@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 
 // Next Imports
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 // MUI Imports
 import { styled } from '@mui/material/styles'
@@ -43,6 +43,8 @@ const UserDropdown = () => {
 
   // Hooks
   const router = useRouter()
+  const params = useParams()
+  const { lang: locale } = params
 
   const { settings } = useSettings()
 
@@ -64,7 +66,8 @@ const UserDropdown = () => {
 
   const handleUserLogout = async () => {
     // Redirect to login page
-    router.push('/login')
+    // router.push('/login')
+    router.push(`/${locale}/login`)
   }
 
   return (

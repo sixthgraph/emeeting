@@ -1,10 +1,12 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Next Imports
 import { useRouter } from 'next/navigation'
+
+import axios from 'axios'
 
 // MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -88,6 +90,45 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
+  const [user, setUser] = useState({
+    email: '',
+    password: ''
+  })
+
+  const [buttonDisable, setButtonDisable] = useState(false)
+
+  const [loading, setLoading] = useState(false)
+
+  const onLogin = async () => {
+    console.log('onLogin Start')
+
+    try {
+      setLoading(true)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, user) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
+
+      if (response.data.success) {
+        console.log('Login success. ', response)
+        router.push('/')
+      } else {
+        console.log('Login failed.')
+      }
+    } catch (error: any) {
+      console.log('Login failed. ', error.message)
+
+      //toast.error(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user.email.length > 0 && user.password.length > 0) {
+      setButtonDisable(true)
+    } else {
+      setButtonDisable(false)
+    }
+  }, [user])
+
   return (
     <div className='flex bs-full justify-center'>
       <div
@@ -113,7 +154,9 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
         </div>
         <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
           <div className='flex flex-col gap-1'>
-            <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
+            <Typography variant='h4'>
+              {loading ? 'Processing' : `Welcome to ${themeConfig.templateName}! 👋🏻`}
+            </Typography>
             <Typography>Please sign-in to your account and start the adventure</Typography>
           </div>
           <form
@@ -121,17 +164,26 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
             autoComplete='off'
             onSubmit={e => {
               e.preventDefault()
-              router.push('/')
+              onLogin()
+
+              //router.push('/')
             }}
             className='flex flex-col gap-5'
           >
-            <CustomTextField autoFocus fullWidth label='Email or Username' placeholder='Enter your email or username' />
+            <CustomTextField
+              autoFocus
+              fullWidth
+              label='Email or Username'
+              placeholder='Enter your email or username'
+              onChange={e => setUser({ ...user, email: e.target.value })}
+            />
             <CustomTextField
               fullWidth
               label='Password'
               placeholder='············'
               id='outlined-adornment-password'
               type={isPasswordShown ? 'text' : 'password'}
+              onChange={e => setUser({ ...user, password: e.target.value })}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position='end'>
@@ -148,9 +200,20 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
                 Forgot password?
               </Typography>
             </div>
+
             <Button fullWidth variant='contained' type='submit'>
-              Login
+              {buttonDisable ? 'Waiting' : 'Login'}
             </Button>
+
+            {/* {buttonDisable ? (
+              <Button fullWidth variant='contained'>
+                waiting
+              </Button>
+            ) : (
+              <Button fullWidth variant='contained' type='submit'>
+                Login
+              </Button>
+            )} */}
             <div className='flex justify-center items-center flex-wrap gap-2'>
               <Typography>New on our platform?</Typography>
               <Typography component={Link} color='primary'>
