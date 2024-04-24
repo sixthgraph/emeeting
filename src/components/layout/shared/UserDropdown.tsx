@@ -7,6 +7,8 @@ import type { MouseEvent } from 'react'
 // Next Imports
 import { useParams, useRouter } from 'next/navigation'
 
+import { useSession } from 'next-auth/react'
+
 // MUI Imports
 import { styled } from '@mui/material/styles'
 import Badge from '@mui/material/Badge'
@@ -67,8 +69,13 @@ const UserDropdown = () => {
   const handleUserLogout = async () => {
     // Redirect to login page
     // router.push('/login')
-    router.push(`/${locale}/login`)
+    // router.push(`/${locale}/login`)
+    router.push(`/api/auth/signout`)
   }
+
+  const { data: session } = useSession({
+    required: true
+  })
 
   return (
     <>
@@ -109,9 +116,9 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        John Doe
+                        {session?.user && session.user.name}
                       </Typography>
-                      <Typography variant='caption'>admin@vuexy.com</Typography>
+                      <Typography variant='caption'>{session?.user && session.user.email}</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />

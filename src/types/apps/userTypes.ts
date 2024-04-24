@@ -16,3 +16,22 @@ export type UsersType = {
   avatarColor?: ThemeColor
   billing: string
 }
+
+// export type UsersType = {
+//   id: number
+//   role: string
+//   email: string
+//   status: string
+//   avatar: string
+//   company: string
+//   country: string
+//   contact: string
+//   fullName: string
+//   username: string
+//   currentPlan: string
+//   avatarColor?: ThemeColor
+//   billing: string
+//   firstname: string
+//   lastname: string
+//   token: string
+// }

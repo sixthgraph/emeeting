@@ -4,9 +4,11 @@
 import { useEffect, useState } from 'react'
 
 // Next Imports
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 
-import axios from 'axios'
+// import axios from 'axios'
+
+import { signIn } from 'next-auth/react'
 
 // MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -61,7 +63,12 @@ const MaskImg = styled('img')({
   zIndex: -1
 })
 
-const LoginV2 = ({ mode }: { mode: SystemMode }) => {
+type Props = {
+  callbackUrl?: string
+  error?: string
+}
+
+const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
 
@@ -74,7 +81,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
   const borderedLightIllustration = '/images/illustrations/auth/v2-login-light-border.png'
 
   // Hooks
-  const router = useRouter()
+  // const router = useRouter()
   const { settings } = useSettings()
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
@@ -104,14 +111,12 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
 
     try {
       setLoading(true)
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, user) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
-
-      if (response.data.success) {
-        console.log('Login success. ', response)
-        router.push('/')
-      } else {
-        console.log('Login failed.')
-      }
+      await signIn('credentials', {
+        username: user.email,
+        password: user.password,
+        redirect: true,
+        callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
+      })
     } catch (error: any) {
       console.log('Login failed. ', error.message)
 
@@ -158,6 +163,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
               {loading ? 'Processing' : `Welcome to ${themeConfig.templateName}! 👋🏻`}
             </Typography>
             <Typography>Please sign-in to your account and start the adventure</Typography>
+            {!!props.error && <Typography>Authentication Failed</Typography>}
           </div>
           <form
             noValidate
