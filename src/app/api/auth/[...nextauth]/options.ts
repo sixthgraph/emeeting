@@ -66,6 +66,36 @@ export const options: NextAuthOptions = {
     })
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      const prov = account?.provider
+
+      if (prov === 'github') {
+        console.log('i am github')
+        console.log(account)
+        console.log(user)
+        console.log(profile)
+
+        // connectToDb();
+        // try {
+        //   const user = await User.findOne({ email: profile.email });
+
+        //   if (!user) {
+        //     const newUser = new User({
+        //       username: profile.login,
+        //       email: profile.email,
+        //       image: profile.avatar_url,
+        //     });
+
+        //     await newUser.save();
+        //   }
+        // } catch (err) {
+        //   console.log(err);
+        //   return false;
+        // }
+      }
+
+      return true
+    },
     jwt: async ({ token, user }) => {
       if (user && user.firstname && user.token) {
         token.name = user.firstname + ' ' + user.lastname

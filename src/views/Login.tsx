@@ -106,6 +106,14 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
 
   const [loading, setLoading] = useState(false)
 
+  const githubLogin = async () => {
+    console.log('githubLogin start!')
+    await signIn('github', {
+      redirect: true,
+      callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
+    })
+  }
+
   const onLogin = async () => {
     console.log('onLogin Start')
 
@@ -234,7 +242,7 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
               <IconButton className='text-twitter' size='small'>
                 <i className='tabler-brand-twitter-filled' />
               </IconButton>
-              <IconButton className='text-textPrimary' size='small'>
+              <IconButton onClick={githubLogin} className='text-textPrimary' size='small'>
                 <i className='tabler-brand-github-filled' />
               </IconButton>
               <IconButton className='text-error' size='small'>
