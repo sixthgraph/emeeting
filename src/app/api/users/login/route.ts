@@ -10,7 +10,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const reqBody = await request.json()
-    const res = await axios.post('http://localhost:9995/login', reqBody)
+
+    // const res = await axios.post('http://localhost:9995/login', reqBody)
+    const res = await axios.post('https://rd.infoma.net/routeflow-api/login', reqBody)
     const user = res.data.data.detail
 
     // console.log('user ==== ')
