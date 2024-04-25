@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 // Next Imports
 // import { useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 // import axios from 'axios'
 
@@ -26,6 +27,7 @@ import classnames from 'classnames'
 
 // Type Imports
 import type { SystemMode } from '@core/types'
+import type { Locale } from '@/configs/i18n'
 
 // Component Imports
 import Link from '@components/Link'
@@ -38,6 +40,9 @@ import themeConfig from '@configs/themeConfig'
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
+
+// Util Imports
+import { getLocalizedUrl } from '@/utils/i18n'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -86,6 +91,7 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const authBackground = useImageVariant(mode, lightImg, darkImg)
+  const { lang: locale } = useParams()
 
   const characterIllustration = useImageVariant(
     mode,
@@ -230,7 +236,10 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
             )} */}
             <div className='flex justify-center items-center flex-wrap gap-2'>
               <Typography>New on our platform?</Typography>
-              <Typography component={Link} color='primary'>
+              {/* <Typography component={Link} color='primary'>
+                Create an account
+              </Typography> */}
+              <Typography component={Link} href={getLocalizedUrl('/register', locale as Locale)} color='primary'>
                 Create an account
               </Typography>
             </div>

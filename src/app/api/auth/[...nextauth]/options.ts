@@ -1,6 +1,9 @@
 import type { NextAuthOptions } from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 import Credentials from 'next-auth/providers/credentials'
+import Google from 'next-auth/providers/google'
+import Facebook from 'next-auth/providers/facebook'
+
 import axios from 'axios'
 
 const login = async (credentials: any) => {
@@ -35,6 +38,14 @@ export const options: NextAuthOptions = {
     signIn: '/en/login'
   },
   providers: [
+    Google({
+      clientId: 'dummy',
+      clientSecret: 'dummy'
+    }),
+    Facebook({
+      clientId: 'dummy',
+      clientSecret: 'dummy'
+    }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string
@@ -74,6 +85,45 @@ export const options: NextAuthOptions = {
         console.log(account)
         console.log(user)
         console.log(profile)
+
+        //TODO REGISTER GITHUB ACCOUNT TO ROUTEFLOW ACCOUNT
+
+        /**
+            const oauthUser = {
+              email: user.email,
+              password: 'github-oauth-p@ssW0rd'
+            }
+
+            try {
+              console.log('oauthUser ==== ')
+              console.log(oauthUser)
+
+              const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/check-user`, oauthUser) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
+
+              if (response.data.success) {
+                console.log('Login success. ========> return : ', response.data)
+
+                return true
+              } else {
+                console.log('Not found github user on routeflow')
+
+                const registerRes = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, oauthUser)
+
+                if (registerRes.data.success) {
+                  console.log('Register github success === > ', registerRes.data.data.user)
+
+                  return true
+                }
+
+                //return null
+              }
+
+              // return user;
+            } catch (err) {
+              console.log(err)
+              throw new Error('Failed to login!')
+            }
+         */
 
         // connectToDb();
         // try {
