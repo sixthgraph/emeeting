@@ -21,6 +21,8 @@ import Divider from '@mui/material/Divider'
 // Third-party Imports
 import classnames from 'classnames'
 
+import axios from 'axios'
+
 // Type Imports
 import type { SystemMode } from '@core/types'
 import type { Locale } from '@configs/i18n'
@@ -63,6 +65,7 @@ const MaskImg = styled('img')({
 const Register = ({ mode }: { mode: SystemMode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const [signupStatus, setSignupStatus] = useState('Make your app management easy and fun!')
 
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
@@ -89,6 +92,38 @@ const Register = ({ mode }: { mode: SystemMode }) => {
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
+  const [user, setUser] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: ''
+  })
+
+  const onSignup = async () => {
+    console.log('onSignup Start')
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, user) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
+
+      if (response.data.success) {
+        console.log('register success. ========> return : ', response.data)
+        setSignupStatus('Signup success, Please signin!')
+
+        return response.data
+      } else {
+        console.log('Singup failed.')
+        setSignupStatus('Singup failed.')
+
+        return null
+      }
+
+      // return user;
+    } catch (err) {
+      //console.log(err)
+      setSignupStatus('Failed to signup!')
+    }
+  }
+
   return (
     <div className='flex bs-full justify-center'>
       <div
@@ -109,15 +144,41 @@ const Register = ({ mode }: { mode: SystemMode }) => {
         <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-8 sm:mbs-11 md:mbs-0'>
           <div className='flex flex-col gap-1'>
             <Typography variant='h4'>Adventure starts here 🚀</Typography>
-            <Typography>Make your app management easy and fun!</Typography>
+            <Typography>{signupStatus}</Typography>
           </div>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()} className='flex flex-col gap-6'>
-            <CustomTextField autoFocus fullWidth label='Username' placeholder='Enter your username' />
-            <CustomTextField fullWidth label='Email' placeholder='Enter your email' />
+          <form
+            noValidate
+            autoComplete='off'
+            onSubmit={e => {
+              e.preventDefault()
+              onSignup()
+            }}
+            className='flex flex-col gap-6'
+          >
+            <CustomTextField
+              autoFocus
+              fullWidth
+              label='Firstname'
+              placeholder='Enter your firstname'
+              onChange={e => setUser({ ...user, firstname: e.target.value })}
+            />
+            <CustomTextField
+              fullWidth
+              label='Lastname'
+              placeholder='Enter your lastname'
+              onChange={e => setUser({ ...user, lastname: e.target.value })}
+            />
+            <CustomTextField
+              fullWidth
+              label='Email'
+              placeholder='Enter your email'
+              onChange={e => setUser({ ...user, email: e.target.value })}
+            />
             <CustomTextField
               fullWidth
               label='Password'
               placeholder='············'
+              onChange={e => setUser({ ...user, password: e.target.value })}
               type={isPasswordShown ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
