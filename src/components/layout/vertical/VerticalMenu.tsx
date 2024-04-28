@@ -102,6 +102,17 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
             User Group
           </MenuItem>
         </MenuSection>
+        <MenuSection label='Test'>
+          <MenuItem href={`/${locale}/test`} icon={<i className='tabler-users' />}>
+            Test
+          </MenuItem>
+          <MenuItem href={`/${locale}/test2`} icon={<i className='tabler-users' />}>
+            Test2
+          </MenuItem>
+          <MenuItem href={`/${locale}/test-update-session`} icon={<i className='tabler-users' />}>
+            Update Session
+          </MenuItem>
+        </MenuSection>
       </Menu>
     </ScrollWrapper>
   )

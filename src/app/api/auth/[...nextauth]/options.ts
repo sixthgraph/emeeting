@@ -146,7 +146,11 @@ export const options: NextAuthOptions = {
 
       return true
     },
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user, trigger, session }) => {
+      if (trigger === 'update') {
+        return { ...token, ...session.user }
+      }
+
       if (user && user.firstname && user.token) {
         token.name = user.firstname + ' ' + user.lastname
         token.firstname = user.firstname
