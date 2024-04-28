@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
@@ -22,6 +22,8 @@ import Divider from '@mui/material/Divider'
 import classnames from 'classnames'
 
 import axios from 'axios'
+
+import { registerFormSchema } from '../schemas/formSchema'
 
 // Type Imports
 import type { SystemMode } from '@core/types'
@@ -90,24 +92,76 @@ const Register = ({ mode }: { mode: SystemMode }) => {
     borderedDarkIllustration
   )
 
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  interface FormDataType {
+    firstname: string
+    lastname: string
+    email: string
+    password: string
+  }
 
-  const [user, setUser] = useState({
+  // Vars
+  const initialData = {
     firstname: '',
     lastname: '',
     email: '',
     password: ''
-  })
+  }
+
+  const handleReset = () => {
+    setTimeout(() => {
+      setFormData({
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: ''
+      })
+    }, 300)
+  }
+
+  useEffect(() => {
+    handleReset()
+  }, [])
+
+  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+
+  const [formData, setFormData] = useState<FormDataType>(initialData)
+
+  const [errors, setErrors] = useState<any[]>([])
 
   const onSignup = async () => {
     console.log('onSignup Start')
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, user) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
+      const parsedData = registerFormSchema.safeParse(formData)
+
+      if (!parsedData.success) {
+        // eslint-disable-next-line prefer-const
+        let errArr: any[] = []
+
+        const { errors: err } = parsedData.error
+
+        for (let i = 0; i < err.length; i++) {
+          errArr.push({ for: err[i].path[0], message: err[i].message })
+          setErrors(errArr)
+        }
+
+        setErrors(errArr)
+
+        throw err
+      }
+
+      console.log('Form submitted successfully', parsedData.data)
+
+      //**
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
 
       if (response.data.success) {
         console.log('register success. ========> return : ', response.data)
         setSignupStatus('Signup success, Please signin!')
+        handleReset()
+
+        // sg here
 
         return response.data
       } else {
@@ -117,9 +171,12 @@ const Register = ({ mode }: { mode: SystemMode }) => {
         return null
       }
 
+      //*/
+
       // return user;
     } catch (err) {
       //console.log(err)
+      console.error('Error submitting form:', err)
       setSignupStatus('Failed to signup!')
     }
   }
@@ -160,25 +217,32 @@ const Register = ({ mode }: { mode: SystemMode }) => {
               fullWidth
               label='Firstname'
               placeholder='Enter your firstname'
-              onChange={e => setUser({ ...user, firstname: e.target.value })}
+              value={formData.firstname}
+              onChange={e => setFormData({ ...formData, firstname: e.target.value })}
             />
+            {errors.find(error => error.for === 'firstname')?.message}
             <CustomTextField
               fullWidth
               label='Lastname'
               placeholder='Enter your lastname'
-              onChange={e => setUser({ ...user, lastname: e.target.value })}
+              value={formData.lastname}
+              onChange={e => setFormData({ ...formData, lastname: e.target.value })}
             />
+            {errors.find(error => error.for === 'lastname')?.message}
             <CustomTextField
               fullWidth
               label='Email'
               placeholder='Enter your email'
-              onChange={e => setUser({ ...user, email: e.target.value })}
+              value={formData.email}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
             />
+            {errors.find(error => error.for === 'email')?.message}
             <CustomTextField
               fullWidth
               label='Password'
               placeholder='············'
-              onChange={e => setUser({ ...user, password: e.target.value })}
+              value={formData.password}
+              onChange={e => setFormData({ ...formData, password: e.target.value })}
               type={isPasswordShown ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
@@ -190,6 +254,7 @@ const Register = ({ mode }: { mode: SystemMode }) => {
                 )
               }}
             />
+            {errors.find(error => error.for === 'password')?.message}
             <FormControlLabel
               control={<Checkbox />}
               label={

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 // Next Imports
 // import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useParams } from 'next/navigation'
 
 // import axios from 'axios'
@@ -77,6 +78,10 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
 
+  const pathname = usePathname()
+
+  // const [changes, setChanges] = useState(0);
+
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
   const lightImg = '/images/pages/auth-mask-light.png'
@@ -101,16 +106,40 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
     borderedDarkIllustration
   )
 
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  type FormDataType = {
+    email: string
+    password: string
+  }
 
-  const [user, setUser] = useState({
+  // Vars
+  const initialData = {
     email: '',
     password: ''
-  })
+  }
+
+  const handleReset = () => {
+    setTimeout(() => {
+      setFormData({
+        email: '',
+        password: ''
+      })
+    }, 300)
+  }
+
+  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+
+  const [formData, setFormData] = useState<FormDataType>(initialData)
 
   const [buttonDisable, setButtonDisable] = useState(false)
 
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    console.log(`Route changed to: ${pathname}`)
+    handleReset()
+
+    //setChanges((prev) => prev + 1);
+  }, [pathname])
 
   const githubLogin = async () => {
     console.log('githubLogin start!')
@@ -126,8 +155,8 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
     try {
       setLoading(true)
       await signIn('credentials', {
-        username: user.email,
-        password: user.password,
+        username: formData.email,
+        password: formData.password,
         redirect: true,
         callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
       })
@@ -141,12 +170,12 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   }
 
   useEffect(() => {
-    if (user.email.length > 0 && user.password.length > 0) {
+    if (formData.email.length > 0 && formData.password.length > 0) {
       setButtonDisable(true)
     } else {
       setButtonDisable(false)
     }
-  }, [user])
+  }, [formData])
 
   return (
     <div className='flex bs-full justify-center'>
@@ -195,7 +224,8 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
               fullWidth
               label='Email or Username'
               placeholder='Enter your email or username'
-              onChange={e => setUser({ ...user, email: e.target.value })}
+              value={formData.email}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
             />
             <CustomTextField
               fullWidth
@@ -203,7 +233,8 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
               placeholder='············'
               id='outlined-adornment-password'
               type={isPasswordShown ? 'text' : 'password'}
-              onChange={e => setUser({ ...user, password: e.target.value })}
+              value={formData.password}
+              onChange={e => setFormData({ ...formData, password: e.target.value })}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position='end'>
