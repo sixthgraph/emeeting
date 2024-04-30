@@ -15,6 +15,8 @@ export async function POST(request: NextRequest) {
 
     // const res = await axios.post('http://localhost:9995/register', reqBody)
     const res = await axios.post('https://rd.infoma.net/routeflow-api/register', reqBody)
+
+    console.log('res from server api ==== ', res)
     const user = res.data.data.detail
 
     const response = NextResponse.json({

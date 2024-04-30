@@ -123,21 +123,18 @@ const Register = ({ mode }: { mode: SystemMode }) => {
   }, [])
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-
   const [formData, setFormData] = useState<FormDataType>(initialData)
-
   const [errors, setErrors] = useState<any[]>([])
 
   const onSignup = async () => {
-    console.log('onSignup Start')
-
     try {
       const parsedData = registerFormSchema.safeParse(formData)
 
-      if (!parsedData.success) {
-        // eslint-disable-next-line prefer-const
-        let errArr: any[] = []
+      console.log('parsedData ---- ')
+      console.log(parsedData)
 
+      if (!parsedData.success) {
+        const errArr: any[] = []
         const { errors: err } = parsedData.error
 
         for (let i = 0; i < err.length; i++) {
@@ -152,16 +149,12 @@ const Register = ({ mode }: { mode: SystemMode }) => {
 
       console.log('Form submitted successfully', parsedData.data)
 
-      //**
-
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
 
       if (response.data.success) {
         console.log('register success. ========> return : ', response.data)
         setSignupStatus('Signup success, Please signin!')
         handleReset()
-
-        // sg here
 
         return response.data
       } else {
