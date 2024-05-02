@@ -164,7 +164,18 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
+
   const [globalFilter, setGlobalFilter] = useState('')
+
+  // const [updateData, setUpdateData] = useState(...[initialData])
+  const [updateData, setUpdateData] = useState({})
+
+  // console.log('updateData ====', updateData)
+
+  useEffect(() => {
+    console.log()
+    console.log('updateData ====', updateData)
+  }, [updateData])
 
   // Hooks
   //const { lang: locale } = useParams()
@@ -268,12 +279,12 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
             <Icon
-              className={userRoleObj[row.original.role].icon}
-              sx={{ color: `var(--mui-palette-${userRoleObj[row.original.role].color}-main)` }}
+              className={row.original.role && userRoleObj[row.original.role].icon}
+              sx={{ color: `var(--mui-palette-${row.original.role && userRoleObj[row.original.role].color}-main)` }}
             />
             <Typography className='capitalize' color='text.primary'>
               {/* {row.original.role} */}
-              {userRoleObj[row.original.role].name}
+              {row.original.role && userRoleObj[row.original.role].name}
             </Typography>
           </div>
         )
@@ -500,7 +511,12 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
           }}
         />
       </Card>
-      <UserDrawerForm open={addUserOpen} updateData={initialData} handleClose={() => setAddUserOpen(!addUserOpen)} />
+      <UserDrawerForm
+        open={addUserOpen}
+        updateData={initialData}
+        handleUpdateUserData={() => setUpdateData(initialData)}
+        handleClose={() => setAddUserOpen(!addUserOpen)}
+      />
     </>
   )
 }

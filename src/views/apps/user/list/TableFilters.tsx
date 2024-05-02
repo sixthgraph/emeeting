@@ -19,6 +19,8 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersT
   //const [plan, setPlan] = useState<UsersType['currentPlan']>('')
   const [status, setStatus] = useState<UsersType['status']>('')
 
+  // console.log('tableData === >', tableData)
+
   useEffect(() => {
     const filteredData = tableData?.filter(user => {
       if (role && String(user.role) !== role) return false

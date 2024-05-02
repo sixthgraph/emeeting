@@ -9,7 +9,7 @@ import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 
-//mport MenuItem from '@mui/material/MenuItem'
+import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
@@ -18,6 +18,8 @@ import Divider from '@mui/material/Divider'
 
 import axios from 'axios'
 
+// import { any } from 'zod'
+
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { UserFormDataType } from '@/types/apps/userTypes'
@@ -25,21 +27,9 @@ import type { UserFormDataType } from '@/types/apps/userTypes'
 type Props = {
   open: boolean
   updateData: UserFormDataType
+  handleUpdateUserData: () => void
   handleClose: () => void
 }
-
-// type FormDataType = {
-//   firstname: string
-//   lastname: string
-//   fullName: string
-//   email: string
-//   avatar: string
-//   avatarcolor: string
-//   dep: string
-//   position: string
-//   status: string
-//   role: number
-// }
 
 // Vars
 const initialData = {
@@ -55,7 +45,7 @@ const initialData = {
   status: ''
 }
 
-const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
+const UserDrawerForm = ({ open, updateData, handleUpdateUserData, handleClose }: Props) => {
   const router = useRouter()
   const params = useParams()
   const { lang: locale } = params
@@ -64,7 +54,6 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
 
   // const [isPasswordShown, setIsPasswordShown] = useState(false)
-
   // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -123,7 +112,8 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
 
       if (response.data.message === 'success') {
         console.log('Update user success.')
-        console.log() // sg here
+
+        handleUpdateUserData()
         handleClose()
       }
 
@@ -227,12 +217,31 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
             onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
           />
           <CustomTextField
-            label='Status'
+            select
             fullWidth
-            placeholder=''
+            id='select-role'
+            value={formData.role}
+            onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
+            label='Select Role'
+          >
+            <MenuItem value='1'>Admin</MenuItem>
+            <MenuItem value='2'>Worker</MenuItem>
+            <MenuItem value='3'>Viewer</MenuItem>
+            <MenuItem value='4'>Super user</MenuItem>
+          </CustomTextField>
+          <CustomTextField
+            select
+            fullWidth
+            id='select-status'
             value={formData.status}
             onChange={e => setFormData({ ...formData, status: e.target.value })}
-          />
+            label='Status'
+          >
+            <MenuItem value='pending'>Pending</MenuItem>
+            <MenuItem value='active'>Active</MenuItem>
+            <MenuItem value='inactive'>Inactive</MenuItem>
+          </CustomTextField>
+
           <div className='flex items-center gap-4'>
             {updateData.email !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
