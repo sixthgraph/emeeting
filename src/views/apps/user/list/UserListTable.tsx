@@ -4,8 +4,8 @@
 import { useEffect, useState, useMemo } from 'react'
 
 // Next Imports
-import Link from 'next/link'
-import { useParams } from 'next/navigation'
+// import Link from 'next/link'
+// import { useParams } from 'next/navigation'
 
 // MUI Imports
 import { NextResponse } from 'next/server'
@@ -14,9 +14,11 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+
 import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
+
 import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
@@ -43,12 +45,12 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Type Imports
 import axios from 'axios'
 
-import type { Locale } from '@configs/i18n'
+//import type { Locale } from '@configs/i18n'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
-import type { ThemeColor } from '@core/types'
-import type { UsersType } from '@/types/apps/userTypes'
+// import type { ThemeColor } from '@core/types'
+import type { UsersType, UserRoleType, UsersTypeWithAction, UserStatusType } from '@/types/apps/userTypes'
 
 // Component Imports
 import TableFilters from './TableFilters'
@@ -61,7 +63,8 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
 import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
+
+//import { getLocalizedUrl } from '@/utils/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
@@ -73,18 +76,6 @@ declare module '@tanstack/table-core' {
   interface FilterMeta {
     itemRank: RankingInfo
   }
-}
-
-type UsersTypeWithAction = UsersType & {
-  action?: string
-}
-
-type UserRoleType = {
-  [key: string]: { icon: string; color: string }
-}
-
-type UserStatusType = {
-  [key: string]: ThemeColor
 }
 
 // Styled Components
@@ -135,11 +126,11 @@ const DebouncedInput = ({
 
 // Vars
 const userRoleObj: UserRoleType = {
-  admin: { icon: 'tabler-crown', color: 'error' },
-  author: { icon: 'tabler-device-desktop', color: 'warning' },
-  editor: { icon: 'tabler-edit', color: 'info' },
-  maintainer: { icon: 'tabler-chart-pie', color: 'success' },
-  subscriber: { icon: 'tabler-user', color: 'primary' }
+  0: { icon: 'tabler-crown', color: 'error', name: 'Undefined' },
+  1: { icon: 'tabler-crown', color: 'error', name: 'Admin' },
+  2: { icon: 'tabler-device-desktop', color: 'warning', name: 'Worker' },
+  3: { icon: 'tabler-edit', color: 'info', name: 'Viewer' },
+  4: { icon: 'tabler-chart-pie', color: 'success', name: 'Super User' }
 }
 
 const userStatusObj: UserStatusType = {
@@ -148,31 +139,19 @@ const userStatusObj: UserStatusType = {
   inactive: 'secondary'
 }
 
-// data for edit user
-// type FormDataType = {
-//   fullName: string
-//   username: string
-//   password: string
-//   email: string
-//   company: string
-//   country: string
-//   contact: string
-//   role: string
-//   plan: string
-//   status: string
-// }
-
 // Vars
 let initialData = {
+  firstname: '',
+  lastname: '',
   fullName: '',
-  username: '',
-  password: '',
   email: '',
-  company: '',
-  country: '',
-  contact: '',
-  role: '',
-  plan: '',
+  avatar: '',
+  avatarcolor: '',
+
+  // password: '',
+  dep: '',
+  position: '',
+  role: 0,
   status: ''
 }
 
@@ -180,9 +159,6 @@ let initialData = {
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
 const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
-  // console.log('tableData=== ')
-  // console.log(tableData)
-
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -191,28 +167,28 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Hooks
-  const { lang: locale } = useParams()
+  //const { lang: locale } = useParams()
 
   const userDrawerOpenHandle = () => {
     // sg here
     initialData = {
+      firstname: '',
+      lastname: '',
       fullName: '',
-      username: '',
-      password: '',
       email: '',
-      company: '',
-      country: '',
-      contact: '',
-      role: '',
-      plan: '',
+      avatar: '',
+      avatarcolor: '',
+
+      // password: '',
+      dep: '',
+      position: '',
+      role: 0,
       status: ''
     }
     setAddUserOpen(true)
   }
 
   const updateUserData = () => {
-    //const [updateData, setUpdateData] = useState<FormDataType>(initialData)
-
     console.log('initialData ===')
     console.log(initialData)
     setAddUserOpen(!addUserOpen)
@@ -223,7 +199,7 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
     console.log(email)
 
     try {
-      const response = await axios.post('/api/apps/user-delete', email)
+      const response = await axios.post('/api/users/delete', email)
 
       console.log('Deleted user successfully.', response.data)
 
@@ -262,17 +238,28 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
           />
         )
       },
-      columnHelper.accessor('fullName', {
+      columnHelper.accessor('firstname', {
         header: 'User',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
-            {getAvatar({ avatar: row.original.avatar, fullName: row.original.fullName })}
+            {getAvatar({ avatar: row.original.avatar, fullName: row.original.firstname + ' ' + row.original.lastname })}
             <div className='flex flex-col'>
               <Typography color='text.primary' className='font-medium'>
-                {row.original.fullName}
+                {row.original.firstname + ' ' + row.original.lastname}
               </Typography>
-              <Typography variant='body2'>{row.original.username}</Typography>
+              <Typography variant='body2'>{row.original.email}</Typography>
             </div>
+          </div>
+        )
+      }),
+      columnHelper.accessor('dep', {
+        header: 'Department',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.dep}
+            </Typography>
+            <Typography variant='body2'>{row.original.position}</Typography>
           </div>
         )
       }),
@@ -285,23 +272,13 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
               sx={{ color: `var(--mui-palette-${userRoleObj[row.original.role].color}-main)` }}
             />
             <Typography className='capitalize' color='text.primary'>
-              {row.original.role}
+              {/* {row.original.role} */}
+              {userRoleObj[row.original.role].name}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('currentPlan', {
-        header: 'Plan',
-        cell: ({ row }) => (
-          <Typography className='capitalize' color='text.primary'>
-            {row.original.currentPlan}
-          </Typography>
-        )
-      }),
-      columnHelper.accessor('billing', {
-        header: 'Billing',
-        cell: ({ row }) => <Typography>{row.original.billing}</Typography>
-      }),
+
       columnHelper.accessor('status', {
         header: 'Status',
         cell: ({ row }) => (
@@ -327,23 +304,23 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
             </IconButton>
-            <IconButton>
+            {/* <IconButton>
               <Link href={getLocalizedUrl('apps/user/view', locale as Locale)} className='flex'>
                 <i className='tabler-eye text-[22px] text-textSecondary' />
               </Link>
-            </IconButton>
+            </IconButton> */}
 
             <IconButton
               onClick={() => {
-                initialData.fullName = row.original.fullName
-                initialData.username = row.original.username
-                initialData.password = ''
+                initialData.firstname = row.original.firstname
+                initialData.lastname = row.original.lastname
+
+                // initialData.password = ''
                 initialData.email = row.original.email
-                initialData.company = row.original.company
-                initialData.country = row.original.country
-                initialData.contact = row.original.contact
-                initialData.role = row.original.role
-                initialData.plan = row.original.currentPlan
+                initialData.dep = row.original.dep
+                initialData.position = row.original.position
+                initialData.avatar = row.original.avatar
+                initialData.role = Number(row.original.role)
                 initialData.status = row.original.status
                 updateUserData()
               }}

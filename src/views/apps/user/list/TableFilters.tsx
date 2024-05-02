@@ -15,20 +15,25 @@ import CustomTextField from '@core/components/mui/TextField'
 const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersType[] }) => {
   // States
   const [role, setRole] = useState<UsersType['role']>('')
-  const [plan, setPlan] = useState<UsersType['currentPlan']>('')
+
+  //const [plan, setPlan] = useState<UsersType['currentPlan']>('')
   const [status, setStatus] = useState<UsersType['status']>('')
 
   useEffect(() => {
     const filteredData = tableData?.filter(user => {
-      if (role && user.role !== role) return false
-      if (plan && user.currentPlan !== plan) return false
+      if (role && String(user.role) !== role) return false
+
+      // if (plan && user.currentPlan !== plan) return false
       if (status && user.status !== status) return false
 
       return true
     })
 
+    //   setData(filteredData)
+    // }, [role, plan, status, tableData, setData])
+
     setData(filteredData)
-  }, [role, plan, status, tableData, setData])
+  }, [role, status, tableData, setData])
 
   return (
     <CardContent>
@@ -43,14 +48,14 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersT
             SelectProps={{ displayEmpty: true }}
           >
             <MenuItem value=''>Select Role</MenuItem>
-            <MenuItem value='admin'>Admin</MenuItem>
-            <MenuItem value='author'>Author</MenuItem>
-            <MenuItem value='editor'>Editor</MenuItem>
-            <MenuItem value='maintainer'>Maintainer</MenuItem>
-            <MenuItem value='subscriber'>Subscriber</MenuItem>
+            {/* <MenuItem value='0'>Undefined</MenuItem> */}
+            <MenuItem value='1'>Admin</MenuItem>
+            <MenuItem value='2'>Worker</MenuItem>
+            <MenuItem value='3'>Viewer</MenuItem>
+            <MenuItem value='4'>Super User</MenuItem>
           </CustomTextField>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={4}>
           <CustomTextField
             select
             fullWidth
@@ -65,7 +70,7 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersT
             <MenuItem value='enterprise'>Enterprise</MenuItem>
             <MenuItem value='team'>Team</MenuItem>
           </CustomTextField>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sm={4}>
           <CustomTextField
             select

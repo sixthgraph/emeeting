@@ -1,15 +1,24 @@
+import { getServerSession } from 'next-auth'
+import axios from 'axios'
+
 import UserList from '@views/apps/user/list'
+import { options } from '@/app/api/auth/[...nextauth]/options'
 
 const getData = async () => {
-  // Vars
-  // const res = await fetch(`${process.env.API_URL}/apps/user-list`, { cache: 'no-store' })
-  const res = await fetch(`${process.env.API_URL}/apps/user-list`, { cache: 'no-store' })
+  const session = await getServerSession(options)
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch userData')
+  try {
+    const token = { token: session?.user.token }
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, token)
+
+    if (response.data.message === 'success') {
+      return response.data.data.detail
+    } else {
+      return 'User not found'
+    }
+  } catch (err) {
+    console.log(err)
   }
-
-  return res.json()
 }
 
 const UserListApp = async () => {

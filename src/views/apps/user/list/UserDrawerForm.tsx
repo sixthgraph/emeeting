@@ -8,47 +8,50 @@ import { useRouter, useParams } from 'next/navigation'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
-import MenuItem from '@mui/material/MenuItem'
+
+//mport MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-import { InputAdornment } from '@mui/material'
+// import { InputAdornment } from '@mui/material'
 
 import axios from 'axios'
 
 import CustomTextField from '@core/components/mui/TextField'
 
+import type { UserFormDataType } from '@/types/apps/userTypes'
+
 type Props = {
   open: boolean
-  updateData: FormDataType
+  updateData: UserFormDataType
   handleClose: () => void
 }
 
-type FormDataType = {
-  fullName: string
-  username: string
-  password: string
-  email: string
-  company: string
-  country: string
-  contact: string
-  role: string
-  plan: string
-  status: string
-}
+// type FormDataType = {
+//   firstname: string
+//   lastname: string
+//   fullName: string
+//   email: string
+//   avatar: string
+//   avatarcolor: string
+//   dep: string
+//   position: string
+//   status: string
+//   role: number
+// }
 
 // Vars
 const initialData = {
+  firstname: '',
+  lastname: '',
   fullName: '',
-  username: '',
-  password: '',
   email: '',
-  company: '',
-  country: '',
-  contact: '',
-  role: '',
-  plan: '',
+  avatar: '',
+  avatarcolor: '',
+  dep: '',
+  position: '',
+  role: 0,
   status: ''
 }
 
@@ -58,11 +61,11 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
   const { lang: locale } = params
 
   // States
-  const [formData, setFormData] = useState<FormDataType>(initialData)
+  const [formData, setFormData] = useState<UserFormDataType>(initialData)
 
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
+  // const [isPasswordShown, setIsPasswordShown] = useState(false)
 
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -96,15 +99,15 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
   const handleReset = () => {
     handleClose()
     setFormData({
+      firstname: '',
+      lastname: '',
       fullName: '',
-      username: '',
-      password: '',
       email: '',
-      company: '',
-      country: '',
-      contact: '',
-      role: '',
-      plan: '',
+      avatar: '',
+      avatarcolor: '',
+      dep: '',
+      position: '',
+      role: 0,
       status: ''
     })
   }
@@ -114,15 +117,21 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
     console.log(formData)
 
     try {
-      const response = await axios.post('/api/apps/user-update', formData)
+      const response = await axios.post('/api/users/update', formData)
 
-      console.log('Update user success. ', response.data)
+      //console.log('Update user success. ', response.data)
 
-      return NextResponse.json({
-        message: 'User created successfully',
-        success: true,
-        response
-      })
+      if (response.data.message === 'success') {
+        console.log('Update user success.')
+        console.log() // sg here
+        handleClose()
+      }
+
+      // return NextResponse.json({
+      //   message: 'User created successfully',
+      //   success: true,
+      //   response
+      // })
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
     }
@@ -156,20 +165,20 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           <CustomTextField
-            label='Full Name'
+            label='Firstname'
             fullWidth
-            placeholder='John Doe'
-            value={formData.fullName}
-            onChange={e => setFormData({ ...formData, fullName: e.target.value })}
+            placeholder=''
+            value={formData.firstname}
+            onChange={e => setFormData({ ...formData, firstname: e.target.value })}
           />
           <CustomTextField
-            label='Username'
+            label='Lastname'
             fullWidth
             placeholder='johndoe'
-            value={formData.username}
-            onChange={e => setFormData({ ...formData, username: e.target.value })}
+            value={formData.lastname}
+            onChange={e => setFormData({ ...formData, lastname: e.target.value })}
           />
-          <CustomTextField
+          {/* <CustomTextField
             fullWidth
             label='Password'
             placeholder='············'
@@ -186,84 +195,44 @@ const UserDrawerForm = ({ open, updateData, handleClose }: Props) => {
                 </InputAdornment>
               )
             }}
-          />
+          /> */}
           <CustomTextField
             label='Email'
+            disabled
             fullWidth
             placeholder='johndoe@gmail.com'
             value={formData.email}
             onChange={e => setFormData({ ...formData, email: e.target.value })}
           />
           <CustomTextField
-            label='Company'
+            label='Department'
             fullWidth
-            placeholder='Company PVT LTD'
-            value={formData.company}
-            onChange={e => setFormData({ ...formData, company: e.target.value })}
+            placeholder=''
+            value={formData.dep}
+            onChange={e => setFormData({ ...formData, dep: e.target.value })}
           />
           <CustomTextField
-            select
+            label='Position'
             fullWidth
-            id='country'
-            value={formData.country}
-            onChange={e => setFormData({ ...formData, country: e.target.value })}
-            label='Select Country'
-            inputProps={{ placeholder: 'Country' }}
-          >
-            <MenuItem value='UK'>UK</MenuItem>
-            <MenuItem value='USA'>USA</MenuItem>
-            <MenuItem value='Australia'>Australia</MenuItem>
-            <MenuItem value='Germany'>Germany</MenuItem>
-          </CustomTextField>
+            placeholder=''
+            value={formData.position}
+            onChange={e => setFormData({ ...formData, position: e.target.value })}
+          />
           <CustomTextField
-            label='Contact'
+            label='Role'
             type='number'
             fullWidth
-            placeholder='(397) 294-5153'
-            value={formData.contact}
-            onChange={e => setFormData({ ...formData, contact: e.target.value })}
+            placeholder=''
+            value={formData.role}
+            onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
           />
           <CustomTextField
-            select
+            label='Status'
             fullWidth
-            id='select-role'
-            value={formData.role}
-            onChange={e => setFormData({ ...formData, role: e.target.value })}
-            label='Select Role'
-          >
-            <MenuItem value='admin'>Admin</MenuItem>
-            <MenuItem value='author'>Author</MenuItem>
-            <MenuItem value='editor'>Editor</MenuItem>
-            <MenuItem value='maintainer'>Maintainer</MenuItem>
-            <MenuItem value='subscriber'>Subscriber</MenuItem>
-          </CustomTextField>
-          <CustomTextField
-            select
-            fullWidth
-            id='select-plan'
-            value={formData.plan}
-            onChange={e => setFormData({ ...formData, plan: e.target.value })}
-            label='Select Plan'
-            inputProps={{ placeholder: 'Select Plan' }}
-          >
-            <MenuItem value='basic'>Basic</MenuItem>
-            <MenuItem value='company'>Company</MenuItem>
-            <MenuItem value='enterprise'>Enterprise</MenuItem>
-            <MenuItem value='team'>Team</MenuItem>
-          </CustomTextField>
-          <CustomTextField
-            select
-            fullWidth
-            id='select-status'
+            placeholder=''
             value={formData.status}
             onChange={e => setFormData({ ...formData, status: e.target.value })}
-            label='Select Status'
-          >
-            <MenuItem value='pending'>Pending</MenuItem>
-            <MenuItem value='active'>Active</MenuItem>
-            <MenuItem value='inactive'>Inactive</MenuItem>
-          </CustomTextField>
-
+          />
           <div className='flex items-center gap-4'>
             {updateData.email !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>

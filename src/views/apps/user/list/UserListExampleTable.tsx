@@ -48,7 +48,7 @@ import type { Locale } from '@configs/i18n'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 import type { ThemeColor } from '@core/types'
-import type { UsersType } from '@/types/apps/userTypes'
+import type { UsersTypeExample } from '@/types/apps/userTypes'
 
 // Component Imports
 import TableFiltersExample from './TableFiltersExample'
@@ -75,7 +75,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type UsersTypeWithAction = UsersType & {
+type UsersTypeWithAction = UsersTypeExample & {
   action?: string
 }
 
@@ -179,7 +179,7 @@ let initialData = {
 // Column Definitions
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
-const UserListExampleTable = ({ tableData }: { tableData?: UsersType[] }) => {
+const UserListExampleTable = ({ tableData }: { tableData?: UsersTypeExample[] }) => {
   // console.log('tableData=== ')
   // console.log(tableData)
 
@@ -189,6 +189,9 @@ const UserListExampleTable = ({ tableData }: { tableData?: UsersType[] }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
+
+  console.log('data tablefilter ===')
+  console.log(data)
 
   // Hooks
   const { lang: locale } = useParams()
@@ -379,7 +382,7 @@ const UserListExampleTable = ({ tableData }: { tableData?: UsersType[] }) => {
 
   // Table config
   const table = useReactTable({
-    data: data as UsersType[],
+    data: data as UsersTypeExample[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter // search field
@@ -407,7 +410,7 @@ const UserListExampleTable = ({ tableData }: { tableData?: UsersType[] }) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
+  const getAvatar = (params: Pick<UsersTypeExample, 'avatar' | 'fullName'>) => {
     const { avatar, fullName } = params
 
     if (avatar) {

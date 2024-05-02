@@ -7,16 +7,16 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 
 // Type Imports
-import type { UsersType } from '@/types/apps/userTypes'
+import type { UsersTypeExample } from '@/types/apps/userTypes'
 
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
 
-const TableFiltersExample = ({ setData, tableData }: { setData: any; tableData?: UsersType[] }) => {
+const TableFiltersExample = ({ setData, tableData }: { setData: any; tableData?: UsersTypeExample[] }) => {
   // States
-  const [role, setRole] = useState<UsersType['role']>('')
-  const [plan, setPlan] = useState<UsersType['currentPlan']>('')
-  const [status, setStatus] = useState<UsersType['status']>('')
+  const [role, setRole] = useState<UsersTypeExample['role']>('')
+  const [plan, setPlan] = useState<UsersTypeExample['currentPlan']>('')
+  const [status, setStatus] = useState<UsersTypeExample['status']>('')
 
   useEffect(() => {
     const filteredData = tableData?.filter(user => {
