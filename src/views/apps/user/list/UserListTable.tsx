@@ -168,14 +168,6 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // const [updateData, setUpdateData] = useState(...[initialData])
-  const [updateData, setUpdateData] = useState({})
-
-  // console.log('updateData ====', updateData)
-
-  useEffect(() => {
-    console.log()
-    console.log('updateData ====', updateData)
-  }, [updateData])
 
   // Hooks
   //const { lang: locale } = useParams()
@@ -200,7 +192,7 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   }
 
   const updateUserData = () => {
-    console.log('initialData ===')
+    console.log('UserLIstTable initialData ===')
     console.log(initialData)
     setAddUserOpen(!addUserOpen)
   }
@@ -513,8 +505,9 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
       </Card>
       <UserDrawerForm
         open={addUserOpen}
+        setData={setData}
+        tableData={tableData}
         updateData={initialData}
-        handleUpdateUserData={() => setUpdateData(initialData)}
         handleClose={() => setAddUserOpen(!addUserOpen)}
       />
     </>

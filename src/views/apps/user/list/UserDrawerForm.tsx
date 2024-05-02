@@ -22,12 +22,13 @@ import axios from 'axios'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { UserFormDataType } from '@/types/apps/userTypes'
+import type { UserFormDataType, UsersType } from '@/types/apps/userTypes'
 
 type Props = {
   open: boolean
   updateData: UserFormDataType
-  handleUpdateUserData: () => void
+  setData: any
+  tableData?: UsersType[]
   handleClose: () => void
 }
 
@@ -45,7 +46,7 @@ const initialData = {
   status: ''
 }
 
-const UserDrawerForm = ({ open, updateData, handleUpdateUserData, handleClose }: Props) => {
+const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
   const router = useRouter()
   const params = useParams()
   const { lang: locale } = params
@@ -102,33 +103,38 @@ const UserDrawerForm = ({ open, updateData, handleUpdateUserData, handleClose }:
   }
 
   const handleUpdateData = async () => {
-    console.log('handleUpdateData start === ')
-    console.log(formData)
-
     try {
       const response = await axios.post('/api/users/update', formData)
 
-      //console.log('Update user success. ', response.data)
-
       if (response.data.message === 'success') {
         console.log('Update user success.')
-
-        handleUpdateUserData()
         handleClose()
-      }
 
-      // return NextResponse.json({
-      //   message: 'User created successfully',
-      //   success: true,
-      //   response
-      // })
+        const newUserUpdate = tableData?.filter(user => {
+          if (formData && user.email === formData.email) {
+            user.firstname = formData.firstname
+            user.lastname = formData.lastname
+
+            // user.password = formData.password
+            user.dep = formData.dep
+            user.position = formData.position
+            user.role = String(formData.role)
+            user.status = formData.status
+
+            //return true
+          }
+
+          return true
+        })
+
+        setData(newUserUpdate)
+      }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
     }
   }
 
   useEffect(() => {
-    console.log('open = ', open)
     setFormData(updateData)
   }, [open, updateData])
 
@@ -209,17 +215,9 @@ const UserDrawerForm = ({ open, updateData, handleUpdateUserData, handleClose }:
             onChange={e => setFormData({ ...formData, position: e.target.value })}
           />
           <CustomTextField
-            label='Role'
-            type='number'
-            fullWidth
-            placeholder=''
-            value={formData.role}
-            onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
-          />
-          <CustomTextField
             select
             fullWidth
-            id='select-role'
+            id='Role'
             value={formData.role}
             onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
             label='Select Role'
