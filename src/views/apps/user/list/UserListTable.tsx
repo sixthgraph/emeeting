@@ -50,7 +50,14 @@ import axios from 'axios'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type { UsersType, UserRoleType, UsersTypeWithAction, UserStatusType, RoleType } from '@/types/apps/userTypes'
+import type {
+  UsersType,
+  UserRoleType,
+  UsersTypeWithAction,
+  UserStatusType,
+  RoleType,
+  DepType
+} from '@/types/apps/userTypes'
 
 // Component Imports
 import TableFilters from './TableFilters'
@@ -135,6 +142,8 @@ const roleObj: UserRoleType = {
   //0: { icon: 'tabler-crown', color: 'error', name: 'Undefined' },
 }
 
+const depObj: DepType = {}
+
 const userStatusObj: UserStatusType = {
   active: 'success',
   pending: 'warning',
@@ -159,7 +168,26 @@ let initialData = {
 // Column Definitions
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
-const UserListTable = ({ tableData, roleData }: { tableData?: UsersType[]; roleData?: RoleType[] }) => {
+type Props = {
+  tableData?: UsersType[]
+  roleData?: RoleType[]
+  depData?: DepType[]
+}
+
+const UserListTable = ({ tableData, roleData, depData }: Props) => {
+  //console.log('depData === ', depData)
+
+  depData?.map(dep => {
+    const id = String(dep.dep)
+
+    depObj[id] = {
+      dep: String(dep.dep),
+      depname: String(dep.depname),
+      docuname: Number(dep.docuname),
+      statecode: String(dep.statecode)
+    }
+  })
+
   roleData?.map(role => {
     const id = role.roleid
     const name = role.rolename
@@ -173,7 +201,6 @@ const UserListTable = ({ tableData, roleData }: { tableData?: UsersType[]; roleD
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
-
   const [globalFilter, setGlobalFilter] = useState('')
 
   // const [updateData, setUpdateData] = useState(...[initialData])
@@ -262,7 +289,7 @@ const UserListTable = ({ tableData, roleData }: { tableData?: UsersType[]; roleD
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
-              {row.original.dep}
+              {row.original.dep && depObj[row.original.dep].depname}
             </Typography>
             <Typography variant='body2'>{row.original.position}</Typography>
           </div>
@@ -277,7 +304,6 @@ const UserListTable = ({ tableData, roleData }: { tableData?: UsersType[]; roleD
               sx={{ color: `var(--mui-palette-${row.original.role && userRoleObj[row.original.role].color}-main)` }}
             />
             <Typography className='capitalize' color='text.primary'>
-              {/* {row.original.role} */}
               {row.original.role && roleObj[row.original.role].name}
             </Typography>
           </div>
@@ -487,6 +513,7 @@ const UserListTable = ({ tableData, roleData }: { tableData?: UsersType[]; roleD
         tableData={tableData}
         updateData={initialData}
         roleData={roleData}
+        depData={depData}
         handleClose={() => setAddUserOpen(!addUserOpen)}
       />
     </>

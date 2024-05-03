@@ -66,6 +66,10 @@ export type RoleType = {
   [key: string]: { properties: []; roleid: number; rolename: string }
 }
 
+export type DepType = {
+  [key: string]: { dep: string; depname: string; docuname: number; statecode: string }
+}
+
 export type UserStatusType = {
   [key: string]: ThemeColor
 }

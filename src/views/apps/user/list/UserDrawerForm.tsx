@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react'
 
 // MUI Imports
-import { NextResponse } from 'next/server'
-import { useRouter, useParams } from 'next/navigation'
+//import { NextResponse } from 'next/server'
+//import { useRouter, useParams } from 'next/navigation'
 
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -20,9 +20,11 @@ import axios from 'axios'
 
 // import { any } from 'zod'
 
+// import { any } from 'zod'
+
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { RoleType, UserFormDataType, UsersType } from '@/types/apps/userTypes'
+import type { DepType, RoleType, UserFormDataType, UsersType } from '@/types/apps/userTypes'
 
 type Props = {
   open: boolean
@@ -30,6 +32,7 @@ type Props = {
   setData: any
   tableData?: UsersType[]
   roleData?: RoleType[]
+  depData?: DepType[]
   handleClose: () => void
 }
 
@@ -48,10 +51,10 @@ const initialData = {
   status: ''
 }
 
-const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, handleClose }: Props) => {
-  const router = useRouter()
-  const params = useParams()
-  const { lang: locale } = params
+const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depData, handleClose }: Props) => {
+  //const router = useRouter()
+  //const params = useParams()
+  //const { lang: locale } = params
 
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
@@ -65,15 +68,31 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, handle
     setFormData(initialData)
 
     try {
-      const response = await axios.post('/api/apps/signup', formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
 
-      router.push(`/${locale}/users`)
+      console.log('signup response===', response.data) // sg here
 
-      return NextResponse.json({
-        message: 'User created successfully',
-        success: true,
-        response
-      })
+      if (response.data.success) {
+        console.log('signup success')
+
+        if (tableData) {
+          const updateData: any = {
+            firstname: formData.firstname,
+            lastname: formData.lastname,
+            email: formData.email,
+            dep: formData.dep,
+            position: formData.position,
+            role: Number(formData.role),
+            status: formData.status
+          }
+
+          tableData.push(updateData)
+        }
+
+        setData(tableData)
+      } else {
+        console.log('register failed.')
+      }
     } catch (error: any) {
       console.log('Add user failed. ', error.message)
     }
@@ -109,7 +128,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, handle
         if (tableData) {
           //const newUpdate = { ...tableData[Number(foundIndex)], formData }
           // tableData[Number(index)].password = formData.password
-          tableData[Number(index)]
+          //tableData[Number(index)]
           tableData[Number(index)].firstname = formData.firstname
           tableData[Number(index)].lastname = formData.lastname
           tableData[Number(index)].dep = formData.dep
@@ -183,21 +202,43 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, handle
               )
             }}
           />
+
+          {updateData.email !== '' ? (
+            <CustomTextField
+              label='Email'
+              disabled
+              fullWidth
+              placeholder='your_email@gmail.com'
+              value={formData.email}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
+            />
+          ) : (
+            <CustomTextField
+              label='Email'
+              fullWidth
+              placeholder='your_email@gmail.com'
+              value={formData.email}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
+            />
+          )}
+
           <CustomTextField
-            label='Email'
-            disabled
+            select
             fullWidth
-            placeholder='johndoe@gmail.com'
-            value={formData.email}
-            onChange={e => setFormData({ ...formData, email: e.target.value })}
-          />
-          <CustomTextField
-            label='Department'
-            fullWidth
-            placeholder=''
+            id='select-department'
             value={formData.dep}
             onChange={e => setFormData({ ...formData, dep: e.target.value })}
-          />
+            label='Department'
+          >
+            {/* todo */}
+            {depData?.map((dep: any) => {
+              return (
+                <MenuItem key={dep.dep} value={dep.dep}>
+                  {dep.depname}
+                </MenuItem>
+              )
+            })}
+          </CustomTextField>
           <CustomTextField
             label='Position'
             fullWidth
@@ -205,13 +246,14 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, handle
             value={formData.position}
             onChange={e => setFormData({ ...formData, position: e.target.value })}
           />
+
           <CustomTextField
             select
             fullWidth
             id='Role'
             value={formData.role}
             onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
-            label='Select Role'
+            label='Role'
           >
             {/* todo */}
             {roleData?.map((role: any) => {
