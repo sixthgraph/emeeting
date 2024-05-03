@@ -12,7 +12,12 @@ const getData = async () => {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, token)
 
     if (response.data.message === 'success') {
-      return response.data.data.detail
+      // console.log('user list front end return roles')
+      // console.log(response.data.data.roles)
+      // console.log('user list front end return user')
+      // console.log(response.data.data.detail)
+
+      return response.data.data
     } else {
       return 'User not found'
     }
@@ -24,8 +29,10 @@ const getData = async () => {
 const UserListApp = async () => {
   // Vars
   const data = await getData()
+  const users = data.detail
+  const roles = data.roles
 
-  return <UserList userData={data} />
+  return <UserList userData={users} roleData={roles} />
 }
 
 export default UserListApp

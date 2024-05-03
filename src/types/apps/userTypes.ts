@@ -26,6 +26,7 @@ export type UserFormDataType = {
   lastname: string
   fullName: string
   email: string
+  password: string
   avatar: string
   avatarcolor: string
   dep: string
@@ -59,6 +60,10 @@ export type UsersTypeWithAction = UsersType & {
 
 export type UserRoleType = {
   [key: string]: { icon: string; color: string; name: string }
+}
+
+export type RoleType = {
+  [key: string]: { properties: []; roleid: number; rolename: string }
 }
 
 export type UserStatusType = {

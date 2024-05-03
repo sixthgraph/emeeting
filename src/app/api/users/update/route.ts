@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   console.log(reqBody)
 
   try {
-    const response = await fetch(`https://rd.infoma.net/routeflow-api/updateuserinfo`, {
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updateuserinfo`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

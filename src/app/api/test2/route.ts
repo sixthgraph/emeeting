@@ -14,7 +14,7 @@ export async function GET() {
   const token = serverSession?.user.token
 
   try {
-    const response = await fetch(`https://rd.infoma.net/routeflow-api/getuserinfo`, {
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getuserinfo`, {
       headers: {
         Authorization: `Bearer ${token}`,
         cache: 'force-cache'

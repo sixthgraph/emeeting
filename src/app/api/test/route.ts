@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     // CALL ROUTEFLOW-API WITH AXIOS
     const headers = { Authorization: `Bearer ${token}` }
-    const response = await axios.get('https://rd.infoma.net/routeflow-api/testgetuserinfo', { headers })
+    const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getuserinfo`, { headers })
 
     //*/
 

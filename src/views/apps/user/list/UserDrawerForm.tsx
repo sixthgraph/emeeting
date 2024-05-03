@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-// import { InputAdornment } from '@mui/material'
+import { InputAdornment } from '@mui/material'
 
 import axios from 'axios'
 
@@ -22,13 +22,14 @@ import axios from 'axios'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { UserFormDataType, UsersType } from '@/types/apps/userTypes'
+import type { RoleType, UserFormDataType, UsersType } from '@/types/apps/userTypes'
 
 type Props = {
   open: boolean
   updateData: UserFormDataType
   setData: any
   tableData?: UsersType[]
+  roleData?: RoleType[]
   handleClose: () => void
 }
 
@@ -38,6 +39,7 @@ const initialData = {
   lastname: '',
   fullName: '',
   email: '',
+  password: '',
   avatar: '',
   avatarcolor: '',
   dep: '',
@@ -46,7 +48,7 @@ const initialData = {
   status: ''
 }
 
-const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
+const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, handleClose }: Props) => {
   const router = useRouter()
   const params = useParams()
   const { lang: locale } = params
@@ -54,8 +56,8 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
 
-  // const [isPasswordShown, setIsPasswordShown] = useState(false)
-  // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -63,7 +65,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
     setFormData(initialData)
 
     try {
-      const response = await axios.post('/api/apps/signup', formData) //console.log('Add user success. ', response.data)
+      const response = await axios.post('/api/apps/signup', formData)
 
       router.push(`/${locale}/users`)
 
@@ -72,15 +74,6 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
         success: true,
         response
       })
-
-      /*
-      const savedUser = await axios.post('http://localhost:9995/register', formData)
-      return NextResponse.json({
-        message: 'User created successfully',
-        success: true,
-        savedUser
-      })
-      */
     } catch (error: any) {
       console.log('Add user failed. ', error.message)
     }
@@ -93,6 +86,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
       lastname: '',
       fullName: '',
       email: '',
+      password: '',
       avatar: '',
       avatarcolor: '',
       dep: '',
@@ -110,24 +104,21 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
         console.log('Update user success.')
         handleClose()
 
-        const newUserUpdate = tableData?.filter(user => {
-          if (formData && user.email === formData.email) {
-            user.firstname = formData.firstname
-            user.lastname = formData.lastname
+        const index = tableData?.findIndex(x => x.email == formData.email)
 
-            // user.password = formData.password
-            user.dep = formData.dep
-            user.position = formData.position
-            user.role = String(formData.role)
-            user.status = formData.status
+        if (tableData) {
+          //const newUpdate = { ...tableData[Number(foundIndex)], formData }
+          // tableData[Number(index)].password = formData.password
+          tableData[Number(index)]
+          tableData[Number(index)].firstname = formData.firstname
+          tableData[Number(index)].lastname = formData.lastname
+          tableData[Number(index)].dep = formData.dep
+          tableData[Number(index)].position = formData.position
+          tableData[Number(index)].role = String(formData.role)
+          tableData[Number(index)].status = formData.status
+        }
 
-            //return true
-          }
-
-          return true
-        })
-
-        setData(newUserUpdate)
+        setData(tableData)
       }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
@@ -174,7 +165,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
             value={formData.lastname}
             onChange={e => setFormData({ ...formData, lastname: e.target.value })}
           />
-          {/* <CustomTextField
+          <CustomTextField
             fullWidth
             label='Password'
             placeholder='············'
@@ -191,7 +182,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
                 </InputAdornment>
               )
             }}
-          /> */}
+          />
           <CustomTextField
             label='Email'
             disabled
@@ -222,10 +213,14 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, handleClose }: P
             onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
             label='Select Role'
           >
-            <MenuItem value='1'>Admin</MenuItem>
-            <MenuItem value='2'>Worker</MenuItem>
-            <MenuItem value='3'>Viewer</MenuItem>
-            <MenuItem value='4'>Super user</MenuItem>
+            {/* todo */}
+            {roleData?.map((role: any) => {
+              return (
+                <MenuItem key={role.roleid} value={role.roleid}>
+                  {role.rolename}
+                </MenuItem>
+              )
+            })}
           </CustomTextField>
           <CustomTextField
             select

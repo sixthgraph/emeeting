@@ -50,13 +50,11 @@ import axios from 'axios'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type { UsersType, UserRoleType, UsersTypeWithAction, UserStatusType } from '@/types/apps/userTypes'
+import type { UsersType, UserRoleType, UsersTypeWithAction, UserStatusType, RoleType } from '@/types/apps/userTypes'
 
 // Component Imports
 import TableFilters from './TableFilters'
 import UserDrawerForm from './UserDrawerForm'
-
-// import OptionMenu from '@core/components/option-menu'
 
 import CustomTextField from '@core/components/mui/TextField'
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -133,6 +131,10 @@ const userRoleObj: UserRoleType = {
   4: { icon: 'tabler-chart-pie', color: 'success', name: 'Super User' }
 }
 
+const roleObj: UserRoleType = {
+  //0: { icon: 'tabler-crown', color: 'error', name: 'Undefined' },
+}
+
 const userStatusObj: UserStatusType = {
   active: 'success',
   pending: 'warning',
@@ -147,8 +149,7 @@ let initialData = {
   email: '',
   avatar: '',
   avatarcolor: '',
-
-  // password: '',
+  password: '',
   dep: '',
   position: '',
   role: 0,
@@ -158,7 +159,15 @@ let initialData = {
 // Column Definitions
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
-const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
+const UserListTable = ({ tableData, roleData }: { tableData?: UsersType[]; roleData?: RoleType[] }) => {
+  roleData?.map(role => {
+    const id = role.roleid
+    const name = role.rolename
+
+    //TODO UPDATE ROUTE FLOW API FIELD FOR "ICON, COLOR" AND REPLACE userRoleObj with userRoleObj2
+    roleObj[Number(id)] = { icon: 'tabler-crown', color: 'error', name: String(name) }
+  })
+
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -181,20 +190,13 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
       email: '',
       avatar: '',
       avatarcolor: '',
-
-      // password: '',
+      password: '',
       dep: '',
       position: '',
       role: 0,
       status: ''
     }
     setAddUserOpen(true)
-  }
-
-  const updateUserData = () => {
-    console.log('UserLIstTable initialData ===')
-    console.log(initialData)
-    setAddUserOpen(!addUserOpen)
   }
 
   const handleDeleteUser = async (email: object) => {
@@ -276,7 +278,7 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             />
             <Typography className='capitalize' color='text.primary'>
               {/* {row.original.role} */}
-              {row.original.role && userRoleObj[row.original.role].name}
+              {row.original.role && roleObj[row.original.role].name}
             </Typography>
           </div>
         )
@@ -307,47 +309,23 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
             </IconButton>
-            {/* <IconButton>
-              <Link href={getLocalizedUrl('apps/user/view', locale as Locale)} className='flex'>
-                <i className='tabler-eye text-[22px] text-textSecondary' />
-              </Link>
-            </IconButton> */}
-
             <IconButton
               onClick={() => {
+                // initialData.password = ''
                 initialData.firstname = row.original.firstname
                 initialData.lastname = row.original.lastname
-
-                // initialData.password = ''
                 initialData.email = row.original.email
                 initialData.dep = row.original.dep
                 initialData.position = row.original.position
                 initialData.avatar = row.original.avatar
                 initialData.role = Number(row.original.role)
                 initialData.status = row.original.status
-                updateUserData()
+
+                setAddUserOpen(!addUserOpen)
               }}
             >
               <i className='tabler-edit text-[22px] text-textSecondary' />
             </IconButton>
-
-            {/* sg here */}
-
-            {/* <OptionMenu
-              iconClassName='text-[22px] text-textSecondary'
-              options={[
-                {
-                  text: 'Download',
-                  icon: 'tabler-download text-[22px]',
-                  menuItemProps: { className: 'flex items-center gap-2 text-textSecondary' }
-                },
-                {
-                  text: 'Edit',
-                  icon: 'tabler-edit text-[22px]',
-                  menuItemProps: { className: 'flex items-center gap-2 text-textSecondary' }
-                }
-              ]}
-            /> */}
           </div>
         ),
         enableSorting: false
@@ -431,7 +409,7 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
-              onClick={() => userDrawerOpenHandle()} // onClick={() => setAddUserOpen(!addUserOpen)}
+              onClick={() => userDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
               Add New User
@@ -508,6 +486,7 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
         setData={setData}
         tableData={tableData}
         updateData={initialData}
+        roleData={roleData}
         handleClose={() => setAddUserOpen(!addUserOpen)}
       />
     </>
