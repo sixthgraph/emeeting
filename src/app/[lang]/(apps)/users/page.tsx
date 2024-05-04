@@ -9,14 +9,17 @@ const getData = async () => {
 
   try {
     const token = { token: session?.user.token }
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, token)
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0'
+    }
+
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, token, { headers })
 
     if (response.data.message === 'success') {
-      // console.log('user list front end return roles')
-      // console.log(response.data.data.roles)
-      // console.log('user list front end return user')
-      // console.log(response.data.data.detail)
-
       return response.data.data
     } else {
       return 'User not found'

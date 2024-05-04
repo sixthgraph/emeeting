@@ -8,7 +8,7 @@ import { useEffect, useState, useMemo } from 'react'
 // import { useParams } from 'next/navigation'
 
 // MUI Imports
-import { NextResponse } from 'next/server'
+// import { NextResponse } from 'next/server'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -226,20 +226,31 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     setAddUserOpen(true)
   }
 
+  console.log(tableData)
+
   const handleDeleteUser = async (email: object) => {
-    console.log('email ===')
-    console.log(email)
-
     try {
-      const response = await axios.post('/api/users/delete', email)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/delete`, email)
 
-      console.log('Deleted user successfully.', response.data)
+      if (response.data.message === 'success') {
+        console.log(response.data.data.detail)
 
-      return NextResponse.json({
-        message: 'User deleted successfully',
-        success: true,
-        response
-      })
+        //todo update tableData
+        const em: any = email
+        const newUpdate = tableData?.filter(el => el.email !== em.email)
+
+        console.log('newUpdate === ', newUpdate)
+        setData(newUpdate)
+
+        tableData = data
+
+        console.log(tableData)
+
+        //todo update refresh token
+        console.log('Update token ===', response.data.token)
+      } else {
+        console.error('User delete failed')
+      }
     } catch (error: any) {
       console.log('Delete user failed. ', error.message)
     }
