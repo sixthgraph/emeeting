@@ -1,11 +1,11 @@
 'use client'
 
 // React Imports
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 // MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -19,11 +19,14 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Divider from '@mui/material/Divider'
 
 // Third-party Imports
+import { Controller, useForm } from 'react-hook-form'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import { object, minLength, string, email } from 'valibot'
+import type { SubmitHandler } from 'react-hook-form'
+import type { Input } from 'valibot'
 import classnames from 'classnames'
 
 import axios from 'axios'
-
-import { registerFormSchema } from '../schemas/formSchema'
 
 // Type Imports
 import type { SystemMode } from '@core/types'
@@ -64,10 +67,26 @@ const MaskImg = styled('img')({
   zIndex: -1
 })
 
+type FormData = Input<typeof schema>
+type ErrorType = {
+  message: string[]
+}
+
+const schema = object({
+  firstname: string([minLength(1, 'This field is required')]),
+  lastname: string([minLength(1, 'This field is required')]),
+  email: string([minLength(1, 'This field is required'), email('Email is invalid')]),
+  password: string([
+    minLength(1, 'This field is required'),
+    minLength(8, 'Password must be at least 8 characters long')
+  ])
+})
+
 const Register = ({ mode }: { mode: SystemMode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const [signupStatus, setSignupStatus] = useState('Make your app management easy and fun!')
+  const [signupStatus, setSignupStatus] = useState<string>('')
+  const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
@@ -78,11 +97,27 @@ const Register = ({ mode }: { mode: SystemMode }) => {
   const borderedLightIllustration = '/images/illustrations/auth/v2-register-light-border.png'
 
   // Hooks
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const { lang: locale } = useParams()
   const { settings } = useSettings()
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const authBackground = useImageVariant(mode, lightImg, darkImg)
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: valibotResolver(schema),
+    defaultValues: {
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: ''
+    }
+  })
 
   const characterIllustration = useImageVariant(
     mode,
@@ -92,85 +127,31 @@ const Register = ({ mode }: { mode: SystemMode }) => {
     borderedDarkIllustration
   )
 
-  interface FormDataType {
-    firstname: string
-    lastname: string
-    email: string
-    password: string
-  }
-
-  // Vars
-  const initialData = {
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: ''
-  }
-
-  const handleReset = () => {
-    setTimeout(() => {
-      setFormData({
-        firstname: '',
-        lastname: '',
-        email: '',
-        password: ''
-      })
-    }, 300)
-  }
-
-  useEffect(() => {
-    handleReset()
-  }, [])
-
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-  const [formData, setFormData] = useState<FormDataType>(initialData)
-  const [errors, setErrors] = useState<any[]>([])
 
-  const onSignup = async () => {
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     try {
-      const parsedData = registerFormSchema.safeParse(formData)
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, {
+        firstname: data.firstname,
+        lastname: data.lastname,
+        password: data.password,
+        email: data.email,
+        redirect: false
+      })
 
-      console.log('parsedData ---- ')
-      console.log(parsedData)
+      if (res && res.data.success) {
+        const redirectURL = searchParams.get('redirectTo') ?? '/login'
 
-      if (!parsedData.success) {
-        const errArr: any[] = []
-        const { errors: err } = parsedData.error
-
-        for (let i = 0; i < err.length; i++) {
-          errArr.push({ for: err[i].path[0], message: err[i].message })
-          setErrors(errArr)
-        }
-
-        setErrors(errArr)
-
-        throw err
+        router.push(getLocalizedUrl(redirectURL, locale as Locale))
       }
+    } catch (error: any) {
+      // console.log('error === ', error)
 
-      console.log('Form submitted successfully', parsedData.data)
-
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
-
-      if (response.data.success) {
-        console.log('register success. ========> return : ', response.data)
-        setSignupStatus('Signup success, Please signin!')
-        handleReset()
-
-        return response.data
-      } else {
-        console.log('Singup failed.')
-        setSignupStatus('Singup failed.')
-
-        return null
+      if (error) {
+        //setErrorState(error.response.data)
+        console.log(error.response.data.error)
+        setSignupStatus(error.response.data.error)
       }
-
-      //*/
-
-      // return user;
-    } catch (err) {
-      //console.log(err)
-      console.error('Error submitting form:', err)
-      setSignupStatus('Failed to signup!')
     }
   }
 
@@ -194,60 +175,110 @@ const Register = ({ mode }: { mode: SystemMode }) => {
         <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-8 sm:mbs-11 md:mbs-0'>
           <div className='flex flex-col gap-1'>
             <Typography variant='h4'>Adventure starts here 🚀</Typography>
-            <Typography>{signupStatus}</Typography>
+            {signupStatus === '' ? (
+              <Typography>Make your app management easy and fun!</Typography>
+            ) : (
+              <Typography sx={{ color: 'error.main' }}>{signupStatus}</Typography>
+            )}
           </div>
-          <form
-            noValidate
-            autoComplete='off'
-            onSubmit={e => {
-              e.preventDefault()
-              onSignup()
-            }}
-            className='flex flex-col gap-6'
-          >
-            <CustomTextField
-              autoFocus
-              fullWidth
-              label='Firstname'
-              placeholder='Enter your firstname'
-              value={formData.firstname}
-              onChange={e => setFormData({ ...formData, firstname: e.target.value })}
+
+          <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
+            <Controller
+              name='firstname'
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  autoFocus
+                  fullWidth
+                  label='Firstname'
+                  placeholder='Enter your firstname'
+                  onChange={e => {
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  {...((errors.firstname || errorState !== null) && {
+                    error: true,
+                    helperText: errors?.firstname?.message || errorState?.message[0]
+                  })}
+                />
+              )}
             />
-            {errors.find(error => error.for === 'firstname')?.message}
-            <CustomTextField
-              fullWidth
-              label='Lastname'
-              placeholder='Enter your lastname'
-              value={formData.lastname}
-              onChange={e => setFormData({ ...formData, lastname: e.target.value })}
+
+            <Controller
+              name='lastname'
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  fullWidth
+                  label='Lastname'
+                  placeholder='Enter your lastname'
+                  onChange={e => {
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  {...((errors.lastname || errorState !== null) && {
+                    error: true,
+                    helperText: errors?.lastname?.message || errorState?.message[0]
+                  })}
+                />
+              )}
             />
-            {errors.find(error => error.for === 'lastname')?.message}
-            <CustomTextField
-              fullWidth
-              label='Email'
-              placeholder='Enter your email'
-              value={formData.email}
-              onChange={e => setFormData({ ...formData, email: e.target.value })}
+            <Controller
+              name='email'
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  autoFocus
+                  fullWidth
+                  type='email'
+                  label='Email'
+                  placeholder='Enter your email'
+                  onChange={e => {
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  {...((errors.email || errorState !== null) && {
+                    error: true,
+                    helperText: errors?.email?.message || errorState?.message[0]
+                  })}
+                />
+              )}
             />
-            {errors.find(error => error.for === 'email')?.message}
-            <CustomTextField
-              fullWidth
-              label='Password'
-              placeholder='············'
-              value={formData.password}
-              onChange={e => setFormData({ ...formData, password: e.target.value })}
-              type={isPasswordShown ? 'text' : 'password'}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                      <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
+            <Controller
+              name='password'
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  fullWidth
+                  label='Password'
+                  placeholder='············'
+                  id='login-password'
+                  type={isPasswordShown ? 'text' : 'password'}
+                  onChange={e => {
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                          <i className={isPasswordShown ? 'tabler-eye' : 'tabler-eye-off'} />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                  {...(errors.password && { error: true, helperText: errors.password.message })}
+                />
+              )}
             />
-            {errors.find(error => error.for === 'password')?.message}
             <FormControlLabel
               control={<Checkbox />}
               label={

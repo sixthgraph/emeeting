@@ -1,14 +1,10 @@
 'use client'
 
 // React Imports
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // Next Imports
-// import { useRouter } from 'next/navigation'
-import { usePathname } from 'next/navigation'
 import { useParams } from 'next/navigation'
-
-// import axios from 'axios'
 
 import { signIn } from 'next-auth/react'
 
@@ -24,6 +20,11 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Divider from '@mui/material/Divider'
 
 // Third-party Imports
+import { Controller, useForm } from 'react-hook-form'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import { object, minLength, string, email } from 'valibot'
+import type { SubmitHandler } from 'react-hook-form'
+import type { Input } from 'valibot'
 import classnames from 'classnames'
 
 // Type Imports
@@ -74,13 +75,24 @@ type Props = {
   error?: string
 }
 
+type ErrorType = {
+  message: string[]
+}
+
+type FormData = Input<typeof schema>
+
+const schema = object({
+  email: string([minLength(1, 'This field is required'), email('Email is invalid')]),
+  password: string([
+    minLength(1, 'This field is required'),
+    minLength(8, 'Password must be at least 8 characters long')
+  ])
+})
+
 const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
-
-  const pathname = usePathname()
-
-  // const [changes, setChanges] = useState(0);
+  const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
@@ -98,6 +110,18 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   const authBackground = useImageVariant(mode, lightImg, darkImg)
   const { lang: locale } = useParams()
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: valibotResolver(schema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  })
+
   const characterIllustration = useImageVariant(
     mode,
     lightIllustration,
@@ -106,40 +130,28 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
     borderedDarkIllustration
   )
 
-  type FormDataType = {
-    email: string
-    password: string
-  }
-
-  // Vars
-  const initialData = {
-    email: '',
-    password: ''
-  }
-
-  const handleReset = () => {
-    setTimeout(() => {
-      setFormData({
-        email: '',
-        password: ''
-      })
-    }, 300)
-  }
-
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  const [formData, setFormData] = useState<FormDataType>(initialData)
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+    const res = await signIn('credentials', {
+      username: data.email,
+      password: data.password,
+      redirect: true,
+      callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
+    })
 
-  const [buttonDisable, setButtonDisable] = useState(false)
+    if (res && res.ok && res.error === null) {
+      // Vars
+      // const redirectURL = searchParam.get('redirectTo') ?? '/'
+      // router.push(getLocalizedUrl(redirectURL, locale as Locale))
+    } else {
+      if (res?.error) {
+        const error = JSON.parse(res.error)
 
-  const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    console.log(`Route changed to: ${pathname}`)
-    handleReset()
-
-    //setChanges((prev) => prev + 1);
-  }, [pathname])
+        setErrorState(error)
+      }
+    }
+  }
 
   const githubLogin = async () => {
     console.log('githubLogin start!')
@@ -148,34 +160,6 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
       callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
     })
   }
-
-  const onLogin = async () => {
-    console.log('onLogin Start')
-
-    try {
-      setLoading(true)
-      await signIn('credentials', {
-        username: formData.email,
-        password: formData.password,
-        redirect: true,
-        callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
-      })
-    } catch (error: any) {
-      console.log('Login failed. ', error.message)
-
-      //toast.error(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (formData.email.length > 0 && formData.password.length > 0) {
-      setButtonDisable(true)
-    } else {
-      setButtonDisable(false)
-    }
-  }, [formData])
 
   return (
     <div className='flex bs-full justify-center'>
@@ -202,79 +186,90 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
         </div>
         <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
           <div className='flex flex-col gap-1'>
-            <Typography variant='h4'>
-              {loading ? 'Processing' : `Welcome to ${themeConfig.templateName}! 👋🏻`}
-            </Typography>
+            <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
             <Typography>Please sign-in to your account and start the adventure</Typography>
             {!!props.error && <Typography>Authentication Failed</Typography>}
           </div>
-          <form
-            noValidate
-            autoComplete='off'
-            onSubmit={e => {
-              e.preventDefault()
-              onLogin()
 
-              //router.push('/')
-            }}
-            className='flex flex-col gap-5'
-          >
-            <CustomTextField
-              autoFocus
-              fullWidth
-              label='Email or Username'
-              placeholder='Enter your email or username'
-              value={formData.email}
-              onChange={e => setFormData({ ...formData, email: e.target.value })}
+          <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
+            <Controller
+              name='email'
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  autoFocus
+                  fullWidth
+                  type='email'
+                  label='Email'
+                  placeholder='Enter your email'
+                  onChange={e => {
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  {...((errors.email || errorState !== null) && {
+                    error: true,
+                    helperText: errors?.email?.message || errorState?.message[0]
+                  })}
+                />
+              )}
             />
-            <CustomTextField
-              fullWidth
-              label='Password'
-              placeholder='············'
-              id='outlined-adornment-password'
-              type={isPasswordShown ? 'text' : 'password'}
-              value={formData.password}
-              onChange={e => setFormData({ ...formData, password: e.target.value })}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                      <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
+            <Controller
+              name='password'
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  fullWidth
+                  label='Password'
+                  placeholder='············'
+                  id='login-password'
+                  type={isPasswordShown ? 'text' : 'password'}
+                  onChange={e => {
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                          <i className={isPasswordShown ? 'tabler-eye' : 'tabler-eye-off'} />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                  {...(errors.password && { error: true, helperText: errors.password.message })}
+                />
+              )}
             />
+
             <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
               <FormControlLabel control={<Checkbox />} label='Remember me' />
               <Typography className='text-end' color='primary' component={Link}>
                 Forgot password?
               </Typography>
             </div>
-
             <Button fullWidth variant='contained' type='submit'>
-              {buttonDisable ? 'Waiting' : 'Login'}
+              Login
             </Button>
-
-            {/* {buttonDisable ? (
-              <Button fullWidth variant='contained'>
-                waiting
-              </Button>
-            ) : (
-              <Button fullWidth variant='contained' type='submit'>
-                Login
-              </Button>
-            )} */}
             <div className='flex justify-center items-center flex-wrap gap-2'>
               <Typography>New on our platform?</Typography>
-              {/* <Typography component={Link} color='primary'>
-                Create an account
-              </Typography> */}
               <Typography component={Link} href={getLocalizedUrl('/register', locale as Locale)} color='primary'>
                 Create an account
               </Typography>
             </div>
             <Divider className='gap-2 text-textPrimary'>or</Divider>
+            <Button
+              color='secondary'
+              className='self-center text-textPrimary'
+              startIcon={<img src='/images/logos/google.png' alt='Google' width={22} />}
+              sx={{ '& .MuiButton-startIcon': { marginInlineEnd: 3 } }}
+              onClick={() => signIn('google')}
+            >
+              Sign in with Google
+            </Button>
             <div className='flex justify-center items-center gap-1.5'>
               <IconButton className='text-facebook' size='small'>
                 <i className='tabler-brand-facebook-filled' />

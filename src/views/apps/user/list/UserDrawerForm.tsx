@@ -25,6 +25,7 @@ import axios from 'axios'
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { DepType, RoleType, UserFormDataType, UsersType } from '@/types/apps/userTypes'
+import { addUserFormSchema } from '@/schemas/formSchema'
 
 type Props = {
   open: boolean
@@ -58,19 +59,38 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
 
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
+  const [errors, setErrors] = useState<any[]>([])
 
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    handleClose()
+
     setFormData(initialData)
 
     try {
+      const parsedData = addUserFormSchema.safeParse(formData)
+
+      if (!parsedData.success) {
+        const errArr: any[] = []
+        const { errors: err } = parsedData.error
+
+        //sg here
+        for (let i = 0; i < err.length; i++) {
+          errArr.push({ for: err[i].path[0], message: err[i].message })
+          setErrors(errArr)
+        }
+
+        setErrors(errArr)
+
+        throw err
+      }
+
+      console.log('Form submitted successfully', parsedData.data)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
 
-      console.log('signup response===', response.data) // sg here
+      console.log('signup response===', response.data)
 
       if (response.data.success) {
         console.log('signup success')
@@ -90,6 +110,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
         }
 
         setData(tableData)
+        handleClose()
       } else {
         console.log('register failed.')
       }
@@ -177,6 +198,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             value={formData.firstname}
             onChange={e => setFormData({ ...formData, firstname: e.target.value })}
           />
+          {errors.find(error => error.for === 'firstname')?.message}
           <CustomTextField
             label='Lastname'
             fullWidth
@@ -184,6 +206,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             value={formData.lastname}
             onChange={e => setFormData({ ...formData, lastname: e.target.value })}
           />
+          {errors.find(error => error.for === 'lastname')?.message}
           <CustomTextField
             fullWidth
             label='Password'
@@ -202,7 +225,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
               )
             }}
           />
-
+          {errors.find(error => error.for === 'password')?.message}
           {updateData.email !== '' ? (
             <CustomTextField
               label='Email'
@@ -221,7 +244,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
               onChange={e => setFormData({ ...formData, email: e.target.value })}
             />
           )}
-
+          {errors.find(error => error.for === 'email')?.message}
           <CustomTextField
             select
             fullWidth
@@ -239,6 +262,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
               )
             })}
           </CustomTextField>
+          {errors.find(error => error.for === 'department')?.message}
           <CustomTextField
             label='Position'
             fullWidth
@@ -246,7 +270,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             value={formData.position}
             onChange={e => setFormData({ ...formData, position: e.target.value })}
           />
-
+          {errors.find(error => error.for === 'position')?.message}
           <CustomTextField
             select
             fullWidth
@@ -264,6 +288,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
               )
             })}
           </CustomTextField>
+          {errors.find(error => error.for === 'role')?.message}
           <CustomTextField
             select
             fullWidth
@@ -276,7 +301,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             <MenuItem value='active'>Active</MenuItem>
             <MenuItem value='inactive'>Inactive</MenuItem>
           </CustomTextField>
-
+          {errors.find(error => error.for === 'status')?.message}
           <div className='flex items-center gap-4'>
             {updateData.email !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
