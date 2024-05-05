@@ -247,7 +247,12 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
 
             <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
               <FormControlLabel control={<Checkbox />} label='Remember me' />
-              <Typography className='text-end' color='primary' component={Link}>
+              <Typography
+                className='text-end'
+                color='primary'
+                component={Link}
+                href={getLocalizedUrl('/forgot-password', locale as Locale)}
+              >
                 Forgot password?
               </Typography>
             </div>

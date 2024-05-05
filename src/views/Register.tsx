@@ -21,7 +21,6 @@ import Divider from '@mui/material/Divider'
 // Third-party Imports
 import { Controller, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import { object, minLength, string, email } from 'valibot'
 import type { SubmitHandler } from 'react-hook-form'
 import type { Input } from 'valibot'
 import classnames from 'classnames'
@@ -42,6 +41,9 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
 import { getLocalizedUrl } from '@/utils/i18n'
+
+//form Schema Import
+import { RegisterSchema } from '@/schemas/formSchema'
 
 // Styled Custom Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -67,20 +69,10 @@ const MaskImg = styled('img')({
   zIndex: -1
 })
 
-type FormData = Input<typeof schema>
+type FormData = Input<typeof RegisterSchema>
 type ErrorType = {
   message: string[]
 }
-
-const schema = object({
-  firstname: string([minLength(1, 'This field is required')]),
-  lastname: string([minLength(1, 'This field is required')]),
-  email: string([minLength(1, 'This field is required'), email('Email is invalid')]),
-  password: string([
-    minLength(1, 'This field is required'),
-    minLength(8, 'Password must be at least 8 characters long')
-  ])
-})
 
 const Register = ({ mode }: { mode: SystemMode }) => {
   // States
@@ -110,7 +102,7 @@ const Register = ({ mode }: { mode: SystemMode }) => {
     handleSubmit,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: valibotResolver(schema),
+    resolver: valibotResolver(RegisterSchema),
     defaultValues: {
       firstname: '',
       lastname: '',

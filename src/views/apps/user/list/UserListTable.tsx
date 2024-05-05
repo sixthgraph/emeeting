@@ -226,8 +226,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     setAddUserOpen(true)
   }
 
-  console.log(tableData)
-
   const handleDeleteUser = async (email: object) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/delete`, email)
