@@ -2,23 +2,24 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+//import { headers } from 'next/headers'
+
 import axios from 'axios'
 
-// import { headers } from 'next/headers'
+import { getServerSession } from 'next-auth'
 
-// import { getServerSession } from 'next-auth'
-
-// import { options } from './../../auth/[...nextauth]/options'
+import { options } from './../../auth/[...nextauth]/options'
 
 // export async function GET() {
+
 export async function POST(req: NextRequest) {
-  // const serverSession = await getServerSession(options)
-
-  // console.log('test server session =========> ')
-  // console.log(serverSession)
-
   const reqBody = await req.json()
   const { token } = reqBody
+
+  const serverSession = await getServerSession(options)
+  const token2 = serverSession?.user.token
+
+  console.log('server token ==', token2)
 
   //TOKEN FOR SEND HEADER TO ROUTEFLOW API
   // console.log('token =====')

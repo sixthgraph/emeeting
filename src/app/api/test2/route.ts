@@ -13,6 +13,8 @@ export async function GET() {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 
+  console.log('server token ==', token)
+
   try {
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getuserinfo`, {
       headers: {
