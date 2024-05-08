@@ -7,33 +7,17 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 
 // Type Imports
-import type { UsersType } from '@/types/apps/userTypes'
+// import type { UsersType } from '@/types/apps/userTypes'
 
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
+import { GroupType } from '@/types/apps/groupTypes'
 
-const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersType[] }) => {
-  // States
-  const [role, setRole] = useState<UsersType['role']>('')
-  const [status, setStatus] = useState<UsersType['status']>('')
-
-  // console.log('tableData === >', tableData)
-
+const TableFilters = ({ setData, tableData }: { setData: any; tableData?: GroupType[] }) => {
   useEffect(() => {
-    const filteredData = tableData?.filter(user => {
-      if (role && String(user.role) !== role) return false
-
-      // if (plan && user.currentPlan !== plan) return false
-      if (status && user.status !== status) return false
-
-      return true
-    })
-
-    //   setData(filteredData)
-    // }, [role, plan, status, tableData, setData])
-
+    const filteredData = tableData?.filter(user => {})
     setData(filteredData)
-  }, [role, status, tableData, setData])
+  }, [tableData, setData])
 
   return (
     <CardContent>
@@ -43,8 +27,8 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersT
             select
             fullWidth
             id='select-role'
-            value={role}
-            onChange={e => setRole(e.target.value)}
+            // value={role}
+            // onChange={e => setRole(e.target.value)}
             SelectProps={{ displayEmpty: true }}
           >
             <MenuItem value=''>Select Role</MenuItem>
@@ -53,21 +37,6 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersT
             <MenuItem value='2'>Worker</MenuItem>
             <MenuItem value='3'>Viewer</MenuItem>
             <MenuItem value='4'>Super User</MenuItem>
-          </CustomTextField>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <CustomTextField
-            select
-            fullWidth
-            id='select-status'
-            value={status}
-            onChange={e => setStatus(e.target.value)}
-            SelectProps={{ displayEmpty: true }}
-          >
-            <MenuItem value=''>Select Status</MenuItem>
-            <MenuItem value='pending'>Pending</MenuItem>
-            <MenuItem value='active'>Active</MenuItem>
-            <MenuItem value='inactive'>Inactive</MenuItem>
           </CustomTextField>
         </Grid>
       </Grid>

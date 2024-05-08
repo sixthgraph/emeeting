@@ -1,111 +1,137 @@
-// // React Imports
+// React Imports
 import { useEffect, useState } from 'react'
 
-// // MUI Imports
-import { NextResponse } from 'next/server'
-import { useRouter, useParams } from 'next/navigation'
+// MUI Imports
+//import { NextResponse } from 'next/server'
+//import { useRouter, useParams } from 'next/navigation'
 
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
+
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
-// // Component Imports
-// import { InputAdornment } from '@mui/material'
+// Component Imports
+import { InputAdornment } from '@mui/material'
 
 import axios from 'axios'
 
+// import { any } from 'zod'
+
+// import { any } from 'zod'
+
 import CustomTextField from '@core/components/mui/TextField'
+
+import type { GroupFormDataType, GroupType } from '@/types/apps/groupTypes'
+import { addUserFormSchema } from '@/schemas/formSchema'
 
 type Props = {
   open: boolean
   updateData: GroupFormDataType
+  setData: any
+  tableData?: GroupType[]
   handleClose: () => void
-}
-
-type GroupFormDataType = {
-  GroupId: string
-  Itemno: string
-  Groupname: string
-  Createby: string
-  Member: string
 }
 
 // Vars
 const initialData = {
-  GroupId: '',
-  Itemno: '',
-  Groupname: '',
-  Createby: '',
-  Member: ''
+  groupid: '',
+  itemno: '',
+  groupname: '',
+  createby: '',
+  member: ''
 }
 
-const GroupDrawerForm = ({ open, updateData, handleClose }: Props) => {
-  const router = useRouter()
-  const params = useParams()
-  const { lang: locale } = params
-
+const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<GroupFormDataType>(initialData)
-
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  const [errors, setErrors] = useState<any[]>([])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    handleClose()
+
     setFormData(initialData)
 
     try {
-      const response = await axios.post('/api/apps/signup', formData) //console.log('Add user success. ', response.data)
+      const parsedData = addUserFormSchema.safeParse(formData)
 
-      router.push(`/${locale}/users`)
+      if (!parsedData.success) {
+        const errArr: any[] = []
+        const { errors: err } = parsedData.error
 
-      return NextResponse.json({
-        message: 'Group created successfully',
-        success: true,
-        response
-      })
+        //sg here
+        for (let i = 0; i < err.length; i++) {
+          errArr.push({ for: err[i].path[0], message: err[i].message })
+          setErrors(errArr)
+        }
+
+        setErrors(errArr)
+
+        throw err
+      }
+
+      console.log('Form submitted successfully', parsedData.data)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
+
+      console.log('signup response===', response.data)
+
+      if (response.data.success) {
+        console.log('signup success')
+
+        if (tableData) {
+          const updateData: any = {
+            Groupname: formData.groupname,
+            Member: formData.member
+          }
+
+          tableData.push(updateData)
+        }
+
+        setData(tableData)
+        handleClose()
+      } else {
+        console.log('register failed.')
+      }
     } catch (error: any) {
-      console.log('Add group failed. ', error.message)
+      console.log('Add user failed. ', error.message)
     }
   }
 
   const handleReset = () => {
     handleClose()
     setFormData({
-      GroupId: '',
-      Itemno: '',
-      Groupname: '',
-      Createby: '',
-      Member: ''
+      groupname: '',
+      member: ''
     })
   }
 
   const handleUpdateData = async () => {
-    console.log('handleUpdateData start === ')
-    console.log(formData)
-
     try {
-      const response = await axios.post('/api/apps/user-update', formData)
+      const response = await axios.post('/api/users/update', formData)
 
-      console.log('Update user success. ', response.data)
+      if (response.data.message === 'success') {
+        console.log('Update user success.')
+        handleClose()
 
-      return NextResponse.json({
-        message: 'User created successfully',
-        success: true,
-        response
-      })
+        const index = tableData?.findIndex(x => x.groupname == formData.groupname)
+
+        if (tableData) {
+          //const newUpdate = { ...tableData[Number(foundIndex)], formData }
+          // tableData[Number(index)].password = formData.password
+          //tableData[Number(index)]
+          tableData[Number(index)].groupname = formData.groupname
+        }
+
+        setData(tableData)
+      }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
     }
   }
 
   useEffect(() => {
-    console.log('open = ', open)
     setFormData(updateData)
   }, [open, updateData])
 
@@ -119,7 +145,7 @@ const GroupDrawerForm = ({ open, updateData, handleClose }: Props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
-        {updateData.GroupId !== '' ? (
+        {updateData.groupname !== '' ? (
           <Typography variant='h5'>Edit Group</Typography>
         ) : (
           <Typography variant='h5'>Add New Group</Typography>
@@ -132,14 +158,16 @@ const GroupDrawerForm = ({ open, updateData, handleClose }: Props) => {
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           <CustomTextField
-            label='Group Name'
+            label='Groupname'
             fullWidth
-            placeholder='John Doe'
-            value={formData.Groupname}
-            onChange={e => setFormData({ ...formData, Groupname: e.target.value })}
+            placeholder=''
+            value={formData.groupname}
+            onChange={e => setFormData({ ...formData, groupname: e.target.value })}
           />
+          {errors.find(error => error.for === 'Groupname')?.message}
+
           <div className='flex items-center gap-4'>
-            {updateData.GroupId !== '' ? (
+            {updateData.groupname !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
                 Edit
               </Button>

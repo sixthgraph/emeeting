@@ -1,19 +1,46 @@
-// import Grid from '@mui/material/Grid'
+'use client'
 
-// // Type Imports
-// import type { UsersType } from '@/types/apps/userTypes'
+import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import Grid from '@mui/material/Grid'
 
-// // Component Imports
-// import GroupListTable from './GroupListTable'
+// Type Imports
+import type { GroupType } from '@/types/apps/groupTypes'
 
-// const GroupList = ({ groupData }: { groupData?: UsersType[] }) => {
-//   return (
-//     <Grid container spacing={6}>
-//       <Grid item xs={12}>
-//         <GroupListTable tableData={groupData} />
-//       </Grid>
-//     </Grid>
-//   )
-// }
+// Component Imports
+import GroupListTable from './GroupListTable'
 
-// export default GroupList
+const GroupList = ({ groupData, updateToken }: { groupData?: GroupType[]; updateToken?: string }) => {
+  const { data: session, update } = useSession()
+  const [tokenData, setTokenData] = useState(session?.user.token)
+
+  async function updateSession() {
+    await update({
+      ...session,
+      user: {
+        ...session?.user,
+        token: updateToken
+      }
+    })
+  }
+
+  useEffect(() => {
+    updateSession()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenData])
+
+  if (tokenData !== updateToken) {
+    console.log('update token')
+    setTokenData(updateToken)
+  }
+
+  return (
+    <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <GroupListTable tableData={groupData} />
+      </Grid>
+    </Grid>
+  )
+}
+
+export default GroupList

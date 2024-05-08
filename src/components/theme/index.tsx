@@ -34,6 +34,7 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Core Theme Imports
 import defaultCoreTheme from '@core/theme'
+// import defaultCoreTheme from '@/components/themeV2'
 
 type Props = ChildrenType & {
   direction: Direction

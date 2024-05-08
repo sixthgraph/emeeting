@@ -208,6 +208,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   // Hooks
   //const { lang: locale } = useParams()
 
+  console.log('data ===', data)
+
   const userDrawerOpenHandle = () => {
     // sg here
     initialData = {
