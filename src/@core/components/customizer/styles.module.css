@@ -60,7 +60,7 @@
 }
 
 .textPrimaryColor {
-  color: var(--mui-palette-text-primary);
+  color: var(--mui-palette-text-secondary);
 }
 
 .dotStyles {
