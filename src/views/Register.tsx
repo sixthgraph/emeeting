@@ -83,10 +83,10 @@ const Register = ({ mode }: { mode: SystemMode }) => {
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
   const lightImg = '/images/pages/auth-mask-light.png'
-  const darkIllustration = 'http://rd.excelink.co.th/softflow-express/assets/media/illustrations/sketchy-1/14.png'
-  const lightIllustration = 'http://rd.excelink.co.th/softflow-express/assets/media/illustrations/sketchy-1/14.png'
-  const borderedDarkIllustration = '/images/illustrations/auth/v2-register-dark-border.png'
-  const borderedLightIllustration = '/images/illustrations/auth/v2-register-light-border.png'
+  const darkIllustration = '/images/illustrations/auth/V3-register-dark.png'
+  const lightIllustration = '/images/illustrations/auth/V3-register-light.png'
+  const borderedDarkIllustration = '/images/illustrations/auth/V3-register-dark-border.png'
+  const borderedLightIllustration = '/images/illustrations/auth/V3-register-light-border.png'
 
   // Hooks
   const router = useRouter()

@@ -87,6 +87,10 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
           <MenuItem href={`/${locale}/my-items`} icon={<i className='tabler-box' />}>
             My Items
           </MenuItem>
+          {/* <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler:window-maximize' />}> */}
+          <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler-window-maximize' />}>
+            Assignment
+          </MenuItem>
           <MenuItem href={`/${locale}/collabs`} icon={<i className='tabler-brand-asana' />}>
             Collabs
           </MenuItem>

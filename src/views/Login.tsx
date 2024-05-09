@@ -97,10 +97,10 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
   const lightImg = '/images/pages/auth-mask-light.png'
-  const darkIllustration = 'http://rd.excelink.co.th/softflow-ui/assets/media/illustrations/sketchy-1/9.png'
-  const lightIllustration = 'http://rd.excelink.co.th/softflow-ui/assets/media/illustrations/sketchy-1/9.png'
-  const borderedDarkIllustration = '/images/illustrations/auth/v2-login-dark-border.png'
-  const borderedLightIllustration = '/images/illustrations/auth/v2-login-light-border.png'
+  const darkIllustration = '/images/illustrations/auth/V3-login-dark.png'
+  const lightIllustration = '/images/illustrations/auth/V3-login-light.png'
+  const borderedDarkIllustration = '/images/illustrations/auth/V3-login-dark-border.png'
+  const borderedLightIllustration = '/images/illustrations/auth/V3-login-light-border.png'
 
   // Hooks
   // const router = useRouter()
