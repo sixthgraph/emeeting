@@ -10,7 +10,10 @@ import type { SystemMode, Skin } from '@core/types'
 
 // Theme Options Imports
 import overrides from './overrides'
-import colorSchemes from './colorSchemes'
+
+// import colorSchemes from './colorSchemes'
+import colorSchemes from '@/components/themeV2/colorSchemes'
+
 import spacing from './spacing'
 import shadows from './shadows'
 import customShadows from './customShadows'
