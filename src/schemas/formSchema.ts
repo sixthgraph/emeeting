@@ -25,3 +25,7 @@ export const RegisterSchema = object({
     minLength(8, 'Password must be at least 8 characters long')
   ])
 })
+
+export const addGroupFormSchema = z.object({
+  groupname: z.string().min(1, 'Groupname is required').trim()
+})

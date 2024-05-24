@@ -25,7 +25,7 @@ import axios from 'axios'
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { GroupFormDataType, GroupType } from '@/types/apps/groupTypes'
-import { addUserFormSchema } from '@/schemas/formSchema'
+import { addGroupFormSchema } from '@/schemas/formSchema'
 
 type Props = {
   open: boolean
@@ -37,7 +37,6 @@ type Props = {
 
 // Vars
 const initialData = {
-  groupid: '',
   itemno: '',
   groupname: '',
   createby: '',
@@ -54,8 +53,9 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
 
     setFormData(initialData)
 
+    // ADD
     try {
-      const parsedData = addUserFormSchema.safeParse(formData)
+      const parsedData = addGroupFormSchema.safeParse(formData)
 
       if (!parsedData.success) {
         const errArr: any[] = []
@@ -73,12 +73,12 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
       }
 
       console.log('Form submitted successfully', parsedData.data)
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/add`, formData)
 
-      console.log('signup response===', response.data)
+      console.log('Create response===', response.data)
 
       if (response.data.success) {
-        console.log('signup success')
+        console.log('Create success')
 
         if (tableData) {
           const updateData: any = {
@@ -92,13 +92,14 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
         setData(tableData)
         handleClose()
       } else {
-        console.log('register failed.')
+        console.log('Create failed.')
       }
     } catch (error: any) {
-      console.log('Add user failed. ', error.message)
+      console.log('Add group failed. ', error.message)
     }
   }
 
+  // Reset
   const handleReset = () => {
     handleClose()
     setFormData({
@@ -107,9 +108,10 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
     })
   }
 
+  // Update
   const handleUpdateData = async () => {
     try {
-      const response = await axios.post('/api/users/update', formData)
+      const response = await axios.post('/api/groups/update', formData)
 
       if (response.data.message === 'success') {
         console.log('Update user success.')
@@ -118,9 +120,6 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
         const index = tableData?.findIndex(x => x.groupname == formData.groupname)
 
         if (tableData) {
-          //const newUpdate = { ...tableData[Number(foundIndex)], formData }
-          // tableData[Number(index)].password = formData.password
-          //tableData[Number(index)]
           tableData[Number(index)].groupname = formData.groupname
         }
 

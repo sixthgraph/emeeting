@@ -21,6 +21,17 @@ import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
+import Avatar from '@mui/material/Avatar'
+import MuiAvatar from '@mui/material/Avatar'
+
+//AKK IMPORT
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
 
 // // Third-party Imports
 import classnames from 'classnames'
@@ -133,14 +144,31 @@ type Props = {
   tableData?: GroupType[]
 }
 
+// AKK select/add user
+
+const emails = ['username@gmail.com', 'user02@gmail.com']
+// AKK end
+
 const GruopListTable = ({ tableData }: Props) => {
   // States
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
-
   const [globalFilter, setGlobalFilter] = useState('')
+
+  //AKK
+  const [memberopen, setmemberOpen] = useState(false)
+  const [selectedValue, setSelectedValue] = useState(emails[1])
+
+  const handleClickOpen = () => setmemberOpen(true)
+
+  const handleDialogClose = () => setmemberOpen(false)
+
+  const handleCloseeee = (value: string) => {
+    setmemberOpen(false)
+    setSelectedValue(value)
+  }
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
@@ -160,6 +188,7 @@ const GruopListTable = ({ tableData }: Props) => {
     setAddGroupOpen(true)
   }
 
+  // Delete
   const handleDeleteGroup = async (groupid: object) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/delete`, groupid)
@@ -181,10 +210,10 @@ const GruopListTable = ({ tableData }: Props) => {
         //todo update refresh token
         console.log('Update token ===', response.data.token)
       } else {
-        console.error('User delete failed')
+        console.error('Group delete failed')
       }
     } catch (error: any) {
-      console.log('Delete user failed. ', error.message)
+      console.log('Delete group failed. ', error.message)
     }
   }
 
@@ -226,10 +255,16 @@ const GruopListTable = ({ tableData }: Props) => {
       columnHelper.accessor('member', {
         header: 'Member',
         cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
+          <div className='flex flex-col-2'>
+            {/* <Typography color='text.primary' className='font-medium'>
+              Selected: {selectedValue}
+            </Typography> */}
+            <Button variant='tonal' onClick={handleClickOpen}>
               {row.original.member.length}
-            </Typography>
+            </Button>
+            {/* <Typography color='text.primary' className='font-medium'>
+              {row.original.member.length}
+            </Typography> */}
             {/* {row.original.member.map(member => (
               <Typography color='text.primary' className='font-medium'>
                 {member}
@@ -334,7 +369,7 @@ const GruopListTable = ({ tableData }: Props) => {
               onClick={() => GroupDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
-              Add New User
+              Add New Group
             </Button>
           </div>
         </div>
@@ -403,7 +438,39 @@ const GruopListTable = ({ tableData }: Props) => {
           }}
         />
       </Card>
-
+      <Dialog
+        onClick={() => {
+          handleDialogClose
+        }}
+        aria-labelledby='simple-dialog-title'
+        open={memberopen}
+      >
+        <DialogTitle id='simple-dialog-title'>Member</DialogTitle>
+        <List className='pt-0 px-0'>
+          {emails.map(email => (
+            <ListItem key={email} disablePadding onClick={() => handleCloseeee(email)}>
+              <ListItemButton>
+                <ListItemAvatar>
+                  <Avatar>
+                    <i className='tabler-user' />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={email} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+          <ListItem disablePadding onClick={() => handleCloseeee('addAccount')}>
+            <ListItemButton>
+              <ListItemAvatar>
+                <MuiAvatar>
+                  <i className='tabler-plus' />
+                </MuiAvatar>
+              </ListItemAvatar>
+              <ListItemText primary='Add account' onClick={() => setAddGroupOpen(!addGroupOpen)} />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Dialog>
       <GroupDrawerForm
         open={addGroupOpen}
         setData={setData}

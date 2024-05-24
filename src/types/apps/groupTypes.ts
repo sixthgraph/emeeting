@@ -3,7 +3,7 @@ import type { ThemeColor } from '@core/types'
 
 export type GroupType = {
   groupid: number
-  itemno: number
+  itemno: any
   groupname: string
   createby: string
   member: string[]
