@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const serverSession = await getServerSession(options)
   const token2 = serverSession?.user.token
 
-  console.log('server token ==', token2)
+  console.log('server token2 ==', token2)
 
   //TOKEN FOR SEND HEADER TO ROUTEFLOW API
   // console.log('token =====')

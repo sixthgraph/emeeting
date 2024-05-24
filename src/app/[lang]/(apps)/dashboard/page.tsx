@@ -18,6 +18,8 @@ export default function Page() {
 
   console.log('session ======== >>>>>>', session)
 
+  //console.log('dashboard load')
+
   return (
     <Grid container spacing={6} wrap='nowrap'>
       <Grid item xs={12}>

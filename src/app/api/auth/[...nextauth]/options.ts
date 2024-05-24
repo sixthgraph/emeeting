@@ -16,11 +16,11 @@ const login = async (credentials: any) => {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, user) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
 
     if (response.data.success) {
-      console.log('Login success. ========> return : ', response.data)
+      //console.log('Login success. ========> return : ', response.data)
 
       return response.data
     } else {
-      console.log('Login failed.')
+      //console.log('Login failed.')
 
       return null
     }
@@ -29,6 +29,24 @@ const login = async (credentials: any) => {
   } catch (err) {
     console.log(err)
     throw new Error('Failed to login!')
+  }
+}
+
+async function refreshAccessToken(tokenObject: any, userEmail: any) {
+  try {
+    const tokenResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refreshToken`, {
+      token: tokenObject,
+      email: userEmail
+    })
+
+    return {
+      message: tokenResponse.data.message,
+      token: tokenResponse.data.token
+    }
+  } catch (error) {
+    return {
+      message: 'refresh token error'
+    }
   }
 }
 
@@ -87,7 +105,6 @@ export const options: NextAuthOptions = {
         console.log(profile)
 
         //TODO REGISTER GITHUB ACCOUNT TO ROUTEFLOW ACCOUNT
-
         /**
             const oauthUser = {
               email: user.email,
@@ -124,18 +141,15 @@ export const options: NextAuthOptions = {
               throw new Error('Failed to login!')
             }
          */
-
         // connectToDb();
         // try {
         //   const user = await User.findOne({ email: profile.email });
-
         //   if (!user) {
         //     const newUser = new User({
         //       username: profile.login,
         //       email: profile.email,
         //       image: profile.avatar_url,
         //     });
-
         //     await newUser.save();
         //   }
         // } catch (err) {
@@ -155,7 +169,14 @@ export const options: NextAuthOptions = {
         token.name = user.firstname + ' ' + user.lastname
         token.firstname = user.firstname
         token.token = user.token
+        token.email = user.email
       }
+
+      const refreshTokenData = await refreshAccessToken(token.token, token.email)
+
+      token.token = refreshTokenData.token
+
+      console.log('tokenB 5 ==== ', refreshTokenData)
 
       return token
     },

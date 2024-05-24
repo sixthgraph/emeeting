@@ -35,9 +35,10 @@ const UserListApp = async () => {
   const users = data.data.detail
   const roles = data.data.roles
   const deps = data.data.deps
-  const updateToken = data.token
 
-  return <UserList userData={users} roleData={roles} depData={deps} updateToken={updateToken} />
+  //const updateToken = data.token
+
+  return <UserList userData={users} roleData={roles} depData={deps} />
 }
 
 export default UserListApp
