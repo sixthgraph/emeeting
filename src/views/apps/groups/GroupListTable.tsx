@@ -24,7 +24,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Avatar from '@mui/material/Avatar'
 import MuiAvatar from '@mui/material/Avatar'
 
-//AKK IMPORT
+//AKK IMPORT DIALOG
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import ListItemText from '@mui/material/ListItemText'
@@ -59,7 +59,7 @@ import axios from 'axios'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type { GroupType, GroupTypeWithAction } from '@/types/apps/groupTypes'
+import type { GroupType, GroupTypeWithAction, MemberType } from '@/types/apps/groupTypes'
 
 // // Component Imports
 import TableFilters from './TableFilters'
@@ -74,6 +74,7 @@ import { getInitials } from '@/utils/getInitials'
 
 // // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import { any, string } from 'zod'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -137,19 +138,31 @@ let initialData = {
   member: ''
 }
 
+// member AKK HERE
+const memberObj: MemberType = {}
+
 // Column Definitions
 const columnHelper = createColumnHelper<GroupTypeWithAction>()
 
 type Props = {
   tableData?: GroupType[]
+  memberData?: MemberType[]
 }
 
 // AKK select/add user
 
-const emails = ['username@gmail.com', 'user02@gmail.com']
-// AKK end
+const GruopListTable = ({ tableData, memberData }: Props) => {
+  // AKK HERE
+  memberData?.map(member => {
+    const id = String(member.groupid)
 
-const GruopListTable = ({ tableData }: Props) => {
+    console.log('noonid==== ', id)
+
+    memberObj[id] = {
+      member: String(member.member)
+    }
+  })
+  console.log(memberObj)
   // States
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -159,7 +172,7 @@ const GruopListTable = ({ tableData }: Props) => {
 
   //AKK
   const [memberopen, setmemberOpen] = useState(false)
-  const [selectedValue, setSelectedValue] = useState(emails[1])
+  // const [selectedValue, setSelectedValue] = useState(emails[1])
 
   const handleClickOpen = () => setmemberOpen(true)
 
@@ -167,12 +180,13 @@ const GruopListTable = ({ tableData }: Props) => {
 
   const handleCloseeee = (value: string) => {
     setmemberOpen(false)
-    setSelectedValue(value)
+    // setSelectedValue(value)
   }
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
   console.log('table data =', data)
+  console.log('table data by noon =')
 
   // Hooks
   //const { lang: locale } = useParams()
@@ -216,6 +230,8 @@ const GruopListTable = ({ tableData }: Props) => {
       console.log('Delete group failed. ', error.message)
     }
   }
+
+  // list user member
 
   // Table Columns config
   const columns = useMemo<ColumnDef<GroupTypeWithAction, any>[]>(
@@ -440,14 +456,14 @@ const GruopListTable = ({ tableData }: Props) => {
       </Card>
       <Dialog
         onClick={() => {
-          handleDialogClose
+          handleDialogClose()
         }}
         aria-labelledby='simple-dialog-title'
         open={memberopen}
       >
         <DialogTitle id='simple-dialog-title'>Member</DialogTitle>
         <List className='pt-0 px-0'>
-          {emails.map(email => (
+          {/* {emails.map(email => (
             <ListItem key={email} disablePadding onClick={() => handleCloseeee(email)}>
               <ListItemButton>
                 <ListItemAvatar>
@@ -458,7 +474,8 @@ const GruopListTable = ({ tableData }: Props) => {
                 <ListItemText primary={email} />
               </ListItemButton>
             </ListItem>
-          ))}
+          ))} */}
+          {/* Button addAccount
           <ListItem disablePadding onClick={() => handleCloseeee('addAccount')}>
             <ListItemButton>
               <ListItemAvatar>
@@ -468,7 +485,7 @@ const GruopListTable = ({ tableData }: Props) => {
               </ListItemAvatar>
               <ListItemText primary='Add account' onClick={() => setAddGroupOpen(!addGroupOpen)} />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Dialog>
       <GroupDrawerForm

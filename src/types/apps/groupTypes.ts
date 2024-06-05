@@ -17,3 +17,7 @@ export type GroupFormDataType = {
 export type GroupTypeWithAction = GroupType & {
   action?: string
 }
+
+export type MemberType = {
+  [key: string]: { member: string }
+}
