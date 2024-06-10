@@ -16,8 +16,7 @@ export default function Page() {
     }
   })
 
-  console.log('session ======== >>>>>>', session)
-
+  //console.log('session ======== >>>>>>', session)
   //console.log('dashboard load')
 
   return (

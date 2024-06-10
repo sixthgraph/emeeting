@@ -12,12 +12,10 @@ import { useEffect, useState, useMemo } from 'react'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
 import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
 
 import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
@@ -43,25 +41,18 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // Type Imports
-import axios from 'axios'
+//import axios from 'axios'
 
 //import type { Locale } from '@configs/i18n'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type {
-  UsersType,
-  UserRoleType,
-  UsersTypeWithAction,
-  UserStatusType,
-  RoleType,
-  DepType
-} from '@/types/apps/userTypes'
+import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
 
 // Component Imports
-import TableFilters from './TableFilters'
-import UserDrawerForm from './UserDrawerForm'
+// import TableFilters from './TableFilters'
+// import UserDrawerForm from './UserDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -130,141 +121,27 @@ const DebouncedInput = ({
 }
 
 // Vars
-const userRoleObj: UserRoleType = {
-  0: { icon: 'tabler-crown', color: 'error', name: 'Undefined' },
-  1: { icon: 'tabler-crown', color: 'error', name: 'Admin' },
-  2: { icon: 'tabler-device-desktop', color: 'warning', name: 'Worker' },
-  3: { icon: 'tabler-edit', color: 'info', name: 'Viewer' },
-  4: { icon: 'tabler-chart-pie', color: 'success', name: 'Super User' }
-}
-
-const roleObj: UserRoleType = {
-  //0: { icon: 'tabler-crown', color: 'error', name: 'Undefined' },
-}
-
-const depObj: DepType = {}
-
-const userStatusObj: UserStatusType = {
-  active: 'success',
-  pending: 'warning',
-  inactive: 'secondary'
-}
-
-// Vars
-let initialData = {
-  firstname: '',
-  lastname: '',
-  fullName: '',
-  email: '',
-  avatar: '',
-  avatarcolor: '',
-  password: '',
-  dep: '',
-  position: '',
-  role: 0,
-  status: ''
-}
 
 // Column Definitions
-const columnHelper = createColumnHelper<UsersTypeWithAction>()
+const columnHelper = createColumnHelper<TodoTypeWithAction>()
 
 type Props = {
-  tableData?: UsersType[]
-  roleData?: RoleType[]
-  depData?: DepType[]
+  tableData?: TodoType[]
 }
 
-const UserListTable = ({ tableData, roleData, depData }: Props) => {
+const TodoListTable = ({ tableData }: Props) => {
   //console.log('depData === ', depData)
 
-  depData?.map(dep => {
-    const id = String(dep.dep)
-
-    depObj[id] = {
-      dep: String(dep.dep),
-      depname: String(dep.depname),
-      docuname: Number(dep.docuname),
-      path: String(dep.path),
-      sort: Number(dep.sort),
-      statecode: String(dep.statecode)
-    }
-  })
-
-  roleData?.map(role => {
-    const id = role.roleid
-    const name = role.rolename
-
-    //TODO UPDATE ROUTE FLOW API FIELD FOR "ICON, COLOR" AND REPLACE userRoleObj with userRoleObj2
-    roleObj[Number(id)] = { icon: 'tabler-crown', color: 'error', name: String(name) }
-  })
-
   // States
-  const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  console.log('data =====')
-  console.log(data)
-
-  // const [updateData, setUpdateData] = useState(...[initialData])
-
-  // Hooks
-  //const { lang: locale } = useParams()
-
-  //console.log('data ===', data)
-
-  console.log('user list table load.')
-
-  const userDrawerOpenHandle = () => {
-    // sg here
-    initialData = {
-      firstname: '',
-      lastname: '',
-      fullName: '',
-      email: '',
-      avatar: '',
-      avatarcolor: '',
-      password: '',
-      dep: '',
-      position: '',
-      role: 0,
-      status: ''
-    }
-    setAddUserOpen(true)
-  }
-
-  const handleDeleteUser = async (email: object) => {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/delete`, email)
-
-      if (response.data.message === 'success') {
-        console.log(response.data.data.detail)
-
-        //todo update tableData
-        const em: any = email
-        const newUpdate = tableData?.filter(el => el.email !== em.email)
-
-        console.log('newUpdate === ', newUpdate)
-        setData(newUpdate)
-
-        tableData = data
-
-        console.log(tableData)
-
-        //todo update refresh token
-        console.log('Update token ===', response.data.token)
-      } else {
-        console.error('User delete failed')
-      }
-    } catch (error: any) {
-      console.log('Delete user failed. ', error.message)
-    }
-  }
+  console.log('todo list table load.')
 
   // Table Columns config
-  const columns = useMemo<ColumnDef<UsersTypeWithAction, any>[]>(
+  const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(
     () => [
       {
         id: 'select',
@@ -288,93 +165,63 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
           />
         )
       },
-      columnHelper.accessor('firstname', {
-        header: 'User',
+      columnHelper.accessor('readed', {
+        header: '',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
-            {getAvatar({ avatar: row.original.avatar, fullName: row.original.firstname + ' ' + row.original.lastname })}
+            <div className='flex flex-col'>
+              {row.original.readed ? (
+                <Icon className='text-[22px] text-textSecondary tabler-mail-opened' />
+              ) : (
+                <Icon className='text-[22px] text-textSecondary tabler-mail' />
+              )}
+            </div>
+          </div>
+        )
+      }),
+      columnHelper.accessor('created_by', {
+        header: 'Created By',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-4'>
+            {getAvatar({ avatar: row.original.avatar, fullName: row.original.created_by })}
             <div className='flex flex-col'>
               <Typography color='text.primary' className='font-medium'>
-                {row.original.firstname + ' ' + row.original.lastname}
+                {row.original.created_by}
               </Typography>
               <Typography variant='body2'>{row.original.email}</Typography>
             </div>
           </div>
         )
       }),
-      columnHelper.accessor('dep', {
-        header: 'Department',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
+      columnHelper.accessor('subject', {
+        header: 'Subject',
+        cell: (
+          { row } // <div className='flex flex-col pli-2 plb-3'>
+        ) => (
+          <div className='flex flex-col pli-2 plb-3'>
             <Typography color='text.primary' className='font-medium'>
-              {/* {row.original.dep && depObj[row.original.dep].depname} */}
-
-              {depObj[row.original.dep] && depObj[row.original.dep].depname}
+              {row.original.subject}
             </Typography>
-            <Typography variant='body2'>{row.original.position}</Typography>
+            <div className='flex'>
+              {row.original.overdue ? (
+                <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
+              ) : (
+                ''
+              )}
+              {row.original.status && <Chip variant='tonal' size='small' label={row.original.status} color='warning' />}
+            </div>
           </div>
         )
       }),
-      columnHelper.accessor('role', {
-        header: 'Role',
+      columnHelper.accessor('created', {
+        header: 'Created',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Icon
-              className={row.original.role && userRoleObj[row.original.role].icon}
-              sx={{ color: `var(--mui-palette-${row.original.role && userRoleObj[row.original.role].color}-main)` }}
-            />
             <Typography className='capitalize' color='text.primary'>
-              {row.original.role && roleObj[row.original.role].name}
+              {row.original.created}
             </Typography>
           </div>
         )
-      }),
-
-      columnHelper.accessor('status', {
-        header: 'Status',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-3'>
-            <Chip
-              variant='tonal'
-              className='capitalize'
-              label={row.original.status}
-              color={userStatusObj[row.original.status]}
-              size='small'
-            />
-          </div>
-        )
-      }),
-      columnHelper.accessor('action', {
-        header: 'Action',
-        cell: ({ row }) => (
-          <div className='flex items-center'>
-            <IconButton
-              onClick={() => {
-                handleDeleteUser({ email: row.original.email })
-              }}
-            >
-              <i className='tabler-trash text-[22px] text-textSecondary' />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                // initialData.password = ''
-                initialData.firstname = row.original.firstname
-                initialData.lastname = row.original.lastname
-                initialData.email = row.original.email
-                initialData.dep = row.original.dep
-                initialData.position = row.original.position
-                initialData.avatar = row.original.avatar
-                initialData.role = Number(row.original.role)
-                initialData.status = row.original.status
-
-                setAddUserOpen(!addUserOpen)
-              }}
-            >
-              <i className='tabler-edit text-[22px] text-textSecondary' />
-            </IconButton>
-          </div>
-        ),
-        enableSorting: false
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -383,7 +230,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
 
   // Table config
   const table = useReactTable({
-    data: data as UsersType[],
+    data: data as TodoType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter // search field
@@ -411,7 +258,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
+  const getAvatar = (params: Pick<TodoType, 'avatar' | 'fullName'>) => {
     const { avatar, fullName } = params
 
     if (avatar) {
@@ -425,7 +272,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     <>
       <Card>
         <CardHeader title='Filters' className='pbe-4' />
-        <TableFilters setData={setData} tableData={tableData} />
+        {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -444,22 +291,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
               placeholder='Search User'
               className='is-full sm:is-auto'
             />
-            <Button
-              color='secondary'
-              variant='tonal'
-              startIcon={<i className='tabler-upload' />}
-              className='is-full sm:is-auto'
-            >
-              Export
-            </Button>
-            <Button
-              variant='contained'
-              startIcon={<i className='tabler-plus' />}
-              onClick={() => userDrawerOpenHandle()}
-              className='is-full sm:is-auto'
-            >
-              Add New User
-            </Button>
           </div>
         </div>
         <div className='overflow-x-auto'>
@@ -527,17 +358,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
           }}
         />
       </Card>
-      <UserDrawerForm
-        open={addUserOpen}
-        setData={setData}
-        tableData={tableData}
-        updateData={initialData}
-        roleData={roleData}
-        depData={depData}
-        handleClose={() => setAddUserOpen(!addUserOpen)}
-      />
     </>
   )
 }
 
-export default UserListTable
+export default TodoListTable

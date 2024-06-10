@@ -38,6 +38,8 @@ const UserListApp = async () => {
 
   //const updateToken = data.token
 
+  console.log('deps ===', deps)
+
   return <UserList userData={users} roleData={roles} depData={deps} />
 }
 

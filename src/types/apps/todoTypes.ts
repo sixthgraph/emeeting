@@ -54,7 +54,18 @@ export type UsersTypeExample = {
   token: string
 }
 
-export type UsersTypeWithAction = UsersType & {
+export type TodoType = {
+  id: number
+  created_by: string
+  subject: string
+  type: string
+  status: string
+  overdue: boolean
+  readed: boolean
+  created: string
+}
+
+export type TodoTypeWithAction = TodoType & {
   action?: string
 }
 

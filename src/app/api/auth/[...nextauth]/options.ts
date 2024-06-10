@@ -32,6 +32,29 @@ const login = async (credentials: any) => {
   }
 }
 
+// interface TokenResponse {
+//   message: string;
+//   token?: string; // The token is optional because it might not be present in case of an error
+// }
+
+// async function refreshAccessToken(tokenObject: any, userEmail: any): Promise<TokenResponse> {
+//   try {
+//     const tokenResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refreshToken`, {
+//       token: tokenObject,
+//       email: userEmail
+//     })
+
+//     return {
+//       message: tokenResponse.data.message,
+//       token: tokenResponse.data.token
+//     }
+//   } catch (error) {
+//     return {
+//       message: 'refresh token error'
+//     }
+//   }
+// }
+
 async function refreshAccessToken(tokenObject: any, userEmail: any) {
   try {
     const tokenResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refreshToken`, {
@@ -174,9 +197,22 @@ export const options: NextAuthOptions = {
 
       const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
-      token.token = refreshTokenData.token
+      if (refreshTokenData.message == 'success') {
+        console.log('refreshToken success')
+        token.token = refreshTokenData.token
+      } else {
+        console.log('refreshToken failed')
 
-      console.log('tokenB 5 ==== ', refreshTokenData)
+        token.name = ''
+        token.firstname = ''
+        token.token = ''
+        token.email = ''
+
+        // const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
+        // signOut({ redirect: false }).then(() => console.log(logoutCognitoUrl))
+      }
+
+      //console.log('tokenB 5 ==== ', refreshTokenData)
 
       return token
     },
