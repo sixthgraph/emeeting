@@ -11,7 +11,8 @@ export type GroupType = {
 
 export type GroupFormDataType = {
   groupname: string
-  member: string
+  createby: string
+  member: string[]
 }
 
 export type GroupTypeWithAction = GroupType & {

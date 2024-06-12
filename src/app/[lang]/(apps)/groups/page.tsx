@@ -8,6 +8,7 @@ const getData = async () => {
 
   try {
     const token = { token: session?.user.token }
+    const email = { email: session?.user.email }
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -28,13 +29,41 @@ const getData = async () => {
   }
 }
 
+const getDataUser = async () => {
+  const session = await getServerSession(options)
+
+  try {
+    const token = { token: session?.user.token }
+    const email = { email: session?.user.email }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0'
+    }
+
+    const userinfo = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, token, { headers })
+
+    if (userinfo.data.message === 'success') {
+      return userinfo.data
+    } else {
+      return 'User not found'
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const GroupListApp = async () => {
   // Vars
   const data = await getData()
+  const usersData = await getDataUser()
   const groupData = data.data.detail
   const updateToken = data.token
-
-  return <GroupList groupData={groupData} updateToken={updateToken} />
+  const email = data.email
+  const userData = usersData.data.detail
+  return <GroupList groupData={groupData} updateToken={updateToken} userData={userData} email={email} />
 }
 
 export default GroupListApp

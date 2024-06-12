@@ -32,6 +32,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import { useSession } from 'next-auth/react'
 
 // // Third-party Imports
 import classnames from 'classnames'
@@ -64,6 +65,7 @@ import type { GroupType, GroupTypeWithAction, MemberType } from '@/types/apps/gr
 // // Component Imports
 import TableFilters from './TableFilters'
 import GroupDrawerForm from './GroupDrawerForm'
+import type { UsersType } from '@/types/apps/userTypes'
 
 import CustomTextField from '@core/components/mui/TextField'
 // import CustomAvatar from '@core/components/mui/Avatar'
@@ -131,11 +133,9 @@ const DebouncedInput = ({
 
 // // Vars
 let initialData = {
-  groupid: '',
-  itemno: '',
   groupname: '',
   createby: '',
-  member: ''
+  member: []
 }
 
 // member AKK HERE
@@ -147,11 +147,13 @@ const columnHelper = createColumnHelper<GroupTypeWithAction>()
 type Props = {
   tableData?: GroupType[]
   memberData?: MemberType[]
+  userData?: UsersType[]
+  email?: string
 }
 
 // AKK select/add user
 
-const GruopListTable = ({ tableData, memberData }: Props) => {
+const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   // AKK HERE
   memberData?.map(member => {
     const id = String(member.groupid)
@@ -162,15 +164,19 @@ const GruopListTable = ({ tableData, memberData }: Props) => {
       member: String(member.member)
     }
   })
+
   console.log(memberObj)
   // States
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
+  const [user, setusersData] = useState(...[userData])
   const [globalFilter, setGlobalFilter] = useState('')
 
   //AKK
+  const { data: session, update } = useSession()
+  const [emailData, setEmailData] = useState(session?.user.email)
   const [memberopen, setmemberOpen] = useState(false)
   // const [selectedValue, setSelectedValue] = useState(emails[1])
 
@@ -185,19 +191,18 @@ const GruopListTable = ({ tableData, memberData }: Props) => {
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
-  console.log('table data =', data)
-  console.log('table data by noon =')
+  console.log('table data ==== ', data)
+  console.log('user data ==== ', user)
+  console.log('email data by noon ==== ', emailData)
 
   // Hooks
   //const { lang: locale } = useParams()
 
   const GroupDrawerOpenHandle = () => {
     initialData = {
-      groupid: '',
-      itemno: '',
       groupname: '',
       createby: '',
-      member: ''
+      member: []
     }
     setAddGroupOpen(true)
   }
@@ -212,7 +217,7 @@ const GruopListTable = ({ tableData, memberData }: Props) => {
 
         //todo update tableData
         const em: any = groupid
-        const newUpdate = tableData?.filter(el => el.groupid !== em.groupid)
+        const newUpdate = tableData?.filter(el => el.groupid == em.groupid)
 
         console.log('newUpdate === ', newUpdate)
         setData(newUpdate)
@@ -492,6 +497,7 @@ const GruopListTable = ({ tableData, memberData }: Props) => {
         open={addGroupOpen}
         setData={setData}
         tableData={tableData}
+        userData={userData}
         updateData={initialData}
         handleClose={() => setAddGroupOpen(!addGroupOpen)}
       />

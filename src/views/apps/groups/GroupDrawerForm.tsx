@@ -25,33 +25,49 @@ import axios from 'axios'
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { GroupFormDataType, GroupType } from '@/types/apps/groupTypes'
+import type { UsersType } from '@/types/apps/userTypes'
 import { addGroupFormSchema } from '@/schemas/formSchema'
+
+import { useSession } from 'next-auth/react'
 
 type Props = {
   open: boolean
   updateData: GroupFormDataType
   setData: any
   tableData?: GroupType[]
+  userData?: UsersType[]
+  email?: string
+
   handleClose: () => void
 }
 
 // Vars
-const initialData = {
-  itemno: '',
+var initialData = {
   groupname: '',
   createby: '',
-  member: ''
+  member: []
 }
 
-const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
+const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<GroupFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
+
+  const { data: session, update } = useSession()
+  const [emailData, setEmailData] = useState(session?.user.email)
+
+  console.log(emailData)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setFormData(initialData)
+    console.log(initialData)
+    //console.log(emailData)
+    //setFormData({ groupname: 'eeeee', createby: 'fasdfadsf', member: [] })
+
+    console.log('formData')
+    console.log(formData)
 
     // ADD
     try {
@@ -73,6 +89,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
       }
 
       console.log('Form submitted successfully', parsedData.data)
+
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/add`, formData)
 
       console.log('Create response===', response.data)
@@ -82,8 +99,9 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
 
         if (tableData) {
           const updateData: any = {
-            Groupname: formData.groupname,
-            Member: formData.member
+            groupname: formData.groupname,
+            createby: String(emailData),
+            member: ''
           }
 
           tableData.push(updateData)
@@ -104,7 +122,8 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
     handleClose()
     setFormData({
       groupname: '',
-      member: ''
+      createby: '',
+      member: []
     })
   }
 
@@ -119,8 +138,13 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
 
         const index = tableData?.findIndex(x => x.groupname == formData.groupname)
 
+        console.log('newUpdate === ', index)
+        setData(index)
+
         if (tableData) {
           tableData[Number(index)].groupname = formData.groupname
+          tableData[Number(index)].createby = String(emailData)
+          tableData[Number(index)].member = formData.member
         }
 
         setData(tableData)
@@ -161,7 +185,8 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
             fullWidth
             placeholder=''
             value={formData.groupname}
-            onChange={e => setFormData({ ...formData, groupname: e.target.value })}
+            //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
+            onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
           />
           {errors.find(error => error.for === 'Groupname')?.message}
 
