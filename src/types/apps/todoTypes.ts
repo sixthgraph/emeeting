@@ -1,60 +1,4 @@
-// Type Imports
-import type { ThemeColor } from '@core/types'
-
-export type UsersType = {
-  id: number
-  firstname: string
-  lastname: string
-  fullName: string
-  email: string
-  avatar: string
-  password: string
-  dep: string
-  position: string
-  role: string
-  status: string
-  startdate: string
-  updated_at: string
-  token: string
-  refresh_token: string
-  otp_secret: string
-  avatarcolor?: ThemeColor
-}
-
-export type UserFormDataType = {
-  firstname: string
-  lastname: string
-  fullName: string
-  email: string
-  password: string
-  avatar: string
-  avatarcolor: string
-  dep: string
-  position: string
-  status: string
-  role: number
-}
-
-export type UsersTypeExample = {
-  id: number
-  role: string
-  email: string
-  status: string
-  avatar: string
-  company: string
-  country: string
-  contact: string
-  fullName: string
-  username: string
-  currentPlan: string
-  avatarColor?: ThemeColor
-  billing: string
-  firstname: string
-  lastname: string
-  token: string
-}
-
-export type TodoType = {
+export type TodoTypeV1 = {
   id: number
   created_by: string
   subject: string
@@ -64,23 +8,33 @@ export type TodoType = {
   readed: boolean
   created: string
 }
+export type TodoType = {
+  wid: string
+  Completedate: string
+  Expiredate: string
+  Registerdate: string
+  registerdep: string
+  registeruid: string
+  subject: string
+  statecode: string
+  status: string
+  firstname: string
+  lastname: string
+  workflowid: string
+  connectionid: string
+  pagesourceid: string
+  pagetargetid: string
+  conditions: string
+  nodeid: string
+  blockid: string
+  processname: string
+  userid: string
+  basketid: string
+  user_field: [string]
+  task: [string]
+  eformlist: [string]
+}
 
 export type TodoTypeWithAction = TodoType & {
   action?: string
-}
-
-export type UserRoleType = {
-  [key: string]: { icon: string; color: string; name: string }
-}
-
-export type RoleType = {
-  [key: string]: { properties: []; roleid: number; rolename: string }
-}
-
-export type DepType = {
-  [key: string]: { dep: string; depname: string; docuname: number; path: string; sort: number; statecode: string }
-}
-
-export type UserStatusType = {
-  [key: string]: ThemeColor
 }

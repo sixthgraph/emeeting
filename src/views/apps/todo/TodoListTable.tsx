@@ -15,7 +15,8 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 
 import Chip from '@mui/material/Chip'
-import Checkbox from '@mui/material/Checkbox'
+
+//import Checkbox from '@mui/material/Checkbox'
 
 import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
@@ -49,9 +50,11 @@ import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
 import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
+import type { DepType } from '@/types/apps/userTypes'
 
 // Component Imports
-// import TableFilters from './TableFilters'
+import TableFilters from './TableFilters'
+
 // import UserDrawerForm from './UserDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
@@ -120,6 +123,8 @@ const DebouncedInput = ({
   return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
 }
 
+const depObj: DepType = {}
+
 // Vars
 
 // Column Definitions
@@ -127,68 +132,103 @@ const columnHelper = createColumnHelper<TodoTypeWithAction>()
 
 type Props = {
   tableData?: TodoType[]
+  depData?: DepType[]
 }
 
-const TodoListTable = ({ tableData }: Props) => {
-  //console.log('depData === ', depData)
+const TodoListTable = ({ tableData, depData }: Props) => {
+  depData?.map(dep => {
+    const id = String(dep.dep)
+
+    depObj[id] = {
+      dep: String(dep.dep),
+      depname: String(dep.depname),
+      docuname: Number(dep.docuname),
+      path: String(dep.path),
+      sort: Number(dep.sort),
+      statecode: String(dep.statecode)
+    }
+  })
+
+  console.log('depObj==')
+  console.log(depObj)
 
   // States
-  const [rowSelection, setRowSelection] = useState({})
+  //const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
 
   console.log('todo list table load.')
 
+  const handleRowClick = () => {
+    alert('click')
+  }
+
   // Table Columns config
   const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
-      columnHelper.accessor('readed', {
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
+      //   )
+      // },
+
+      // columnHelper.accessor('readed', {
+      //   header: '',
+      //   cell: ({ row }) => (
+      //     <div className='flex items-center gap-4'>
+      //       <div className='flex flex-col'>
+      //         {row.original.readed ? (
+      //           <Icon className='text-[22px] text-textSecondary tabler-mail-opened' />
+      //         ) : (
+      //           <Icon className='text-[22px] text-textSecondary tabler-mail' />
+      //         )}
+      //       </div>
+      //     </div>
+      //   )
+      // }),
+      columnHelper.accessor('processname', {
         header: '',
-        cell: ({ row }) => (
+        cell: ({}) => (
           <div className='flex items-center gap-4'>
             <div className='flex flex-col'>
-              {row.original.readed ? (
-                <Icon className='text-[22px] text-textSecondary tabler-mail-opened' />
-              ) : (
-                <Icon className='text-[22px] text-textSecondary tabler-mail' />
-              )}
+              <Icon className='text-[22px] text-textSecondary tabler-mail' />
             </div>
           </div>
         )
       }),
-      columnHelper.accessor('created_by', {
+      columnHelper.accessor('registeruid', {
         header: 'Created By',
         cell: ({ row }) => (
-          <div className='flex items-center gap-4'>
-            {getAvatar({ avatar: row.original.avatar, fullName: row.original.created_by })}
+          <div
+            className='flex items-center gap-4'
+            onClick={() => {
+              handleRowClick()
+            }}
+          >
+            {getAvatar({ avatar: row.original.avatar, fullName: row.original.firstname + ' ' + row.original.lastname })}
             <div className='flex flex-col'>
               <Typography color='text.primary' className='font-medium'>
-                {row.original.created_by}
+                {row.original.firstname + ' ' + row.original.lastname}
               </Typography>
-              <Typography variant='body2'>{row.original.email}</Typography>
+              <Typography variant='body2'>{row.original.registeruid}</Typography>
             </div>
           </div>
         )
@@ -198,7 +238,12 @@ const TodoListTable = ({ tableData }: Props) => {
         cell: (
           { row } // <div className='flex flex-col pli-2 plb-3'>
         ) => (
-          <div className='flex flex-col pli-2 plb-3'>
+          <div
+            className='flex flex-col pli-2 plb-3'
+            onClick={() => {
+              handleRowClick()
+            }}
+          >
             <Typography color='text.primary' className='font-medium'>
               {row.original.subject}
             </Typography>
@@ -213,12 +258,32 @@ const TodoListTable = ({ tableData }: Props) => {
           </div>
         )
       }),
-      columnHelper.accessor('created', {
+      columnHelper.accessor('basketid', {
+        header: 'Department',
+        cell: ({ row }) => (
+          <div
+            className='flex items-center gap-2'
+            onClick={() => {
+              handleRowClick()
+            }}
+          >
+            <Typography color='text.primary' className='font-medium'>
+              {depObj[row.original.basketid] && depObj[row.original.basketid].depname}
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('Registerdate', {
         header: 'Created',
         cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
+          <div
+            className='flex items-center gap-2'
+            onClick={() => {
+              handleRowClick()
+            }}
+          >
             <Typography className='capitalize' color='text.primary'>
-              {row.original.created}
+              {row.original.Registerdate}
             </Typography>
           </div>
         )
@@ -236,7 +301,7 @@ const TodoListTable = ({ tableData }: Props) => {
       fuzzy: fuzzyFilter // search field
     },
     state: {
-      rowSelection,
+      //rowSelection,
       globalFilter
     },
     initialState: {
@@ -244,10 +309,12 @@ const TodoListTable = ({ tableData }: Props) => {
         pageSize: 10
       }
     },
-    enableRowSelection: true, //enable row selection for all rows
+
+    //enableRowSelection: true, //enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     globalFilterFn: fuzzyFilter,
-    onRowSelectionChange: setRowSelection,
+
+    //onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),
@@ -272,7 +339,7 @@ const TodoListTable = ({ tableData }: Props) => {
     <>
       <Card>
         <CardHeader title='Filters' className='pbe-4' />
-        {/* <TableFilters setData={setData} tableData={tableData} /> */}
+        <TableFilters depData={depData} setData={setData} tableData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -288,7 +355,7 @@ const TodoListTable = ({ tableData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search User'
+              placeholder='Search Todo'
               className='is-full sm:is-auto'
             />
           </div>

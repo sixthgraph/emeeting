@@ -1,17 +1,23 @@
+import { headers } from 'next/headers'
+
 import TodoList from '@/views/apps/todo'
 
 const getData = async () => {
-  const res = await fetch(`${process.env.API_URL}/todo/list`)
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/todo/list`, {
+      headers: headers()
+    })
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch userData')
+    const data = await res.json()
+
+    return data
+  } catch (err) {
+    console.log(err)
   }
-
-  return res.json()
 }
 
 export default async function TodoListApp() {
   const data = await getData()
 
-  return <TodoList todoData={data} />
+  return <TodoList todoData={data.todo} depData={data.dep} />
 }
