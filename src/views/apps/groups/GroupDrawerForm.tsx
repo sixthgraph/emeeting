@@ -130,10 +130,12 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
   // Update
   const handleUpdateData = async () => {
     try {
-      const response = await axios.post('/api/groups/update', formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, formData)
 
       if (response.data.message === 'success') {
         console.log('Update user success.')
+        console.log('formData')
+        console.log(formData)
         handleClose()
 
         const index = tableData?.findIndex(x => x.groupname == formData.groupname)
@@ -143,7 +145,6 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
 
         if (tableData) {
           tableData[Number(index)].groupname = formData.groupname
-          tableData[Number(index)].createby = String(emailData)
           tableData[Number(index)].member = formData.member
         }
 
@@ -184,6 +185,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
             label='Groupname'
             fullWidth
             placeholder=''
+            inputProps={{ minlength: 3, maxLength: 150 }}
             value={formData.groupname}
             //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
             onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
