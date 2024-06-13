@@ -20,9 +20,9 @@ const colorSchemes = (skin: Skin): Theme['colorSchemes'] => {
           darkerOpacity: 'rgb(var(--mui-palette-primary-mainChannel) / 0.38)'
         },
         secondary: {
-          light: '#9E70FF',
-          main: '#7239EA',
-          dark: '#5A0CFF',
+          light: '#D2BCFF',
+          main: '#AF8BFA',
+          dark: '#7239EA',
           contrastText: '#FFF',
           lighterOpacity: 'rgb(var(--mui-palette-secondary-mainChannel) / 0.08)',
           lightOpacity: 'rgb(var(--mui-palette-secondary-mainChannel) / 0.16)',
@@ -172,9 +172,9 @@ const colorSchemes = (skin: Skin): Theme['colorSchemes'] => {
           darkerOpacity: 'rgb(var(--mui-palette-primary-mainChannel) / 0.38)'
         },
         secondary: {
-          light: '#9E70FF',
-          main: '#7239EA',
-          dark: '#5A0CFF',
+          light: '#D2BCFF',
+          main: '#AF8BFA',
+          dark: '#7239EA',
           contrastText: '#FFF',
           lighterOpacity: 'rgb(var(--mui-palette-secondary-mainChannel) / 0.08)',
           lightOpacity: 'rgb(var(--mui-palette-secondary-mainChannel) / 0.16)',
