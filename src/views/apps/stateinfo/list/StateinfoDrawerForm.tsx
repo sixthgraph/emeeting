@@ -24,35 +24,36 @@ import axios from 'axios'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { DepartmentFormDataType, DepartmentsType, StateinfoType } from '@/types/apps/departmentTypes'
-import { addUserFormSchema } from '@/schemas/formSchema' //NP????
+import type { StateinfoFormDataType, StateinfosType } from '@/types/apps/stateinfoTypes'
+import { addStateinfoFormSchema } from '@/schemas/stateinfoSchema'
 
 type Props = {
   open: boolean
-  updateData: DepartmentFormDataType
+  updateData: StateinfoFormDataType
   setData: any
-  tableData?: DepartmentsType[]
-  stateinfoData?: StateinfoType[]
+  tableData?: StateinfosType[]
   handleClose: () => void
 }
 
 // Vars
 const initialData = {
-  dep: '',
-  depname: '',
   statecode: '',
-  docuname: 0,
-  path: '',
-  sort: 0
+  desc: '',
+  ref: '',
+  remark: '',
+  create_date: '',
+  create_by: '',
+  update_date: '',
+  update_by: ''
 }
 
-const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoData, handleClose }: Props) => {
+const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
   //const router = useRouter()
   //const params = useParams()
   //const { lang: locale } = params
 
   // States
-  const [formData, setFormData] = useState<DepartmentFormDataType>(initialData)
+  const [formData, setFormData] = useState<StateinfoFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
 
   const [isPasswordShown, setIsPasswordShown] = useState(false)
@@ -64,7 +65,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
     setFormData(initialData)
 
     try {
-      const parsedData = addUserFormSchema.safeParse(formData)
+      const parsedData = addStateinfoFormSchema.safeParse(formData)
 
       if (!parsedData.success) {
         const errArr: any[] = []
@@ -82,7 +83,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       }
 
       console.log('Form submitted successfully', parsedData.data)
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfo`, formData)
 
       console.log('signup response===', response.data)
 
@@ -91,11 +92,10 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
 
         if (tableData) {
           const updateData: any = {
-            depname: formData.depname,
             statecode: formData.statecode,
-            docuname: formData.docuname,
-            path: formData.path,
-            sort: formData.sort
+            desc: formData.desc,
+            ref: formData.ref,
+            remark: formData.remark
           }
 
           tableData.push(updateData)
@@ -118,29 +118,28 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
 
   const handleUpdateData = async () => {
     try {
-      const response = await axios.post('/api/department/update', formData)
+      const response = await axios.post('/api/stateinfo/update', formData)
 
       if (response.data.message === 'success') {
-        console.log('Update department success.')
+        console.log('Update stateinfo success.')
         handleClose()
 
-        const index = tableData?.findIndex(x => x.dep == formData.dep)
+        const index = tableData?.findIndex(x => x.statecode == formData.statecode)
 
         if (tableData) {
           //const newUpdate = { ...tableData[Number(foundIndex)], formData }
           // tableData[Number(index)].password = formData.password
           //tableData[Number(index)]
-          tableData[Number(index)].depname = formData.depname
           tableData[Number(index)].statecode = formData.statecode
-          tableData[Number(index)].docuname = formData.docuname
-          tableData[Number(index)].path = formData.path
-          tableData[Number(index)].sort = formData.sort
+          tableData[Number(index)].desc = formData.desc
+          tableData[Number(index)].ref = formData.ref
+          tableData[Number(index)].remark = formData.remark
         }
 
         setData(tableData)
       }
     } catch (error: any) {
-      console.log('Update department failed. ', error.message)
+      console.log('Update stateinfo failed. ', error.message)
     }
   }
 
@@ -158,10 +157,10 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
-        {updateData.dep !== '' ? (
-          <Typography variant='h5'>Edit Department</Typography>
+        {updateData.statecode !== '' ? (
+          <Typography variant='h5'>Edit Stateinfo</Typography>
         ) : (
-          <Typography variant='h5'>Add New Department</Typography>
+          <Typography variant='h5'>Add New Stateinfo</Typography>
         )}
         <IconButton onClick={handleReset}>
           <i className='tabler-x text-textPrimary' />
@@ -171,14 +170,6 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           <CustomTextField
-            label='Depname'
-            fullWidth
-            placeholder=''
-            value={formData.depname}
-            onChange={e => setFormData({ ...formData, depname: e.target.value })}
-          />
-          {errors.find(error => error.for === 'depname')?.message}
-          <CustomTextField
             label='Statecode'
             fullWidth
             placeholder=''
@@ -187,40 +178,31 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
           />
           {errors.find(error => error.for === 'statecode')?.message}
           <CustomTextField
-            select
-            fullWidth
-            id='select-statecode'
-            value={formData.statecode}
-            onChange={e => setFormData({ ...formData, statecode: e.target.value })}
-            label='Statecode'
-          >
-            {stateinfoData?.map((stateinfo: any) => {
-              return (
-                <MenuItem key={stateinfo.statecode} value={stateinfo.statecode}>
-                  {stateinfo.desc}
-                </MenuItem>
-              )
-            })}
-          </CustomTextField>
-          {errors.find(error => error.for === 'statecode')?.message}
-          <CustomTextField
-            label='Docuname'
+            label='Desc'
             fullWidth
             placeholder=''
-            value={formData.docuname}
-            onChange={e => setFormData({ ...formData, docuname: parseInt(e.target.value) })}
+            value={formData.desc}
+            onChange={e => setFormData({ ...formData, desc: e.target.value })}
           />
-          {errors.find(error => error.for === 'docuname')?.message}
+          {errors.find(error => error.for === 'desc')?.message}
           <CustomTextField
-            label='Sort'
+            label='Ref'
             fullWidth
             placeholder=''
-            value={formData.sort}
-            onChange={e => setFormData({ ...formData, sort: parseInt(e.target.value) })}
+            value={formData.ref}
+            onChange={e => setFormData({ ...formData, ref: e.target.value })}
           />
-          {errors.find(error => error.for === 'docuname')?.message}
+          {errors.find(error => error.for === 'ref')?.message}
+          <CustomTextField
+            label='Remark'
+            fullWidth
+            placeholder=''
+            value={formData.remark}
+            onChange={e => setFormData({ ...formData, remark: e.target.value })}
+          />
+          {errors.find(error => error.for === 'remark')?.message}
           <div className='flex items-center gap-4'>
-            {updateData.dep !== '' ? (
+            {updateData.statecode !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
                 Edit
               </Button>
@@ -240,4 +222,4 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
   )
 }
 
-export default DepartmentDrawerForm
+export default StateinfoDrawerForm
