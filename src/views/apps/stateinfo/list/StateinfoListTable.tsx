@@ -166,19 +166,23 @@ const StateinfoListTable = ({ tableData }: Props) => {
     setAddStateinfoOpen(true)
   }
 
-  const handleDeleteStateinfo = async (stateinfo: object) => {
+  const handleDeleteStateinfo = async (statecode: object) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/delete`, stateinfo)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/delete`, statecode)
 
       if (response.data.message === 'success') {
-        // console.log(response.data.data.detail)
+        console.log('=====stateinfo')
+        console.log(response.data)
 
         // //todo update tableData
-        // const em: any = dep
-        // const newUpdate = tableData?.filter(el => el.dep !== em.dep)
+        const em: any = statecode
+        console.log('==== look statecode')
+        console.log(statecode)
 
-        // console.log('newUpdate === ', newUpdate)
-        // setData(newUpdate)
+        const newUpdate = tableData?.filter(el => el.statecode !== em.statecode)
+
+        console.log('newUpdate === ', newUpdate)
+        setData(newUpdate)
 
         tableData = data
 
@@ -239,33 +243,33 @@ const StateinfoListTable = ({ tableData }: Props) => {
           </div>
         )
       }),
-      columnHelper.accessor('ref', {
-        header: 'Ref',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.ref}
-            </Typography>
-          </div>
-        )
-      }),
-      columnHelper.accessor('remark', {
-        header: 'Remark',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.remark}
-            </Typography>
-          </div>
-        )
-      }),
+      //   columnHelper.accessor('ref', {
+      //     header: 'Ref',
+      //     cell: ({ row }) => (
+      //       <div className='flex flex-col'>
+      //         <Typography color='text.primary' className='font-medium'>
+      //           {row.original.ref}
+      //         </Typography>
+      //       </div>
+      //     )
+      //   }),
+      //   columnHelper.accessor('remark', {
+      //     header: 'Remark',
+      //     cell: ({ row }) => (
+      //       <div className='flex flex-col'>
+      //         <Typography color='text.primary' className='font-medium'>
+      //           {row.original.remark}
+      //         </Typography>
+      //       </div>
+      //     )
+      //   }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeleteStateinfo({ Stateinfo: row.original.statecode })
+                handleDeleteStateinfo({ statecode: row.original.statecode })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -275,6 +279,10 @@ const StateinfoListTable = ({ tableData }: Props) => {
                 // initialData.password = ''
                 initialData.statecode = row.original.statecode
                 initialData.desc = row.original.desc
+                initialData.ref = row.original.ref
+                initialData.remark = row.original.remark
+                initialData.update_date = row.original.update_date
+                initialData.update_by = row.original.update_by
                 setAddStateinfoOpen(!addStateinfoOpen)
               }}
             >
@@ -426,13 +434,13 @@ const StateinfoListTable = ({ tableData }: Props) => {
         />
       </Card>
 
-      {/* <GroupDrawerForm
+      <GroupDrawerForm
         open={addStateinfoOpen}
         setData={setData}
         tableData={tableData}
         updateData={initialData}
         handleClose={() => setAddStateinfoOpen(!addStateinfoOpen)}
-      /> */}
+      />
     </>
   )
 }

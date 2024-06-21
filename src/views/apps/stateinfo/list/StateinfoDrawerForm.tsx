@@ -26,6 +26,8 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import type { StateinfoFormDataType, StateinfosType } from '@/types/apps/stateinfoTypes'
 import { addStateinfoFormSchema } from '@/schemas/stateinfoSchema'
+import { useSession } from 'next-auth/react'
+import router, { useRouter } from 'next/router'
 
 type Props = {
   open: boolean
@@ -56,14 +58,22 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
   const [formData, setFormData] = useState<StateinfoFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
 
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  const { data: session } = useSession()
+  const emailData = session?.user.email
+
+  const handleRefresh = () => {
+    //router.reload()
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setFormData(initialData)
 
+    //Add
     try {
       const parsedData = addStateinfoFormSchema.safeParse(formData)
 
@@ -83,57 +93,86 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
       }
 
       console.log('Form submitted successfully', parsedData.data)
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfo`, formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, formData)
 
-      console.log('signup response===', response.data)
+      console.log('Add response===', response.data)
 
       if (response.data.success) {
-        console.log('signup success')
+        console.log('Add success')
 
         if (tableData) {
-          const updateData: any = {
+          const addData: any = {
             statecode: formData.statecode,
             desc: formData.desc,
             ref: formData.ref,
-            remark: formData.remark
+            remark: formData.remark,
+            create_date: '',
+            create_by: String(emailData),
+            update_date: '',
+            update_by: String(emailData)
           }
 
-          tableData.push(updateData)
+          console.log(addData)
+
+          tableData.push(addData)
         }
 
         setData(tableData)
         handleClose()
+        handleRefresh()
       } else {
-        console.log('register failed.')
+        console.log('add failed.')
       }
     } catch (error: any) {
-      console.log('Add user failed. ', error.message)
+      console.log('Add stateinfo failed. ', error.message)
     }
   }
 
+  //Reset
   const handleReset = () => {
     handleClose()
     setFormData(initialData)
   }
 
+  //Update
   const handleUpdateData = async () => {
     try {
-      const response = await axios.post('/api/stateinfo/update', formData)
+      const response = await axios.post('/api/stateinfos/update', formData)
+
+      console.log('stateinfo formdate=====')
+      console.log(formData)
+      console.log(response.data)
 
       if (response.data.message === 'success') {
         console.log('Update stateinfo success.')
         handleClose()
 
         const index = tableData?.findIndex(x => x.statecode == formData.statecode)
-
+        console.log('index=>' + index)
         if (tableData) {
           //const newUpdate = { ...tableData[Number(foundIndex)], formData }
           // tableData[Number(index)].password = formData.password
           //tableData[Number(index)]
+
           tableData[Number(index)].statecode = formData.statecode
           tableData[Number(index)].desc = formData.desc
           tableData[Number(index)].ref = formData.ref
           tableData[Number(index)].remark = formData.remark
+
+          console.log('email=>' + String(emailData))
+          if (tableData) {
+            const updateData: any = {
+              statecode: formData.statecode,
+              desc: formData.desc,
+              ref: formData.ref,
+              remark: formData.remark,
+              update_date: '',
+              update_by: emailData
+            }
+            console.log('updateData=====')
+            console.log(updateData)
+            tableData.push(updateData)
+          }
         }
 
         setData(tableData)
@@ -200,7 +239,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
             value={formData.remark}
             onChange={e => setFormData({ ...formData, remark: e.target.value })}
           />
-          {errors.find(error => error.for === 'remark')?.message}
+          {errors.find(error => error.for === 'update_date')?.message}
           <div className='flex items-center gap-4'>
             {updateData.statecode !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
