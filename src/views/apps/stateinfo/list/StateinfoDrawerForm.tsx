@@ -127,7 +127,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
 
         setData(tableData)
         handleClose()
-        //handleRefresh()
+        handleRefresh()
       } else {
         console.log('add failed.')
       }
