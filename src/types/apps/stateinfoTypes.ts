@@ -18,6 +18,8 @@ export type StateinfoFormDataType = {
   desc: string
   ref: string
   remark: string
+  create_date: string
+  create_by: string
   update_date: string
   update_by: string
 }

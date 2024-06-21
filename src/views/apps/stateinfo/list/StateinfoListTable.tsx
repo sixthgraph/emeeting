@@ -73,6 +73,12 @@ declare module '@tanstack/table-core' {
   }
 }
 
+const handleRefresh = () => {
+  //router.reload()
+  setTimeout(() => {
+    window.location.reload()
+  }, 100)
+}
 // // Styled Components
 const Icon = styled('i')({})
 
@@ -190,6 +196,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
 
         //todo update refresh token
         console.log('Update token ===', response.data.token)
+        handleRefresh()
       } else {
         console.error('Stateinfo delete failed')
       }

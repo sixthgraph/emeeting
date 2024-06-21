@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   console.log('server token =====')
   console.log(token)
-  console.log('reqBody =====')
+  console.log('reqBody update=====')
   console.log(reqBody)
 
   try {

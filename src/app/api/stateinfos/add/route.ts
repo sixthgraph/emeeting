@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json()
 
-    console.log('reqBody ==== ', reqBody)
+    console.log('reqBody add ==== ', reqBody)
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createstateinfo`, reqBody, {
       headers: {
         Authorization: `Bearer ${token}`,

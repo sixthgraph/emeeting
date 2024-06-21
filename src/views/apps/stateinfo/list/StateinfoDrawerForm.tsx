@@ -61,6 +61,8 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
   const { data: session } = useSession()
   const emailData = session?.user.email
 
+  console.log(emailData)
+
   const handleRefresh = () => {
     //router.reload()
     setTimeout(() => {
@@ -75,6 +77,8 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
 
     //Add
     try {
+      formData.create_by = String(emailData)
+      formData.update_by = String(emailData)
       const parsedData = addStateinfoFormSchema.safeParse(formData)
 
       if (!parsedData.success) {
@@ -107,19 +111,23 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
             ref: formData.ref,
             remark: formData.remark,
             create_date: '',
-            create_by: String(emailData),
+            create_by: emailData,
             update_date: '',
-            update_by: String(emailData)
+            update_by: emailData
           }
+          console.log('add ====' + emailData)
 
           console.log(addData)
 
+          //tableData.push(addData)
           tableData.push(addData)
         }
 
+        console.log(tableData)
+
         setData(tableData)
         handleClose()
-        handleRefresh()
+        //handleRefresh()
       } else {
         console.log('add failed.')
       }
@@ -137,6 +145,8 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
   //Update
   const handleUpdateData = async () => {
     try {
+      formData.update_by = String(emailData)
+
       const response = await axios.post('/api/stateinfos/update', formData)
 
       console.log('stateinfo formdate=====')
@@ -158,21 +168,6 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
           tableData[Number(index)].desc = formData.desc
           tableData[Number(index)].ref = formData.ref
           tableData[Number(index)].remark = formData.remark
-
-          console.log('email=>' + String(emailData))
-          if (tableData) {
-            const updateData: any = {
-              statecode: formData.statecode,
-              desc: formData.desc,
-              ref: formData.ref,
-              remark: formData.remark,
-              update_date: '',
-              update_by: emailData
-            }
-            console.log('updateData=====')
-            console.log(updateData)
-            tableData.push(updateData)
-          }
         }
 
         setData(tableData)
@@ -239,7 +234,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
             value={formData.remark}
             onChange={e => setFormData({ ...formData, remark: e.target.value })}
           />
-          {errors.find(error => error.for === 'update_date')?.message}
+          {errors.find(error => error.for === 'remark')?.message}
           <div className='flex items-center gap-4'>
             {updateData.statecode !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
