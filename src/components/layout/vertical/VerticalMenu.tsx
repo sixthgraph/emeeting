@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material/styles'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Type Imports
+import type { getDictionary } from '@/utils/getDictionary'
 import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
 
 // Component Imports
@@ -31,6 +32,7 @@ type RenderExpandIconProps = {
 }
 
 type Props = {
+  dictionary: Awaited<ReturnType<typeof getDictionary>>
   scrollMenu: (container: any, isPerfectScrollbar: boolean) => void
 }
 
@@ -40,7 +42,7 @@ const RenderExpandIcon = ({ open, transitionDuration }: RenderExpandIconProps) =
   </StyledVerticalNavExpandIcon>
 )
 
-const VerticalMenu = ({ scrollMenu }: Props) => {
+const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
@@ -78,52 +80,41 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
         <MenuItem href={`/${locale}/dashboard`} icon={<i className='tabler-dashboard' />}>
-          Dashboard
+          {dictionary['navigation'].dashboard}
         </MenuItem>
         <MenuSection label='Works'>
           <MenuItem href={`/${locale}/todo`} icon={<i className='tabler-inbox' />}>
-            To Do
+            {dictionary['navigation'].todo}
           </MenuItem>
           <MenuItem href={`/${locale}/my-items`} icon={<i className='tabler-box' />}>
-            My Items
+            {dictionary['navigation'].myItems}
           </MenuItem>
           {/* <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler:window-maximize' />}> */}
           <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler-window-maximize' />}>
-            Assignment
+            {dictionary['navigation'].assignment}
           </MenuItem>
           <MenuItem href={`/${locale}/collabs`} icon={<i className='tabler-brand-asana' />}>
-            Collabs
+            {dictionary['navigation'].collabs}
           </MenuItem>
         </MenuSection>
-        <MenuSection label='Admin'>
+        <MenuSection label={dictionary['navigation'].admin}>
           <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
-            Users
+            {dictionary['navigation'].users}
           </MenuItem>
-          <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
+          {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
             Users Example
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem href={`/${locale}/departments`} icon={<i className='tabler-building-bank' />}>
-            Departments
+            {dictionary['navigation'].departments}
           </MenuItem>
           <MenuItem href={`/${locale}/groups`} icon={<i className='tabler-users' />}>
-            User Group
+            {dictionary['navigation'].userGroup}
           </MenuItem>
-          <MenuItem href={`/${locale}/position`} icon={<i className='tabler-scan-position' />}>
-            Position
+          <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
+            {dictionary['navigation'].position}
           </MenuItem>
           <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
-            Stateinfo
-          </MenuItem>
-        </MenuSection>
-        <MenuSection label='Test'>
-          <MenuItem href={`/${locale}/test`} icon={<i className='tabler-users' />}>
-            Test
-          </MenuItem>
-          <MenuItem href={`/${locale}/test2`} icon={<i className='tabler-users' />}>
-            Test2
-          </MenuItem>
-          <MenuItem href={`/${locale}/test-update-session`} icon={<i className='tabler-users' />}>
-            Update Session
+            {dictionary['navigation'].stateInfo}
           </MenuItem>
         </MenuSection>
       </Menu>

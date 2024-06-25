@@ -3,6 +3,7 @@ import GithubProvider from 'next-auth/providers/github'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
+import { signOut } from 'next-auth/react'
 
 import axios from 'axios'
 
@@ -209,7 +210,8 @@ export const options: NextAuthOptions = {
         token.email = ''
 
         // const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-        // signOut({ redirect: false }).then(() => console.log(logoutCognitoUrl))
+        //signOut({ redirect: false }).then(() => console.log(logoutCognitoUrl))
+        signOut({ redirect: false })
       }
 
       //console.log('tokenB 5 ==== ', refreshTokenData)

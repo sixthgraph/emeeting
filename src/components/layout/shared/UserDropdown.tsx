@@ -7,7 +7,7 @@ import type { MouseEvent } from 'react'
 // Next Imports
 import { useParams, useRouter } from 'next/navigation'
 
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 // MUI Imports
 import { styled } from '@mui/material/styles'
@@ -22,6 +22,12 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
+
+// Util Imports
+import { getLocalizedUrl } from '@/utils/i18n'
+
+// Type Imports
+import type { Locale } from '@configs/i18n'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
@@ -66,11 +72,26 @@ const UserDropdown = () => {
     setOpen(false)
   }
 
+  // const handleUserLogout = async () => {
+  //   // Redirect to login page
+  //   // router.push('/login')
+  //   // router.push(`/${locale}/login`)
+  //   router.push(`/api/auth/signout`)
+  // }
+
   const handleUserLogout = async () => {
-    // Redirect to login page
-    // router.push('/login')
-    // router.push(`/${locale}/login`)
-    router.push(`/api/auth/signout`)
+    try {
+      // Sign out from the app
+      await signOut({ redirect: false })
+
+      // Redirect to login page
+      router.push(getLocalizedUrl('/login', locale as Locale))
+    } catch (error) {
+      console.error(error)
+
+      // Show above error in a toast like following
+      // toastService.error((err as Error).message)
+    }
   }
 
   const { data: session } = useSession({

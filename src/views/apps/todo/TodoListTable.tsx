@@ -3,21 +3,16 @@
 // React Imports
 import { useEffect, useState, useMemo } from 'react'
 
-// Next Imports
-// import Link from 'next/link'
-// import { useParams } from 'next/navigation'
+// import { redirect } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
-// MUI Imports
-// import { NextResponse } from 'next/server'
+import Link from 'next/link'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 
 import Chip from '@mui/material/Chip'
-
-//import Checkbox from '@mui/material/Checkbox'
-
 import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
@@ -41,14 +36,7 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// Type Imports
-//import axios from 'axios'
-
-//import type { Locale } from '@configs/i18n'
-
 import TablePaginationComponent from '@components/TablePaginationComponent'
-
-// import type { ThemeColor } from '@core/types'
 import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
 import type { DepType } from '@/types/apps/userTypes'
 
@@ -62,8 +50,8 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
 import { getInitials } from '@/utils/getInitials'
-
-//import { getLocalizedUrl } from '@/utils/i18n'
+import { getLocalizedUrl } from '@/utils/i18n'
+import type { Locale } from '@configs/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
@@ -126,6 +114,32 @@ const DebouncedInput = ({
 const depObj: DepType = {}
 
 // Vars
+// const initialData = {
+//   workflowid: '',
+//   wid: '',
+//   userid: '',
+//   user_field: [''],
+//   task: [''],
+//   subject: '',
+//   status: '',
+//   statecode: '',
+//   registeruid: '',
+//   registerdep: '',
+//   processname: '',
+//   pagetargetid: '',
+//   pagesourceid: '',
+//   nodeid: '',
+//   lastname: '',
+//   firstname: '',
+//   eformlist: [''],
+//   connectionid: '',
+//   conditions: '',
+//   blockid: '',
+//   basketid: '',
+//   Registerdate: '',
+//   Expiredate: '',
+//   Completedate: ''
+// }
 
 // Column Definitions
 const columnHelper = createColumnHelper<TodoTypeWithAction>()
@@ -136,6 +150,11 @@ type Props = {
 }
 
 const TodoListTable = ({ tableData, depData }: Props) => {
+  const router = useRouter()
+
+  // Hooks
+  const { lang: locale } = useParams()
+
   depData?.map(dep => {
     const id = String(dep.dep)
 
@@ -149,8 +168,11 @@ const TodoListTable = ({ tableData, depData }: Props) => {
     }
   })
 
-  console.log('depObj==')
-  console.log(depObj)
+  // console.log('depObj==')
+  // console.log(depObj)
+
+  console.log('tableData === ')
+  console.log(tableData)
 
   // States
   //const [rowSelection, setRowSelection] = useState({})
@@ -160,8 +182,20 @@ const TodoListTable = ({ tableData, depData }: Props) => {
 
   console.log('todo list table load.')
 
-  const handleRowClick = () => {
-    alert('click')
+  //handleRowClick(row.original.nodeid,row.original.workflowid,row.original.wid)
+
+  const handleRowClick = (nodeid: any, workflowid: any, wid: any, data: any) => {
+    // console.log(nodeid)
+    // console.log(workflowid)
+    // console.log(wid)
+    console.log(data)
+
+    const filteredTodo = tableData?.filter(todo => {
+      return todo.nodeid == nodeid && todo.workflowid == workflowid && todo.wid == wid
+    })
+
+    console.log(filteredTodo)
+    router.push(getLocalizedUrl('/work', locale as Locale))
   }
 
   // Table Columns config
@@ -220,7 +254,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <div
             className='flex items-center gap-4'
             onClick={() => {
-              handleRowClick()
+              handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid, row.original)
             }}
           >
             {getAvatar({ avatar: row.original.avatar, fullName: row.original.firstname + ' ' + row.original.lastname })}
@@ -238,24 +272,34 @@ const TodoListTable = ({ tableData, depData }: Props) => {
         cell: (
           { row } // <div className='flex flex-col pli-2 plb-3'>
         ) => (
-          <div
-            className='flex flex-col pli-2 plb-3'
-            onClick={() => {
-              handleRowClick()
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: row.original
             }}
           >
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.subject}
-            </Typography>
-            <div className='flex'>
-              {row.original.overdue ? (
-                <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
-              ) : (
-                ''
-              )}
-              {row.original.status && <Chip variant='tonal' size='small' label={row.original.status} color='warning' />}
+            <div
+              className='flex flex-col pli-2 plb-3'
+
+              // onClick={() => {
+              //   handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid)
+              // }}
+            >
+              <Typography color='text.primary' className='font-medium'>
+                {row.original.subject}
+              </Typography>
+              <div className='flex'>
+                {row.original.overdue ? (
+                  <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
+                ) : (
+                  ''
+                )}
+                {row.original.status && (
+                  <Chip variant='tonal' size='small' label={row.original.status} color='warning' />
+                )}
+              </div>
             </div>
-          </div>
+          </Link>
         )
       }),
       columnHelper.accessor('basketid', {
@@ -264,7 +308,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <div
             className='flex items-center gap-2'
             onClick={() => {
-              handleRowClick()
+              handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid)
             }}
           >
             <Typography color='text.primary' className='font-medium'>
@@ -279,7 +323,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <div
             className='flex items-center gap-2'
             onClick={() => {
-              handleRowClick()
+              handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid)
             }}
           >
             <Typography className='capitalize' color='text.primary'>

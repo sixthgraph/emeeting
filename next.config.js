@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    nextScriptWorkers: true
+  },
   basePath: process.env.BASEPATH,
   redirects: async () => {
     return [

@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'react'
 import { styled, useColorScheme, useTheme } from '@mui/material/styles'
 
 // Type Imports
+import type { getDictionary } from '@/utils/getDictionary'
 import type { Mode, SystemMode } from '@core/types'
 
 // Component Imports
@@ -22,6 +23,7 @@ import { useSettings } from '@core/hooks/useSettings'
 import navigationCustomStyles from '@core/styles/vertical/navigationCustomStyles'
 
 type Props = {
+  dictionary: Awaited<ReturnType<typeof getDictionary>>
   mode: Mode
   systemMode: SystemMode
 }
@@ -46,7 +48,7 @@ const StyledBoxForShadow = styled('div')(({ theme }) => ({
 
 const Navigation = (props: Props) => {
   // Props
-  const { mode, systemMode } = props
+  const { dictionary, mode, systemMode } = props
 
   // Hooks
   const verticalNavOptions = useVerticalNav()
@@ -121,7 +123,7 @@ const Navigation = (props: Props) => {
         )}
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
-      <VerticalMenu scrollMenu={scrollMenu} />
+      <VerticalMenu dictionary={dictionary} scrollMenu={scrollMenu} />
     </VerticalNav>
   )
 }
