@@ -67,10 +67,12 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 
 // Type Imports
 import type { ProfileTabType } from '@/types/pages/profileTypes'
+import type { WorkinfoType } from '@/types/apps/workType'
+import type { EFORM_DATA } from '@/types/apps/workType'
 
-const EformList = ({ data }: { data?: ProfileTabType }) => {
+const EformList = ({ data }: { data?: WorkinfoType }) => {
   console.log('data eform list')
-  console.log(data)
+  console.log(data?.EFORMS)
 
   // useEffect(() => {
   //   console.log($('#input').val())

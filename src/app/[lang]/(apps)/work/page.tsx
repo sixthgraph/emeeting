@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic'
 
 // Type Imports
 import type { Data } from '@/types/pages/profileTypes'
-
+import type { WorkinfoType } from '@/types/apps/workType'
 // Component Imports
 import WorkDetail from '@/views/apps/work'
 
@@ -21,10 +21,10 @@ const ActivityTab = dynamic(() => import('@views/apps/work/activity'))
 
 // Vars
 
-const tabContentList = (data?: Data): { [key: string]: ReactElement } => ({
-  form: <FormTab data={data?.users.profile} />,
-  document: <DocumentTab data={data?.users.profile} />,
-  activity: <ActivityTab data={data?.users.profile} />
+const tabContentList = (data?: WorkinfoType): { [key: string]: ReactElement } => ({
+  form: <FormTab data={data} />,
+  document: <DocumentTab data={data} />,
+  activity: <ActivityTab data={data} />
 
   // profile: <ProfileTab data={data?.users.profile} />,
   // teams: <TeamsTab data={data?.users.teams} />,
