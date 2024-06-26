@@ -27,20 +27,20 @@ const UserProfileHeader = ({ workData, data }: { workData: any; data?: ProfileHe
         </div>
         <div className='flex is-full justify-start self-end flex-col items-center gap-6 sm-gap-0 sm:flex-row sm:justify-between sm:items-end '>
           <div className='flex flex-col items-center sm:items-start gap-2'>
-            <div className='flex flex-wrap gap-6 justify-center sm:justify-normal'>
-              <div className='flex flex-col'>
+            <div className='grid grid-col-3 gap-6 '>
+              <div>
                 <Typography className='text-xs'>Created by:</Typography>
                 <Typography className='font-bold'>{workData?.firstname + ' ' + workData?.lastname}</Typography>
                 <Typography className='text-xs mt-2'>Work ID:</Typography>
                 <Typography className='font-bold'>{workData.wid}</Typography>
               </div>
-              <div className='flex flex-col'>
+              <div>
                 <Typography className='text-xs'>Created:</Typography>
                 <Typography className='font-bold'>{workData?.Registerdate}</Typography>
                 <Typography className='text-xs mt-2'>Subject:</Typography>
                 <Typography className='font-bold'>{workData.subject}</Typography>
               </div>
-              <div className='flex flex-col'>
+              <div>
                 <Typography className='font-medium'>Work progress 50%</Typography>
               </div>
             </div>

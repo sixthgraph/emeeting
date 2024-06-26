@@ -19,8 +19,8 @@ import { CardHeader } from '@mui/material'
 import type { Data } from '@/types/pages/profileTypes'
 
 // Component Imports
-import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
+import WorkProfileHeader from './WorkProfileHeader'
 
 const WorkDetail = ({
   workData,
@@ -46,8 +46,7 @@ const WorkDetail = ({
       <Grid item xs={8}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
-            {/* <UserProfileHeader data={data?.profileHeader} /> */}
-            <UserProfileHeader workData={workData} data={data?.profileHeader} />
+            <WorkProfileHeader workData={workData} data={data?.profileHeader} />
           </Grid>
           {activeTab === undefined ? null : (
             <Grid item xs={12} className='flex flex-col gap-6'>
