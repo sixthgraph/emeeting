@@ -180,24 +180,6 @@ const TodoListTable = ({ tableData, depData }: Props) => {
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  console.log('todo list table load.')
-
-  //handleRowClick(row.original.nodeid,row.original.workflowid,row.original.wid)
-
-  const handleRowClick = (nodeid: any, workflowid: any, wid: any, data: any) => {
-    // console.log(nodeid)
-    // console.log(workflowid)
-    // console.log(wid)
-    console.log(data)
-
-    const filteredTodo = tableData?.filter(todo => {
-      return todo.nodeid == nodeid && todo.workflowid == workflowid && todo.wid == wid
-    })
-
-    console.log(filteredTodo)
-    router.push(getLocalizedUrl('/work', locale as Locale))
-  }
-
   // Table Columns config
   const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(
     () => [
@@ -251,20 +233,25 @@ const TodoListTable = ({ tableData, depData }: Props) => {
       columnHelper.accessor('registeruid', {
         header: 'Created By',
         cell: ({ row }) => (
-          <div
-            className='flex items-center gap-4'
-            onClick={() => {
-              handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid, row.original)
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}`
             }}
           >
-            {getAvatar({ avatar: row.original.avatar, fullName: row.original.firstname + ' ' + row.original.lastname })}
-            <div className='flex flex-col'>
-              <Typography color='text.primary' className='font-medium'>
-                {row.original.firstname + ' ' + row.original.lastname}
-              </Typography>
-              <Typography variant='body2'>{row.original.registeruid}</Typography>
+            <div className='flex items-center gap-4'>
+              {getAvatar({
+                avatar: row.original.avatar,
+                fullName: row.original.firstname + ' ' + row.original.lastname
+              })}
+              <div className='flex flex-col'>
+                <Typography color='text.primary' className='font-medium'>
+                  {row.original.firstname + ' ' + row.original.lastname}
+                </Typography>
+                <Typography variant='body2'>{row.original.registeruid}</Typography>
+              </div>
             </div>
-          </div>
+          </Link>
         )
       }),
       columnHelper.accessor('subject', {
@@ -275,16 +262,10 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: row.original
+              query: `wid=${row.original.wid}`
             }}
           >
-            <div
-              className='flex flex-col pli-2 plb-3'
-
-              // onClick={() => {
-              //   handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid)
-              // }}
-            >
+            <div className='flex flex-col pli-2 plb-3'>
               <Typography color='text.primary' className='font-medium'>
                 {row.original.subject}
               </Typography>
@@ -305,31 +286,35 @@ const TodoListTable = ({ tableData, depData }: Props) => {
       columnHelper.accessor('basketid', {
         header: 'Department',
         cell: ({ row }) => (
-          <div
-            className='flex items-center gap-2'
-            onClick={() => {
-              handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid)
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}`
             }}
           >
-            <Typography color='text.primary' className='font-medium'>
-              {depObj[row.original.basketid] && depObj[row.original.basketid].depname}
-            </Typography>
-          </div>
+            <div className='flex items-center gap-2'>
+              <Typography color='text.primary' className='font-medium'>
+                {depObj[row.original.basketid] && depObj[row.original.basketid].depname}
+              </Typography>
+            </div>
+          </Link>
         )
       }),
       columnHelper.accessor('Registerdate', {
         header: 'Created',
         cell: ({ row }) => (
-          <div
-            className='flex items-center gap-2'
-            onClick={() => {
-              handleRowClick(row.original.nodeid, row.original.workflowid, row.original.wid)
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}`
             }}
           >
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.Registerdate}
-            </Typography>
-          </div>
+            <div className='flex items-center gap-2'>
+              <Typography className='capitalize' color='text.primary'>
+                {row.original.Registerdate}
+              </Typography>
+            </div>
+          </Link>
         )
       })
     ],

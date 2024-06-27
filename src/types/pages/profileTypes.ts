@@ -106,6 +106,7 @@ export type DataType = {
   connections: ConnectionsTabType[]
 }
 export type Data = {
+  [x: string]: any
   users: DataType
   profileHeader: ProfileHeaderType
 }

@@ -34,9 +34,6 @@ const WorkDetail = ({
   // States
   const [activeTab, setActiveTab] = useState('form')
 
-  console.log('workData ==== ')
-  console.log(workData)
-
   const handleChange = (event: SyntheticEvent, value: string) => {
     setActiveTab(value)
   }
@@ -45,7 +42,7 @@ const WorkDetail = ({
     <Grid container spacing={6}>
       <Grid item xs={8}>
         <Grid container spacing={6}>
-          <Grid item xs={12}>
+          <Grid item xs={12} className='flex flex-col gap-6'>
             <WorkProfileHeader workData={workData} data={data?.profileHeader} />
           </Grid>
           {activeTab === undefined ? null : (
