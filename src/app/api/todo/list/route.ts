@@ -7,6 +7,7 @@ import { options } from './../../auth/[...nextauth]/options'
 export async function GET() {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
+  const email = serverSession?.user.email
 
   try {
     const headers = {
@@ -14,10 +15,12 @@ export async function GET() {
       cache: 'force-cache'
     }
 
-    const response = await fetch(
-      `${process.env.ROUTE_FLOW_API_URL}/getworklist?id=webmaster@excelink.co.th&dep=66165612ac85b486211bdcc7`,
-      { headers }
-    )
+    console.log('call getworklist url ====')
+    console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=test`)
+
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=test`, {
+      headers
+    })
 
     const depres = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
     const todoData = await response.json()

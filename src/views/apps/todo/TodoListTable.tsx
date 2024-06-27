@@ -150,6 +150,9 @@ type Props = {
 }
 
 const TodoListTable = ({ tableData, depData }: Props) => {
+  console.log('tableData =====')
+  console.log(tableData)
+
   const router = useRouter()
 
   // Hooks
@@ -236,7 +239,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}`
+              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
             }}
           >
             <div className='flex items-center gap-4'>
@@ -262,7 +265,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}`
+              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
             }}
           >
             <div className='flex flex-col pli-2 plb-3'>
@@ -289,7 +292,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}`
+              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -306,7 +309,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}`
+              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -418,7 +421,9 @@ const TodoListTable = ({ tableData, depData }: Props) => {
                 </tr>
               ))}
             </thead>
-            {table.getFilteredRowModel().rows.length === 0 ? (
+
+            {/* { table.getFilteredRowModel().rows.length === 0 ? ( */}
+            {tableData === null ? (
               <tbody>
                 <tr>
                   <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
@@ -444,15 +449,17 @@ const TodoListTable = ({ tableData, depData }: Props) => {
             )}
           </table>
         </div>
-        <TablePagination
-          component={() => <TablePaginationComponent table={table} />}
-          count={table.getFilteredRowModel().rows.length}
-          rowsPerPage={table.getState().pagination.pageSize}
-          page={table.getState().pagination.pageIndex}
-          onPageChange={(_, page) => {
-            table.setPageIndex(page)
-          }}
-        />
+        {tableData && (
+          <TablePagination
+            component={() => <TablePaginationComponent table={table} />}
+            count={table.getFilteredRowModel().rows.length}
+            rowsPerPage={table.getState().pagination.pageSize}
+            page={table.getState().pagination.pageIndex}
+            onPageChange={(_, page) => {
+              table.setPageIndex(page)
+            }}
+          />
+        )}
       </Card>
     </>
   )

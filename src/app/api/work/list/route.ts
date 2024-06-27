@@ -1,25 +1,20 @@
 // Next Imports
-//import type { NextRequest } from 'next/server'
+
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
 import axios from 'axios'
 
-// Data Imports
-//import { db } from '@/app/api/fake-db/user-profile'
-import { getServerSession } from 'next-auth'
-
-import { options } from '../../auth/[...nextauth]/options'
-
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
 
-  const { token, wid } = reqBody
+  console.log('reqBody')
+  console.log(reqBody)
 
-  const serverSession = await getServerSession(options)
-  const token2 = serverSession?.user.token
+  const { wid, dep, token, email } = reqBody
 
-  console.log('server token2 ==', token2)
+  console.log('call3 work api url === ')
+  console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`)
 
   try {
     const headers = {
@@ -29,10 +24,9 @@ export async function POST(req: NextRequest) {
       Expires: '0'
     }
 
-    const res = await axios.get(
-      `${process.env.ROUTE_FLOW_API_URL}/getworklist?id=webmaster@excelink.co.th&dep=66165612ac85b486211bdcc7&wid=${wid}`,
-      { headers }
-    )
+    const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`, {
+      headers
+    })
 
     console.log('getworklist return-------------------')
     console.log(res)
