@@ -5,11 +5,9 @@ import type { ReactElement } from 'react'
 import dynamic from 'next/dynamic'
 
 // Type Imports
-
+//import type { Data } from '@/types/pages/profileTypes'
 import type { WorkinfoType } from '@/types/apps/workType'
-
-// Component
-
+// Component Imports
 import WorkDetail from '@/views/apps/work'
 
 // const ProfileTab = dynamic(() => import('@views/apps/work/profile'))
@@ -39,7 +37,7 @@ const getData = async () => {
   const res = await fetch(`${process.env.API_URL}/work`)
 
   if (!res.ok) {
-    throw new Error('Failed to fetch workdata')
+    throw new Error('Failed to fetch profileData')
   }
 
   return res.json()

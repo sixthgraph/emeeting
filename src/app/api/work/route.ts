@@ -1,12 +1,11 @@
 // Next Imports
-
+import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
 import axios from 'axios'
 
-import { getServerSession } from 'next-auth'
-
-import { options } from '../auth/[...nextauth]/options'
+// Data Imports
+import { db } from '@/app/api/fake-db/user-profile'
 
 export async function GET() {
   const serverSession = await getServerSession(options)

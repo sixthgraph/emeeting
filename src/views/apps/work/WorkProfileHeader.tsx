@@ -29,32 +29,32 @@ const WorkProfileHeader = ({ workData, data }: { workData: any; data?: ProfileHe
 
   return (
     <>
-      <Card variant='outlined'>
-        {/* <CardMedia image={data?.coverImg} className='bs-[250px]' /> */}
-        <CardContent className='flex gap-5 item-stretch flex-col'>
-          <div className='flex items-stretch gap-4 w-full rounded-lg bg-stripes-cyan text-center'>
-            <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
-              <img height={55} width={55} src={data?.profileImg} className='rounded' alt='Profile Background' />
+      <TabContext value={value}>
+        <Card variant='outlined'>
+          {/* <CardMedia image={data?.coverImg} className='bs-[250px]' /> */}
+          <CardContent className='flex gap-5 item-stretch flex-col'>
+            <div className='flex items-stretch gap-4 w-full rounded-lg bg-stripes-cyan text-center'>
+              <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
+                <img height={55} width={55} src={data?.profileImg} className='rounded' alt='Profile Background' />
+              </div>
+              <div className='flex-1 flex flex-col items-start justify-start'>
+                <Typography className='text-xs'>Created by:</Typography>
+                <Typography className='font-bold'>{workData?.firstname + ' ' + workData?.lastname}</Typography>
+                <Typography className='text-xs mt-2'>Work ID:</Typography>
+                <Typography className='font-bold'>{workData.wid}</Typography>
+              </div>
+              <div className='flex-1 flex flex-col items-start justify-start'>
+                <Typography className='text-xs'>Created:</Typography>
+                <Typography className='font-bold'>{workData?.Registerdate}</Typography>
+                <Typography className='text-xs mt-2'>Subject:</Typography>
+                <Typography className='font-bold'>{workData.subject}</Typography>
+              </div>
+              <div className='flex-1 flex items-start justify-end'>
+                <Typography className='font-medium'>Work progress 50%</Typography>
+              </div>
             </div>
-            <div className='flex-1 flex flex-col items-start justify-start'>
-              <Typography className='text-xs'>Created by:</Typography>
-              <Typography className='font-bold'>{workData?.firstname + ' ' + workData?.lastname}</Typography>
-              <Typography className='text-xs mt-2'>Work ID:</Typography>
-              <Typography className='font-bold'>{workData.wid}</Typography>
-            </div>
-            <div className='flex-1 flex flex-col items-start justify-start'>
-              <Typography className='text-xs'>Created:</Typography>
-              <Typography className='font-bold'>{workData?.Registerdate}</Typography>
-              <Typography className='text-xs mt-2'>Subject:</Typography>
-              <Typography className='font-bold'>{workData.subject}</Typography>
-            </div>
-            <div className='flex-1 flex items-start justify-end'>
-              <Typography className='font-medium'>Work progress 50%</Typography>
-            </div>
-          </div>
-          <div className='flex flex-1'>
-            <Box sx={{ width: '100%', typography: 'body1' }}>
-              <TabContext value={value}>
+            <div className='flex flex-1'>
+              <Box sx={{ width: '100%', typography: 'body1' }}>
                 <Box>
                   <TabList onChange={handleChange} aria-label='lab API tabs example'>
                     <Tab
@@ -64,7 +64,7 @@ const WorkProfileHeader = ({ workData, data }: { workData: any; data?: ProfileHe
                           E-Forms
                         </div>
                       }
-                      value='e'
+                      value='1'
                     />
                     <Tab
                       label={
@@ -86,14 +86,18 @@ const WorkProfileHeader = ({ workData, data }: { workData: any; data?: ProfileHe
                     />
                   </TabList>
                 </Box>
-                <TabPanel value='1'>Item One</TabPanel>
-                <TabPanel value='2'>Item Two</TabPanel>
-                <TabPanel value='3'>Item Three</TabPanel>
-              </TabContext>
-            </Box>
-          </div>
-        </CardContent>
-      </Card>
+              </Box>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className='gap-6'>
+            <TabPanel value='1'>Item One</TabPanel>
+            <TabPanel value='2'>Item Two</TabPanel>
+            <TabPanel value='3'>Item Three</TabPanel>
+          </CardContent>
+        </Card>
+      </TabContext>
     </>
   )
 }
