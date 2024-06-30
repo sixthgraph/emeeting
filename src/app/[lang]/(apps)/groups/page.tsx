@@ -1,5 +1,7 @@
 import { getServerSession } from 'next-auth'
+
 import axios from 'axios'
+
 import GroupList from '@views/apps/groups'
 import { options } from '@/app/api/auth/[...nextauth]/options'
 
@@ -8,7 +10,8 @@ const getData = async () => {
 
   try {
     const token = { token: session?.user.token }
-    const email = { email: session?.user.email }
+
+    //const email = { email: session?.user.email }
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -34,7 +37,8 @@ const getDataUser = async () => {
 
   try {
     const token = { token: session?.user.token }
-    const email = { email: session?.user.email }
+
+    //const email = { email: session?.user.email }
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -63,6 +67,7 @@ const GroupListApp = async () => {
   const updateToken = data.token
   const email = data.email
   const userData = usersData.data.detail
+
   return <GroupList groupData={groupData} updateToken={updateToken} userData={userData} email={email} />
 }
 
