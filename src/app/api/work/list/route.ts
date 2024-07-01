@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
       Expires: '0'
     }
 
+    //const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`, {
     const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`, {
       headers
     })

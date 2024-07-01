@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { SyntheticEvent } from 'react'
 
 import Image from 'next/image'
@@ -94,6 +94,12 @@ const WorkProfile = ({ workData }: { workData: any }) => {
 
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
+  useEffect(() => {
+    // alert('first time')
+
+    ;<Script id='test'>{`alert("aaa")`}</Script>
+  }, [])
+
   return (
     <>
       <TabContext value={value}>
@@ -178,24 +184,32 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                 <AccordionDetails>
                   <div className='fb-render'></div>
                   <Script
+                    async
+                    strategy='afterInteractive'
                     src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'
                     onLoad={() => {
                       console.log('Script has loaded jquery.min.js')
                     }}
                   />
                   <Script
+                    async
+                    strategy='afterInteractive'
                     src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js'
                     onLoad={() => {
                       console.log('Script has loaded jquery-ui.min.js')
                     }}
                   />
                   <Script
+                    async
+                    strategy='afterInteractive'
                     src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-builder.min.js'
                     onLoad={() => {
                       console.log('Script has loaded form-builder.min.js')
                     }}
                   />
                   <Script
+                    async
+                    strategy='afterInteractive'
                     src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
                     onLoad={() => {
                       console.log('Script has loaded form-render.min.js')
@@ -204,7 +218,7 @@ const WorkProfile = ({ workData }: { workData: any }) => {
 
                   <Script
                     src='/script/test-render.js'
-                    strategy='afterInteractive'
+                    strategy='lazyOnload'
                     onLoad={() => {
                       console.log('form render has loaded')
                     }}

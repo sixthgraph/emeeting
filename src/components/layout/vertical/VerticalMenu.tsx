@@ -86,16 +86,21 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
           <MenuItem href={`/${locale}/todo`} icon={<i className='tabler-inbox' />}>
             {dictionary['navigation'].todo}
           </MenuItem>
-          <MenuItem href={`/${locale}/my-items`} icon={<i className='tabler-box' />}>
+          <MenuItem href={`/${locale}/my-requests`} icon={<i className='tabler-inbox' />}>
+            {dictionary['navigation'].myRequests}
+          </MenuItem>
+          <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-inbox' />}>
+            {dictionary['navigation'].comments}
+          </MenuItem>
+          {/* <MenuItem href={`/${locale}/my-items`} icon={<i className='tabler-box' />}>
             {dictionary['navigation'].myItems}
           </MenuItem>
-          {/* <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler:window-maximize' />}> */}
           <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler-window-maximize' />}>
             {dictionary['navigation'].assignment}
           </MenuItem>
           <MenuItem href={`/${locale}/collabs`} icon={<i className='tabler-brand-asana' />}>
             {dictionary['navigation'].collabs}
-          </MenuItem>
+          </MenuItem> */}
         </MenuSection>
         <MenuSection label={dictionary['navigation'].admin}>
           <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>

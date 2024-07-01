@@ -18,7 +18,7 @@ export async function GET() {
     console.log('call getworklist url ====')
     console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=test`)
 
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=test`, {
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=""`, {
       headers
     })
 
