@@ -8,6 +8,8 @@ import Image from 'next/image'
 // MUI Imports
 import Script from 'next/script'
 
+// import $ from 'jquery'
+
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -26,7 +28,7 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
 // Type Imports
-import { Box } from '@mui/material'
+import { Box, LinearProgress } from '@mui/material'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -95,9 +97,7 @@ const WorkProfile = ({ workData }: { workData: any }) => {
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
   useEffect(() => {
-    // alert('first time')
-
-    ;<Script id='test'>{`alert("aaa")`}</Script>
+    //alert('first time')
   }, [])
 
   return (
@@ -129,8 +129,13 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                 <Typography className='text-xs mt-2'>Subject:</Typography>
                 <Typography className='font-bold'>{workData.subject}</Typography>
               </div>
-              <div className='flex-1 flex items-start justify-end'>
-                <Typography className='font-medium'>Work progress 50%</Typography>
+              {/* <div className='flex-1 flex flex-col items-start justify-end'> */}
+              <div className='flex-none w-50 flex flex-col'>
+                <div className='flex flex-row'>
+                  <Typography color='text.disabled'>Work progress</Typography>
+                  <Typography>50%</Typography>
+                </div>
+                <LinearProgress value={50} variant='determinate' color='success' className='mt-2 mr-2 min-bs-1' />
               </div>
             </div>
             <div className='flex flex-1'>
@@ -139,7 +144,7 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                   <TabList onChange={handleChange} aria-label='lab API tabs example'>
                     <Tab
                       label={
-                        <div className='flex items-center gap-1.5'>
+                        <div id='eform-tab' className='flex items-center gap-1.5'>
                           <i className='tabler-article text-lg' />
                           E-Forms
                         </div>
@@ -179,48 +184,16 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                   expandIcon={expandIcon('panel1')}
                   aria-controls='customized-panel-content-1'
                 >
-                  <Typography>Eform 1</Typography>
+                  <Typography>แบบคำขอรับการฝึกอบรมภายนอก</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <div className='fb-render'></div>
                   <Script
-                    async
-                    strategy='afterInteractive'
-                    src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'
-                    onLoad={() => {
-                      console.log('Script has loaded jquery.min.js')
-                    }}
-                  />
-                  <Script
-                    async
-                    strategy='afterInteractive'
-                    src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js'
-                    onLoad={() => {
-                      console.log('Script has loaded jquery-ui.min.js')
-                    }}
-                  />
-                  <Script
-                    async
-                    strategy='afterInteractive'
-                    src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-builder.min.js'
-                    onLoad={() => {
-                      console.log('Script has loaded form-builder.min.js')
-                    }}
-                  />
-                  <Script
-                    async
-                    strategy='afterInteractive'
-                    src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
-                    onLoad={() => {
-                      console.log('Script has loaded form-render.min.js')
-                    }}
-                  />
-
-                  <Script
                     src='/script/test-render.js'
                     strategy='lazyOnload'
-                    onLoad={() => {
+                    onReady={() => {
                       console.log('form render has loaded')
+                      testScript()
                     }}
                   />
                 </AccordionDetails>

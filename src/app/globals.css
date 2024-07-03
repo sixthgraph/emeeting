@@ -124,3 +124,8 @@ code {
   background-color: rgb(var(--mui-palette-info-mainChannel) / 0.08);
   border: 0;
 }
+
+/* .rendered-form .fb-text-label {
+  color: rgb(0, 255, 255);
+  border: solid 1px #f00;
+} */

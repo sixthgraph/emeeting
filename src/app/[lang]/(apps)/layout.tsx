@@ -1,3 +1,5 @@
+import Script from 'next/script'
+
 // MUI Imports
 import Button from '@mui/material/Button'
 
@@ -23,6 +25,10 @@ import ScrollToTop from '@core/components/scroll-to-top'
 import { getDictionary } from '@/utils/getDictionary'
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 
+import './custom-eform.css'
+
+// import './eform.module.css'
+
 const Layout = async ({ children, params }: ChildrenType & { params: { lang: Locale } }) => {
   // Vars
   const direction = 'ltr'
@@ -45,6 +51,26 @@ const Layout = async ({ children, params }: ChildrenType & { params: { lang: Loc
         }
         horizontalLayout={
           <HorizontalLayout header={<Header dictionary={dictionary} />} footer={<HorizontalFooter />}>
+            <Script
+              async
+              strategy='beforeInteractive'
+              src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'
+            />
+            <Script
+              async
+              strategy='afterInteractive'
+              src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js'
+            />
+            <Script
+              async
+              strategy='afterInteractive'
+              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-builder.min.js'
+            />
+            <Script
+              async
+              strategy='afterInteractive'
+              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
+            />
             {children}
           </HorizontalLayout>
         }

@@ -927,12 +927,26 @@ var data2 = [
   }
 ]
 
-$(document).ready(function () {
-  setTimeout(() => {
-    alert('start render')
-    $('.fb-render').formRender({
-      dataType: 'json',
-      formData: data2
-    })
-  }, 500)
-})
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const testScript = () => {
+  //alert('test Script2')
+  $('.fb-render').formRender({
+    dataType: 'json',
+    formData: data2
+  })
+}
+
+// $('.fb-render').formRender({
+//   dataType: 'json',
+//   formData: data2
+// })
+
+// $(document).ready(function () {
+//   setTimeout(() => {
+//     alert('start render')
+//     $('.fb-render').formRender({
+//       dataType: 'json',
+//       formData: data2
+//     })
+//   }, 500)
+// })
