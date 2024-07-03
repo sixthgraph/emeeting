@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     })
 
     console.log('getworklist return-------------------')
-    console.log(res)
+    console.log(res.data.data.detail)
     const workinfo = res.data.data.detail
 
     const response = NextResponse.json({
