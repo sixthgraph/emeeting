@@ -48,16 +48,11 @@ import axios from 'axios'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type {
-  DepartmentsType,
-  DepartmentsTypeWithAction,
-  StateinfoType,
-  DepParentType
-} from '@/types/apps/departmentTypes'
+import type { PositionsType, PositionsTypeWithAction } from '@/types/apps/positionTypes'
 
 // // Component Imports
-import TableFilters from './TableFilters'
-import GroupDrawerForm from './DepartmentDrawerForm'
+//import TableFilters from './TableFilters'
+import GroupDrawerForm from './PositionDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 // import CustomAvatar from '@core/components/mui/Avatar'
@@ -78,6 +73,12 @@ declare module '@tanstack/table-core' {
   }
 }
 
+const handleRefresh = () => {
+  //router.reload()
+  setTimeout(() => {
+    window.location.reload()
+  }, 100)
+}
 // // Styled Components
 const Icon = styled('i')({})
 
@@ -122,56 +123,30 @@ const DebouncedInput = ({
   return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
 }
 
-const stateinfoObj: StateinfoType = {}
-const parentObj: DepParentType = {}
-
 // // Vars
 let initialData = {
-  dep: '',
-  depname: '',
-  statecode: '',
-  docuname: 0,
-  path: '',
-  parent: '',
-  sort: 0
+  positioncode: '',
+  desc: '',
+  level: '',
+  ref: '',
+  status: 'Y',
+  remark: '',
+  create_date: '',
+  create_by: '',
+  update_date: '',
+  update_by: ''
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<DepartmentsTypeWithAction>()
+const columnHelper = createColumnHelper<PositionsTypeWithAction>()
 
 type Props = {
-  tableData?: DepartmentsType[]
-  stateinfoData?: StateinfoType[]
-  depParentData?: DepParentType[]
+  tableData?: PositionsType[]
 }
 
-const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props) => {
-  stateinfoData?.map(stateinfo => {
-    const id = String(stateinfo.statecode)
-
-    stateinfoObj[id] = {
-      statecode: String(stateinfo.statecode),
-      desc: String(stateinfo.desc)
-    }
-  })
-  console.log('stateinfoData === ', stateinfoData)
-  depParentData?.map(depParent => {
-    const id = String(depParent.dep)
-
-    parentObj[id] = {
-      dep: String(depParent.Dep),
-      depname: String(depParent.Depname),
-      docuname: Number(depParent.Docuname),
-      path: String(depParent.Path),
-      sort: Number(depParent.Sort),
-      statecode: String(depParent.Statecode)
-    }
-  })
-  //console.log('stateinfopData === ', stateinfoData)
-  console.log('parentData === ', depParentData)
-
+const PositionListTable = ({ tableData }: Props) => {
   // States
-  const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
+  const [addPositionOpen, setAddPositionOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
@@ -185,29 +160,36 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
   // Hooks
   //const { lang: locale } = useParams()
 
-  const DepartmentDrawerOpenHandle = () => {
+  const PositionDrawerOpenHandle = () => {
     initialData = {
-      dep: '',
-      depname: '',
-      statecode: '',
-      docuname: 0,
-      path: '',
-      parent: '',
-      sort: 0
+      positioncode: '',
+      desc: '',
+      level: '',
+      ref: '',
+      status: '',
+      remark: '',
+      create_date: '',
+      create_by: '',
+      update_date: '',
+      update_by: ''
     }
-    setAddDepartmentOpen(true)
+    setAddPositionOpen(true)
   }
 
-  const handleDeleteDepartment = async (dep: object) => {
+  const handleDeletePosition = async (positioncode: object) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/delete`, dep)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/delete`, positioncode)
 
       if (response.data.message === 'success') {
-        console.log(response.data.data.detail)
+        console.log('=====positioninfo')
+        console.log(response.data)
 
-        //todo update tableData
-        const em: any = dep
-        const newUpdate = tableData?.filter(el => el.dep !== em.dep)
+        // //todo update tableData
+        const em: any = positioncode
+        console.log('==== look positioncode')
+        console.log(positioncode)
+
+        const newUpdate = tableData?.filter(el => el.positioncode !== em.positioncode)
 
         console.log('newUpdate === ', newUpdate)
         setData(newUpdate)
@@ -218,16 +200,17 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
 
         //todo update refresh token
         console.log('Update token ===', response.data.token)
+        handleRefresh()
       } else {
-        console.error('Department delete failed')
+        console.error('Position delete failed')
       }
     } catch (error: any) {
-      console.log('Delete Department failed. ', error.message)
+      console.log('Delete Position failed. ', error.message)
     }
   }
 
   // Table Columns config
-  const columns = useMemo<ColumnDef<DepartmentsTypeWithAction, any>[]>(
+  const columns = useMemo<ColumnDef<PositionsTypeWithAction, any>[]>(
     () => [
       {
         id: 'select',
@@ -251,60 +234,73 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
           />
         )
       },
-      columnHelper.accessor('depname', {
-        header: 'Department Name',
+      columnHelper.accessor('positioncode', {
+        header: 'Positionode',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
-              {row.original.path.split(',').length <= 2
-                ? row.original.depname
-                : '='.repeat(row.original.path.split(',').length - 1) + ' ' + row.original.depname}
+              {row.original.positioncode}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('statecode', {
-        header: 'Statedesc',
+      columnHelper.accessor('desc', {
+        header: 'Desc',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
-              {stateinfoObj[row.original.statecode] && stateinfoObj[row.original.statecode].desc}
+              {row.original.desc}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('docuname', {
-        header: 'Docuname',
+      columnHelper.accessor('level', {
+        header: 'Level',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
-              {row.original.docuname}
-            </Typography>
-            {/* {row.original.member.map(member => (
-              <Typography color='text.primary' className='font-medium'>
-                {member}
-              </Typography>
-            ))} */}
-          </div>
-        )
-      }),
-      columnHelper.accessor('sort', {
-        header: 'Sort',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.sort}
+              {row.original.level}
             </Typography>
           </div>
         )
       }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.status === 'N' ? 'ยกเลิก' : 'ปกติ'}
+            </Typography>
+          </div>
+        )
+      }),
+      //   columnHelper.accessor('ref', {
+      //     header: 'Ref',
+      //     cell: ({ row }) => (
+      //       <div className='flex flex-col'>
+      //         <Typography color='text.primary' className='font-medium'>
+      //           {row.original.ref}
+      //         </Typography>
+      //       </div>
+      //     )
+      //   }),
+      //   columnHelper.accessor('remark', {
+      //     header: 'Remark',
+      //     cell: ({ row }) => (
+      //       <div className='flex flex-col'>
+      //         <Typography color='text.primary' className='font-medium'>
+      //           {row.original.remark}
+      //         </Typography>
+      //       </div>
+      //     )
+      //   }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeleteDepartment({ Dep: row.original.dep })
+                handleDeletePosition({ positioncode: row.original.positioncode })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -312,13 +308,15 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
             <IconButton
               onClick={() => {
                 // initialData.password = ''
-                initialData.depname = row.original.depname
-                initialData.docuname = row.original.docuname
-                initialData.statecode = row.original.statecode
-                initialData.parent = row.original.parent
-                initialData.path = row.original.path
-                initialData.sort = row.original.sort
-                setAddDepartmentOpen(!addDepartmentOpen)
+                initialData.positioncode = row.original.positioncode
+                initialData.desc = row.original.desc
+                initialData.level = row.original.level
+                initialData.ref = row.original.ref
+                initialData.status = row.original.status
+                initialData.remark = row.original.remark
+                initialData.update_date = row.original.update_date
+                initialData.update_by = row.original.update_by
+                setAddPositionOpen(!addPositionOpen)
               }}
             >
               <i className='tabler-edit text-[22px] text-textSecondary' />
@@ -334,7 +332,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
 
   // Table config
   const table = useReactTable({
-    data: data as DepartmentsType[],
+    data: data as PositionsType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter // search field
@@ -366,7 +364,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
     <>
       <Card>
         <CardHeader title='Filters' className='pbe-4' />
-        <TableFilters setData={setData} tableData={tableData} />
+        {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -396,7 +394,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
-              onClick={() => DepartmentDrawerOpenHandle()}
+              onClick={() => PositionDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
               Add New User
@@ -470,15 +468,13 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
       </Card>
 
       <GroupDrawerForm
-        open={addDepartmentOpen}
+        open={addPositionOpen}
         setData={setData}
         tableData={tableData}
         updateData={initialData}
-        stateinfoData={stateinfoData}
-        depParentData={depParentData}
-        handleClose={() => setAddDepartmentOpen(!addDepartmentOpen)}
+        handleClose={() => setAddPositionOpen(!addPositionOpen)}
       />
     </>
   )
 }
-export default DepartmentListTable
+export default PositionListTable

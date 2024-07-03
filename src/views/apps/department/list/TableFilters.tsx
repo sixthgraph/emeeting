@@ -48,6 +48,19 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: Depart
             onChange={e => setStatecode(e.target.value)}
             SelectProps={{ displayEmpty: true }}
           >
+            <MenuItem value=''>Select Parent</MenuItem>
+            <MenuItem value='665421d5cf450c9ba79c2e26'>ECL</MenuItem>
+          </CustomTextField>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <CustomTextField
+            select
+            fullWidth
+            id='select-stateinfo'
+            value={statecode}
+            onChange={e => setStatecode(e.target.value)}
+            SelectProps={{ displayEmpty: true }}
+          >
             <MenuItem value=''>Select State</MenuItem>
             <MenuItem value='01'>ปกติ</MenuItem>
             <MenuItem value='02'>ห้ามใช้</MenuItem>

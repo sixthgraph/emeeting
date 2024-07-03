@@ -8,6 +8,7 @@ export type DepartmentsType = {
   statedesc: string
   docuname: number
   path: string
+  parent: string
   sort: number
 }
 
@@ -17,6 +18,7 @@ export type DepartmentFormDataType = {
   statecode: string
   docuname: number
   path: string
+  parent: string
   sort: number
 }
 
@@ -28,5 +30,16 @@ export type StateinfoType = {
   [key: string]: {
     statecode: string
     desc: string
+  }
+}
+
+export type DepParentType = {
+  [key: string]: {
+    dep: string
+    depname: string
+    docuname: number
+    path: string
+    sort: number
+    statecode: string
   }
 }

@@ -24,7 +24,12 @@ import axios from 'axios'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { DepartmentFormDataType, DepartmentsType, StateinfoType } from '@/types/apps/departmentTypes'
+import type {
+  DepParentType,
+  DepartmentFormDataType,
+  DepartmentsType,
+  StateinfoType
+} from '@/types/apps/departmentTypes'
 import { addUserFormSchema } from '@/schemas/formSchema' //NP????
 
 type Props = {
@@ -33,6 +38,7 @@ type Props = {
   setData: any
   tableData?: DepartmentsType[]
   stateinfoData?: StateinfoType[]
+  depParentData?: DepParentType[]
   handleClose: () => void
 }
 
@@ -43,10 +49,19 @@ const initialData = {
   statecode: '',
   docuname: 0,
   path: '',
+  parent: '',
   sort: 0
 }
 
-const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoData, handleClose }: Props) => {
+const DepartmentDrawerForm = ({
+  open,
+  setData,
+  updateData,
+  tableData,
+  stateinfoData,
+  depParentData,
+  handleClose
+}: Props) => {
   //const router = useRouter()
   //const params = useParams()
   //const { lang: locale } = params
@@ -55,8 +70,15 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
   const [formData, setFormData] = useState<DepartmentFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
 
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  // const [isPasswordShown, setIsPasswordShown] = useState(false)
+  // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+
+  const handleRefresh = () => {
+    //router.reload()
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -82,12 +104,12 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       }
 
       console.log('Form submitted successfully', parsedData.data)
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/department/add`, formData)
 
-      console.log('signup response===', response.data)
+      console.log('add department response===', response.data)
 
       if (response.data.success) {
-        console.log('signup success')
+        console.log('add department success')
 
         if (tableData) {
           const updateData: any = {
@@ -104,10 +126,10 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
         setData(tableData)
         handleClose()
       } else {
-        console.log('register failed.')
+        console.log('add department failed.')
       }
     } catch (error: any) {
-      console.log('Add user failed. ', error.message)
+      console.log('Add department failed. ', error.message)
     }
   }
 
@@ -158,7 +180,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
-        {updateData.dep !== '' ? (
+        {updateData.depname !== '' ? (
           <Typography variant='h5'>Edit Department</Typography>
         ) : (
           <Typography variant='h5'>Add New Department</Typography>
@@ -171,6 +193,23 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           <CustomTextField
+            select
+            fullWidth
+            id='select-department'
+            value={formData.parent}
+            onChange={e => setFormData({ ...formData, parent: e.target.value })}
+            label='Parent Department'
+          >
+            {depParentData?.map((parentData: any) => {
+              return (
+                <MenuItem key={parentData.dep} value={parentData.dep}>
+                  {parentData.depname}
+                </MenuItem>
+              )
+            })}
+          </CustomTextField>
+          {errors.find(error => error.for === 'parent')?.message}
+          <CustomTextField
             label='Depname'
             fullWidth
             placeholder=''
@@ -178,14 +217,15 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
             onChange={e => setFormData({ ...formData, depname: e.target.value })}
           />
           {errors.find(error => error.for === 'depname')?.message}
+
           <CustomTextField
-            label='Statecode'
+            label='Path'
             fullWidth
             placeholder=''
-            value={formData.statecode}
-            onChange={e => setFormData({ ...formData, statecode: e.target.value })}
+            value={formData.path}
+            onChange={e => setFormData({ ...formData, path: e.target.value })}
           />
-          {errors.find(error => error.for === 'statecode')?.message}
+          {errors.find(error => error.for === 'path')?.message}
           <CustomTextField
             select
             fullWidth
