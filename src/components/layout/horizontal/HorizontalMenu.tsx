@@ -105,12 +105,16 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
         <MenuItem href={`/${locale}/collabs`} icon={<i className='tabler-brand-asana' />}>
           {dictionary['navigation'].collabs}
         </MenuItem> */}
-        <MenuItem href={`/${locale}/my-requests`} icon={<i className='tabler-box' />}>
+        <MenuItem href={`/${locale}/my-requests`} icon={<i className='tabler-article' />}>
           {dictionary['navigation'].myRequests}
         </MenuItem>
-        <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-box' />}>
+        <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-message' />}>
           {dictionary['navigation'].comments}
         </MenuItem>
+        <SubMenu label={dictionary['navigation'].create} icon={<i className='tabler-circle-plus' />}>
+          <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
+          <MenuItem href={`/${locale}/new-route`}>{dictionary['navigation'].newRoute}</MenuItem>
+        </SubMenu>
         <SubMenu label={dictionary['navigation'].admin} icon={<i className='tabler-settings' />}>
           <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
             {dictionary['navigation'].users}

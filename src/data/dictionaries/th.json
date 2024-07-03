@@ -13,6 +13,9 @@
     "userGroup": "กลุ่มผู้ใช้",
     "position": "ตำแหน่ง",
     "stateInfo": "ลำดับของข้อมูล",
-    "dashboards": "Dashboards"
+    "dashboards": "แผงควบคุม",
+    "create": "สร้าง",
+    "newRequest": "คำขอใหม่",
+    "newRoute": "เส้นทางใหม่"
   }
 }

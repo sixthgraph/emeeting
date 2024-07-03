@@ -102,6 +102,10 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
             {dictionary['navigation'].collabs}
           </MenuItem> */}
         </MenuSection>
+        <MenuSection label={dictionary['navigation'].create}>
+          <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
+          <MenuItem href={`/${locale}/new-route`}>{dictionary['navigation'].newRoute}</MenuItem>
+        </MenuSection>
         <MenuSection label={dictionary['navigation'].admin}>
           <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
             {dictionary['navigation'].users}

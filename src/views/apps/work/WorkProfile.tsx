@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { SyntheticEvent } from 'react'
 
 import Image from 'next/image'
@@ -9,6 +9,8 @@ import Image from 'next/image'
 import Script from 'next/script'
 
 // import $ from 'jquery'
+
+import { useParams } from 'next/navigation'
 
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
@@ -78,6 +80,8 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData }: { workData: any }) => {
+  const params = useParams()
+  const { lang: locale } = params
   const [value, setValue] = useState('1')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -96,9 +100,35 @@ const WorkProfile = ({ workData }: { workData: any }) => {
 
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
-  useEffect(() => {
-    //alert('first time')
-  }, [])
+  const formatshortdate = (date: any) => {
+    const m_th_names = [
+      'ม.ค.',
+      'ก.พ.',
+      'มี.ค.',
+      ' เม.ย.',
+      'พ.ค.',
+      'มิ.ย.',
+      'ก.ค.',
+      'ส.ค.',
+      'ก.ย.',
+      'ต.ค.',
+      'พ.ย',
+      'ธ.ค.'
+    ]
+
+    const m_en_names = ['Jan', 'Feb', 'Mar', ' Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const d = new Date(date),
+      curr_date = d.getDate(),
+      curr_month = d.getMonth(),
+      curr_year: number = d.getFullYear() + 543
+
+    if (locale == 'th') {
+      return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year
+    }
+
+    return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year
+  }
 
   return (
     <>
@@ -125,15 +155,17 @@ const WorkProfile = ({ workData }: { workData: any }) => {
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created:</Typography>
-                <Typography className='font-bold'>{workData?.Registerdate}</Typography>
+                <Typography className='font-bold'>{formatshortdate(workData?.Registerdate)}</Typography>
                 <Typography className='text-xs mt-2'>Subject:</Typography>
                 <Typography className='font-bold'>{workData.subject}</Typography>
               </div>
               {/* <div className='flex-1 flex flex-col items-start justify-end'> */}
-              <div className='flex-none w-50 flex flex-col'>
+              <div className='flex-none w-59 flex flex-col'>
                 <div className='flex flex-row'>
-                  <Typography color='text.disabled'>Work progress</Typography>
-                  <Typography>50%</Typography>
+                  <Typography color='text.disabled' sx={{ paddingRight: 4 }}>
+                    Work progress
+                  </Typography>
+                  <Typography className='font-bold'>50%</Typography>
                 </div>
                 <LinearProgress value={50} variant='determinate' color='success' className='mt-2 mr-2 min-bs-1' />
               </div>

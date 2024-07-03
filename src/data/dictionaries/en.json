@@ -13,6 +13,9 @@
     "userGroup": "User Group",
     "position": "Position",
     "stateInfo": "State Info",
-    "dashboards": "Dashboards"
+    "dashboards": "Dashboards",
+    "create": "Create",
+    "newRequest": "New Request",
+    "newRoute": "New Route"
   }
 }

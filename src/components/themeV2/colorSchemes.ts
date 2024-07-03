@@ -84,7 +84,7 @@ const colorSchemes = (skin: Skin): Theme['colorSchemes'] => {
         divider: `rgb(var(--mui-mainColorChannels-light) / 0.12)`,
         dividerChannel: 'var(--mui-mainColorChannels-light)',
         background: {
-          default: skin === 'bordered' ? '#FFFFFF' : '#F8F7FA',
+          default: skin === 'bordered' ? '#FFFFFF' : '#F5F8Fa',
           paper: '#FFFFFF',
           paperChannel: '255 255 255'
         },
