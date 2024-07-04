@@ -105,8 +105,8 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
         <MenuItem href={`/${locale}/collabs`} icon={<i className='tabler-brand-asana' />}>
           {dictionary['navigation'].collabs}
         </MenuItem> */}
-        <MenuItem href={`/${locale}/my-requests`} icon={<i className='tabler-article' />}>
-          {dictionary['navigation'].myRequests}
+        <MenuItem href={`/${locale}/my-request`} icon={<i className='tabler-article' />}>
+          {dictionary['navigation'].myRequest}
         </MenuItem>
         <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-message' />}>
           {dictionary['navigation'].comments}

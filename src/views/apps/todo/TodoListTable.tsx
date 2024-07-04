@@ -371,7 +371,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
     <>
       <Card>
         <CardHeader title='Filters' className='pbe-4' />
-        <TableFilters depData={depData} setData={setData} tableData={tableData} />
+        {/* <TableFilters depData={depData} setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select

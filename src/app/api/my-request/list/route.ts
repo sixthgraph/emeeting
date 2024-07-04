@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 
-import { lighten } from '@mui/material/styles'
-
 import { getServerSession } from 'next-auth'
 
 import { options } from '../../auth/[...nextauth]/options'
@@ -17,16 +15,16 @@ export async function POST() {
       cache: 'force-cache'
     }
 
-    console.log('url getmyitems------------')
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getmyitems?id=${email}`)
+    console.log('call getmyitems url ====')
+    console.log(`${process.env.ROUTE_FLOW_API_URL}/getmyrequest?id=${email}&dep=test`)
 
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getmyitems?id=${email}`, { headers })
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getmyrequest?id=${email}`, { headers })
     const depres = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
-    const myitemData = await response.json()
+    const myrequestData = await response.json()
     const depData = await depres.json()
 
     const data = {
-      myitem: myitemData.data.detail,
+      myrequest: myrequestData.data.detail,
       dep: depData.data.detail
     }
 
