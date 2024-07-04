@@ -6,19 +6,17 @@ import { options } from '@/app/api/auth/[...nextauth]/options'
 import axios from '@/utils/axios'
 import WorkDetailV2 from '@/views/apps/workV2'
 
-const getData = async ({ wid, dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid?: any }) => {
+const getData = async ({ dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid?: any }) => {
   // Vars
   const session = await getServerSession(options)
 
   console.log('req body ====')
   console.log(dep)
-  console.log(wid)
   console.log(rid)
   console.log(pid)
 
   try {
     const reqBody = {
-      wid: wid,
       dep: dep,
       pid: pid,
       rid: rid,
@@ -33,7 +31,7 @@ const getData = async ({ wid, dep, rid, pid }: { wid?: any; dep?: any; rid?: any
       Expires: '0'
     }
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/create`, reqBody, { headers })
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/eforms`, reqBody, { headers })
 
     if (response.data.message === 'success') {
       return response.data

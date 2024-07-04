@@ -8,7 +8,7 @@ import axios from 'axios'
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json()
-    const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/sendwork`, reqBody)
+    const res = await axios.post(`${process.env.ROUTE_MANAGER_API_URL}/sendwork`, reqBody)
     const sent = res.data.data.detail
 
     const response = NextResponse.json({
