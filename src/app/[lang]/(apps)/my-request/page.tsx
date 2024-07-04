@@ -22,7 +22,7 @@ const getData = async ({ wid, dep }: { wid?: any; dep?: any }) => {
       Expires: '0'
     }
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/my-requests/list`, reqBody, { headers })
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/my-request/list`, reqBody, { headers })
 
     if (response.data.message === 'success') {
       return response.data
