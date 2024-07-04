@@ -225,7 +225,10 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                     strategy='lazyOnload'
                     onReady={() => {
                       console.log('form render has loaded')
-                      testScript()
+
+                      {
+                        testScript()
+                      }
                     }}
                   />
                 </AccordionDetails>

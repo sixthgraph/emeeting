@@ -49,9 +49,6 @@ const Navigation = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof getD
   // Vars
   const headerContentCompact = settings.navbarContentWidth === 'compact'
 
-  console.log('dictionary')
-  console.log(dictionary)
-
   return (
     <div
       {...(!isBreakpointReached && {
