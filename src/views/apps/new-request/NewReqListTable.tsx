@@ -3,6 +3,8 @@
 // React Imports
 import { useEffect, useState, useMemo } from 'react'
 
+import Link from 'next/link'
+
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
@@ -125,9 +127,11 @@ const NewReqListTable = ({ tableData }: Props) => {
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
             <div className='flex flex-col'>
-              <Typography color='text.primary' className='font-medium'>
-                {row.original.routename}
-              </Typography>
+              <Link href={{ pathname: 'en/work/create', query: 'rid=3333' }}>
+                <Typography color='text.primary' className='font-medium'>
+                  {row.original.routename}
+                </Typography>
+              </Link>
             </div>
           </div>
         )
@@ -182,7 +186,6 @@ const NewReqListTable = ({ tableData }: Props) => {
     <>
       <Card>
         <CardHeader title='New Request' className='pbe-4' />
-        {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -198,7 +201,7 @@ const NewReqListTable = ({ tableData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search User'
+              placeholder='Search Route Name'
               className='is-full sm:is-auto'
             />
           </div>
