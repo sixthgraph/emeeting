@@ -4,7 +4,8 @@ import { getServerSession } from 'next-auth'
 import { options } from '@/app/api/auth/[...nextauth]/options'
 
 import axios from '@/utils/axios'
-import WorkDetailV2 from '@/views/apps/workV2'
+
+// import WorkDetailV2 from '@/views/apps/workV2'
 
 const getData = async ({ dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid?: any }) => {
   // Vars
@@ -54,8 +55,11 @@ const workPage = async ({ searchParams }: any) => {
 
   const data = await getData({ wid, dep, rid, pid })
 
+  console.log('page data === ')
+  console.log(data)
+
   // return <WorkDetail workData={searchParams} data={data} tabContentList={tabContentList(data)} />
-  return <WorkDetailV2 data={data} />
+  return <h1>For SG</h1>
 }
 
 export default workPage

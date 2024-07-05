@@ -4,13 +4,11 @@ import { getServerSession } from 'next-auth'
 import { options } from '@/app/api/auth/[...nextauth]/options'
 import axios from '@/utils/axios'
 
-const getData = async ({ wid, dep }: { wid?: any; dep?: any }) => {
+const getData = async () => {
   const session = await getServerSession(options)
 
   try {
     const reqBody = {
-      wid: wid,
-      dep: dep,
       token: session?.user.token,
       email: session?.user.email
     }
@@ -24,43 +22,21 @@ const getData = async ({ wid, dep }: { wid?: any; dep?: any }) => {
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/my-request/list`, reqBody, { headers })
 
-    if (response.data.message === 'success') {
-      return response.data
-    } else {
-      //throw new Error('Failed to fetch my-items')
+    console.log(response.data)
 
-      return 'Failed to fetch my-requests'
-    }
+    return response.data
   } catch (err) {
     console.log(err)
   }
 }
 
-const myRequestPage = async ({ searchParams }: any) => {
-  const { wid, dep } = searchParams
+const myRequestPage = async () => {
+  const data = await getData()
 
-  const data = await getData({ wid, dep })
+  console.log('my-items data------')
+  console.log(data.detail)
 
-  // try {
-  //   const data = await getData({ wid, dep })
-
-  //   resData = data
-  // } catch (error) {
-  //   resData = error
-  // }
-
-  return <>{data}</>
-
-  // console.log('my-items data------')
-  // console.log(data)
+  return <h1>For SG</h1>
 }
 
 export default myRequestPage
-
-// export default function Page() {
-//   return (
-//     <div>
-//       <h1>My Items page</h1>
-//     </div>
-//   )
-// }
