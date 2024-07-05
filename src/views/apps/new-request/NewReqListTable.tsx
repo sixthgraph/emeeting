@@ -127,7 +127,12 @@ const NewReqListTable = ({ tableData }: Props) => {
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
             <div className='flex flex-col'>
-              <Link href={{ pathname: 'en/work/create', query: 'rid=3333' }}>
+              <Link
+                href={{
+                  pathname: '/en/work/create',
+                  query: `dep=${row.original.basketid}&rid=${row.original.workflowid}&pid=${row.original.processid}`
+                }}
+              >
                 <Typography color='text.primary' className='font-medium'>
                   {row.original.routename}
                 </Typography>
