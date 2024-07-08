@@ -238,7 +238,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
             }}
           >
             <div className='flex items-center gap-4'>
@@ -264,7 +264,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
             }}
           >
             <div className='flex flex-col pli-2 plb-3'>
