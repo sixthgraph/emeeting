@@ -72,13 +72,13 @@ export default withAuth(
     // If the user is logged in, `token` will be an object containing the user's details
     const token = request.nextauth.token
 
-    console.log('token ==== ')
-    console.log(token?.token)
+    // console.log('token ==== ')
+    // console.log(token?.token)
 
     // Check if the user is logged in
     const isUserLoggedIn = token?.token
 
-    console.log('isUserLoggedIn ==== ', isUserLoggedIn)
+    // console.log('isUserLoggedIn ==== ', isUserLoggedIn)
 
     // Guest routes (Routes that can be accessed by guest users who are not logged in)
     const guestRoutes = ['login', 'register', 'forgot-password']
@@ -89,12 +89,12 @@ export default withAuth(
     // Private routes (All routes except guest and shared routes that can only be accessed by logged in users)
     const privateRoute = ![...guestRoutes, ...sharedRoutes].some(route => pathname.endsWith(route))
 
-    console.log('privateRoute ===')
-    console.log(privateRoute + ' -- ' + !isUserLoggedIn)
+    // console.log('privateRoute ===')
+    // console.log(privateRoute + ' -- ' + !isUserLoggedIn)
 
     // If the user is not logged in and is trying to access a private route, redirect to the login page
     if (!isUserLoggedIn && privateRoute) {
-      console.log('goto redirect')
+      // console.log('goto redirect')
       let redirectUrl = '/login'
 
       if (!(pathname === '/' || pathname === `/${locale}`)) {

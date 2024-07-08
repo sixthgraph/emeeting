@@ -11,12 +11,18 @@ declare module 'next-auth' {
       lastname: string
       token: string
       refreshToken: string
+      dep: string
+      role: number
+      avatar: string
     }
   }
   interface User extends DefaultUser {
     firstname: string
     lastname: string
     token: string
+    dep: string
+    role: number
+    avatar: string
   }
 }
 
@@ -25,6 +31,9 @@ declare module 'next-auth/jwt' {
     firstname: string
     lastnamename: string
     token: string
+    dep: string
+    role: number
+    avatar: string
   }
 }
 

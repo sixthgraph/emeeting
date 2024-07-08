@@ -189,9 +189,6 @@ export const options: NextAuthOptions = {
       return true
     },
     jwt: async ({ token, user, trigger, session }) => {
-      console.log('jwt recive user ====')
-      console.log(user)
-
       if (trigger === 'update') {
         return { ...token, ...session.user }
       }
@@ -201,13 +198,15 @@ export const options: NextAuthOptions = {
         token.firstname = user.firstname
         token.token = user.token
         token.email = user.email
-        token.image = user.image
+        token.avatar = user.avatar
+        token.dep = user.dep
+        token.role = user.role
       }
 
       const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
       if (refreshTokenData.message == 'success') {
-        console.log('refreshToken success')
+        // console.log('refreshToken success')
         token.token = refreshTokenData.token
       } else {
         console.log('refreshToken failed')
@@ -228,13 +227,12 @@ export const options: NextAuthOptions = {
       return token
     },
     session: async ({ session, token }) => {
-      console.log('session recive data ===')
-      console.log(session)
-      console.log(token)
-
       if (token && token.firstname && token.token) {
         session.user.name = token.name
         session.user.token = token.token
+        session.user.avatar = token.avatar
+        session.user.dep = token.dep
+        session.user.role = token.role
       }
 
       return session
