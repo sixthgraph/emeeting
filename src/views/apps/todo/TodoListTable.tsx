@@ -146,10 +146,9 @@ const columnHelper = createColumnHelper<TodoTypeWithAction>()
 
 type Props = {
   tableData?: TodoType[]
-  depData?: DepType[]
 }
 
-const TodoListTable = ({ tableData, depData }: Props) => {
+const TodoListTable = ({ tableData }: Props) => {
   console.log('tableData =====')
   console.log(tableData)
 
@@ -158,18 +157,18 @@ const TodoListTable = ({ tableData, depData }: Props) => {
   // Hooks
   const { lang: locale } = useParams()
 
-  depData?.map(dep => {
-    const id = String(dep.dep)
+  // depData?.map(dep => {
+  //   const id = String(dep.dep)
 
-    depObj[id] = {
-      dep: String(dep.dep),
-      depname: String(dep.depname),
-      docuname: Number(dep.docuname),
-      path: String(dep.path),
-      sort: Number(dep.sort),
-      statecode: String(dep.statecode)
-    }
-  })
+  //   depObj[id] = {
+  //     dep: String(dep.dep),
+  //     depname: String(dep.depname),
+  //     docuname: Number(dep.docuname),
+  //     path: String(dep.path),
+  //     sort: Number(dep.sort),
+  //     statecode: String(dep.statecode)
+  //   }
+  // })
 
   // console.log('depObj==')
   // console.log(depObj)
@@ -233,7 +232,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           </div>
         )
       }),
-      columnHelper.accessor('registeruid', {
+      columnHelper.accessor('createby', {
         header: 'Created By',
         cell: ({ row }) => (
           <Link
@@ -245,13 +244,13 @@ const TodoListTable = ({ tableData, depData }: Props) => {
             <div className='flex items-center gap-4'>
               {getAvatar({
                 avatar: row.original.avatar,
-                fullName: row.original.firstname + ' ' + row.original.lastname
+                fullName: row.original.createby
               })}
               <div className='flex flex-col'>
                 <Typography color='text.primary' className='font-medium'>
-                  {row.original.firstname + ' ' + row.original.lastname}
+                  {row.original.createby}
                 </Typography>
-                <Typography variant='body2'>{row.original.registeruid}</Typography>
+                <Typography variant='body2'>{row.original.email}</Typography>
               </div>
             </div>
           </Link>
@@ -286,35 +285,53 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           </Link>
         )
       }),
-      columnHelper.accessor('basketid', {
+      columnHelper.accessor('currentdeptname', {
         header: 'Department',
         cell: ({ row }) => (
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
             }}
           >
             <div className='flex items-center gap-2'>
               <Typography color='text.primary' className='font-medium'>
-                {depObj[row.original.basketid] && depObj[row.original.basketid].depname}
+                {/* {depObj[row.original.basketid] && depObj[row.original.basketid].depname} */}
+                {row.original.currentdeptname}
               </Typography>
             </div>
           </Link>
         )
       }),
-      columnHelper.accessor('Registerdate', {
+      columnHelper.accessor('routename', {
+        header: 'Route Name',
+        cell: ({ row }) => (
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
+            }}
+          >
+            <div className='flex items-center gap-2'>
+              <Typography color='text.primary' className='font-medium'>
+                {row.original.routename}
+              </Typography>
+            </div>
+          </Link>
+        )
+      }),
+      columnHelper.accessor('createdate', {
         header: 'Created',
         cell: ({ row }) => (
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.basketid}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
             }}
           >
             <div className='flex items-center gap-2'>
               <Typography className='capitalize' color='text.primary'>
-                {row.original.Registerdate}
+                {row.original.createdate}
               </Typography>
             </div>
           </Link>

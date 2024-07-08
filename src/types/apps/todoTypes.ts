@@ -8,7 +8,7 @@ export type TodoTypeV1 = {
   readed: boolean
   created: string
 }
-export type TodoType = {
+export type TodoTypeV2 = {
   wid: string
   Completedate: string
   Expiredate: string
@@ -33,6 +33,27 @@ export type TodoType = {
   user_field: [string]
   task: [string]
   eformlist: [string]
+}
+
+export type TodoType = {
+  avatar: string
+  blockid: string
+  createby: string
+  email: string
+  createdate: string
+  currentdept: string
+  currentname: string
+  currentdeptname: string
+  currentuid: string
+  expiredate: string
+  processname: string
+  status: string
+  subject: string
+  task: string[]
+  viewstatus: boolean
+  wid: string
+  workflowid: string
+  routename: string
 }
 
 export type TodoTypeWithAction = TodoType & {

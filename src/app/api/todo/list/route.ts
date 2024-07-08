@@ -16,19 +16,24 @@ export async function GET() {
     }
 
     console.log('call getworklist url ====')
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=test`)
+    console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}`)
 
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=""`, {
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}`, {
       headers
     })
 
-    const depres = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
+    // const depres = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
     const todoData = await response.json()
-    const depData = await depres.json()
+
+    // const depData = await depres.json()
+
+    console.log('todoData ==== ')
+    console.log(todoData.data.detail)
 
     const data = {
-      todo: todoData.data.detail,
-      dep: depData.data.detail
+      todo: todoData.data.detail
+
+      // dep: depData.data.detail
     }
 
     return NextResponse.json(data)

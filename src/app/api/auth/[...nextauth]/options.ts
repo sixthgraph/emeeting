@@ -3,7 +3,8 @@ import GithubProvider from 'next-auth/providers/github'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
-import { signOut } from 'next-auth/react'
+
+// import { signOut } from 'next-auth/react'
 
 import axios from 'axios'
 
@@ -111,6 +112,9 @@ export const options: NextAuthOptions = {
           const result = await login(credentials)
           const user = result.data
 
+          console.log('api return after sigin')
+          console.log(result)
+
           return user
         } catch (err) {
           return null
@@ -185,6 +189,9 @@ export const options: NextAuthOptions = {
       return true
     },
     jwt: async ({ token, user, trigger, session }) => {
+      console.log('jwt recive user ====')
+      console.log(user)
+
       if (trigger === 'update') {
         return { ...token, ...session.user }
       }
@@ -194,6 +201,7 @@ export const options: NextAuthOptions = {
         token.firstname = user.firstname
         token.token = user.token
         token.email = user.email
+        token.image = user.image
       }
 
       const refreshTokenData = await refreshAccessToken(token.token, token.email)
@@ -209,9 +217,8 @@ export const options: NextAuthOptions = {
         token.token = ''
         token.email = ''
 
-        const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-
-        signOut({ redirect: false }).then(() => console.log(logoutCognitoUrl))
+        // const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
+        // signOut({ redirect: false }).then(() => console.log(logoutCognitoUrl))
 
         // signOut({ redirect: false })
       }
@@ -221,6 +228,10 @@ export const options: NextAuthOptions = {
       return token
     },
     session: async ({ session, token }) => {
+      console.log('session recive data ===')
+      console.log(session)
+      console.log(token)
+
       if (token && token.firstname && token.token) {
         session.user.name = token.name
         session.user.token = token.token

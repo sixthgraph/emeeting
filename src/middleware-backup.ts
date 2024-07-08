@@ -139,6 +139,6 @@ export const config = {
   matcher: [
     // '/en/dashboard'
 
-    '/((?!api|_next/static|_next/image|favicon.ico|.+?/hook-examples|.+?/menu-examples|images|next.svg|vercel.svg|script|test-render.js).*)'
+    '/((?!api|_next/static|_next/image|favicon.ico|.+?/hook-examples|.+?/menu-examples|images|next.svg|vercel.svg).*)'
   ]
 }

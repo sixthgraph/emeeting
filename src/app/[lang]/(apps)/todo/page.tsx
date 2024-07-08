@@ -19,5 +19,5 @@ const getData = async () => {
 export default async function TodoListApp() {
   const data = await getData()
 
-  return <TodoList todoData={data.todo} depData={data.dep} />
+  return <TodoList todoData={data.todo} />
 }
