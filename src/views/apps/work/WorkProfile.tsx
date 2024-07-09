@@ -149,7 +149,9 @@ const WorkProfile = ({ workData }: { workData: any }) => {
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created by:</Typography>
-                <Typography className='font-bold'>{workData?.firstname + ' ' + workData?.lastname}</Typography>
+                <Typography className='font-bold'>
+                  {workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname}
+                </Typography>
                 <Typography className='text-xs mt-2'>Work ID:</Typography>
                 <Typography className='font-bold'>{workData.wid}</Typography>
               </div>
