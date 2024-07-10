@@ -929,24 +929,27 @@ var data2 = [
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const testScript = () => {
-  //alert('test Script2')
+  sessionStorage.setItem('formdata', 'test')
   $('.fb-render').formRender({
     dataType: 'json',
     formData: data2
   })
 }
 
-// $('.fb-render').formRender({
-//   dataType: 'json',
-//   formData: data2
-// })
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const renderEform = () => {
+  const data = sessionStorage.getItem('eformData')
+  const dataObj = JSON.parse(data)
 
-// $(document).ready(function () {
-//   setTimeout(() => {
-//     alert('start render')
-//     $('.fb-render').formRender({
-//       dataType: 'json',
-//       formData: data2
-//     })
-//   }, 500)
-// })
+  for (let i = 0; i < dataObj.length; i++) {
+    const elem = dataObj[i]
+
+    console.log(elem)
+    console.log('--------')
+
+    $('#fb-render-' + elem._id).formRender({
+      dataType: 'json',
+      formData: elem.form_template
+    })
+  }
+}
