@@ -10,6 +10,8 @@ import { useEffect, useState, useMemo } from 'react'
 // // MUI Imports
 // // import { NextResponse } from 'next/server'
 
+import Link from 'next/link'
+
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
@@ -60,10 +62,12 @@ import TableFilters from './TableFilters'
 import GroupDrawerForm from './DepartmentDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
+
 // import CustomAvatar from '@core/components/mui/Avatar'
 
 // // Util Imports
 import { getInitials } from '@/utils/getInitials'
+
 // import { getLocalizedUrl } from '@/utils/i18n'
 
 // // Style Imports
@@ -85,10 +89,12 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
+
   //   // Store the itemRank info
   addMeta({
     itemRank
   })
+
   //   // Return if the item should be filtered in/out
   return itemRank.passed
 }
@@ -167,6 +173,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
       statecode: String(depParent.Statecode)
     }
   })
+
   //console.log('stateinfopData === ', stateinfoData)
   console.log('parentData === ', depParentData)
 
@@ -323,6 +330,16 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
             >
               <i className='tabler-edit text-[22px] text-textSecondary' />
             </IconButton>
+            <Link
+              href={{
+                pathname: '/en/position/dep',
+                query: `dep=${row.original.dep}`
+              }}
+            >
+              <IconButton>
+                <i className='tabler-shield text-[22px] text-textSecondary' />
+              </IconButton>
+            </Link>
           </div>
         ),
         enableSorting: false
@@ -481,4 +498,5 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
     </>
   )
 }
+
 export default DepartmentListTable

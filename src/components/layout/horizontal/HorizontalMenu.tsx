@@ -136,9 +136,9 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
             <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
               {dictionary['navigation'].position}
             </MenuItem>
-            <MenuItem href={`/${locale}/position/dep`} icon={<i className='tabler-shield' />}>
+            {/* <MenuItem href={`/${locale}/position/dep`} icon={<i className='tabler-shield' />}>
               {dictionary['navigation'].positionDep}
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
               {dictionary['navigation'].stateInfo}
             </MenuItem>
