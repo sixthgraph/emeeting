@@ -12,6 +12,7 @@
     "departments": "หน่วยงาน",
     "userGroup": "กลุ่มผู้ใช้",
     "position": "ตำแหน่ง",
+    "positionDep": "ตำแหน่งในหน่วยงาน",
     "stateInfo": "ลำดับของข้อมูล",
     "dashboards": "แผงควบคุม",
     "create": "สร้าง",
