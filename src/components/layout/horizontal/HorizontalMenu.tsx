@@ -7,6 +7,8 @@ import { useParams } from 'next/navigation'
 import { useTheme } from '@mui/material/styles'
 
 // Type Imports
+import { useSession } from 'next-auth/react'
+
 import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
 import type { getDictionary } from '@/utils/getDictionary'
 
@@ -56,6 +58,8 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
   const theme = useTheme()
   const params = useParams()
   const { settings } = useSettings()
+  const { data: session } = useSession()
+  const userRole = session?.user.role
 
   // Vars
   const { skin } = settings
@@ -115,26 +119,28 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
           <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
           <MenuItem href={`/${locale}/new-route`}>{dictionary['navigation'].newRoute}</MenuItem>
         </SubMenu>
-        <SubMenu label={dictionary['navigation'].admin} icon={<i className='tabler-settings' />}>
-          <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
-            {dictionary['navigation'].users}
-          </MenuItem>
-          {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
+        {userRole == 1 && (
+          <SubMenu label={dictionary['navigation'].admin} icon={<i className='tabler-settings' />}>
+            <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
+              {dictionary['navigation'].users}
+            </MenuItem>
+            {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
             Users Example
           </MenuItem> */}
-          <MenuItem href={`/${locale}/departments`} icon={<i className='tabler-building-bank' />}>
-            {dictionary['navigation'].departments}
-          </MenuItem>
-          <MenuItem href={`/${locale}/groups`} icon={<i className='tabler-users' />}>
-            {dictionary['navigation'].userGroup}
-          </MenuItem>
-          <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
-            {dictionary['navigation'].position}
-          </MenuItem>
-          <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
-            {dictionary['navigation'].stateInfo}
-          </MenuItem>
-        </SubMenu>
+            <MenuItem href={`/${locale}/departments`} icon={<i className='tabler-building-bank' />}>
+              {dictionary['navigation'].departments}
+            </MenuItem>
+            <MenuItem href={`/${locale}/groups`} icon={<i className='tabler-users' />}>
+              {dictionary['navigation'].userGroup}
+            </MenuItem>
+            <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
+              {dictionary['navigation'].position}
+            </MenuItem>
+            <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
+              {dictionary['navigation'].stateInfo}
+            </MenuItem>
+          </SubMenu>
+        )}
       </Menu>
     </HorizontalNav>
   )

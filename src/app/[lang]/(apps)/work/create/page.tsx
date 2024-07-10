@@ -1,6 +1,8 @@
 import { getServerSession } from 'next-auth'
 
 // Component Imports
+import { Card, CardContent, Typography } from '@mui/material'
+
 import { options } from '@/app/api/auth/[...nextauth]/options'
 
 import axios from '@/utils/axios'
@@ -35,7 +37,7 @@ const getData = async ({ dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/eforms`, reqBody, { headers })
 
     if (response.data.message === 'success') {
-      return response.data
+      return response.data.data
     } else {
       throw new Error('Failed to fetch workdata')
     }
@@ -55,11 +57,34 @@ const workPage = async ({ searchParams }: any) => {
 
   const data = await getData({ wid, dep, rid, pid })
 
-  console.log('page data === ')
+  console.log('new request page data === ')
   console.log(data)
 
   // return <WorkDetail workData={searchParams} data={data} tabContentList={tabContentList(data)} />
-  return <h1>For SG</h1>
+  return (
+    <>
+      <h1>For SG - create new request</h1>
+      {data.map((form: any) => {
+        return (
+          <>
+            <Card key={form.form_id} className='my-4'>
+              <CardContent>
+                <Typography>
+                  <b>form_id :</b> {form.form_id}
+                </Typography>
+                <Typography>
+                  <b>form_name :</b> {form.form_name}
+                </Typography>
+                <Typography>
+                  <b>form_template :</b> {JSON.stringify(form.form_template)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </>
+        )
+      })}
+    </>
+  )
 }
 
 export default workPage

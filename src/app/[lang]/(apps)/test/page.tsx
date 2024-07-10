@@ -26,8 +26,8 @@ const getData = async () => {
 export default async function Page() {
   const users = await getData()
 
-  // console.log('Users list ====')
-  // console.log(users)
+  console.log('Users list ====')
+  console.log(users)
 
   return (
     <div>

@@ -9,6 +9,8 @@ import { useTheme } from '@mui/material/styles'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Type Imports
+import { useSession } from 'next-auth/react'
+
 import type { getDictionary } from '@/utils/getDictionary'
 import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
 
@@ -44,11 +46,14 @@ const RenderExpandIcon = ({ open, transitionDuration }: RenderExpandIconProps) =
 
 const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
   // Hooks
+
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
   const { settings } = useSettings()
   const params = useParams()
   const { isBreakpointReached } = useVerticalNav()
+  const { data: session } = useSession()
+  const userRole = session?.user.role
 
   // Vars
   const { transitionDuration } = verticalNavOptions
@@ -87,7 +92,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
             {dictionary['navigation'].todo}
           </MenuItem>
           <MenuItem href={`/${locale}/my-requests`} icon={<i className='tabler-inbox' />}>
-            {dictionary['navigation'].myRequests}
+            {dictionary['navigation'].myRequest}
           </MenuItem>
           <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-inbox' />}>
             {dictionary['navigation'].comments}
@@ -106,26 +111,28 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
           <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
           <MenuItem href={`/${locale}/new-route`}>{dictionary['navigation'].newRoute}</MenuItem>
         </MenuSection>
-        <MenuSection label={dictionary['navigation'].admin}>
-          <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
-            {dictionary['navigation'].users}
-          </MenuItem>
-          {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
-            Users Example
-          </MenuItem> */}
-          <MenuItem href={`/${locale}/departments`} icon={<i className='tabler-building-bank' />}>
-            {dictionary['navigation'].departments}
-          </MenuItem>
-          <MenuItem href={`/${locale}/groups`} icon={<i className='tabler-users' />}>
-            {dictionary['navigation'].userGroup}
-          </MenuItem>
-          <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
-            {dictionary['navigation'].position}
-          </MenuItem>
-          <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
-            {dictionary['navigation'].stateInfo}
-          </MenuItem>
-        </MenuSection>
+        {userRole == 1 && (
+          <MenuSection label={dictionary['navigation'].admin}>
+            <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
+              {dictionary['navigation'].users}
+            </MenuItem>
+            {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
+              Users Example
+            </MenuItem> */}
+            <MenuItem href={`/${locale}/departments`} icon={<i className='tabler-building-bank' />}>
+              {dictionary['navigation'].departments}
+            </MenuItem>
+            <MenuItem href={`/${locale}/groups`} icon={<i className='tabler-users' />}>
+              {dictionary['navigation'].userGroup}
+            </MenuItem>
+            <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
+              {dictionary['navigation'].position}
+            </MenuItem>
+            <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
+              {dictionary['navigation'].stateInfo}
+            </MenuItem>
+          </MenuSection>
+        )}
       </Menu>
     </ScrollWrapper>
   )
