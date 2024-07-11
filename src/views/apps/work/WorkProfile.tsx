@@ -98,6 +98,62 @@ const WorkProfile = ({ workData }: { workData: any }) => {
     setExpanded(isExpanded ? panel : false)
   }
 
+  const handleEditwork = async (formData: any) => {
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, formData)
+
+      if (response.data.message === 'success') {
+        console.log('---Call Editwork success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+    } catch (error: any) {
+      console.log('Editwork failed. ', error.message)
+    }
+  }
+
+  const handlesendwork = async (formData: any) => {
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, formData)
+
+      if (response.data.message === 'success') {
+        console.log('---Call sendwork success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+    } catch (error: any) {
+      console.log('Editwork failed. ', error.message)
+    }
+  }
+
+  const handlesendbackwork = async (formData: any) => {
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, formData)
+
+      if (response.data.message === 'success') {
+        console.log('---Call sendbackwork success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+    } catch (error: any) {
+      console.log('Editwork failed. ', error.message)
+    }
+  }
+
+  const handlerejectwork = async (formData: any) => {
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/rejet`, formData)
+
+      if (response.data.message === 'success') {
+        console.log('---Call rejectwork success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+    } catch (error: any) {
+      console.log('Editwork failed. ', error.message)
+    }
+  }
+
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
   const formatshortdate = (date: any) => {
@@ -105,7 +161,7 @@ const WorkProfile = ({ workData }: { workData: any }) => {
       'ม.ค.',
       'ก.พ.',
       'มี.ค.',
-      ' เม.ย.',
+      'เม.ย.',
       'พ.ค.',
       'มิ.ย.',
       'ก.ค.',
@@ -123,11 +179,14 @@ const WorkProfile = ({ workData }: { workData: any }) => {
       curr_month = d.getMonth(),
       curr_year: number = d.getFullYear() + 543
 
+    const formattedDate = d.toLocaleString()
+    const curr_time = formattedDate.split(',')[1]
+
     if (locale == 'th') {
-      return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year
+      return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year + ' ' + curr_time
     }
 
-    return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year
+    return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
 
   return (
