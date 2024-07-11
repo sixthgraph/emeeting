@@ -4,6 +4,8 @@ import { getServerSession } from 'next-auth'
 import { options } from '@/app/api/auth/[...nextauth]/options'
 import axios from '@/utils/axios'
 
+import MyrequestList from '@/views/apps/my-request'
+
 const getData = async () => {
   const session = await getServerSession(options)
 
@@ -36,7 +38,7 @@ const myRequestPage = async () => {
   console.log('my-items data------')
   console.log(data.detail)
 
-  return <h1>For SG</h1>
+  return <MyrequestList myrequestData={data.detail}></MyrequestList>
 }
 
 export default myRequestPage

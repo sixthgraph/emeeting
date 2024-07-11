@@ -37,7 +37,7 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
-import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
+import type { MyrequestType, MyrequestTypeWithAction } from '@/types/apps/todoTypes'
 import type { DepType } from '@/types/apps/userTypes'
 
 // Component Imports
@@ -142,13 +142,13 @@ const depObj: DepType = {}
 // }
 
 // Column Definitions
-const columnHelper = createColumnHelper<TodoTypeWithAction>()
+const columnHelper = createColumnHelper<MyrequestTypeWithAction>()
 
 type Props = {
-  tableData?: TodoType[]
+  tableData?: MyrequestType[]
 }
 
-const TodoListTable = ({ tableData }: Props) => {
+const MyrequestListTable = ({ tableData }: Props) => {
   console.log('tableData =====')
   console.log(tableData)
 
@@ -183,7 +183,7 @@ const TodoListTable = ({ tableData }: Props) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Table Columns config
-  const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(
+  const columns = useMemo<ColumnDef<MyrequestTypeWithAction, any>[]>(
     () => [
       // {
       //   id: 'select',
@@ -420,7 +420,7 @@ const TodoListTable = ({ tableData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Awaiting your action' className='pbe-4' />
+        <CardHeader title='My Request' className='pbe-4' />
         {/* <TableFilters depData={depData} setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
@@ -515,4 +515,4 @@ const TodoListTable = ({ tableData }: Props) => {
   )
 }
 
-export default TodoListTable
+export default MyrequestListTable
