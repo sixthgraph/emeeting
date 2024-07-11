@@ -31,6 +31,9 @@ import type { Locale } from '@configs/i18n'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
+import { getInitials } from '@/utils/getInitials'
+import CustomAvatar from '@/@core/components/mui/Avatar'
+import type { UsersType } from '@/types/apps/userTypes'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -98,6 +101,21 @@ const UserDropdown = () => {
     required: true
   })
 
+  const userData: any = session?.user
+
+  console.log('session?.user')
+  console.log(session)
+
+  const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
+    const { avatar, fullName } = params
+
+    if (avatar) {
+      return <CustomAvatar src={avatar} size={38} variant='rounded' />
+    } else {
+      return <CustomAvatar size={38}>{getInitials(fullName as string)}</CustomAvatar>
+    }
+  }
+
   return (
     <>
       <Badge
@@ -107,13 +125,14 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         className='mis-2'
       >
-        <Avatar
+        {/* <Avatar
           ref={anchorRef}
           alt='John Doe'
           src='/images/avatars/1.png'
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
-        />
+        /> */}
+        {userData && getAvatar({ avatar: userData.avatar, fullName: userData.name })}
       </Badge>
       <Popper
         open={open}

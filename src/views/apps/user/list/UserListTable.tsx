@@ -305,14 +305,18 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       columnHelper.accessor('dep', {
         header: 'Department',
         cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {/* {row.original.dep && depObj[row.original.dep].depname} */}
-
-              {depObj[row.original.dep] && depObj[row.original.dep].depname}
-            </Typography>
-            <Typography variant='body2'>{row.original.position}</Typography>
-          </div>
+          <>
+            {row.original.dep.map((dep: any) => {
+              return (
+                <div key={row.original.id} className='flex flex-row gap-2'>
+                  <Typography color='text.primary' className='font-medium'>
+                    {dep.depname}
+                  </Typography>
+                  <Typography variant='body2'>({dep.positionname})</Typography>
+                </div>
+              )
+            })}
+          </>
         )
       }),
       columnHelper.accessor('role', {

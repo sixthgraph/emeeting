@@ -9,7 +9,7 @@ export type UsersType = {
   email: string
   avatar: string
   password: string
-  dep: string
+  dep: string[]
   position: string
   role: string
   status: string

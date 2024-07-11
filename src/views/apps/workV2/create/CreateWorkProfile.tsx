@@ -3,14 +3,10 @@
 import { useState } from 'react'
 import type { SyntheticEvent } from 'react'
 
-import Image from 'next/image'
-
 // MUI Imports
 import Script from 'next/script'
 
 // import $ from 'jquery'
-
-import { useParams } from 'next/navigation'
 
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
@@ -30,7 +26,12 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
 // Type Imports
-import { Box, LinearProgress } from '@mui/material'
+import { Box, Button, CardActions, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { useSession } from 'next-auth/react'
+
+import { Formatshortdate } from '@/utils/hooks/datetime'
+import CustomAvatar from '@/@core/components/mui/Avatar'
+import { getInitials } from '@/utils/getInitials'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -80,16 +81,18 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const CreateWorkProfile = ({ workData }: { workData: any }) => {
-  const params = useParams()
-  const { lang: locale } = params
   const [value, setValue] = useState('1')
+
+  const { data: session } = useSession({
+    required: true
+  })
+
+  const today = new Date()
+  const userData: any = session?.user
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
-
-  console.log('workData in CreateWorkProfileV2 ====')
-  console.log(workData)
 
   // States
   const [expanded, setExpanded] = useState<string | false>('panel-' + workData[0]._id)
@@ -100,35 +103,21 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
 
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
-  const formatshortdate = (date: any) => {
-    const m_th_names = [
-      'ม.ค.',
-      'ก.พ.',
-      'มี.ค.',
-      ' เม.ย.',
-      'พ.ค.',
-      'มิ.ย.',
-      'ก.ค.',
-      'ส.ค.',
-      'ก.ย.',
-      'ต.ค.',
-      'พ.ย',
-      'ธ.ค.'
-    ]
+  const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
+    const { avatar, fullName } = params
 
-    const m_en_names = ['Jan', 'Feb', 'Mar', ' Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-    const d = new Date(date),
-      curr_date = d.getDate(),
-      curr_month = d.getMonth(),
-      curr_year: number = d.getFullYear() + 543
-
-    if (locale == 'th') {
-      return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year
+    if (avatar) {
+      return <CustomAvatar src={avatar} size={55} variant='rounded' />
+    } else {
+      return (
+        <CustomAvatar size={55} variant='rounded'>
+          {getInitials(fullName as string)}
+        </CustomAvatar>
+      )
     }
-
-    return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year
   }
+
+  // Vars
 
   return (
     <>
@@ -138,48 +127,35 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
           <CardContent className='flex gap-5 p-0 item-stretch flex-col'>
             <div className='flex p-5 items-stretch gap-4 w-full rounded-lg bg-stripes-cyan text-center'>
               <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
-                {/* <img height={55} width={55} src={data?.profileImg} className='rounded' alt='Profile Background' /> */}
-                <Image
-                  src={`/images/avatars/1.png`}
-                  className='rounded'
-                  alt='Profile Background'
-                  height={55}
-                  width={55}
-                />
+                {userData && getAvatar({ avatar: session?.user.avatar, fullName: session?.user.name })}
+              </div>
+              <div className='flex-1 flex flex-col items-start'>
+                <Typography className='text-xs flex'>Created by:</Typography>
+                <Typography className='font-bold flex pb-4'>{session?.user ? session.user.name : '--'}</Typography>
+                <FormControl variant='standard' fullWidth>
+                  <InputLabel id='department-select-label'>Select department</InputLabel>
+                  <Select
+                    label='Select department'
+                    labelId='department-select-label'
+                    id='department-select'
+                    defaultValue=''
+                    className='text-left'
+                  >
+                    {userData &&
+                      userData.dep.map((dep: any) => {
+                        return (
+                          <MenuItem key={dep.depid} value={dep.depid}>
+                            {dep.depname} / {dep.positionname}
+                          </MenuItem>
+                        )
+                      })}
+                  </Select>
+                </FormControl>
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Created by:</Typography>
-                <Typography className='font-bold'>
-                  111
-                  {/* {workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname} */}
-                </Typography>
-                <Typography className='text-xs mt-2'>Work ID:</Typography>
-                <Typography className='font-bold'>
-                  {/* {workData.wid} */}
-                  222
-                </Typography>
-              </div>
-              <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Created:</Typography>
-                <Typography className='font-bold'>
-                  {/* {formatshortdate(workData?.Registerdate)} */}
-                  333
-                </Typography>
-                <Typography className='text-xs mt-2'>Subject:</Typography>
-                <Typography className='font-bold'>
-                  444
-                  {/* {workData.subject} */}
-                </Typography>
-              </div>
-              {/* <div className='flex-1 flex flex-col items-start justify-end'> */}
-              <div className='flex-none w-59 flex flex-col'>
-                <div className='flex flex-row'>
-                  <Typography color='text.disabled' sx={{ paddingRight: 4 }}>
-                    Work progress
-                  </Typography>
-                  <Typography className='font-bold'>50%</Typography>
-                </div>
-                <LinearProgress value={50} variant='determinate' color='success' className='mt-2 mr-2 min-bs-1' />
+                <Typography className='text-xs'>Create date:</Typography>
+                <Typography className='font-bold pb-4'>{Formatshortdate(today)}</Typography>
+                <TextField fullWidth id='subject' label='Subject' variant='standard' />
               </div>
             </div>
             <div className='flex flex-1'>
@@ -203,15 +179,6 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                         </div>
                       }
                       value='2'
-                    />
-                    <Tab
-                      label={
-                        <div className='flex items-center gap-1.5'>
-                          <i className='tabler-chart-bar text-lg' />
-                          Activity
-                        </div>
-                      }
-                      value='3'
                     />
                   </TabList>
                 </Box>
@@ -301,10 +268,29 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
              */}
             </TabPanel>
             <TabPanel value='2'>Documents list</TabPanel>
-            <TabPanel value='3'>Activity content</TabPanel>
           </CardContent>
         </Card>
       </TabContext>
+
+      <footer
+        className='w-full content-center'
+        style={{ color: 'gray', position: 'fixed', bottom: 0, left: 0, textAlign: 'center' }}
+      >
+        <Card>
+          <CardActions
+            disableSpacing
+            sx={{
+              alignSelf: 'stretch',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              p: 2
+            }}
+          >
+            <Button variant='text'>Create</Button>
+          </CardActions>
+        </Card>
+      </footer>
     </>
   )
 }
