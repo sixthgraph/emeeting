@@ -32,10 +32,10 @@ export async function POST(req: NextRequest) {
 
     if (depPartents.data.message === 'success') {
       response.data.data.depPartents = depPartents.data.data.detail
-      console.log('server reponse depParent ==============================')
-      console.log(depPartents.data.data.detail)
-      console.log(response.data)
-      console.log('end server reponse depPartents ==============================')
+      // console.log('server reponse depParent ==============================')
+      // console.log(depPartents.data.data.detail)
+      // console.log(response.data)
+      // console.log('end server reponse depPartents ==============================')
     }
 
     return NextResponse.json(response.data)

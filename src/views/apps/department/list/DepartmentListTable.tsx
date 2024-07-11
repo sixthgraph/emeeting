@@ -160,7 +160,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
       desc: String(stateinfo.desc)
     }
   })
-  console.log('stateinfoData === ', stateinfoData)
+  //console.log('stateinfoData === ', stateinfoData)
   depParentData?.map(depParent => {
     const id = String(depParent.dep)
 
@@ -175,7 +175,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
   })
 
   //console.log('stateinfopData === ', stateinfoData)
-  console.log('parentData === ', depParentData)
+  //console.log('parentData === ', depParentData)
 
   // States
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
@@ -187,7 +187,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
-  console.log('table data =', data)
+  //console.log('table data =', data)
 
   // Hooks
   //const { lang: locale } = useParams()
@@ -416,7 +416,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
               onClick={() => DepartmentDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
-              Add New User
+              Add New
             </Button>
           </div>
         </div>

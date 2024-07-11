@@ -48,11 +48,17 @@ import axios from 'axios'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type { StateinfosType, StateinfosTypeWithAction } from '@/types/apps/stateinfoTypes'
+import type {
+  PositionsDepType,
+  PositionsDepTypeWithAction,
+  PositionsType,
+  DepType,
+  PositionFilterType
+} from '@/types/apps/positionTypes'
 
 // // Component Imports
 //import TableFilters from './TableFilters'
-import GroupDrawerForm from './StateinfoDrawerForm'
+import GroupDrawerForm from './PositionDepDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 // import CustomAvatar from '@core/components/mui/Avatar'
@@ -63,6 +69,8 @@ import { getInitials } from '@/utils/getInitials'
 
 // // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import { integer } from 'valibot'
+import { useSearchParams } from 'next/navigation'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -123,28 +131,67 @@ const DebouncedInput = ({
   return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
 }
 
+const posObj: PositionFilterType = {}
+const depObj: DepType = {}
+
 // // Vars
 let initialData = {
-  statecode: '',
-  desc: '',
+  dep: '',
+  depname: '',
+  path: '',
+  sort: '',
   ref: '',
-  remark: '',
-  create_date: '',
-  create_by: '',
-  update_date: '',
-  update_by: ''
+  positioncode: '',
+  positiondesc: '',
+  positionpath: '',
+  positionlevel: '',
+  positionref: ''
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<StateinfosTypeWithAction>()
+const columnHelper = createColumnHelper<PositionsDepTypeWithAction>()
 
 type Props = {
-  tableData?: StateinfosType[]
+  tableData?: PositionsDepType[]
+  positionData?: PositionFilterType[]
+  depData?: DepType[]
 }
 
-const StateinfoListTable = ({ tableData }: Props) => {
+const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
+  const searchParams = useSearchParams()
+
+  const dep = searchParams.get('dep')
+
+  // console.log('tableData 222222')
+  console.log(dep)
+  //console.log(tableData)
+  positionData?.map(position => {
+    const id = String(position.positioncode)
+
+    posObj[id] = {
+      positioncode: String(position.positioncode),
+      desc: String(position.desc),
+      level: String(position.level),
+      ref: String(position.ref),
+      status: String(position.status),
+      remark: String(position.remark)
+    }
+  })
+  //console.log('positionData === ', positionData)
+  depData?.map(department => {
+    const id = String(department.dep)
+
+    depObj[id] = {
+      dep: String(department.Dep),
+      depname: String(department.Depname),
+      docuname: Number(department.Docuname),
+      path: String(department.Path),
+      sort: Number(department.Sort)
+    }
+  })
+
   // States
-  const [addStateinfoOpen, setAddStateinfoOpen] = useState(false)
+  const [addPositionDepOpen, setAddPositionDepOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
@@ -153,39 +200,42 @@ const StateinfoListTable = ({ tableData }: Props) => {
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
-  console.log('table data =', data)
+  //console.log('table data =', data)
+  //console.log('position data =', data)
 
   // Hooks
   //const { lang: locale } = useParams()
 
-  const StateinfoDrawerOpenHandle = () => {
+  const PositionDepDrawerOpenHandle = () => {
     initialData = {
-      statecode: '',
-      desc: '',
+      dep: '',
+      depname: '',
+      path: '',
+      sort: '',
       ref: '',
-      remark: '',
-      create_date: '',
-      create_by: '',
-      update_date: '',
-      update_by: ''
+      positioncode: '',
+      positiondesc: '',
+      positionpath: '',
+      positionlevel: '',
+      positionref: ''
     }
-    setAddStateinfoOpen(true)
+    setAddPositionDepOpen(true)
   }
 
-  const handleDeleteStateinfo = async (statecode: object) => {
+  const handleDeletePositionDep = async (dep: object, positioncode: object) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/delete`, statecode)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/delete`, dep, positioncode)
 
       if (response.data.message === 'success') {
-        console.log('=====stateinfo')
+        console.log('=====positioninfo')
         console.log(response.data)
 
         // //todo update tableData
-        const em: any = statecode
-        console.log('==== look statecode')
-        console.log(statecode)
+        const em: any = positioncode
+        console.log('==== look positioncode')
+        console.log(positioncode)
 
-        const newUpdate = tableData?.filter(el => el.statecode !== em.statecode)
+        const newUpdate = tableData?.filter(el => el.positioncode !== em.positioncode)
 
         console.log('newUpdate === ', newUpdate)
         setData(newUpdate)
@@ -198,15 +248,15 @@ const StateinfoListTable = ({ tableData }: Props) => {
         console.log('Update token ===', response.data.token)
         handleRefresh()
       } else {
-        console.error('Stateinfo delete failed')
+        console.error('Position delete failed')
       }
     } catch (error: any) {
-      console.log('Delete Stateinfo failed. ', error.message)
+      console.log('Delete Position failed. ', error.message)
     }
   }
 
   // Table Columns config
-  const columns = useMemo<ColumnDef<StateinfosTypeWithAction, any>[]>(
+  const columns = useMemo<ColumnDef<PositionsDepTypeWithAction, any>[]>(
     () => [
       {
         id: 'select',
@@ -230,67 +280,111 @@ const StateinfoListTable = ({ tableData }: Props) => {
           />
         )
       },
-      columnHelper.accessor('statecode', {
-        header: 'Statecode',
+      // columnHelper.accessor('dep', {
+      //   header: 'Dep',
+      //   cell: ({ row }) => (
+      //     <div className='flex flex-col'>
+      //       <Typography color='text.primary' className='font-medium'>
+      //         {row.original.dep}
+      //       </Typography>
+      //     </div>
+      //   )
+      // }),
+      columnHelper.accessor('depname', {
+        header: 'Depname',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
-              {row.original.statecode}
+              {row.original.depname}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('desc', {
-        header: 'Desc',
+      columnHelper.accessor('path', {
+        header: 'Path',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
-              {row.original.desc}
+              {row.original.path}
             </Typography>
           </div>
         )
       }),
-      //   columnHelper.accessor('ref', {
-      //     header: 'Ref',
-      //     cell: ({ row }) => (
-      //       <div className='flex flex-col'>
-      //         <Typography color='text.primary' className='font-medium'>
-      //           {row.original.ref}
-      //         </Typography>
-      //       </div>
-      //     )
-      //   }),
-      //   columnHelper.accessor('remark', {
-      //     header: 'Remark',
-      //     cell: ({ row }) => (
-      //       <div className='flex flex-col'>
-      //         <Typography color='text.primary' className='font-medium'>
-      //           {row.original.remark}
-      //         </Typography>
-      //       </div>
-      //     )
-      //   }),
+      columnHelper.accessor('positioncode', {
+        header: 'Positioncode',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.positioncode}
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('positiondesc', {
+        header: 'Positiondesc',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.positiondesc}
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('positionpath', {
+        header: 'Positionpath',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.positionpath}
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('positionlevel', {
+        header: 'Positionlevel',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.positionlevel}
+            </Typography>
+          </div>
+        )
+      }),
+      // columnHelper.accessor('positionref', {
+      //   header: 'Positionref',
+      //   cell: ({ row }) => (
+      //     <div className='flex flex-col'>
+      //       <Typography color='text.primary' className='font-medium'>
+      //         {row.original.positionref}
+      //       </Typography>
+      //     </div>
+      //   )
+      // }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeleteStateinfo({ statecode: row.original.statecode })
+                handleDeletePositionDep({ dep: row.original.dep }, { positioncode: row.original.positioncode })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
             </IconButton>
             <IconButton
               onClick={() => {
-                // initialData.password = ''
-                initialData.statecode = row.original.statecode
-                initialData.desc = row.original.desc
+                initialData.dep = row.original.dep
+                initialData.depname = row.original.depname
+                initialData.path = row.original.path
+                initialData.sort = row.original.sort
                 initialData.ref = row.original.ref
-                initialData.remark = row.original.remark
-                initialData.update_date = row.original.update_date
-                initialData.update_by = row.original.update_by
-                setAddStateinfoOpen(!addStateinfoOpen)
+                initialData.positioncode = row.original.positioncode
+                initialData.positiondesc = row.original.positiondesc
+                initialData.positionlevel = row.original.positionlevel
+                initialData.positionpath = row.original.positionpath
+                initialData.positionref = row.original.positionref
+
+                setAddPositionDepOpen(!addPositionDepOpen)
               }}
             >
               <i className='tabler-edit text-[22px] text-textSecondary' />
@@ -306,7 +400,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
 
   // Table config
   const table = useReactTable({
-    data: data as StateinfosType[],
+    data: data as PositionsDepType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter // search field
@@ -368,7 +462,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
-              onClick={() => StateinfoDrawerOpenHandle()}
+              onClick={() => PositionDepDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
               Add New
@@ -404,7 +498,8 @@ const StateinfoListTable = ({ tableData }: Props) => {
                 </tr>
               ))}
             </thead>
-            {table.getFilteredRowModel().rows.length === 0 ? (
+            {/* {table.getFilteredRowModel().rows.length === 0 ? ( */}
+            {tableData?.length == 0 ? (
               <tbody>
                 <tr>
                   <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
@@ -430,6 +525,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
             )}
           </table>
         </div>
+
         <TablePagination
           component={() => <TablePaginationComponent table={table} />}
           count={table.getFilteredRowModel().rows.length}
@@ -442,13 +538,15 @@ const StateinfoListTable = ({ tableData }: Props) => {
       </Card>
 
       <GroupDrawerForm
-        open={addStateinfoOpen}
+        open={addPositionDepOpen}
         setData={setData}
         tableData={tableData}
         updateData={initialData}
-        handleClose={() => setAddStateinfoOpen(!addStateinfoOpen)}
+        depData={depData}
+        positionData={positionData}
+        handleClose={() => setAddPositionDepOpen(!addPositionDepOpen)}
       />
     </>
   )
 }
-export default StateinfoListTable
+export default PositionDepListTable

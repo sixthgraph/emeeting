@@ -397,7 +397,7 @@ const PositionListTable = ({ tableData }: Props) => {
               onClick={() => PositionDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
-              Add New User
+              Add New
             </Button>
           </div>
         </div>
