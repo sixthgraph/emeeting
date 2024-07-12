@@ -14,11 +14,6 @@ const getData = async ({ dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid
   // Vars
   const session = await getServerSession(options)
 
-  console.log('req body ====')
-  console.log(dep)
-  console.log(rid)
-  console.log(pid)
-
   try {
     const reqBody = {
       dep: dep,
@@ -48,20 +43,9 @@ const getData = async ({ dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid
 }
 
 const workPage = async ({ searchParams }: any) => {
-  // const wid = searchParams.wid
-  // const dep = searchParams.dep
-
   const { wid, dep, rid, pid } = searchParams
-
-  console.log('search params----')
-  console.log(searchParams)
-
   const data = await getData({ wid, dep, rid, pid })
 
-  // console.log('new request page data === ')
-  // console.log(data)
-
-  // return <WorkDetail workData={searchParams} data={data} tabContentList={tabContentList(data)} />
   return (
     <WorkCreate data={data} />
 

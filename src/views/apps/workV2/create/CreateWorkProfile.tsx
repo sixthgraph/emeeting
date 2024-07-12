@@ -7,6 +7,7 @@ import type { SyntheticEvent } from 'react'
 import Script from 'next/script'
 
 // import $ from 'jquery'
+import { useSearchParams } from 'next/navigation'
 
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
@@ -29,9 +30,9 @@ import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 import { Box, Button, CardActions, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { useSession } from 'next-auth/react'
 
-import { Formatshortdate } from '@/utils/hooks/datetime'
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
+import { formRender } from '@/utils/hooks/formRender'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -81,26 +82,35 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const CreateWorkProfile = ({ workData }: { workData: any }) => {
+  console.log('CreateWorkProfile----')
+
+  const eformData = []
+
+  for (let i = 0; i < workData.length; i++) {
+    const newData = {
+      id: workData[i]._id,
+      form_template: workData[i].form_template
+    }
+
+    eformData.push(newData)
+  }
+
+  console.log(eformData)
+
   const [value, setValue] = useState('1')
+
+  const searchParams = useSearchParams()
+
+  const routename = searchParams.get('routename')
 
   const { data: session } = useSession({
     required: true
   })
 
-  const today = new Date()
   const userData: any = session?.user
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-  }
 
   // States
   const [expanded, setExpanded] = useState<string | false>('panel-' + workData[0]._id)
-
-  const handleAccordionChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false)
-  }
-
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
   const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
@@ -117,7 +127,17 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
     }
   }
 
-  // Vars
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue)
+  }
+
+  const handleAccordionChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false)
+  }
+
+  const handleSubmit = () => {
+    console.log('submit create work')
+  }
 
   return (
     <>
@@ -153,8 +173,8 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                 </FormControl>
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Create date:</Typography>
-                <Typography className='font-bold pb-4'>{Formatshortdate(today)}</Typography>
+                <Typography className='text-xs'>Route name:</Typography>
+                <Typography className='font-bold pb-4'>{routename}</Typography>
                 <TextField fullWidth id='subject' label='Subject' variant='standard' />
               </div>
             </div>
@@ -216,56 +236,9 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                 onReady={() => {
                   console.log('form render has loaded')
 
-                  {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    renderEform()
-                  }
+                  formRender(workData)
                 }}
               />
-              {/*
-              <Accordion expanded={expanded === 'panel1'} onChange={handleAccordionChange('panel1')}>
-                <AccordionSummary
-                  id='customized-panel-header-1'
-                  expandIcon={expandIcon('panel1')}
-                  aria-controls='customized-panel-content-1'
-                >
-                  <Typography>แบบคำขอรับการฝึกอบรมภายนอก</Typography>
-                </AccordionSummary>
-                <AccordionDetails>1111</AccordionDetails>
-              </Accordion>
-
-              <Accordion expanded={expanded === 'panel2'} onChange={handleAccordionChange('panel2')}>
-                <AccordionSummary
-                  id='customized-panel-header-2'
-                  expandIcon={expandIcon('panel2')}
-                  aria-controls='customized-panel-content-2'
-                >
-                  <Typography>Eform 2</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    Sugar plum sesame snaps caramels. Cake pie tart fruitcake sesame snaps donut cupcake macaroon.
-                    Gingerbread pudding cheesecake pie ice cream.
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-
-              <Accordion expanded={expanded === 'panel3'} onChange={handleAccordionChange('panel3')}>
-                <AccordionSummary
-                  id='customized-panel-header-3'
-                  expandIcon={expandIcon('panel3')}
-                  aria-controls='customized-panel-content-3'
-                >
-                  <Typography>Eform 3</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    Gingerbread lemon drops bear claw gummi bears bonbon wafer jujubes tiramisu. Jelly pie cake. Sweet
-                    roll dessert sweet pastry powder.
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-             */}
             </TabPanel>
             <TabPanel value='2'>Documents list</TabPanel>
           </CardContent>
@@ -287,7 +260,9 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
               p: 2
             }}
           >
-            <Button variant='text'>Create</Button>
+            <Button variant='contained' color='primary' onClick={() => handleSubmit()}>
+              Create
+            </Button>
           </CardActions>
         </Card>
       </footer>

@@ -14,13 +14,7 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json()
     const { email } = reqBody
-
-    console.log('reqBody ======>')
-    console.log(email)
-
     const deletedUser = await User.findOneAndDelete({ email })
-
-    console.log(deletedUser)
 
     return NextResponse.json({
       message: 'Deleted user successfully',

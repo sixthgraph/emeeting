@@ -9,7 +9,7 @@ import CreateWorkProfile from './CreateWorkProfile'
 const WorkCreate = ({ data }: { data: any }) => {
   useEffect(() => {
     if (window) {
-      window.sessionStorage.setItem('eformData', JSON.stringify(data))
+      //window.sessionStorage.setItem('eformData', JSON.stringify(data))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

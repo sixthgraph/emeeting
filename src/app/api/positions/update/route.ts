@@ -16,11 +16,6 @@ export async function POST(req: NextRequest) {
 
   const reqBody = await req.json()
 
-  console.log('server token =====')
-  console.log(token)
-  console.log('reqBody update=====')
-  console.log(reqBody)
-
   try {
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updateposition`, {
       method: 'POST',

@@ -14,9 +14,6 @@ import type { Data } from '@/types/pages/profileTypes'
 import WorkProfile from '../work/WorkProfile'
 
 const WorkDetailV2 = ({ data }: { data: Data }) => {
-  console.log('data in WorkdetailV2 ===')
-  console.log(data.data)
-
   const workData = data.data
 
   return (

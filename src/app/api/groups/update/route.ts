@@ -1,6 +1,8 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+
 import { getServerSession } from 'next-auth'
+
 import { options } from './../../auth/[...nextauth]/options'
 
 export async function POST(req: NextRequest) {
@@ -8,11 +10,6 @@ export async function POST(req: NextRequest) {
   const token = serverSession?.user.token
 
   const reqBody = await req.json()
-
-  console.log('server token =====')
-  console.log(token)
-  console.log('reqBody =====')
-  console.log(reqBody)
 
   try {
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updateusergroup`, {

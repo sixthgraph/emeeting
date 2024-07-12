@@ -29,7 +29,7 @@ export type UserFormDataType = {
   password: string
   avatar: string
   avatarcolor: string
-  dep: string
+  dep: string[]
   position: string
   status: string
   role: number

@@ -22,3 +22,19 @@ export const Formatshortdate = (date: any) => {
 
   return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
 }
+
+// export const formRender = (data: string) => {
+//   const dataObj = JSON.parse(data)
+
+//   for (let i = 0; i < dataObj.length; i++) {
+//     const elem = dataObj[i]
+
+//     console.log(elem)
+//     console.log('--------')
+
+//     $('#fb-render-' + elem._id).formRender({
+//       dataType: 'json',
+//       formData: elem.form_template
+//     })
+//   }
+// }

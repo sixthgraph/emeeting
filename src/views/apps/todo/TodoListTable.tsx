@@ -38,7 +38,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
-import type { DepType } from '@/types/apps/userTypes'
+import type { DepType, UsersType } from '@/types/apps/userTypes'
 
 // Component Imports
 import TableFilters from './TableFilters'
@@ -238,7 +238,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&routename=${row.original.routename}`
             }}
           >
             <div className='flex items-center gap-4'>
@@ -264,7 +264,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&routename=${row.original.routename}`
             }}
           >
             <div className='flex flex-col pli-2 plb-3'>
@@ -291,7 +291,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&routename=${row.original.routename}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -309,7 +309,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&routename=${row.original.routename}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -326,7 +326,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&routename=${row.original.routename}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -407,7 +407,7 @@ const TodoListTable = ({ tableData }: Props) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  const getAvatar = (params: Pick<TodoType, 'avatar' | 'fullName'>) => {
+  const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
     const { avatar, fullName } = params
 
     if (avatar) {

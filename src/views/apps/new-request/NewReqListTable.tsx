@@ -91,6 +91,8 @@ const DebouncedInput = ({
 }
 
 // Vars
+/**
+ *
 const initialData = {
   firstname: '',
   lastname: '',
@@ -104,6 +106,7 @@ const initialData = {
   role: 0,
   status: ''
 }
+ */
 
 // Column Definitions
 const columnHelper = createColumnHelper<NewReqTypeWithAction>()
@@ -130,7 +133,7 @@ const NewReqListTable = ({ tableData }: Props) => {
               <Link
                 href={{
                   pathname: '/en/work/create',
-                  query: `dep=${row.original.basketid}&rid=${row.original.workflowid}&pid=${row.original.processid}`
+                  query: `dep=${row.original.basketid}&rid=${row.original.workflowid}&pid=${row.original.processid}&routename=${row.original.routename}`
                 }}
               >
                 <Typography color='text.primary' className='font-medium'>

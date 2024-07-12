@@ -46,7 +46,7 @@ const initialData = {
   password: '',
   avatar: '',
   avatarcolor: '',
-  dep: '',
+  dep: [],
   position: '',
   role: 0,
   status: ''
@@ -129,7 +129,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
       password: '',
       avatar: '',
       avatarcolor: '',
-      dep: '',
+      dep: [],
       position: '',
       role: 0,
       status: ''
@@ -250,7 +250,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             fullWidth
             id='select-department'
             value={formData.dep}
-            onChange={e => setFormData({ ...formData, dep: e.target.value })}
+            onChange={e => setFormData({ ...formData, dep: [e.target.value] })}
             label='Department'
           >
             {/* todo */}

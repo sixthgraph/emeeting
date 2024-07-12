@@ -10,10 +10,6 @@ const getData = async ({ wid, dep }: { wid?: any; dep?: any }) => {
   // Vars
   const session = await getServerSession(options)
 
-  console.log('req body ====')
-  console.log(dep)
-  console.log(wid)
-
   try {
     const reqBody = {
       wid: wid,

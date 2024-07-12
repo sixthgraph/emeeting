@@ -30,15 +30,10 @@ const getData = async () => {
 }
 
 const UserListApp = async () => {
-  // Vars
   const data = await getData()
   const users = data.data.detail
   const roles = data.data.roles
   const deps = data.data.deps
-
-  //const updateToken = data.token
-
-  console.log('deps ===', deps)
 
   return <UserList userData={users} roleData={roles} depData={deps} />
 }

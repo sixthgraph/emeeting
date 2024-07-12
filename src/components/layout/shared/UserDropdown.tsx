@@ -12,7 +12,6 @@ import { signOut, useSession } from 'next-auth/react'
 // MUI Imports
 import { styled } from '@mui/material/styles'
 import Badge from '@mui/material/Badge'
-import Avatar from '@mui/material/Avatar'
 import Popper from '@mui/material/Popper'
 import Fade from '@mui/material/Fade'
 import Paper from '@mui/material/Paper'
@@ -103,14 +102,11 @@ const UserDropdown = () => {
 
   const userData: any = session?.user
 
-  console.log('session?.user')
-  console.log(session)
-
   const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
     const { avatar, fullName } = params
 
     if (avatar) {
-      return <CustomAvatar src={avatar} size={38} variant='rounded' />
+      return <CustomAvatar src={avatar} size={38} />
     } else {
       return <CustomAvatar size={38}>{getInitials(fullName as string)}</CustomAvatar>
     }
@@ -153,7 +149,9 @@ const UserDropdown = () => {
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-6 gap-2' tabIndex={-1}>
-                    <Avatar alt='John Doe' src='/images/avatars/1.png' />
+                    {/* <Avatar alt='John Doe' src='/images/avatars/1.png' /> */}
+                    {userData && getAvatar({ avatar: userData.avatar, fullName: userData.name })}
+
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
                         {session?.user && session.user.name}

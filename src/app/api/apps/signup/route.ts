@@ -9,9 +9,6 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json()
     const { fullName, company, role, username, password, country, contact, email, plan, status } = reqBody
 
-    console.log('reqBody ===')
-    console.log(reqBody)
-
     //const savedUser = await axios.post('http://localhost:9995/register', reqBody)
     // const savedUser = await axios.post('https://rd.excelink.co.th/routeflow-api-main/register', reqBody)
 

@@ -7,14 +7,7 @@ import axios from 'axios'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
-
-  console.log('reqBody')
-  console.log(reqBody)
-
   const { wid, dep, token, email } = reqBody
-
-  console.log('call3 work api url === ')
-  console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`)
 
   try {
     const headers = {
@@ -23,6 +16,9 @@ export async function POST(req: NextRequest) {
       Pragma: 'no-cache',
       Expires: '0'
     }
+
+    console.log('get work list api url')
+    console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`)
 
     //const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`, {
     const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`, {

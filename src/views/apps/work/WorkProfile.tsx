@@ -3,14 +3,14 @@
 import { useState } from 'react'
 import type { SyntheticEvent } from 'react'
 
-import Image from 'next/image'
-
 // MUI Imports
 import Script from 'next/script'
 
 // import $ from 'jquery'
 
 import { useParams } from 'next/navigation'
+
+import Link from 'next/link'
 
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
@@ -30,7 +30,11 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
 // Type Imports
-import { Box, LinearProgress } from '@mui/material'
+import { Box, Button, CardActions, LinearProgress } from '@mui/material'
+
+import CustomAvatar from '@/@core/components/mui/Avatar'
+import { getInitials } from '@/utils/getInitials'
+import { formRender } from '@/utils/hooks/formRender'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -189,6 +193,20 @@ const WorkProfile = ({ workData }: { workData: any }) => {
     return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
 
+  const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
+    const { avatar, fullName } = params
+
+    if (avatar) {
+      return <CustomAvatar src={avatar} size={55} variant='rounded' />
+    } else {
+      return (
+        <CustomAvatar size={55} variant='rounded'>
+          {getInitials(fullName as string)}
+        </CustomAvatar>
+      )
+    }
+  }
+
   return (
     <>
       <TabContext value={value}>
@@ -197,14 +215,13 @@ const WorkProfile = ({ workData }: { workData: any }) => {
           <CardContent className='flex gap-5 p-0 item-stretch flex-col'>
             <div className='flex p-5 items-stretch gap-4 w-full rounded-lg bg-stripes-cyan text-center'>
               <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
-                {/* <img height={55} width={55} src={data?.profileImg} className='rounded' alt='Profile Background' /> */}
-                <Image
-                  src={`/images/avatars/1.png`}
-                  className='rounded'
-                  alt='Profile Background'
-                  height={55}
-                  width={55}
-                />
+                {workData &&
+                  getAvatar({
+                    avatar: workData?.usercreateinfo[0].avatar,
+                    fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname
+                  })}
+
+                {/* workData?.usercreateinfo[0].firstname */}
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created by:</Typography>
@@ -287,9 +304,11 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                     onReady={() => {
                       console.log('form render has loaded')
 
-                      {
-                        testScript()
-                      }
+                      //formRender(workData)
+
+                      // {
+                      //   testScript()
+                      // }
                     }}
                   />
                 </AccordionDetails>
@@ -332,6 +351,36 @@ const WorkProfile = ({ workData }: { workData: any }) => {
           </CardContent>
         </Card>
       </TabContext>
+      <footer
+        className='w-full content-center'
+        style={{ color: 'gray', position: 'fixed', bottom: 0, left: 0, textAlign: 'center' }}
+      >
+        <Card>
+          <CardActions
+            disableSpacing
+            sx={{
+              alignSelf: 'stretch',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              p: 2
+            }}
+          >
+            <Button variant='contained' className='mr-2' color='info' type='submit'>
+              Send Back
+            </Button>
+
+            <Button variant='contained' className='mr-2' type='submit'>
+              Finish
+            </Button>
+            <Link href={'/en/todo'}>
+              <Button variant='contained' color='inherit'>
+                close
+              </Button>
+            </Link>
+          </CardActions>
+        </Card>
+      </footer>
     </>
   )
 }
