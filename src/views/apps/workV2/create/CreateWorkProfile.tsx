@@ -32,7 +32,7 @@ import { useSession } from 'next-auth/react'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
-import { formRender } from '@/utils/hooks/formRender'
+import { formRender, getEdata } from '@/utils/hooks/formRender'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -95,7 +95,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
     eformData.push(newData)
   }
 
-  console.log(eformData)
+  // console.log(eformData)
 
   const [value, setValue] = useState('1')
 
@@ -137,7 +137,12 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
 
   const handleSubmit = () => {
     console.log('submit create work')
+    console.log(getEdata(workData))
   }
+
+  // function handleFieldChange(value: any) {
+  //   console.log('new value', value)
+  // }
 
   return (
     <>
