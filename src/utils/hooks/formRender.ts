@@ -1,3 +1,7 @@
+// import * as FriendCard from './../pages/FriendCard';
+
+// import * as formRender from 'https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
+
 const eddata: any = []
 
 const checkIndex = (elemId: any, data: any) => {
@@ -27,7 +31,7 @@ const mergeObj = (a: any, b: any, prop: any) => {
   return reduced.concat(b)
 }
 
-export const getEdata = (workData: any) => {
+export const getEdata = async (workData: any) => {
   let i: any
   const elem: any = workData
 
@@ -53,7 +57,7 @@ export const getEdata = (workData: any) => {
   return workData
 }
 
-export const formRender = (dataObj: string) => {
+export const formRenderV1 = (dataObj: string) => {
   let i: any
   const elem: any = dataObj
 

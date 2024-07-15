@@ -32,7 +32,8 @@ import { useSession } from 'next-auth/react'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
-import { formRender, getEdata } from '@/utils/hooks/formRender'
+import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
+import axios from '@/utils/axios'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -84,6 +85,26 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 const CreateWorkProfile = ({ workData }: { workData: any }) => {
   console.log('CreateWorkProfile----')
 
+  // States
+  const [value, setValue] = useState('1')
+  const [expanded, setExpanded] = useState<string | false>('panel-' + workData[0]._id)
+
+  const searchParams = useSearchParams()
+  const routename = searchParams.get('routename')
+  const routeId = searchParams.get('rid')
+
+  // Vars
+  const initialData = {
+    Registerdep: '',
+    Subject: ''
+  }
+
+  const { data: session } = useSession({
+    required: true
+  })
+
+  const userData: any = session?.user
+
   const eformData = []
 
   for (let i = 0; i < workData.length; i++) {
@@ -95,22 +116,6 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
     eformData.push(newData)
   }
 
-  // console.log(eformData)
-
-  const [value, setValue] = useState('1')
-
-  const searchParams = useSearchParams()
-
-  const routename = searchParams.get('routename')
-
-  const { data: session } = useSession({
-    required: true
-  })
-
-  const userData: any = session?.user
-
-  // States
-  const [expanded, setExpanded] = useState<string | false>('panel-' + workData[0]._id)
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
   const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
@@ -135,9 +140,42 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
     setExpanded(isExpanded ? panel : false)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log('submit create work')
-    console.log(getEdata(workData))
+
+    const eformData = await getEdata(workData)
+    const date: Date = new Date()
+
+    const data = {
+      // Wid: '',
+      Registerdate: date,
+      Registerdep: initialData.Registerdep,
+      Registeruid: session?.user.email,
+      Subject: initialData.Subject,
+      Statecode: '',
+      Status: '',
+      Action: 'create work',
+      Eform: eformData,
+      WorkflowId: routeId,
+      Blockid: '',
+
+      Eform_id: '',
+      Worktype: 'workflow'
+    }
+
+    // console.log('data ===')
+    // console.log(data)
+
+    try {
+      const response = await axios.post('/api/work/create', data)
+
+      if (response.data.message === 'success') {
+        console.log('Create work success.')
+        console.log(response.data.data)
+      }
+    } catch (error: any) {
+      console.log('Create work failed. ', error.message)
+    }
   }
 
   // function handleFieldChange(value: any) {
@@ -165,6 +203,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                     id='department-select'
                     defaultValue=''
                     className='text-left'
+                    onChange={e => (initialData.Registerdep = e.target.value)}
                   >
                     {userData &&
                       userData.dep.map((dep: any) => {
@@ -180,7 +219,13 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Route name:</Typography>
                 <Typography className='font-bold pb-4'>{routename}</Typography>
-                <TextField fullWidth id='subject' label='Subject' variant='standard' />
+                <TextField
+                  fullWidth
+                  id='subject'
+                  label='Subject'
+                  variant='standard'
+                  onChange={e => (initialData.Subject = e.target.value)}
+                />
               </div>
             </div>
             <div className='flex flex-1'>
@@ -241,7 +286,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                 onReady={() => {
                   console.log('form render has loaded')
 
-                  formRender(workData)
+                  formRenderV1(workData)
                 }}
               />
             </TabPanel>
