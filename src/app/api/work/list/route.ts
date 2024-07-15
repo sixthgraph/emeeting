@@ -7,7 +7,7 @@ import axios from 'axios'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
-  const { wid, dep, token, email } = reqBody
+  const { wid, dep, token, email, rid, pid } = reqBody
 
   try {
     const headers = {
