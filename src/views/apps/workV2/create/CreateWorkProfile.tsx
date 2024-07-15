@@ -84,20 +84,23 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 
 const CreateWorkProfile = ({ workData }: { workData: any }) => {
   console.log('CreateWorkProfile----')
-
-  // States
-  const [value, setValue] = useState('1')
-  const [expanded, setExpanded] = useState<string | false>('panel-' + workData[0]._id)
-
-  const searchParams = useSearchParams()
-  const routename = searchParams.get('routename')
-  const routeId = searchParams.get('rid')
+  console.log(workData)
 
   // Vars
   const initialData = {
     Registerdep: '',
     Subject: ''
   }
+
+  // States
+  const [value, setValue] = useState('1')
+  const [expanded, setExpanded] = useState<string | false>('panel-' + workData[0]._id)
+
+  const [formData, setFormData] = useState(...[initialData])
+
+  const searchParams = useSearchParams()
+  const routename = searchParams.get('routename')
+  const routeId = searchParams.get('rid')
 
   const { data: session } = useSession({
     required: true
@@ -146,25 +149,42 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
     const eformData = await getEdata(workData)
     const date: Date = new Date()
 
+    const EformData = []
+
+    let i: any
+    const n: any = eformData
+
+    for (i in n) {
+      const newData = {
+        Eform_id: n[i]._id,
+        Eform_tmp: n[i].form_template
+      }
+
+      EformData.push(newData)
+    }
+
     const data = {
       // Wid: '',
       Registerdate: date,
-      Registerdep: initialData.Registerdep,
+      Registerdep: formData.Registerdep,
       Registeruid: session?.user.email,
-      Subject: initialData.Subject,
+      Subject: formData.Subject,
       Statecode: '',
       Status: '',
-      Action: 'create work',
-      Eform: eformData,
+
+      // Action: 'create work',
+      Eform: EformData,
       WorkflowId: routeId,
       Blockid: '',
 
-      Eform_id: '',
-      Worktype: 'workflow'
+      // Eform_id: '',
+      Worktype: ''
     }
 
-    // console.log('data ===')
-    // console.log(data)
+    console.log('reqBody - data ===')
+    console.log(data)
+
+    //return false
 
     try {
       const response = await axios.post('/api/work/create', data)
@@ -202,8 +222,8 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                     labelId='department-select-label'
                     id='department-select'
                     defaultValue=''
-                    className='text-left'
-                    onChange={e => (initialData.Registerdep = e.target.value)}
+                    className='text-left' // onChange={e => (initialData.Registerdep = e.target.value)}
+                    onChange={e => setFormData({ ...formData, Registerdep: e.target.value })}
                   >
                     {userData &&
                       userData.dep.map((dep: any) => {
@@ -223,8 +243,8 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                   fullWidth
                   id='subject'
                   label='Subject'
-                  variant='standard'
-                  onChange={e => (initialData.Subject = e.target.value)}
+                  variant='standard' // onChange={e => (initialData.Subject = e.target.value)}
+                  onChange={e => setFormData({ ...formData, Subject: e.target.value })}
                 />
               </div>
             </div>
