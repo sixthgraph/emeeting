@@ -76,7 +76,7 @@ import { getInitials } from '@/utils/getInitials'
 
 // // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { any, string } from 'zod'
+import { any, object, string } from 'zod'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -155,25 +155,10 @@ type Props = {
 
 const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   // AKK HERE
-  // memberData?.map(member => {
-  //   const id = String(member.groupid)
 
-  //   console.log('noonid====1 ', id)
-
-  //   memberObj[id] = {
-  //     member: String(member.member)
-  //   }
-  // })
-  // console.log('test noon === ', memberObj)
-
-  tableData?.map(member => {
-    const id = String(member.groupid)
-    console.log('noonid====2 ', id)
-    memberObj[id] = {
-      member: String(member.member)
-    }
-    console.log('test noon2 === ', memberObj)
-  })
+  console.log('tableData')
+  console.log(tableData)
+  console.log(userData)
 
   // States
   const [addGroupOpen, setAddGroupOpen] = useState(false)
@@ -182,26 +167,37 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   const [data, setData] = useState(...[tableData])
   const [user, setusersData] = useState(...[userData])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [members, setMembers] = useState([])
 
   //AKK
   const { data: session, update } = useSession()
   const [emailData, setEmailData] = useState(session?.user.email)
   const [memberopen, setmemberOpen] = useState(false)
-  // const [selectedValue, setSelectedValue] = useState(emails[1])
+  // const [members, setmembers] = useState([])
+  // var members = ['admin@excelink.co.th', 'chulapak@excelink.co.th', 'supachai@excelink.co.th']
+  var mbs = []
+  const handleClickOpen = async (groupid: object, member: string[]) => {
+    console.log('groupid')
+    console.log(groupid)
+    console.log('member')
+    console.log(member)
 
-  const handleClickOpen = () => setmemberOpen(true)
+    var i: any
+    var elem: any = member
+    for (i in elem) {
+      setMembers(elem[i])
+    }
 
+    setmemberOpen(true)
+  }
+
+  // console.log(setmembers(members))
   const handleDialogClose = () => setmemberOpen(false)
 
   const handleCloseeee = (value: string) => {
     setmemberOpen(false)
     // setSelectedValue(value)
   }
-
-  // const [updateData, setUpdateData] = useState(...[initialData])
-
-  // Hooks
-  //const { lang: locale } = useParams()
 
   const GroupDrawerOpenHandle = () => {
     initialData = {
@@ -216,8 +212,7 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   const handleDeleteGroup = async (groupid: object) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/delete`, groupid)
-      console.log('noon del === ', groupid)
-      console.log(response.data.message)
+
       if (response.data.message === 'success') {
         console.log(response.data.data.detail)
 
@@ -241,9 +236,6 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
       console.log('Delete group failed. ', error.message)
     }
   }
-
-  // list user member
-
   // Table Columns config
   const columns = useMemo<ColumnDef<GroupTypeWithAction, any>[]>(
     () => [
@@ -286,7 +278,12 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
             {/* <Typography color='text.primary' className='font-medium'>
               Selected: {selectedValue}
             </Typography> */}
-            <Button variant='tonal' onClick={handleClickOpen}>
+            <Button
+              variant='tonal'
+              onClick={() => {
+                handleClickOpen({ groupid: row.original.groupid }, { member: row.original.member })
+              }}
+            >
               {row.original.member.length}
             </Button>
             {/* <Typography color='text.primary' className='font-medium'>
@@ -473,31 +470,21 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
         open={memberopen}
       >
         <DialogTitle id='simple-dialog-title'>Member</DialogTitle>
-        {/* <List className='pt-0 px-0'>
-          {/* {tableData?.map(member => (
-            <ListItem key={member} disablePadding onClick={() => handleCloseeee(member)}>
+
+        <List className='pt-0 px-0'>
+          {members?.map((email, index) => (
+            <ListItem key={email} disablePadding onClick={() => handleCloseeee(email)}>
               <ListItemButton>
                 <ListItemAvatar>
                   <Avatar>
                     <i className='tabler-user' />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={member} />
+                <ListItemText primary={email} />
               </ListItemButton>
             </ListItem>
-          ))} */}
-        {/* Button addAccount
-          <ListItem disablePadding onClick={() => handleCloseeee('addAccount')}>
-            <ListItemButton>
-              <ListItemAvatar>
-                <MuiAvatar>
-                  <i className='tabler-plus' />
-                </MuiAvatar>
-              </ListItemAvatar>
-              <ListItemText primary='Add account' onClick={() => setAddGroupOpen(!addGroupOpen)} />
-            </ListItemButton>
-          </ListItem>
-        </List> */}
+          ))}
+        </List>
       </Dialog>
       <GroupDrawerForm
         open={addGroupOpen}

@@ -57,13 +57,10 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
   const { data: session, update } = useSession()
   const [emailData, setEmailData] = useState(session?.user.email)
 
-  console.log(emailData)
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setFormData(initialData)
-    console.log(initialData)
     //console.log(emailData)
     //setFormData({ groupname: 'eeeee', createby: 'fasdfadsf', member: [] })
 
@@ -130,26 +127,24 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
 
   // Update
   const handleUpdateData = async () => {
+    console.log('handleUpdateData')
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, formData)
 
       if (response.data.message === 'success') {
         console.log('Update user success.')
-        console.log('formData')
-        console.log(formData)
         handleClose()
 
-        const index = tableData?.findIndex(x => x.groupname == formData.groupname)
+        // const index = tableData?.findIndex(x => x.createby == emailData)
+        // console.log('noonn ', emailData)
+        // // setData(index)
 
-        console.log('newUpdate === ', index)
-        setData(index)
+        // if (tableData) {
+        //   tableData[Number(index)].groupname = formData.groupname
+        //   tableData[Number(index)].member = formData.member
+        // }
 
-        if (tableData) {
-          tableData[Number(index)].groupname = formData.groupname
-          tableData[Number(index)].member = formData.member
-        }
-
-        setData(tableData)
+        // setData(tableData)
       }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
