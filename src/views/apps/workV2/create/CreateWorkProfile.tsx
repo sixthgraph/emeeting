@@ -30,6 +30,8 @@ import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 import { Box, Button, CardActions, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { useSession } from 'next-auth/react'
 
+import { navigate } from './redirect'
+
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
 import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
@@ -86,7 +88,6 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   console.log('CreateWorkProfile----')
   console.log(workData)
 
-  // Vars
   const initialData = {
     Registerdep: '',
     Subject: ''
@@ -95,9 +96,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   // States
   const [value, setValue] = useState('1')
   const [expanded, setExpanded] = useState<string | false>('panel-' + workData[0]._id)
-
   const [formData, setFormData] = useState(...[initialData])
-
   const searchParams = useSearchParams()
   const routename = searchParams.get('routename')
   const routeId = searchParams.get('rid')
@@ -107,7 +106,6 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   })
 
   const userData: any = session?.user
-
   const eformData = []
 
   for (let i = 0; i < workData.length; i++) {
@@ -144,11 +142,8 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   }
 
   const handleSubmit = async () => {
-    console.log('submit create work')
-
     const eformData = await getEdata(workData)
     const date: Date = new Date()
-
     const EformData = []
 
     let i: any
@@ -156,57 +151,50 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
 
     for (i in n) {
       const newData = {
-        Eform_id: n[i]._id,
-        Eform_tmp: n[i].form_template
+        // Eform_id: n[i]._id,
+        // Eform_tmp: n[i].form_template
+
+        Form_id: n[i]._id,
+        Form_template: n[i].form_template
       }
 
       EformData.push(newData)
     }
 
     const data = {
-      // Wid: '',
       Registerdate: date,
       Registerdep: formData.Registerdep,
       Registeruid: session?.user.email,
       Subject: formData.Subject,
-      Statecode: '',
-      Status: '',
-
-      // Action: 'create work',
+      Status: 'workflow',
       Eform: EformData,
       WorkflowId: routeId,
-      Blockid: '',
-
-      // Eform_id: '',
-      Worktype: ''
+      Blockid: 'startpoint'
     }
 
     console.log('reqBody - data ===')
     console.log(data)
-
-    //return false
 
     try {
       const response = await axios.post('/api/work/create', data)
 
       if (response.data.message === 'success') {
         console.log('Create work success.')
-        console.log(response.data.data)
+
+        const wid = response.data.data
+        const path = `/en/work?wid=${wid}&dep=${formData.Registerdep}&routename=${routename}`
+
+        navigate(path)
       }
     } catch (error: any) {
       console.log('Create work failed. ', error.message)
     }
   }
 
-  // function handleFieldChange(value: any) {
-  //   console.log('new value', value)
-  // }
-
   return (
     <>
       <TabContext value={value}>
         <Card variant='outlined'>
-          {/* <CardMedia image={data?.coverImg} className='bs-[250px]' /> */}
           <CardContent className='flex gap-5 p-0 item-stretch flex-col'>
             <div className='flex p-5 items-stretch gap-4 w-full rounded-lg bg-stripes-cyan text-center'>
               <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
@@ -299,7 +287,6 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                   </Accordion>
                 )
               })}
-              <div className='fb-render'></div>
               <Script
                 src='/script/test-render.js'
                 strategy='lazyOnload'

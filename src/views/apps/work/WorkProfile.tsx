@@ -34,7 +34,8 @@ import { Box, Button, CardActions, LinearProgress } from '@mui/material'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
-import { formRender } from '@/utils/hooks/formRender'
+import { formRenderV1 } from '@/utils/hooks/formRender'
+import { Formatshortdate } from '@/utils/hooks/datetime'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -92,11 +93,20 @@ const WorkProfile = ({ workData }: { workData: any }) => {
     setValue(newValue)
   }
 
-  console.log('workData in workProfileV2 ====')
-  console.log(workData)
+  // console.log('workData in workProfileV2 ====')
+  // console.log(workData)
+
+  const eformData = workData.eformdata
+
+  let i: any
+  const eform: any = eformData
+
+  for (i in eform) {
+    eformData[i]._id = eform[i].Id
+  }
 
   // States
-  const [expanded, setExpanded] = useState<string | false>('panel1')
+  const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
 
   const handleAccordionChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false)
@@ -160,39 +170,6 @@ const WorkProfile = ({ workData }: { workData: any }) => {
 
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
-  const formatshortdate = (date: any) => {
-    const m_th_names = [
-      'ม.ค.',
-      'ก.พ.',
-      'มี.ค.',
-      'เม.ย.',
-      'พ.ค.',
-      'มิ.ย.',
-      'ก.ค.',
-      'ส.ค.',
-      'ก.ย.',
-      'ต.ค.',
-      'พ.ย',
-      'ธ.ค.'
-    ]
-
-    const m_en_names = ['Jan', 'Feb', 'Mar', ' Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-    const d = new Date(date),
-      curr_date = d.getDate(),
-      curr_month = d.getMonth(),
-      curr_year: number = d.getFullYear() + 543
-
-    const formattedDate = d.toLocaleString()
-    const curr_time = formattedDate.split(',')[1]
-
-    if (locale == 'th') {
-      return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year + ' ' + curr_time
-    }
-
-    return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
-  }
-
   const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
     const { avatar, fullName } = params
 
@@ -233,7 +210,7 @@ const WorkProfile = ({ workData }: { workData: any }) => {
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created:</Typography>
-                <Typography className='font-bold'>{formatshortdate(workData?.Registerdate)}</Typography>
+                <Typography className='font-bold'>{Formatshortdate(workData?.Registerdate)}</Typography>
                 <Typography className='text-xs mt-2'>Subject:</Typography>
                 <Typography className='font-bold'>{workData.subject}</Typography>
               </div>
@@ -288,6 +265,36 @@ const WorkProfile = ({ workData }: { workData: any }) => {
         <Card variant='outlined'>
           <CardContent className='gap-6 p-0'>
             <TabPanel value='1'>
+              {eformData.map((form: any) => {
+                return (
+                  <Accordion
+                    key={form._id}
+                    expanded={expanded === `panel-${form.Id}`}
+                    onChange={handleAccordionChange(`panel-${form.Id}`)}
+                  >
+                    <AccordionSummary
+                      id={`customized-panel-header-${form.Id}`}
+                      expandIcon={expandIcon('panel1')}
+                      aria-controls='customized-panel-content-1'
+                    >
+                      <Typography>{form.form_name}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <div id={`fb-render-${form.Id}`}>{`fb-render-${form.Id}`}</div>
+                    </AccordionDetails>
+                  </Accordion>
+                )
+              })}
+              <Script
+                src='/script/test-render.js'
+                strategy='lazyOnload'
+                onReady={() => {
+                  console.log('form render has loaded')
+                  formRenderV1(eformData)
+                }}
+              />
+
+              {/*
               <Accordion expanded={expanded === 'panel1'} onChange={handleAccordionChange('panel1')}>
                 <AccordionSummary
                   id='customized-panel-header-1'
@@ -345,6 +352,7 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                   </Typography>
                 </AccordionDetails>
               </Accordion>
+             */}
             </TabPanel>
             <TabPanel value='2'>Documents list</TabPanel>
             <TabPanel value='3'>Activity content</TabPanel>

@@ -53,7 +53,7 @@ const workPage = async ({ searchParams }: any) => {
   // const wid = searchParams.wid
   // const dep = searchParams.dep
 
-  const { wid, dep } = searchParams
+  const { wid, dep, workflowid, blockid } = searchParams
 
   console.log('search params----')
   console.log(searchParams)
