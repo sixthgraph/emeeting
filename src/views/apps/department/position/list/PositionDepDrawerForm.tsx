@@ -25,9 +25,10 @@ import axios from 'axios'
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { DepType, PositionDepFormDataType, PositionFilterType, PositionsDepType } from '@/types/apps/positionTypes'
-import { addPositionFormSchema } from '@/schemas/positionSchema'
+import { addPositionDepFormSchema } from '@/schemas/positionSchema'
 import { useSession } from 'next-auth/react'
 import router, { useRouter } from 'next/router'
+import { integer } from 'valibot'
 
 type Props = {
   open: boolean
@@ -50,7 +51,9 @@ const initialData = {
   positiondesc: '',
   positionpath: '',
   positionlevel: '',
-  positionref: ''
+  positionref: '',
+  positionparent: '',
+  depparent: ''
 }
 
 const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, positionData, handleClose }: Props) => {
@@ -61,12 +64,6 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
   // States
   const [formData, setFormData] = useState<PositionDepFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
-
-  //   const { data: session } = useSession()
-  //   const emailData = session?.user.email
-  console.log('=========positionData==================')
-  console.log(positionData)
-  console.log('=========end positionData==================')
 
   const handleRefresh = () => {
     //router.reload()
@@ -82,50 +79,61 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
 
     //Add
     try {
-      //   const parsedData = addPositionDepFormSchema.safeParse(formData)
+      //formdata for add
+      var positionlevel = parseInt(formData.positionlevel, 10)
 
-      //   if (!parsedData.success) {
-      //     const errArr: any[] = []
-      //     const { errors: err } = parsedData.error
+      const newData: any = {
+        dep: formData.dep,
+        positioncode: formData.positioncode,
+        level: positionlevel,
+        path: formData.positionpath
+      }
 
-      //     //sg here
-      //     for (let i = 0; i < err.length; i++) {
-      //       errArr.push({ for: err[i].path[0], message: err[i].message })
-      //       setErrors(errArr)
-      //     }
+      // const parsedData = addPositionDepFormSchema.safeParse(newData)
 
+      // if (!parsedData.success) {
+      //   const errArr: any[] = []
+      //   const { errors: err } = parsedData.error
+
+      //   //sg here
+      //   for (let i = 0; i < err.length; i++) {
+      //     errArr.push({ for: err[i].path[0], message: err[i].message })
       //     setErrors(errArr)
-
-      //     throw err
       //   }
 
-      //  console.log('Form submitted successfully', parsedData.data)
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/add`, formData)
+      //   setErrors(errArr)
+
+      //   throw err
+      // }
+
+      // console.log('Form submitted successfully', parsedData.data)
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/positions/add`, newData)
 
       console.log('Add response===', response.data)
 
       if (response.data.success) {
         console.log('Add success')
 
-        if (tableData) {
-          const addData: any = {
-            dep: formData.dep,
-            positioncode: formData.positioncode,
-            positiondesc: formData.positiondesc,
-            positionlevel: formData.positionlevel,
-            positionpath: formData.positionpath,
-            positionref: formData.ref
-          }
+        // if (tableData) {
+        //   const addData: any = {
+        //     dep: formData.dep,
+        //     positioncode: formData.positioncode,
+        //     positiondesc: formData.positiondesc,
+        //     positionlevel: formData.positionlevel,
+        //     positionpath: formData.positionpath,
+        //     positionref: formData.ref
+        //   }
 
-          console.log(addData)
+        //   console.log(addData)
 
-          //tableData.push(addData)
-          tableData.push(addData)
-        }
+        //   //tableData.push(addData)
+        //   tableData.push(addData)
+        // }
 
-        console.log(tableData)
+        // console.log(tableData)
 
-        setData(tableData)
+        // setData(tableData)
         handleClose()
         handleRefresh()
       } else {
@@ -145,7 +153,15 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
   //Update
   const handleUpdateData = async () => {
     try {
-      const response = await axios.post('/api/departments/positions/update', formData)
+      var positionlevel = parseInt(formData.positionlevel, 10)
+
+      const newData: any = {
+        dep: formData.dep,
+        positioncode: formData.positioncode,
+        level: positionlevel,
+        path: formData.positionpath
+      }
+      const response = await axios.post('/api/departments/positions/update', newData)
 
       console.log('position formdate=====')
       console.log(formData)
@@ -181,6 +197,17 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
     setFormData(updateData)
   }, [open, updateData])
 
+  const getParentPositionPath = (parentData: String) => {
+    var path = ''
+    var level = '1'
+    if (tableData?.length) {
+      const index = tableData?.findIndex(x => x.positioncode == String(parentData))
+      path = tableData[Number(index)].positionpath
+      level = tableData[Number(index)].positionlevel + 1
+    }
+    return { path: path, level: level }
+  }
+
   return (
     <Drawer
       open={open}
@@ -212,6 +239,63 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
           />
           {errors.find(error => error.for === 'dep')?.message}
           <CustomTextField
+            label='Dep Path'
+            fullWidth
+            placeholder=''
+            value={formData.path}
+            onChange={e => setFormData({ ...formData, path: e.target.value })}
+          />
+          {errors.find(error => error.for === 'path')?.message}
+          <CustomTextField
+            select
+            fullWidth
+            id='select-dep-parent'
+            value={formData.depparent}
+            onChange={e => setFormData({ ...formData, depparent: e.target.value })}
+            label='Department Position Parent'
+          >
+            {depData?.map((depParent: any) => {
+              return (
+                <MenuItem key={depParent.dep} value={depParent.dep}>
+                  {depParent.depname}
+                </MenuItem>
+              )
+            })}
+          </CustomTextField>
+          {errors.find(error => error.for === 'positioncode')?.message}
+          <CustomTextField
+            select
+            fullWidth
+            id='select-parent'
+            value={formData.positionparent}
+            onChange={e =>
+              setFormData({
+                ...formData,
+                positionparent: e.target.value,
+                positionpath: getParentPositionPath(e.target.value).path + e.target.value + ',',
+                positionlevel: getParentPositionPath(e.target.value).level
+              })
+            }
+            label='Position Parent'
+          >
+            {positionData?.map((parent: any) => {
+              return (
+                <MenuItem key={parent.positioncode} value={parent.positioncode}>
+                  {parent.desc}
+                </MenuItem>
+              )
+            })}
+          </CustomTextField>
+          {errors.find(error => error.for === 'positioncode')?.message}
+          {/* <CustomTextField
+            label='Position Parent'
+            fullWidth
+            placeholder=''
+            value={formData.positionparent}
+            onChange={e => setFormData({ ...formData, positionparent: e.target.value })}
+          />
+          {errors.find(error => error.for === 'positionparent')?.message} */}
+          <CustomTextField
             select
             fullWidth
             id='select-position'
@@ -228,22 +312,14 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
             })}
           </CustomTextField>
           {errors.find(error => error.for === 'positioncode')?.message}
-          <CustomTextField
+          {/* <CustomTextField
             label='Positioncode'
             fullWidth
             placeholder=''
             value={formData.positioncode}
             onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
           />
-          {errors.find(error => error.for === 'positioncode')?.message}
-          <CustomTextField
-            label='Desc'
-            fullWidth
-            placeholder=''
-            value={formData.positiondesc}
-            onChange={e => setFormData({ ...formData, positiondesc: e.target.value })}
-          />
-          {errors.find(error => error.for === 'positiondesc')?.message}
+          {errors.find(error => error.for === 'positioncode')?.message} */}
           <CustomTextField
             label='level'
             fullWidth
@@ -252,14 +328,14 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
             onChange={e => setFormData({ ...formData, positionlevel: e.target.value })}
           />
           {errors.find(error => error.for === 'positionlevel')?.message}
-          <CustomTextField
+          {/* <CustomTextField
             label='Path'
             fullWidth
             placeholder=''
             value={formData.positionpath}
             onChange={e => setFormData({ ...formData, positionpath: e.target.value })}
           />
-          {errors.find(error => error.for === 'positionpath')?.message}
+          {errors.find(error => error.for === 'positionpath')?.message} */}
           <div className='flex items-center gap-4'>
             {updateData.positioncode !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>

@@ -56,6 +56,8 @@ export type PositionDepFormDataType = {
   positionpath: string
   positionlevel: string
   positionref: string
+  positionparent: string
+  depparent: string
 }
 
 export type DepType = {

@@ -69,8 +69,9 @@ import { getInitials } from '@/utils/getInitials'
 
 // // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { integer } from 'valibot'
+import { integer, null_ } from 'valibot'
 import { useSearchParams } from 'next/navigation'
+import { any } from 'zod'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -145,7 +146,9 @@ let initialData = {
   positiondesc: '',
   positionpath: '',
   positionlevel: '',
-  positionref: ''
+  positionref: '',
+  positionparent: '',
+  depparent: ''
 }
 
 // Column Definitions
@@ -159,11 +162,14 @@ type Props = {
 
 const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   const searchParams = useSearchParams()
+  var depID = searchParams.get('dep')
 
-  const dep = searchParams.get('dep')
+  if (depID == null) {
+    depID = ''
+  }
 
   // console.log('tableData 222222')
-  console.log(dep)
+  //console.log(depID)
   //console.log(tableData)
   positionData?.map(position => {
     const id = String(position.positioncode)
@@ -207,42 +213,63 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   //const { lang: locale } = useParams()
 
   const PositionDepDrawerOpenHandle = () => {
+    var level = '0'
+    var datalength = 0
+    var deppath = ''
+    if (tableData?.length) {
+      datalength = tableData?.length
+      level = ''
+
+      const index = tableData?.findIndex(x => x.dep == String(depID))
+      deppath = tableData[Number(index)].path
+    }
+
     initialData = {
-      dep: '',
+      dep: String(depID),
       depname: '',
-      path: '',
+      path: String(deppath),
       sort: '',
       ref: '',
       positioncode: '',
       positiondesc: '',
       positionpath: '',
-      positionlevel: '',
-      positionref: ''
+      positionlevel: String(level),
+      positionref: '',
+      positionparent: '',
+      depparent: String(depID)
     }
     setAddPositionDepOpen(true)
   }
 
-  const handleDeletePositionDep = async (dep: object, positioncode: object) => {
+  const handleDeletePositionDep = async (positionDepData: object) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/delete`, dep, positioncode)
+      // const deleteData: any = {
+      //   dep: depData.dep,
+      //   positioncode: positionData.Positioncode
+      // }
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/departments/positions/delete`,
+        positionDepData
+      )
 
       if (response.data.message === 'success') {
         console.log('=====positioninfo')
         console.log(response.data)
 
         // //todo update tableData
-        const em: any = positioncode
-        console.log('==== look positioncode')
-        console.log(positioncode)
+        // const em: any = positionDepData.positioncode
+        // console.log('==== look positioncode')
+        // console.log(positioncode)
 
-        const newUpdate = tableData?.filter(el => el.positioncode !== em.positioncode)
+        // const newUpdate = tableData?.filter(el => el.positioncode !== em.positioncode)
 
-        console.log('newUpdate === ', newUpdate)
-        setData(newUpdate)
+        // console.log('newUpdate === ', newUpdate)
+        // setData(newUpdate)
 
-        tableData = data
+        // tableData = data
 
-        console.log(tableData)
+        // console.log(tableData)
 
         //todo update refresh token
         console.log('Update token ===', response.data.token)
@@ -300,16 +327,16 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
           </div>
         )
       }),
-      columnHelper.accessor('path', {
-        header: 'Path',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.path}
-            </Typography>
-          </div>
-        )
-      }),
+      // columnHelper.accessor('path', {
+      //   header: 'Path',
+      //   cell: ({ row }) => (
+      //     <div className='flex flex-col'>
+      //       <Typography color='text.primary' className='font-medium'>
+      //         {row.original.path}
+      //       </Typography>
+      //     </div>
+      //   )
+      // }),
       columnHelper.accessor('positioncode', {
         header: 'Positioncode',
         cell: ({ row }) => (
@@ -366,7 +393,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeletePositionDep({ dep: row.original.dep }, { positioncode: row.original.positioncode })
+                handleDeletePositionDep({ dep: row.original.dep, positioncode: row.original.positioncode })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -383,6 +410,15 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
                 initialData.positionlevel = row.original.positionlevel
                 initialData.positionpath = row.original.positionpath
                 initialData.positionref = row.original.positionref
+                var parentpath = row.original.positionpath.split(',')
+                var parent = ''
+                parent = parentpath[parentpath.length - 2]
+                initialData.positionparent = parent
+
+                var deppath = row.original.path.split(',')
+                var depparent = ''
+                depparent = deppath[deppath.length - 2]
+                initialData.depparent = depparent
 
                 setAddPositionDepOpen(!addPositionDepOpen)
               }}

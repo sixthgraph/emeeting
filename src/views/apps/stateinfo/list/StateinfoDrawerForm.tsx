@@ -257,8 +257,8 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
       </div>
       <Divider />
       <div>
-        <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
-          <Controller
+        {/* <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'> */}
+        {/* <Controller
             name='statecode'
             control={control}
             rules={{ required: true }}
@@ -280,6 +280,15 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
                 })}
               />
             )}
+          /> */}
+        {/* {errors.find(error => error.for === 'statecode')?.message} */}
+        <form autoComplete='off' onSubmit={handleOnSubmit} className='flex flex-col gap-6 p-6'>
+          <CustomTextField
+            label='Statecode'
+            fullWidth
+            placeholder=''
+            value={formData.statecode}
+            onChange={e => setFormData({ ...formData, statecode: e.target.value })}
           />
           {/* {errors.find(error => error.for === 'statecode')?.message} */}
           <CustomTextField

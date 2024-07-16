@@ -43,7 +43,7 @@ const initialData = {
   desc: '',
   level: '',
   ref: '',
-  status: '',
+  status: 'Y',
   remark: '',
   create_date: '',
   create_by: '',

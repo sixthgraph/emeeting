@@ -383,7 +383,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
     <>
       <Card>
         <CardHeader title='Filters' className='pbe-4' />
-        <TableFilters setData={setData} tableData={tableData} />
+        <TableFilters setData={setData} tableData={tableData} depData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
