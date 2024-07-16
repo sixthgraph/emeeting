@@ -155,17 +155,26 @@ type Props = {
 
 const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   // AKK HERE
-  memberData?.map(member => {
+  // memberData?.map(member => {
+  //   const id = String(member.groupid)
+
+  //   console.log('noonid====1 ', id)
+
+  //   memberObj[id] = {
+  //     member: String(member.member)
+  //   }
+  // })
+  // console.log('test noon === ', memberObj)
+
+  tableData?.map(member => {
     const id = String(member.groupid)
-
-    console.log('noonid==== ', id)
-
+    console.log('noonid====2 ', id)
     memberObj[id] = {
       member: String(member.member)
     }
+    console.log('test noon2 === ', memberObj)
   })
 
-  console.log(memberObj)
   // States
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -191,10 +200,6 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
-  console.log('table data ==== ', data)
-  console.log('user data ==== ', user)
-  console.log('email data by noon ==== ', emailData)
-
   // Hooks
   //const { lang: locale } = useParams()
 
@@ -211,7 +216,8 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   const handleDeleteGroup = async (groupid: object) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/delete`, groupid)
-
+      console.log('noon del === ', groupid)
+      console.log(response.data.message)
       if (response.data.message === 'success') {
         console.log(response.data.data.detail)
 
@@ -467,20 +473,20 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
         open={memberopen}
       >
         <DialogTitle id='simple-dialog-title'>Member</DialogTitle>
-        <List className='pt-0 px-0'>
-          {/* {emails.map(email => (
-            <ListItem key={email} disablePadding onClick={() => handleCloseeee(email)}>
+        {/* <List className='pt-0 px-0'>
+          {/* {tableData?.map(member => (
+            <ListItem key={member} disablePadding onClick={() => handleCloseeee(member)}>
               <ListItemButton>
                 <ListItemAvatar>
                   <Avatar>
                     <i className='tabler-user' />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={email} />
+                <ListItemText primary={member} />
               </ListItemButton>
             </ListItem>
           ))} */}
-          {/* Button addAccount
+        {/* Button addAccount
           <ListItem disablePadding onClick={() => handleCloseeee('addAccount')}>
             <ListItemButton>
               <ListItemAvatar>
@@ -490,8 +496,8 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
               </ListItemAvatar>
               <ListItemText primary='Add account' onClick={() => setAddGroupOpen(!addGroupOpen)} />
             </ListItemButton>
-          </ListItem> */}
-        </List>
+          </ListItem>
+        </List> */}
       </Dialog>
       <GroupDrawerForm
         open={addGroupOpen}

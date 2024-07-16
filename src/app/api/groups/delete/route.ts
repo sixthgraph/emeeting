@@ -16,8 +16,21 @@ export async function POST(req: NextRequest) {
 
   const reqBody = await req.json()
 
+<<<<<<< HEAD
+=======
+  //const { formData } = reqBody
+
+  console.log('server token =====')
+  console.log(token)
+  console.log('reqBody ======')
+  console.log(reqBody)
+  console.log(reqBody.GroupId)
+  console.log('call routeflow-api =====')
+  console.log(`https://rd.infoma.net/routeflow-api/deleteusergroup?id=${reqBody.GroupId}`)
+
+>>>>>>> e02bdf0 (display member)
   try {
-    const response = await fetch(`https://rd.infoma.net/routeflow-api/deleteusergroup?id=${reqBody.groupid}`, {
+    const response = await fetch(`https://rd.infoma.net/routeflow-api/deleteusergroup?id=${reqBody.GroupId}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

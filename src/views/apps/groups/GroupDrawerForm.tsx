@@ -29,6 +29,7 @@ import type { UsersType } from '@/types/apps/userTypes'
 import { addGroupFormSchema } from '@/schemas/formSchema'
 
 import { useSession } from 'next-auth/react'
+import { group } from 'console'
 
 type Props = {
   open: boolean
