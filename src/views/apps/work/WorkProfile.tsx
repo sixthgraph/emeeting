@@ -90,8 +90,28 @@ const WorkProfile = ({ workData }: { workData: any }) => {
     user: ''
   }
 
+  const activity = workData.activity
+
+  let action = []
+
+  let j: any
+  const elem: any = activity
+
+  for (j in elem) {
+    console.log('elem --')
+    console.log(elem[j])
+    console.log(elem[j].actions)
+    action = elem[j].actions
+  }
+
   console.log('workData')
   console.log(workData)
+
+  console.log('activity')
+  console.log(activity)
+
+  console.log('action')
+  console.log(action)
 
   // const WorkinfoEform = {
   //   Wid: 'string',
@@ -417,7 +437,17 @@ const WorkProfile = ({ workData }: { workData: any }) => {
              */}
             </TabPanel>
             <TabPanel value='2'>Documents list</TabPanel>
-            <TabPanel value='3'>Activity content</TabPanel>
+            <TabPanel value='3'>
+              {action.map(item => {
+                return (
+                  <div key={item.Date}>
+                    <Typography>{item.Date}</Typography>
+                    <Typography>{item.user}</Typography>
+                    <Typography>{item.detail}</Typography>
+                  </div>
+                )
+              })}
+            </TabPanel>
           </CardContent>
         </Card>
       </TabContext>
