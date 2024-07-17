@@ -8,7 +8,7 @@ import Script from 'next/script'
 
 // import $ from 'jquery'
 
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 
 import Link from 'next/link'
 
@@ -158,6 +158,16 @@ const WorkProfile = ({ workData }: { workData: any }) => {
   // const [formData, setFormData] = useState<WorkFormDataType>(initialData)
   // const params = useParams()
   // const { lang: locale } = params
+
+  const searchParams = useSearchParams()
+
+  const workflowid = searchParams.get('workflowid')
+  const blockid = searchParams.get('blockid')
+
+  console.log('---paramssss----')
+  console.log(workflowid)
+  console.log(blockid)
+
   const [value, setValue] = useState('1')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
