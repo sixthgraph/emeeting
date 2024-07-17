@@ -5,11 +5,7 @@ import type { SyntheticEvent } from 'react'
 
 // MUI Imports
 import Script from 'next/script'
-
-// import $ from 'jquery'
-
-import { useParams, useSearchParams } from 'next/navigation'
-
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 import { styled } from '@mui/material/styles'
@@ -86,100 +82,25 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData }: { workData: any }) => {
-  const initialData = {
-    user: ''
-  }
-
   const activity = workData.activity
-
   let action = []
-
   let j: any
   const elem: any = activity
 
   for (j in elem) {
-    console.log('elem --')
-    console.log(elem[j])
-    console.log(elem[j].actions)
     action = elem[j].actions
   }
 
-  console.log('workData')
-  console.log(workData)
-
-  console.log('activity')
-  console.log(activity)
-
-  console.log('action')
-  console.log(action)
-
-  // const WorkinfoEform = {
-  //   Wid: 'string',
-  //   Completedate: 'time.Time',
-  //   Expiredate: 'time.Time',
-  //   Registerdate: 'time.Time',
-  //   Registerdep: 'string',
-  //   Registeruid: 'string',
-  //   Subject: 'string',
-  //   Statecode: 'string',
-  //   Status: 'string',
-  //   Action: 'string',
-  //   Eform: [
-  //     {
-  //       Id: 'primitive.ObjectID',
-  //       Ed_id: 'int64 ',
-  //       Wid: 'string',
-  //       Form_id: 'string',
-  //       Ed_data: [],
-  //       Form_template: [
-  //         {
-  //           Type: 'string',
-  //           Required: 'bool',
-  //           SetCol: 'string',
-  //           SetBorder: 'string',
-  //           Label: 'string',
-  //           ClassName: 'string',
-  //           Name: 'string',
-  //           Subtype: 'string',
-  //           Value: 'string'
-  //         }
-  //       ],
-  //       Form_name: 'string'
-  //     }
-  //   ],
-  //   WorkflowId: 'string',
-  //   Blockid: 'string',
-  //   Eform_id: 'string',
-  //   Worktype: 'string'
-  // }
-
-  // console.log(WorkinfoEform)
-
-  // const [formData, setFormData] = useState<WorkFormDataType>(initialData)
-  // const params = useParams()
-  // const { lang: locale } = params
-
   const searchParams = useSearchParams()
-
   const workflowid = searchParams.get('workflowid')
   const blockid = searchParams.get('blockid')
-
-  console.log('---paramssss----')
-  console.log(workflowid)
-  console.log(blockid)
-
   const [value, setValue] = useState('1')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
 
-  // setFormData({ user: 'supachai' })
-  // console.log('workData in workProfileV2 ====')
-  // console.log(workData)
-
   const eformData = workData.eformdata
-
   let i: any
   const eform: any = eformData
 
@@ -199,14 +120,17 @@ const WorkProfile = ({ workData }: { workData: any }) => {
 
     workData.eformdata = eformData
 
+    delete workData.usercreateinfo
+    delete workData.workinprocess
+
+    workData.workflowid = workflowid
+    workData.blockId = blockid
+
     console.log('(workData) reqbody ===')
     console.log(workData)
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, workData)
-
-      console.log('response === ')
-      console.log(response)
 
       if (response.data.message === 'success') {
         console.log('---Call Editwork success.------------------')
