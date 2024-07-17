@@ -83,7 +83,7 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
   paddingBlockStart: `${theme.spacing(6)} !important`
 }))
 
-const WorkProfile = ({ workData }: { workData: any }) => {
+const WorkProfile = ({ workData, condionData }: { workData: any; condionData: any }) => {
   const activity = workData.activity
   let action = []
   let j: any
@@ -92,6 +92,9 @@ const WorkProfile = ({ workData }: { workData: any }) => {
   for (j in elem) {
     action = elem[j].actions
   }
+
+  console.log('----condionData---')
+  console.log(condionData)
 
   const searchParams = useSearchParams()
   const workflowid = searchParams.get('workflowid')

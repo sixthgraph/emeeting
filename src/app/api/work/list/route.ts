@@ -17,24 +17,15 @@ export async function POST(req: NextRequest) {
       Expires: '0'
     }
 
-    console.log('get work list api url')
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`)
-
-    //const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`, {
     const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}&dep=${dep}&wid=${wid}`, {
       headers
     })
 
-    console.log('getworklist return-------------------')
-    console.log(res.data.data.detail)
     const workinfo = res.data.data.detail
 
     const resnp = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${workflowid}/${blockid}`, {
       headers
     })
-
-    console.log('---conditionData-----')
-    console.log(resnp.data)
 
     const response = NextResponse.json({
       message: res.data.message,

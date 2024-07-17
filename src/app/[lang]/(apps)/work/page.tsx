@@ -40,7 +40,7 @@ const getData = async ({
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/list`, reqBody, { headers })
 
     if (response.data.message === 'success') {
-      return response.data
+      return response
     } else {
       throw new Error('Failed to fetch workdata')
     }
@@ -55,13 +55,13 @@ const workPage = async ({ searchParams }: any) => {
 
   const { wid, dep, workflowid, blockid } = searchParams
 
-  console.log('search params----')
-  console.log(searchParams)
+  const res = await getData({ wid, dep, workflowid, blockid })
 
-  const data = await getData({ wid, dep, workflowid, blockid })
+  const data = res.data
+  const conditionData = res.data.conditionData
 
   // return <WorkDetail workData={searchParams} data={data} tabContentList={tabContentList(data)} />
-  return <WorkDetailV2 data={data} />
+  return <WorkDetailV2 data={data} conditiondata={conditionData} />
 }
 
 export default workPage
