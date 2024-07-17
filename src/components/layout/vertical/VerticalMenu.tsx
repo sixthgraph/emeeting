@@ -113,7 +113,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
         </MenuSection>
         {userRole == 1 && (
           <MenuSection label={dictionary['navigation'].admin}>
-            <MenuItem href={`/${locale}/users`} icon={<i className='tabler-user' />}>
+            <MenuItem href={`/${locale}/users/list`} icon={<i className='tabler-user' />}>
               {dictionary['navigation'].users}
             </MenuItem>
             {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>

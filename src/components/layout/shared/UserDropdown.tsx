@@ -160,7 +160,7 @@ const UserDropdown = () => {
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e)}>
+                  <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/en/users/profile')}>
                     <i className='tabler-user text-[22px]' />
                     <Typography color='text.primary'>My Profile</Typography>
                   </MenuItem>
