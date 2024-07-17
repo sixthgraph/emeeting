@@ -34,6 +34,8 @@ import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import { Formatshortdate } from '@/utils/hooks/datetime'
 import axios from '@/utils/axios'
 
+import WorkButton from './WorkButton'
+
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
   margin: '0 !important',
@@ -95,6 +97,11 @@ const WorkProfile = ({ workData }: { workData: any }) => {
   const workflowid = searchParams.get('workflowid')
   const blockid = searchParams.get('blockid')
   const [value, setValue] = useState('1')
+
+  const paramsData = {
+    workflowid: workflowid,
+    blockid: blockid
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -309,70 +316,10 @@ const WorkProfile = ({ workData }: { workData: any }) => {
                   formRenderV1(eformData)
                 }}
               />
-
-              {/*
-              <Accordion expanded={expanded === 'panel1'} onChange={handleAccordionChange('panel1')}>
-                <AccordionSummary
-                  id='customized-panel-header-1'
-                  expandIcon={expandIcon('panel1')}
-                  aria-controls='customized-panel-content-1'
-                >
-                  <Typography>แบบคำขอรับการฝึกอบรมภายนอก</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <div className='fb-render'></div>
-                  <Script
-                    src='/script/test-render.js'
-                    strategy='lazyOnload'
-                    onReady={() => {
-                      console.log('form render has loaded')
-
-                      //formRender(workData)
-
-                      // {
-                      //   testScript()
-                      // }
-                    }}
-                  />
-                </AccordionDetails>
-              </Accordion>
-
-              <Accordion expanded={expanded === 'panel2'} onChange={handleAccordionChange('panel2')}>
-                <AccordionSummary
-                  id='customized-panel-header-2'
-                  expandIcon={expandIcon('panel2')}
-                  aria-controls='customized-panel-content-2'
-                >
-                  <Typography>Eform 2</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    Sugar plum sesame snaps caramels. Cake pie tart fruitcake sesame snaps donut cupcake macaroon.
-                    Gingerbread pudding cheesecake pie ice cream.
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-
-              <Accordion expanded={expanded === 'panel3'} onChange={handleAccordionChange('panel3')}>
-                <AccordionSummary
-                  id='customized-panel-header-3'
-                  expandIcon={expandIcon('panel3')}
-                  aria-controls='customized-panel-content-3'
-                >
-                  <Typography>Eform 3</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    Gingerbread lemon drops bear claw gummi bears bonbon wafer jujubes tiramisu. Jelly pie cake. Sweet
-                    roll dessert sweet pastry powder.
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-             */}
             </TabPanel>
             <TabPanel value='2'>Documents list</TabPanel>
             <TabPanel value='3'>
-              {action.map(item => {
+              {action.map((item: any) => {
                 return (
                   <div key={item.Date}>
                     <Typography>{item.Date}</Typography>
@@ -415,6 +362,8 @@ const WorkProfile = ({ workData }: { workData: any }) => {
           </CardActions>
         </Card>
       </footer>
+
+      {/* <WorkButton workData={workData} paramsData={paramsData} /> */}
     </>
   )
 }

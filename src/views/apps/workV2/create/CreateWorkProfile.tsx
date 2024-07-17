@@ -167,7 +167,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
       Registeruid: session?.user.email,
       Subject: formData.Subject,
       Status: 'workflow',
-      Eform: EformData,
+      EformData: EformData,
       WorkflowId: routeId,
       Blockid: 'startpoint'
     }
