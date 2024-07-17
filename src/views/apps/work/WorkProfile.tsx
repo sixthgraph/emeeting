@@ -34,8 +34,9 @@ import { Box, Button, CardActions, LinearProgress } from '@mui/material'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
-import { formRenderV1 } from '@/utils/hooks/formRender'
+import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import { Formatshortdate } from '@/utils/hooks/datetime'
+import axios from '@/utils/axios'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -85,14 +86,65 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData }: { workData: any }) => {
-  const params = useParams()
-  const { lang: locale } = params
+  const initialData = {
+    user: ''
+  }
+
+  console.log('workData')
+  console.log(workData)
+
+  // const WorkinfoEform = {
+  //   Wid: 'string',
+  //   Completedate: 'time.Time',
+  //   Expiredate: 'time.Time',
+  //   Registerdate: 'time.Time',
+  //   Registerdep: 'string',
+  //   Registeruid: 'string',
+  //   Subject: 'string',
+  //   Statecode: 'string',
+  //   Status: 'string',
+  //   Action: 'string',
+  //   Eform: [
+  //     {
+  //       Id: 'primitive.ObjectID',
+  //       Ed_id: 'int64 ',
+  //       Wid: 'string',
+  //       Form_id: 'string',
+  //       Ed_data: [],
+  //       Form_template: [
+  //         {
+  //           Type: 'string',
+  //           Required: 'bool',
+  //           SetCol: 'string',
+  //           SetBorder: 'string',
+  //           Label: 'string',
+  //           ClassName: 'string',
+  //           Name: 'string',
+  //           Subtype: 'string',
+  //           Value: 'string'
+  //         }
+  //       ],
+  //       Form_name: 'string'
+  //     }
+  //   ],
+  //   WorkflowId: 'string',
+  //   Blockid: 'string',
+  //   Eform_id: 'string',
+  //   Worktype: 'string'
+  // }
+
+  // console.log(WorkinfoEform)
+
+  // const [formData, setFormData] = useState<WorkFormDataType>(initialData)
+  // const params = useParams()
+  // const { lang: locale } = params
   const [value, setValue] = useState('1')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
 
+  // setFormData({ user: 'supachai' })
   // console.log('workData in workProfileV2 ====')
   // console.log(workData)
 
@@ -112,9 +164,19 @@ const WorkProfile = ({ workData }: { workData: any }) => {
     setExpanded(isExpanded ? panel : false)
   }
 
-  const handleEditwork = async (formData: any) => {
+  const handleEditwork = async () => {
+    const eformData = await getEdata(workData.eformdata)
+
+    workData.eformdata = eformData
+
+    console.log('(workData) reqbody ===')
+    console.log(workData)
+
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, workData)
+
+      console.log('response === ')
+      console.log(response)
 
       if (response.data.message === 'success') {
         console.log('---Call Editwork success.------------------')
@@ -374,11 +436,11 @@ const WorkProfile = ({ workData }: { workData: any }) => {
               p: 2
             }}
           >
-            <Button variant='contained' className='mr-2' color='info' type='submit'>
-              Send Back
+            <Button variant='contained' onClick={() => handleEditwork()} className='mr-2' color='info' type='submit'>
+              Save
             </Button>
 
-            <Button variant='contained' className='mr-2' type='submit'>
+            <Button variant='contained' onClick={() => handlesendwork(formData)} className='mr-2' type='submit'>
               Finish
             </Button>
             <Link href={'/en/todo'}>
