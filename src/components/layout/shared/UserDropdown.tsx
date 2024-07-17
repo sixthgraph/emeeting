@@ -23,6 +23,8 @@ import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 
 // Util Imports
+import { Avatar } from '@mui/material'
+
 import { getLocalizedUrl } from '@/utils/i18n'
 
 // Type Imports
@@ -121,14 +123,14 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         className='mis-2'
       >
-        {/* <Avatar
+        <Avatar
           ref={anchorRef}
-          alt='John Doe'
-          src='/images/avatars/1.png'
+          alt={userData?.name}
+          src={userData?.avatar ? userData.avatar : '/images/avatars/1.png'}
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
-        /> */}
-        {userData && getAvatar({ avatar: userData.avatar, fullName: userData.name })}
+        />
+        {/* {userData && getAvatar({ avatar: userData.avatar, fullName: userData.name })} */}
       </Badge>
       <Popper
         open={open}
