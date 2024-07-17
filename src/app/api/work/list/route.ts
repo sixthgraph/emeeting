@@ -7,7 +7,7 @@ import axios from 'axios'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
-  const { wid, dep, token, email, rid, pid } = reqBody
+  const { wid, dep, token, email, workflowid, blockid } = reqBody
 
   try {
     const headers = {
@@ -29,10 +29,18 @@ export async function POST(req: NextRequest) {
     console.log(res.data.data.detail)
     const workinfo = res.data.data.detail
 
+    const resnp = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${workflowid}/${blockid}`, {
+      headers
+    })
+
+    console.log('---conditionData-----')
+    console.log(resnp.data)
+
     const response = NextResponse.json({
       message: res.data.message,
       success: true,
-      data: workinfo
+      data: workinfo,
+      conditionData: resnp.data
     })
 
     return response
