@@ -5,7 +5,7 @@ import type { SyntheticEvent } from 'react'
 
 // MUI Imports
 import Script from 'next/script'
-import { useSearchParams } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 import { useSession } from 'next-auth/react'
@@ -111,11 +111,11 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   const dep = searchParams.get('dep')
   const [value, setValue] = useState('1')
 
-  const paramsData = {
-    workflowid: workflowid,
-    blockid: blockid,
-    dep: dep
-  }
+  // const paramsData = {
+  //   workflowid: workflowid,
+  //   blockid: blockid,
+  //   dep: dep
+  // }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -169,17 +169,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     })
   }
 
-  const handlesendwork = async (formData: any) => {
+  const handlesendwork = async () => {
     try {
-      // wid
-      // uid
-      // dep
-      // rid
-      // pid
-      // dateexp
-      // senderdep
-      // senderpid
-      // senderuid
       const reqBody = {
         wid: workData.wid,
         uid: condionData[0].userid,
