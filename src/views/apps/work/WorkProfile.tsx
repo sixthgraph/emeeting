@@ -152,6 +152,12 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     }
   }
 
+  const handleEditAndSendWork = async () => {
+    handleEditwork().then(() => {
+      handlesendwork()
+    })
+  }
+
   const handlesendwork = async (formData: any) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, formData)
@@ -354,7 +360,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               Save
             </Button>
 
-            <Button variant='contained' onClick={() => handlesendwork(formData)} className='mr-2' type='submit'>
+            <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
               Finish
             </Button>
             <Link href={'/en/todo'}>
