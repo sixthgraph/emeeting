@@ -8,6 +8,8 @@ import Script from 'next/script'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
+import { useSession } from 'next-auth/react'
+
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -84,6 +86,13 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData, condionData }: { workData: any; condionData: any }) => {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+    }
+  })
+
   const activity = workData.activity
   let action = []
   let j: any
@@ -99,11 +108,13 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   const searchParams = useSearchParams()
   const workflowid = searchParams.get('workflowid')
   const blockid = searchParams.get('blockid')
+  const dep = searchParams.get('dep')
   const [value, setValue] = useState('1')
 
   const paramsData = {
     workflowid: workflowid,
-    blockid: blockid
+    blockid: blockid,
+    dep: dep
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -160,7 +171,28 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
 
   const handlesendwork = async (formData: any) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, formData)
+      // wid
+      // uid
+      // dep
+      // rid
+      // pid
+      // dateexp
+      // senderdep
+      // senderpid
+      // senderuid
+      const reqBody = {
+        wid: workData.wid,
+        uid: condionData[0].userid,
+        dep: condionData[0].basketId[0],
+        rid: workflowid,
+        pid: condionData[0].blockId,
+        dateexp: workData.Expiredate,
+        senderdep: dep,
+        senderpid: blockid,
+        senderuid: session?.user.email
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, reqBody)
 
       if (response.data.message === 'success') {
         console.log('---Call sendwork success.------------------')
@@ -168,7 +200,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
         console.log(response.data.message)
       }
     } catch (error: any) {
-      console.log('Editwork failed. ', error.message)
+      console.log('sendwork failed. ', error.message)
     }
   }
 
