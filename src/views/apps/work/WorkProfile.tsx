@@ -257,17 +257,19 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created by:</Typography>
-                <Typography className='font-bold'>
+                <Typography className='font-semibold text-slate-900'>
                   {workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname}
                 </Typography>
                 <Typography className='text-xs mt-2'>Work ID:</Typography>
-                <Typography className='font-bold'>{workData.wid}</Typography>
+                <Typography className='font-semibold text-slate-900'>{workData.wid}</Typography>
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created:</Typography>
-                <Typography className='font-bold'>{Formatshortdate(workData?.Registerdate)}</Typography>
+                <Typography className='font-semibold text-slate-900'>
+                  {Formatshortdate(workData?.Registerdate)}
+                </Typography>
                 <Typography className='text-xs mt-2'>Subject:</Typography>
-                <Typography className='font-bold'>{workData.subject}</Typography>
+                <Typography className='font-semibold text-slate-900'>{workData.subject}</Typography>
               </div>
               {/* <div className='flex-1 flex flex-col items-start justify-end'> */}
               <div className='flex-none w-59 flex flex-col'>
@@ -275,7 +277,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                   <Typography color='text.disabled' sx={{ paddingRight: 4 }}>
                     Work progress
                   </Typography>
-                  <Typography className='font-bold'>50%</Typography>
+                  <Typography className='font-semibold text-slate-900'>50%</Typography>
                 </div>
                 <LinearProgress value={50} variant='determinate' color='success' className='mt-2 mr-2 min-bs-1' />
               </div>
@@ -286,16 +288,16 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                   <TabList onChange={handleChange} aria-label='lab API tabs example'>
                     <Tab
                       label={
-                        <div id='eform-tab' className='flex items-center gap-1.5'>
+                        <div id='eform-tab' className='flex items-center gap-1.5 font-semibold '>
                           <i className='tabler-article text-lg' />
-                          E-Forms
+                          Forms
                         </div>
                       }
                       value='1'
                     />
                     <Tab
                       label={
-                        <div className='flex items-center gap-1.5'>
+                        <div className='flex items-center gap-1.5 font-semibold'>
                           <i className='tabler-paperclip text-lg' />
                           Documents
                         </div>
@@ -304,7 +306,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                     />
                     <Tab
                       label={
-                        <div className='flex items-center gap-1.5'>
+                        <div className='flex items-center gap-1.5 font-semibold'>
                           <i className='tabler-chart-bar text-lg' />
                           Activity
                         </div>
@@ -332,7 +334,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                       expandIcon={expandIcon('panel1')}
                       aria-controls='customized-panel-content-1'
                     >
-                      <Typography>{form.form_name}</Typography>
+                      <Typography className='text-slate-900'>{form.form_name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <div id={`fb-render-${form.Id}`}>{`fb-render-${form.Id}`}</div>

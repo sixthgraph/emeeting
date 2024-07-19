@@ -94,9 +94,9 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        <MenuItem href={`/${locale}/dashboard`} icon={<i className='tabler-dashboard' />}>
+        {/* <MenuItem href={`/${locale}/dashboard`} icon={<i className='tabler-dashboard' />}>
           {dictionary['navigation'].dashboard}
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem href={`/${locale}/todo`} icon={<i className='tabler-inbox' />}>
           {dictionary['navigation'].todo}
         </MenuItem>

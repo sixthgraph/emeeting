@@ -33,7 +33,9 @@ import themeConfig from '@configs/themeConfig'
 import { useSettings } from '@core/hooks/useSettings'
 
 // Core Theme Imports
-import defaultCoreTheme from '@core/theme'
+//import defaultCoreTheme from '@core/theme'
+import mergedTheme from './mergedTheme'
+
 // import defaultCoreTheme from '@/components/themeV2'
 
 type Props = ChildrenType & {
@@ -88,7 +90,9 @@ const ThemeProvider = (props: Props) => {
       }
     }
 
-    const coreTheme = deepmerge(defaultCoreTheme(settings, currentMode, direction), newColorScheme)
+    //const coreTheme = deepmerge(defaultCoreTheme(settings, currentMode, direction), newColorScheme)
+
+    const coreTheme = deepmerge(mergedTheme(settings, currentMode, direction), newColorScheme)
 
     return extendTheme(coreTheme)
 

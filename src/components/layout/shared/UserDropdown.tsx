@@ -126,7 +126,7 @@ const UserDropdown = () => {
         <Avatar
           ref={anchorRef}
           alt={userData?.name}
-          src={userData?.avatar ? userData.avatar : '/images/avatars/1.png'}
+          src={userData?.avatar ? userData.avatar : '/images/avatars/avatar.png'}
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
         />
