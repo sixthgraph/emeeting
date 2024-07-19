@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 // import { getServerSession } from 'next-auth'
 
@@ -19,8 +20,8 @@ export async function POST(req: NextRequest) {
       cache: 'force-cache'
     }
 
-    console.log('call getmyitems url ====')
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getmyrequest?id=${email}`)
+    // console.log('call getmyitems url ====')
+    // console.log(`${process.env.ROUTE_FLOW_API_URL}/getmyrequest?id=${email}`)
 
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getmyrequest?id=${email}`, { headers })
 
@@ -35,8 +36,8 @@ export async function POST(req: NextRequest) {
     //   //dep: depData.data.detail
     // }
 
-    console.log('myrequestData.data----------')
-    console.log(myrequestData.data)
+    // console.log('myrequestData.data----------')
+    // console.log(myrequestData.data)
 
     return NextResponse.json(myrequestData.data)
 

@@ -11,6 +11,9 @@ export async function POST(req: NextRequest) {
   const reqBody = await req.json()
   const { wid, dep, token, email, wip, workflowid, blockid } = reqBody
 
+  console.log('reqBody---')
+  console.log(reqBody)
+
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -27,8 +30,8 @@ export async function POST(req: NextRequest) {
 
     const workinprocess = res.data.data.detail.workinprocess
 
-    console.log('--workinprocess---')
-    console.log(workinprocess)
+    // console.log('--workinprocess---')
+    // console.log(workinprocess)
 
     const dataObj = workinprocess.filter(item => {
       return item.id === wip //'6699081a5848117c8af11a20'

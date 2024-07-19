@@ -146,11 +146,14 @@ const columnHelper = createColumnHelper<TodoTypeWithAction>()
 
 type Props = {
   tableData?: TodoType[]
+  depData?: any
 }
 
-const TodoListTable = ({ tableData }: Props) => {
+const TodoListTable = ({ tableData, depData }: Props) => {
   console.log('tableData =====')
   console.log(tableData)
+  console.log('depData =====')
+  console.log(depData)
 
   const router = useRouter()
 

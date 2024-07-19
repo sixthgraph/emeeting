@@ -245,7 +245,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     lastname: ''
   }
 
-  if (workData?.usercreateinfo[0]) {
+  //if (workData?.usercreateinfo.length > 0) {
+  if (workData?.usercreateinfo !== undefined) {
     userCreateInfo.avatar = workData?.usercreateinfo[0].avatar
     userCreateInfo.firstname = workData?.usercreateinfo[0].firstname
     userCreateInfo.lastname = workData?.usercreateinfo[0].lastname
@@ -270,7 +271,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created by:</Typography>
                 <Typography className='font-semibold text-slate-900'>
-                  {workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname}
+                  {userCreateInfo.firstname + ' ' + userCreateInfo.lastname}
                 </Typography>
                 <Typography className='text-xs mt-2'>Work ID:</Typography>
                 <Typography className='font-semibold text-slate-900'>{workData.wid}</Typography>

@@ -146,11 +146,15 @@ const columnHelper = createColumnHelper<MyrequestTypeWithAction>()
 
 type Props = {
   tableData?: MyrequestType[]
+  depData?: any
 }
 
-const MyrequestListTable = ({ tableData }: Props) => {
+const MyrequestListTable = ({ tableData, depData }: Props) => {
   console.log('tableData =====')
   console.log(tableData)
+
+  console.log('depData ===')
+  console.log(depData)
 
   const router = useRouter()
 
