@@ -239,6 +239,18 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     }
   }
 
+  const userCreateInfo = {
+    avatar: '',
+    firstname: '',
+    lastname: ''
+  }
+
+  if (workData?.usercreateinfo[0]) {
+    userCreateInfo.avatar = workData?.usercreateinfo[0].avatar
+    userCreateInfo.firstname = workData?.usercreateinfo[0].firstname
+    userCreateInfo.lastname = workData?.usercreateinfo[0].lastname
+  }
+
   return (
     <>
       <TabContext value={value}>
@@ -249,8 +261,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
                 {workData &&
                   getAvatar({
-                    avatar: workData?.usercreateinfo[0].avatar,
-                    fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname
+                    avatar: userCreateInfo.avatar,
+                    fullName: userCreateInfo.firstname + ' ' + userCreateInfo.lastname
                   })}
 
                 {/* workData?.usercreateinfo[0].firstname */}
