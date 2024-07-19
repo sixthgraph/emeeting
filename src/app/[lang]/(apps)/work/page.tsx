@@ -9,11 +9,13 @@ import WorkDetailV2 from '@/views/apps/workV2'
 const getData = async ({
   wid,
   dep,
+  wip,
   workflowid,
   blockid
 }: {
   wid?: any
   dep?: any
+  wip?: any
   workflowid?: any
   blockid?: any
 }) => {
@@ -24,6 +26,7 @@ const getData = async ({
     const reqBody = {
       wid: wid,
       dep: dep,
+      wip: wip,
       workflowid: workflowid,
       blockid: blockid,
       token: session?.user.token,
@@ -53,9 +56,9 @@ const workPage = async ({ searchParams }: any) => {
   // const wid = searchParams.wid
   // const dep = searchParams.dep
 
-  const { wid, dep, workflowid, blockid } = searchParams
+  const { wid, dep, wip, workflowid, blockid } = searchParams
 
-  const res = await getData({ wid, dep, workflowid, blockid })
+  const res = await getData({ wid, dep, wip, workflowid, blockid })
 
   const data = res.data
   const conditionData = res.data.conditionData

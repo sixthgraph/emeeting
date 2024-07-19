@@ -238,7 +238,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
             }}
           >
             <div className='flex items-center gap-4'>
@@ -264,7 +264,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
             }}
           >
             <div className='flex flex-col pli-2 plb-3'>
@@ -291,7 +291,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -309,7 +309,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -326,7 +326,7 @@ const TodoListTable = ({ tableData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
             }}
           >
             <div className='flex items-center gap-2'>
