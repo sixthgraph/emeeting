@@ -55,6 +55,7 @@ export type TodoType = {
   workflowid: string
   routename: string
   workinprocessid: string
+  datein: string
 }
 
 export type TodoTypeWithAction = TodoType & {

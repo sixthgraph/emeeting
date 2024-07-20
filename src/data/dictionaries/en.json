@@ -1,5 +1,6 @@
 {
   "navigation": {
+    "home": "Home",
     "dashboard": "Dashboard",
     "todo": "To Do",
     "myItems": "My Items",

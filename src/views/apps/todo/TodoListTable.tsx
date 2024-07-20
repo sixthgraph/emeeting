@@ -238,7 +238,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <div className='flex items-center gap-4'>
             <div className='flex flex-col'>
               {row.original.viewstatus ? (
-                <Icon className='text-[22px] text-textSecondary tabler-mail-opened' />
+                <Icon className='text-[22px] text-slate-300 tabler-mail-opened' />
               ) : (
                 <Icon className='text-[22px] text-textSecondary tabler-mail' />
               )}
@@ -317,40 +317,54 @@ const TodoListTable = ({ tableData, depData }: Props) => {
               <Typography color='text.primary' className='font-medium'>
                 {row.original.subject}
               </Typography>
-              <div className='flex'>
+              <div className='flex flex-col'>
                 {/* {row.original.overdue ? (
                   <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
-                ) : (
-                  ''
-                )} */}
-                {row.original.routename && ( // <Chip variant='tonal' size='small' label={row.original.status} color='warning' />
-                  <Chip variant='tonal' size='small' label={row.original.routename} color='warning' />
-                )}
+                  ) : (
+                    ''
+                    )} */}
+                <div>
+                  <Typography color='text.primary' className='font-xs text-slate-400'>
+                    {row.original.routename}
+                  </Typography>
+                </div>
+                <div className=''>
+                  {/* <Typography color='text.primary' className='font-xs text-slate-400'>
+                    Department : {row.original.currentdeptname}
+                  </Typography> */}
+                  {row.original.status && (
+                    <Chip variant='tonal' size='small' className='mr-2' label={row.original.status} color='warning' />
+                  )}
+                  {row.original.currentdeptname && (
+                    <Chip variant='tonal' size='small' label={row.original.currentdeptname} color='info' />
+                  )}
+                </div>
               </div>
             </div>
           </Link>
         )
       }),
-      columnHelper.accessor('currentdeptname', {
-        header: 'Department',
-        cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <Typography color='text.primary' className='font-medium'>
-                {/* {depObj[row.original.basketid] && depObj[row.original.basketid].depname} */}
-                {row.original.currentdeptname}
-              </Typography>
-            </div>
-          </Link>
-        )
-      }),
-      columnHelper.accessor('createdate', {
-        header: 'Created',
+
+      // columnHelper.accessor('currentdeptname', {
+      //   header: 'Department',
+      //   cell: ({ row }) => (
+      //     <Link
+      //       href={{
+      //         pathname: '/en/work',
+      //         query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+      //       }}
+      //     >
+      //       <div className='flex items-center gap-2'>
+      //         <Typography color='text.primary' className='font-medium'>
+      //           {/* {depObj[row.original.basketid] && depObj[row.original.basketid].depname} */}
+      //           {row.original.currentdeptname}
+      //         </Typography>
+      //       </div>
+      //     </Link>
+      //   )
+      // }),
+      columnHelper.accessor('datein', {
+        header: 'Received Date',
         cell: ({ row }) => (
           <Link
             href={{

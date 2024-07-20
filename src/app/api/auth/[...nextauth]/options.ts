@@ -4,7 +4,7 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
 
-import { signOut } from 'next-auth/react'
+import { signOut, signIn } from 'next-auth/react'
 
 import axios from 'axios'
 
@@ -210,6 +210,10 @@ export const options: NextAuthOptions = {
         token.token = refreshTokenData.token
       } else {
         console.log('refreshToken failed')
+
+        signIn()
+
+        return null
 
         // token.name = ''
         // token.firstname = ''

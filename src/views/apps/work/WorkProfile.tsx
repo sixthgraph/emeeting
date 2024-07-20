@@ -245,19 +245,6 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     }
   }
 
-  const userCreateInfo = {
-    avatar: '',
-    firstname: '',
-    lastname: ''
-  }
-
-  //if (workData?.usercreateinfo.length > 0) {
-  if (workData?.usercreateinfo !== undefined) {
-    userCreateInfo.avatar = workData?.usercreateinfo[0].avatar
-    userCreateInfo.firstname = workData?.usercreateinfo[0].firstname
-    userCreateInfo.lastname = workData?.usercreateinfo[0].lastname
-  }
-
   const formatshortdate = (date: any) => {
     const m_th_names = [
       'ม.ค.',
@@ -301,22 +288,22 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
                 {workData &&
                   getAvatar({
-                    avatar: userCreateInfo.avatar,
-                    fullName: userCreateInfo.firstname + ' ' + userCreateInfo.lastname
+                    avatar: workData?.usercreateinfo[0].avatar,
+                    fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname
                   })}
 
                 {/* workData?.usercreateinfo[0].firstname */}
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Created by:</Typography>
+                <Typography className='text-xs'>Request by:</Typography>
                 <Typography className='font-semibold text-slate-900'>
-                  {userCreateInfo.firstname + ' ' + userCreateInfo.lastname}
+                  {workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname}
                 </Typography>
                 <Typography className='text-xs mt-2'>Work ID:</Typography>
                 <Typography className='font-semibold text-slate-900'>{workData.wid}</Typography>
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Created:</Typography>
+                <Typography className='text-xs'>Create Date:</Typography>
                 <Typography className='font-semibold text-slate-900'>
                   {formatshortdate(workData?.Registerdate)}
                 </Typography>

@@ -191,7 +191,7 @@ const ProjectListTable = () => {
   const columns = useMemo<ColumnDef<ProjectListDataType, any>[]>(
     () => [
       columnHelper.accessor('projectTitle', {
-        header: 'Project',
+        header: 'Workflow',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
             <CustomAvatar src={row.original.img} size={34} />
@@ -262,7 +262,7 @@ const ProjectListTable = () => {
 
   return (
     <Card>
-      <CardHeader title='User&#39;s Project List' className='flex flex-wrap gap-4' />
+      <CardHeader title='My Workflow List' className='flex flex-wrap gap-4' />
       <div className='flex items-center justify-between p-6 gap-4'>
         <div className='flex items-center gap-2'>
           <Typography>Show</Typography>
@@ -280,7 +280,7 @@ const ProjectListTable = () => {
         <DebouncedInput
           value={globalFilter ?? ''}
           onChange={value => setGlobalFilter(String(value))}
-          placeholder='Search Project'
+          placeholder='Search Workflow'
         />
       </div>
       <div className='overflow-x-auto'>
