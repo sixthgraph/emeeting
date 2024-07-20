@@ -410,7 +410,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
             </thead>
 
             {/* { table.getFilteredRowModel().rows.length === 0 ? ( */}
-            {tableData === null ? (
+            {tableData === null || tableData === undefined ? (
               <tbody>
                 <tr>
                   <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
