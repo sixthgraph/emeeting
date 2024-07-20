@@ -17,6 +17,7 @@ export type MyrequestType = {
   wid: string
   workflowid: string
   routename: string
+  datein: string
 }
 
 export type MyrequestTypeWithAction = MyrequestType & {

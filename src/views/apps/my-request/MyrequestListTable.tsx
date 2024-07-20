@@ -4,7 +4,7 @@
 import { useEffect, useState, useMemo } from 'react'
 
 // import { redirect } from 'next/navigation'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 import Link from 'next/link'
 
@@ -39,24 +39,23 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import { IconButton } from '@mui/material'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
-import type { MyrequestType, MyrequestTypeWithAction, TodoType } from '@/types/apps/todoTypes'
-import type { DepType } from '@/types/apps/userTypes'
+import type { MyrequestType, MyrequestTypeWithAction } from '@/types/apps/myrequestTypes'
 
 // Component Imports
-import TableFilters from './TableFilters'
+// import TableFilters from './TableFilters'
 
 // import UserDrawerForm from './UserDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
-import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
-import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
-import type { Locale } from '@configs/i18n'
+// import { getInitials } from '@/utils/getInitials'
+// import { getLocalizedUrl } from '@/utils/i18n'
+// import type { Locale } from '@configs/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import TrackingDrawerInfo from '../new-request/list/TrackingDrawerInfo'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -113,8 +112,6 @@ const DebouncedInput = ({
   return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
 }
 
-const depObj: DepType = {}
-
 // Vars
 // const initialData = {
 //   workflowid: '',
@@ -158,7 +155,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
   console.log('depData ===')
   console.log(depData)
 
-  const router = useRouter()
+  // const router = useRouter()
 
   // Hooks
   const { lang: locale } = useParams()
@@ -187,18 +184,49 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [trackingOpen, setTrackingOpen] = useState(false)
+
+  // Vars
+  const initialData = {
+    fullName: '',
+    username: '',
+    password: '',
+    email: '',
+    company: '',
+    country: '',
+    contact: '',
+    role: '',
+    plan: '',
+    status: ''
+  }
+
+  const userDrawerOpenHandle = () => {
+    // initialData = {
+    //   fullName: '',
+    //   username: '',
+    //   password: '',
+    //   email: '',
+    //   company: '',
+    //   country: '',
+    //   contact: '',
+    //   role: '',
+    //   plan: '',
+    //   status: ''
+    // }
+    setTrackingOpen(true)
+  }
 
   // Table Columns config
   const columns = useMemo<ColumnDef<MyrequestTypeWithAction, any>[]>(
     () => [
-      columnHelper.accessor('readed', {
+      columnHelper.accessor('viewstatus', {
         header: '',
         size: 54,
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
             <div className='flex flex-row gap-2'>
               <Icon className='text-[22px] text-slate-300 tabler-bell' />
-              {row.original.readed ? (
+              {row.original.viewstatus ? (
                 <Icon className='text-[22px] text-slate-300 tabler-star' />
               ) : (
                 <Icon className='text-[22px] text-amber-300 tabler-star-filled' />
@@ -272,7 +300,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
         header: 'Tracking',
         cell: ({}) => (
           <div className='flex items-center'>
-            <IconButton>
+            <IconButton onClick={() => userDrawerOpenHandle()}>
               <i className='tabler-route-scan text-[22px] text-textSecondary' />
             </IconButton>
           </div>
@@ -319,7 +347,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
 
   // Table config
   const table = useReactTable({
-    data: data as TodoType[],
+    data: data as MyrequestType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter // search field
@@ -448,6 +476,11 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
           />
         )}
       </Card>
+      <TrackingDrawerInfo
+        open={trackingOpen}
+        trackingData={initialData}
+        handleClose={() => setTrackingOpen(!trackingOpen)}
+      />
     </>
   )
 }
