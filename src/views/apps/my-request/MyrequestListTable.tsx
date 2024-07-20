@@ -242,7 +242,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
             }}
           >
             <div className='flex items-center gap-4'>

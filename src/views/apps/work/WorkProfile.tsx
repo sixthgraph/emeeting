@@ -5,7 +5,7 @@ import type { SyntheticEvent } from 'react'
 
 // MUI Imports
 import Script from 'next/script'
-import { redirect, useSearchParams } from 'next/navigation'
+import { redirect, useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 import { useSession } from 'next-auth/react'
@@ -33,7 +33,8 @@ import { Box, Button, CardActions, LinearProgress } from '@mui/material'
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
 import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
-import { Formatshortdate } from '@/utils/hooks/datetime'
+
+// import { Formatshortdate } from '@/utils/hooks/datetime'
 import axios from '@/utils/axios'
 
 import WorkButton from './WorkButton'
@@ -86,6 +87,9 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData, condionData }: { workData: any; condionData: any }) => {
+  const params = useParams()
+  const { lang: locale } = params
+
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -102,6 +106,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     action = elem[j].actions
   }
 
+  console.log('----workData---')
+  console.log(workData)
   console.log('----condionData---')
   console.log(condionData)
 
@@ -141,8 +147,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
 
     workData.eformdata = eformData
 
-    delete workData.usercreateinfo
-    delete workData.workinprocess
+    // delete workData.usercreateinfo
+    // delete workData.workinprocess
 
     workData.workflowid = workflowid
     workData.blockId = blockid
@@ -252,6 +258,39 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     userCreateInfo.lastname = workData?.usercreateinfo[0].lastname
   }
 
+  const formatshortdate = (date: any) => {
+    const m_th_names = [
+      'ม.ค.',
+      'ก.พ.',
+      'มี.ค.',
+      'เม.ย.',
+      'พ.ค.',
+      'มิ.ย.',
+      'ก.ค.',
+      'ส.ค.',
+      'ก.ย.',
+      'ต.ค.',
+      'พ.ย',
+      'ธ.ค.'
+    ]
+
+    const m_en_names = ['Jan', 'Feb', 'Mar', ' Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const d = new Date(date),
+      curr_date = d.getDate(),
+      curr_month = d.getMonth(),
+      curr_year: number = d.getFullYear() + 543
+
+    const formattedDate = d.toLocaleString()
+    const curr_time = formattedDate.split(',')[1]
+
+    if (locale == 'th') {
+      return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year + ' ' + curr_time
+    }
+
+    return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
+  }
+
   return (
     <>
       <TabContext value={value}>
@@ -279,7 +318,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               <div className='flex-1 flex flex-col items-start justify-start'>
                 <Typography className='text-xs'>Created:</Typography>
                 <Typography className='font-semibold text-slate-900'>
-                  {Formatshortdate(workData?.Registerdate)}
+                  {formatshortdate(workData?.Registerdate)}
                 </Typography>
                 <Typography className='text-xs mt-2'>Subject:</Typography>
                 <Typography className='font-semibold text-slate-900'>{workData.subject}</Typography>
@@ -350,7 +389,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                       <Typography className='text-slate-900'>{form.form_name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <div id={`fb-render-${form.Id}`}>{`fb-render-${form.Id}`}</div>
+                      <div id={`fb-render-${form.Id}`}>Loading...</div>
                     </AccordionDetails>
                   </Accordion>
                 )

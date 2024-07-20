@@ -179,172 +179,6 @@ const TodoListTable = ({ tableData, depData }: Props) => {
   console.log('tableData === ')
   console.log(tableData)
 
-  // States
-  //const [rowSelection, setRowSelection] = useState({})
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[tableData])
-  const [globalFilter, setGlobalFilter] = useState('')
-
-  // Table Columns config
-  const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(
-    () => [
-      // {
-      //   id: 'select',
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler()
-      //       }}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: row.getIsSelected(),
-      //         disabled: !row.getCanSelect(),
-      //         indeterminate: row.getIsSomeSelected(),
-      //         onChange: row.getToggleSelectedHandler()
-      //       }}
-      //     />
-      //   )
-      // },
-
-      // columnHelper.accessor('readed', {
-      //   header: '',
-      //   cell: ({ row }) => (
-      //     <div className='flex items-center gap-4'>
-      //       <div className='flex flex-col'>
-      //         {row.original.readed ? (
-      //           <Icon className='text-[22px] text-textSecondary tabler-mail-opened' />
-      //         ) : (
-      //           <Icon className='text-[22px] text-textSecondary tabler-mail' />
-      //         )}
-      //       </div>
-      //     </div>
-      //   )
-      // }),
-      columnHelper.accessor('processname', {
-        header: '',
-        cell: ({}) => (
-          <div className='flex items-center gap-4'>
-            <div className='flex flex-col'>
-              <Icon className='text-[22px] text-textSecondary tabler-mail' />
-            </div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('createby', {
-        header: 'Created By',
-        cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
-            }}
-          >
-            <div className='flex items-center gap-4'>
-              {getAvatar({
-                avatar: row.original.avatar,
-                fullName: row.original.createby
-              })}
-              <div className='flex flex-col'>
-                <Typography color='text.primary' className='font-medium'>
-                  {row.original.createby}
-                </Typography>
-                <Typography variant='body2'>{row.original.email}</Typography>
-              </div>
-            </div>
-          </Link>
-        )
-      }),
-      columnHelper.accessor('subject', {
-        header: 'Subject',
-        cell: (
-          { row } // <div className='flex flex-col pli-2 plb-3'>
-        ) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
-            }}
-          >
-            <div className='flex flex-col pli-2 plb-3'>
-              <Typography color='text.primary' className='font-medium'>
-                {row.original.subject}
-              </Typography>
-              <div className='flex'>
-                {row.original.overdue ? (
-                  <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
-                ) : (
-                  ''
-                )}
-                {row.original.status && (
-                  <Chip variant='tonal' size='small' label={row.original.status} color='warning' />
-                )}
-              </div>
-            </div>
-          </Link>
-        )
-      }),
-      columnHelper.accessor('currentdeptname', {
-        header: 'Department',
-        cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <Typography color='text.primary' className='font-medium'>
-                {/* {depObj[row.original.basketid] && depObj[row.original.basketid].depname} */}
-                {row.original.currentdeptname}
-              </Typography>
-            </div>
-          </Link>
-        )
-      }),
-      columnHelper.accessor('routename', {
-        header: 'Route Name',
-        cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <Typography color='text.primary' className='font-medium'>
-                {row.original.routename}
-              </Typography>
-            </div>
-          </Link>
-        )
-      }),
-      columnHelper.accessor('createdate', {
-        header: 'Created',
-        cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <Typography className='capitalize' color='text.primary'>
-                {formatshortdate(row.original.createdate)}
-              </Typography>
-            </div>
-          </Link>
-        )
-      })
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
-
   const formatshortdate = (date: any) => {
     const m_th_names = [
       'ม.ค.',
@@ -377,6 +211,165 @@ const TodoListTable = ({ tableData, depData }: Props) => {
 
     return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
+
+  // States
+  //const [rowSelection, setRowSelection] = useState({})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [data, setData] = useState(...[tableData])
+  const [globalFilter, setGlobalFilter] = useState('')
+
+  // Table Columns config
+  const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(
+    () => [
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      columnHelper.accessor('viewstatus', {
+        header: '',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-4'>
+            <div className='flex flex-col'>
+              {row.original.viewstatus ? (
+                <Icon className='text-[22px] text-textSecondary tabler-mail-opened' />
+              ) : (
+                <Icon className='text-[22px] text-textSecondary tabler-mail' />
+              )}
+            </div>
+          </div>
+        )
+      }),
+
+      // columnHelper.accessor('processname', {
+      //   header: '',
+      //   cell: ({}) => (
+      //     <div className='flex items-center gap-4'>
+      //       <div className='flex flex-col'>
+      //         <Icon className='text-[22px] text-textSecondary tabler-mail' />
+      //       </div>
+      //     </div>
+      //   )
+      // }),
+      columnHelper.accessor('createby', {
+        header: 'Request By',
+        cell: ({ row }) => (
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+            }}
+          >
+            <div className='flex items-center gap-4'>
+              {getAvatar({
+                avatar: row.original.avatar,
+                fullName: row.original.createby
+              })}
+              <div className='flex flex-col'>
+                <Typography color='text.primary' className='font-medium'>
+                  {row.original.createby}
+                </Typography>
+                <Typography variant='body2'>{row.original.email}</Typography>
+              </div>
+            </div>
+          </Link>
+        )
+      }),
+
+      // columnHelper.accessor('routename', {
+      //   header: 'Route Name',
+      //   cell: ({ row }) => (
+      //     <Link
+      //       href={{
+      //         pathname: '/en/work',
+      //         query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+      //       }}
+      //     >
+      //       <div className='flex items-center gap-2'>
+      //         <Typography color='text.primary' className='font-medium'>
+      //           {row.original.routename}
+      //         </Typography>
+      //       </div>
+      //     </Link>
+      //   )
+      // }),
+      columnHelper.accessor('subject', {
+        header: 'Subject',
+        cell: (
+          { row } // <div className='flex flex-col pli-2 plb-3'>
+        ) => (
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+            }}
+          >
+            <div className='flex flex-col '>
+              {/* <Typography color='text.primary' className='font-medium'>
+                Route Name : {row.original.routename}
+              </Typography> */}
+              <Typography color='text.primary' className='font-medium'>
+                {row.original.subject}
+              </Typography>
+              <div className='flex'>
+                {/* {row.original.overdue ? (
+                  <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
+                ) : (
+                  ''
+                )} */}
+                {row.original.routename && ( // <Chip variant='tonal' size='small' label={row.original.status} color='warning' />
+                  <Chip variant='tonal' size='small' label={row.original.routename} color='warning' />
+                )}
+              </div>
+            </div>
+          </Link>
+        )
+      }),
+      columnHelper.accessor('currentdeptname', {
+        header: 'Department',
+        cell: ({ row }) => (
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+            }}
+          >
+            <div className='flex items-center gap-2'>
+              <Typography color='text.primary' className='font-medium'>
+                {/* {depObj[row.original.basketid] && depObj[row.original.basketid].depname} */}
+                {row.original.currentdeptname}
+              </Typography>
+            </div>
+          </Link>
+        )
+      }),
+      columnHelper.accessor('createdate', {
+        header: 'Created',
+        cell: ({ row }) => (
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+            }}
+          >
+            <div className='flex items-center gap-2'>
+              <Typography className='capitalize' color='text.primary'>
+                {formatshortdate(row.original.createdate)}
+              </Typography>
+            </div>
+          </Link>
+        )
+      })
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 
   // Table config
   const table = useReactTable({
