@@ -12,7 +12,7 @@ export async function GET() {
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
-      cache: 'force-cache'
+      cache: 'no-store'
     }
 
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}`, {

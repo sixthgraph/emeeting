@@ -147,17 +147,23 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
 
     workData.eformdata = eformData
 
-    // delete workData.usercreateinfo
-    // delete workData.workinprocess
+    //workData.workflowid = workflowid
 
-    workData.workflowid = workflowid
-    workData.blockId = blockid
+    // workData.blockId = blockid
 
-    console.log('(workData) reqbody ===')
-    console.log(workData)
+    const reqBody = workData
+
+    delete reqBody.usercreateinfo
+    delete reqBody.workinprocess
+
+    // delete reqBody.curdep
+    // delete reqBody.curuid
+
+    console.log('(edit worj reqBody) reqbody ===')
+    console.log(reqBody)
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, workData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, reqBody)
 
       if (response.data.message === 'success') {
         console.log('---Call Editwork success.------------------')
@@ -181,12 +187,12 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
         wid: workData.wid,
         uid: condionData[0].userid,
         dep: condionData[0].basketId[0],
-        rid: workflowid,
+        rid: workData.workflowid,
         pid: condionData[0].blockId,
         dateexp: workData.Expiredate,
-        senderdep: dep,
-        senderpid: blockid,
-        senderuid: session?.user.email
+        senderdep: workData.curdep,
+        senderpid: workData.blockid,
+        senderuid: workData.curuid
       }
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, reqBody)

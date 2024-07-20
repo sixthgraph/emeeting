@@ -48,7 +48,9 @@ const getData = async ({
       throw new Error('Failed to fetch workdata')
     }
   } catch (err) {
+    console.log('--work/list response ---')
     console.log(err)
+    throw new Error(err.message)
   }
 }
 

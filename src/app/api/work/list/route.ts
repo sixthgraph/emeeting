@@ -5,7 +5,8 @@ import { NextResponse } from 'next/server'
 
 import axios from 'axios'
 
-import RoleDialog from '../../../../components/dialogs/role-dialog/index'
+//import RoleDialog from '../../../../components/dialogs/role-dialog/index'
+//import PricingDialog from '../../../../components/dialogs/pricing/index'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
@@ -37,33 +38,50 @@ export async function POST(req: NextRequest) {
       return item.id === wip //'6699081a5848117c8af11a20'
     })
 
+    if (wip == '' || wip == null) {
+      const resnp2 = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${workflowid}/startpoint`, {
+        headers
+      })
+
+      const response2 = NextResponse.json({
+        message: res.data.message,
+        success: true,
+        data: workinfo,
+        conditionData: null
+      })
+
+      return response2
+    }
+
     if (dataObj.length > 0) {
       const rid = dataObj[0].rid
       const pid = dataObj[0].pid
+
+      workinfo.curuid = dataObj[0].uid
+      workinfo.curdep = dataObj[0].dep
+      workinfo.workflowid = rid
+      workinfo.blockid = pid
 
       console.log('dataObj')
       console.log(dataObj)
       console.log(rid)
       console.log(pid)
 
-      // const resnp = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${rid}/${pid}`, {
-      //   headers
-      // })
+      const resnp = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${rid}/${pid}`, {
+        headers
+      })
+
+      const response = NextResponse.json({
+        message: res.data.message,
+        success: true,
+        data: workinfo,
+        conditionData: resnp.data
+      })
+
+      return response
     } else {
+      return NextResponse.json({ error: 'data not found.' }, { status: 500 })
     }
-
-    const resnp = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${workflowid}/${blockid}`, {
-      headers
-    })
-
-    const response = NextResponse.json({
-      message: res.data.message,
-      success: true,
-      data: workinfo,
-      conditionData: resnp.data
-    })
-
-    return response
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
