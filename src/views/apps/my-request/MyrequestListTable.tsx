@@ -36,8 +36,10 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
+import { IconButton } from '@mui/material'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
-import type { MyrequestType, MyrequestTypeWithAction } from '@/types/apps/todoTypes'
+import type { MyrequestType, MyrequestTypeWithAction, TodoType } from '@/types/apps/todoTypes'
 import type { DepType } from '@/types/apps/userTypes'
 
 // Component Imports
@@ -189,55 +191,24 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
   // Table Columns config
   const columns = useMemo<ColumnDef<MyrequestTypeWithAction, any>[]>(
     () => [
-      // {
-      //   id: 'select',
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler()
-      //       }}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: row.getIsSelected(),
-      //         disabled: !row.getCanSelect(),
-      //         indeterminate: row.getIsSomeSelected(),
-      //         onChange: row.getToggleSelectedHandler()
-      //       }}
-      //     />
-      //   )
-      // },
-
-      // columnHelper.accessor('readed', {
-      //   header: '',
-      //   cell: ({ row }) => (
-      //     <div className='flex items-center gap-4'>
-      //       <div className='flex flex-col'>
-      //         {row.original.readed ? (
-      //           <Icon className='text-[22px] text-textSecondary tabler-mail-opened' />
-      //         ) : (
-      //           <Icon className='text-[22px] text-textSecondary tabler-mail' />
-      //         )}
-      //       </div>
-      //     </div>
-      //   )
-      // }),
-      columnHelper.accessor('processname', {
+      columnHelper.accessor('readed', {
         header: '',
-        cell: ({}) => (
+        size: 54,
+        cell: ({ row }) => (
           <div className='flex items-center gap-4'>
-            <div className='flex flex-col'>
-              <Icon className='text-[22px] text-textSecondary tabler-mail' />
+            <div className='flex flex-row gap-2'>
+              <Icon className='text-[22px] text-slate-300 tabler-bell' />
+              {row.original.readed ? (
+                <Icon className='text-[22px] text-slate-300 tabler-star' />
+              ) : (
+                <Icon className='text-[22px] text-amber-300 tabler-star-filled' />
+              )}
             </div>
           </div>
         )
       }),
-      columnHelper.accessor('createby', {
-        header: 'Created By',
+      columnHelper.accessor('subject', {
+        header: 'Subject',
         cell: ({ row }) => (
           <Link
             href={{
@@ -245,87 +216,43 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
               query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
             }}
           >
-            <div className='flex items-center gap-4'>
-              {getAvatar({
-                avatar: row.original.avatar,
-                fullName: row.original.createby
-              })}
-              <div className='flex flex-col'>
-                <Typography color='text.primary' className='font-medium'>
-                  {row.original.createby}
-                </Typography>
-                <Typography variant='body2'>{row.original.email}</Typography>
-              </div>
-            </div>
-          </Link>
-        )
-      }),
-      columnHelper.accessor('subject', {
-        header: 'Subject',
-        cell: (
-          { row } // <div className='flex flex-col pli-2 plb-3'>
-        ) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
-            }}
-          >
-            <div className='flex flex-col pli-2 plb-3'>
+            <div className='flex flex-col '>
               <Typography color='text.primary' className='font-medium'>
                 {row.original.subject}
               </Typography>
-              <div className='flex'>
-                {row.original.overdue ? (
-                  <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
-                ) : (
-                  ''
-                )}
-                {row.original.status && (
-                  <Chip variant='tonal' size='small' label={row.original.status} color='warning' />
-                )}
+              <div className='flex flex-col'>
+                <div>
+                  <Typography color='text.primary' className='font-xs text-slate-400'>
+                    {row.original.routename}
+                  </Typography>
+                </div>
+                <div className=''>
+                  {row.original.status && (
+                    <Chip variant='tonal' size='small' className='mr-2' label={row.original.status} color='warning' />
+                  )}
+                  {row.original.currentdeptname && (
+                    <Chip variant='tonal' size='small' label={row.original.currentdeptname} color='info' />
+                  )}
+                </div>
               </div>
             </div>
           </Link>
         )
       }),
-      columnHelper.accessor('currentdeptname', {
-        header: 'Department',
+      columnHelper.accessor('processname', {
+        header: 'Work in Process',
         cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <Typography color='text.primary' className='font-medium'>
-                {/* {depObj[row.original.basketid] && depObj[row.original.basketid].depname} */}
-                {row.original.currentdeptname}
-              </Typography>
-            </div>
-          </Link>
-        )
-      }),
-      columnHelper.accessor('routename', {
-        header: 'Route Name',
-        cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <Typography color='text.primary' className='font-medium'>
-                {row.original.routename}
-              </Typography>
-            </div>
-          </Link>
+          <>
+            <Typography color='text.primary' className='font-medium'>
+              {' '}
+              {row.original.processname}{' '}
+            </Typography>
+            <Typography className='font-sm'> Recived Date : {formatshortdate(row.original.datein)}</Typography>
+          </>
         )
       }),
       columnHelper.accessor('createdate', {
-        header: 'Created',
+        header: 'Request Date',
         cell: ({ row }) => (
           <Link
             href={{
@@ -340,6 +267,17 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
             </div>
           </Link>
         )
+      }),
+      columnHelper.accessor('action', {
+        header: 'Tracking',
+        cell: ({}) => (
+          <div className='flex items-center'>
+            <IconButton>
+              <i className='tabler-route-scan text-[22px] text-textSecondary' />
+            </IconButton>
+          </div>
+        ),
+        enableSorting: false
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -411,16 +349,6 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  const getAvatar = (params: Pick<TodoType, 'avatar' | 'fullName'>) => {
-    const { avatar, fullName } = params
-
-    if (avatar) {
-      return <CustomAvatar src={avatar} size={34} />
-    } else {
-      return <CustomAvatar size={34}>{getInitials(fullName as string)}</CustomAvatar>
-    }
-  }
-
   return (
     <>
       <Card>
@@ -452,7 +380,12 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th
+                      key={header.id}
+                      style={{
+                        width: header.getSize() !== 150 ? header.getSize() : undefined
+                      }}
+                    >
                       {header.isPlaceholder ? null : (
                         <>
                           <div
