@@ -183,7 +183,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
         console.log('Create work success.')
 
         const wid = response.data.data
-        const path = `/en/work?wid=${wid}&dep=${formData.Registerdep}&routename=${routename}`
+        const path = `/en/work?wid=${wid}&wip=&dep=${formData.Registerdep}&routename=${routename}&workflowid=${routeId}`
 
         navigate(path)
       }

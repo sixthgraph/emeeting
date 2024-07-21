@@ -43,11 +43,18 @@ export async function POST(req: NextRequest) {
         headers
       })
 
+      const condata = resnp2.data
+
+      workinfo.workflowid = workinfo.workinprocess[0].rid
+      workinfo.blockid = 'startpoint'
+      workinfo.curuid = workinfo.workinprocess[0].uid
+      workinfo.curdep = workinfo.workinprocess[0].dep
+
       const response2 = NextResponse.json({
         message: res.data.message,
         success: true,
         data: workinfo,
-        conditionData: null
+        conditionData: condata
       })
 
       return response2

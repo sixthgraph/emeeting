@@ -6,6 +6,7 @@ import type { SyntheticEvent } from 'react'
 // MUI Imports
 import Script from 'next/script'
 import { redirect, useParams, useSearchParams } from 'next/navigation'
+
 import Link from 'next/link'
 
 import { useSession } from 'next-auth/react'
@@ -27,8 +28,11 @@ import type { AccordionProps } from '@mui/material/Accordion'
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
-// Type Imports
 import { Box, Button, CardActions, CardHeader, LinearProgress } from '@mui/material'
+
+import { navigate } from './redirect'
+
+// Type Imports
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
@@ -204,6 +208,10 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
       } else {
         console.log(response.data.message)
       }
+
+      const path = `/en/todo`
+
+      navigate(path)
     } catch (error: any) {
       console.log('sendwork failed. ', error.message)
     }
