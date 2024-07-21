@@ -324,7 +324,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                   {formatshortdate(workData?.Registerdate)}
                 </Typography>
                 <Typography className='text-xs mt-2'>Subject:</Typography>
-                <Typography className='font-semibold text-slate-900'>{workData.subject}</Typography>
+                <Typography className='font-semibold text-slate-900 text-left'>{workData.subject}</Typography>
               </div>
               {/* <div className='flex-1 flex flex-col items-start justify-end'> */}
               <div className='flex-none w-59 flex flex-col'>

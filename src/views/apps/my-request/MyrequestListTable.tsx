@@ -248,7 +248,11 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
               <Typography color='text.primary' className='font-medium'>
                 {row.original.subject}
               </Typography>
-              <div className='flex flex-col'>
+              <Typography variant='body2' color='text.disabled'>
+                Request Date : {formatshortdate(row.original.createdate)}
+              </Typography>
+
+              {/* <div className='flex flex-col'>
                 <div>
                   <Typography color='text.primary' className='font-xs text-slate-400'>
                     {row.original.routename}
@@ -262,7 +266,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
                     <Chip variant='tonal' size='small' label={row.original.currentdeptname} color='info' />
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           </Link>
         )
@@ -272,34 +276,36 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
         cell: ({ row }) => (
           <>
             <Typography color='text.primary' className='font-medium'>
-              {' '}
-              {row.original.processname}{' '}
+              {row.original.processname}
             </Typography>
-            <Typography className='font-sm'> Recived Date : {formatshortdate(row.original.datein)}</Typography>
+            <Typography variant='body2' color='text.disabled'>
+              Received Date : {formatshortdate(row.original.datein)}
+            </Typography>
           </>
         )
       }),
-      columnHelper.accessor('createdate', {
-        header: 'Request Date',
-        cell: ({ row }) => (
-          <Link
-            href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <Typography className='capitalize' color='text.primary'>
-                {formatshortdate(row.original.createdate)}
-              </Typography>
-            </div>
-          </Link>
-        )
-      }),
+
+      // columnHelper.accessor('createdate', {
+      //   header: 'Request Date',
+      //   cell: ({ row }) => (
+      //     <Link
+      //       href={{
+      //         pathname: '/en/work',
+      //         query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
+      //       }}
+      //     >
+      //       <div className='flex items-center gap-2'>
+      //         <Typography className='capitalize' color='text.primary'>
+      //           {formatshortdate(row.original.createdate)}
+      //         </Typography>
+      //       </div>
+      //     </Link>
+      //   )
+      // }),
       columnHelper.accessor('action', {
         header: 'Tracking',
         cell: ({}) => (
-          <div className='flex items-center'>
+          <div className='text-center'>
             <IconButton onClick={() => userDrawerOpenHandle()}>
               <i className='tabler-route-scan text-[22px] text-textSecondary' />
             </IconButton>

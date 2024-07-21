@@ -317,11 +317,6 @@ const TodoListTable = ({ tableData, depData }: Props) => {
                 {row.original.subject}
               </Typography>
               <div className='flex flex-col'>
-                {/* {row.original.overdue ? (
-                  <Chip variant='tonal' sx={{ marginRight: 2 }} size='small' label='overdue' color='error' />
-                  ) : (
-                    ''
-                    )} */}
                 <div>
                   <Typography color='text.primary' className='font-xs text-slate-400'>
                     {row.original.routename}
