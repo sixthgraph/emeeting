@@ -36,6 +36,7 @@ import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
 import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import axios from '@/utils/axios'
+import CreateDocumentTable from './CreateDocumentTable'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -297,7 +298,9 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                 }}
               />
             </TabPanel>
-            <TabPanel value='2'>Documents list</TabPanel>
+            <TabPanel value='2'>
+              <CreateDocumentTable />
+            </TabPanel>
           </CardContent>
         </Card>
       </TabContext>

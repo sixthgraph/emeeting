@@ -4,7 +4,7 @@
 import { useEffect, useState, useMemo } from 'react'
 
 // import { redirect } from 'next/navigation'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 import Link from 'next/link'
 
@@ -38,10 +38,10 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
-import type { DepType, UsersType } from '@/types/apps/userTypes'
+import type { UsersType } from '@/types/apps/userTypes'
 
 // Component Imports
-import TableFilters from './TableFilters'
+// import TableFilters from './TableFilters'
 
 // import UserDrawerForm from './UserDrawerForm'
 
@@ -50,8 +50,9 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
 import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
-import type { Locale } from '@configs/i18n'
+
+// import { getLocalizedUrl } from '@/utils/i18n'
+// import type { Locale } from '@configs/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
@@ -111,7 +112,7 @@ const DebouncedInput = ({
   return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
 }
 
-const depObj: DepType = {}
+// const depObj: DepType = {}
 
 // Vars
 // const initialData = {
@@ -154,8 +155,6 @@ const TodoListTable = ({ tableData, depData }: Props) => {
   console.log(tableData)
   console.log('depData =====')
   console.log(depData)
-
-  const router = useRouter()
 
   // Hooks
   const { lang: locale } = useParams()

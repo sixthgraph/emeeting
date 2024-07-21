@@ -28,7 +28,7 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
 // Type Imports
-import { Box, Button, CardActions, LinearProgress } from '@mui/material'
+import { Box, Button, CardActions, CardHeader, LinearProgress } from '@mui/material'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
@@ -38,6 +38,8 @@ import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import axios from '@/utils/axios'
 
 import WorkButton from './WorkButton'
+import FileUploaderMultiple from './FileUploaderMultiple'
+import DocumentListTable from '../workV2/DocumentListTable'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -396,7 +398,9 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                 }}
               />
             </TabPanel>
-            <TabPanel value='2'>Documents list</TabPanel>
+            <TabPanel value='2'>
+              <DocumentListTable />
+            </TabPanel>
             <TabPanel value='3'>
               {action.map((item: any) => {
                 return (
