@@ -153,13 +153,13 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
     }
   }
 
-  const githubLogin = async () => {
-    console.log('githubLogin start!')
-    await signIn('github', {
-      redirect: true,
-      callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
-    })
-  }
+  // const githubLogin = async () => {
+  //   console.log('githubLogin start!')
+  //   await signIn('github', {
+  //     redirect: true,
+  //     callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
+  //   })
+  // }
 
   return (
     <div className='flex bs-full justify-center'>

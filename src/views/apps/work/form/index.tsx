@@ -1,9 +1,8 @@
 // MUI Imports
 import Grid from '@mui/material/Grid'
 
-import type { ProfileTabType } from '@/types/pages/profileTypes'
 import type { WorkinfoType } from '@/types/apps/workType'
-import type { EFORM_DATA } from '@/types/apps/workType'
+
 // Component Imports
 
 import EformList from './EformList'

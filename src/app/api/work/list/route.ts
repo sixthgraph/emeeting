@@ -12,6 +12,9 @@ export async function POST(req: NextRequest) {
   const reqBody = await req.json()
   const { wid, dep, token, email, wip, workflowid, blockid } = reqBody
 
+  console.log(workflowid)
+  console.log(blockid)
+
   console.log('reqBody---')
   console.log(reqBody)
 
@@ -34,12 +37,12 @@ export async function POST(req: NextRequest) {
     // console.log('--workinprocess---')
     // console.log(workinprocess)
 
-    const dataObj = workinprocess.filter(item => {
+    const dataObj = workinprocess.filter((item: any) => {
       return item.id === wip //'6699081a5848117c8af11a20'
     })
 
     if (wip == '' || wip == null) {
-      const curwip = workinprocess.filter(item => {
+      const curwip = workinprocess.filter((item: any) => {
         //item.action == '', item.uid == email
         return item.action == ''
 

@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 
-import { lighten } from '@mui/material/styles'
-
 import { getServerSession } from 'next-auth'
 
 import { options } from '../../auth/[...nextauth]/options'

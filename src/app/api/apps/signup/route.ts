@@ -20,7 +20,9 @@ export async function POST(request: NextRequest) {
     }
 
     //hash password
+    // eslint-disable-next-line import/no-named-as-default-member
     const salt = await bcrypt.genSalt(10)
+    // eslint-disable-next-line import/no-named-as-default-member
     const hashedPassword = await bcrypt.hash(password, salt)
 
     const newUser = new User({

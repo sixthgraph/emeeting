@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-import { InputAdornment } from '@mui/material'
 
 import axios from 'axios'
 
@@ -73,12 +72,12 @@ const DepartmentDrawerForm = ({
   // const [isPasswordShown, setIsPasswordShown] = useState(false)
   // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  const handleRefresh = () => {
-    //router.reload()
-    setTimeout(() => {
-      window.location.reload()
-    }, 100)
-  }
+  // const handleRefresh = () => {
+  //   //router.reload()
+  //   setTimeout(() => {
+  //     window.location.reload()
+  //   }, 100)
+  // }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

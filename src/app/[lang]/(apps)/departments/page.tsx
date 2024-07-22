@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth'
 import axios from 'axios'
+
 import { options } from '@/app/api/auth/[...nextauth]/options'
 import DepartmentList from '@/views/apps/department/list'
 

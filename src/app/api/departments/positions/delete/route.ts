@@ -15,8 +15,10 @@ export async function POST(req: NextRequest) {
   const token = serverSession?.user.token
 
   const reqBody = await req.json()
+
   console.log('reqBody ======')
   console.log(reqBody)
+
   //const { formData } = reqBody
 
   try {

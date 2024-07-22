@@ -4,7 +4,8 @@ import axios from 'axios'
 
 import { options } from '@/app/api/auth/[...nextauth]/options'
 import PositionDepList from '@/views/apps/department/position/list'
-import { any } from 'zod'
+
+// import { any } from 'zod'
 
 const getData = async ({ dep }: { dep?: any }) => {
   const session = await getServerSession(options)
@@ -14,6 +15,7 @@ const getData = async ({ dep }: { dep?: any }) => {
       dep: dep,
       token: session?.user.token
     }
+
     const token = { token: session?.user.token }
 
     const headers = {
@@ -43,20 +45,14 @@ const positionDepPage = async ({ searchParams }: any) => {
   const positionDepData = data.data.detail
   const positionData = data.data.positions
   const depData = data.data.departments
+
   // console.log('data.data.deps===============')
   // console.log(data.data.departments)
   // console.log('end data.data.deps===============')
 
   // console.log('positionDepData====')
   // console.log(positionDepData)
-  return (
-    // <>
-    //   <h1>Position dep page</h1>
-    //   department id : {dep}
-    // </>
-
-    <PositionDepList positionDepData={positionDepData} positionData={positionData} depData={depData} />
-  )
+  return <PositionDepList positionDepData={positionDepData} positionData={positionData} depData={depData} />
 }
 
 export default positionDepPage

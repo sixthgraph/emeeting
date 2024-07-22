@@ -16,10 +16,8 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
-import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -66,7 +64,6 @@ import CustomTextField from '@core/components/mui/TextField'
 // import CustomAvatar from '@core/components/mui/Avatar'
 
 // // Util Imports
-import { getInitials } from '@/utils/getInitials'
 
 // import { getLocalizedUrl } from '@/utils/i18n'
 
@@ -83,8 +80,6 @@ declare module '@tanstack/table-core' {
 }
 
 // // Styled Components
-const Icon = styled('i')({})
-
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
   // Rank the item
@@ -160,7 +155,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
       desc: String(stateinfo.desc)
     }
   })
-  //console.log('stateinfoData === ', stateinfoData)
+
   depParentData?.map(depParent => {
     const id = String(depParent.dep)
 

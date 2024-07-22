@@ -1,6 +1,6 @@
 import { Poppins } from 'next/font/google'
 
-import { MuiAccordionSummary } from '@mui/material/AccordionSummary'
+// import { MuiAccordionSummary } from '@mui/material/AccordionSummary'
 
 /*
  * We recommend using the merged theme if you want to override our core theme.

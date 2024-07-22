@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+
 import axios from 'axios'
 
 export async function POST(req: NextRequest) {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
 
     if (positions.data.message === 'success') {
       response.data.data.positions = positions.data.data.detail
+
       // console.log(response.data)
       // console.log('end server reponse positions ==============================')
     }

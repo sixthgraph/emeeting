@@ -5,7 +5,7 @@ import type { SyntheticEvent } from 'react'
 
 // MUI Imports
 import Script from 'next/script'
-import { redirect, useParams, useSearchParams } from 'next/navigation'
+import { redirect, useParams } from 'next/navigation'
 
 import Link from 'next/link'
 
@@ -28,7 +28,7 @@ import type { AccordionProps } from '@mui/material/Accordion'
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
-import { Box, Button, CardActions, CardHeader, LinearProgress } from '@mui/material'
+import { Box, Button, CardActions, LinearProgress } from '@mui/material'
 
 import { navigate } from './redirect'
 
@@ -41,10 +41,7 @@ import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 // import { Formatshortdate } from '@/utils/hooks/datetime'
 import axios from '@/utils/axios'
 
-import WorkButton from './WorkButton'
-import FileUploaderMultiple from './FileUploaderMultiple'
 import DocumentListTable from '../workV2/DocumentListTable'
-import typography from '../../../components/themeV2/overrides/typography'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -104,6 +101,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     }
   })
 
+  console.log(session)
+
   const activity = workData.activity
   const action = []
   let j: any
@@ -128,10 +127,12 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   console.log('----condionData---')
   console.log(condionData)
 
-  const searchParams = useSearchParams()
-  const workflowid = searchParams.get('workflowid')
-  const blockid = searchParams.get('blockid')
-  const dep = searchParams.get('dep')
+  // const searchParams = useSearchParams()
+
+  // const workflowid = searchParams.get('workflowid')
+  // const blockid = searchParams.get('blockid')
+  // const dep = searchParams.get('dep')
+
   const [value, setValue] = useState('1')
 
   // const paramsData = {
@@ -228,33 +229,33 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     }
   }
 
-  const handlesendbackwork = async (formData: any) => {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, formData)
+  // const handlesendbackwork = async (formData: any) => {
+  //   try {
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, formData)
 
-      if (response.data.message === 'success') {
-        console.log('---Call sendbackwork success.------------------')
-      } else {
-        console.log(response.data.message)
-      }
-    } catch (error: any) {
-      console.log('Editwork failed. ', error.message)
-    }
-  }
+  //     if (response.data.message === 'success') {
+  //       console.log('---Call sendbackwork success.------------------')
+  //     } else {
+  //       console.log(response.data.message)
+  //     }
+  //   } catch (error: any) {
+  //     console.log('Editwork failed. ', error.message)
+  //   }
+  // }
 
-  const handlerejectwork = async (formData: any) => {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/rejet`, formData)
+  // const handlerejectwork = async (formData: any) => {
+  //   try {
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/rejet`, formData)
 
-      if (response.data.message === 'success') {
-        console.log('---Call rejectwork success.------------------')
-      } else {
-        console.log(response.data.message)
-      }
-    } catch (error: any) {
-      console.log('Editwork failed. ', error.message)
-    }
-  }
+  //     if (response.data.message === 'success') {
+  //       console.log('---Call rejectwork success.------------------')
+  //     } else {
+  //       console.log(response.data.message)
+  //     }
+  //   } catch (error: any) {
+  //     console.log('Editwork failed. ', error.message)
+  //   }
+  // }
 
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 

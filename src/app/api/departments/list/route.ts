@@ -1,9 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+
 import axios from 'axios'
-import { getServerSession } from 'next-auth'
-import { options } from '../../auth/[...nextauth]/options'
-import { stepClasses } from '@mui/material'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
@@ -22,8 +20,10 @@ export async function POST(req: NextRequest) {
     const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getdepartmentlist`, { headers })
     const stateinfores = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getstateinfo`, { headers })
     const depPartents = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
+
     if (stateinfores.data.message === 'success') {
       response.data.data.stateinfos = stateinfores.data.data.detail
+
       // console.log('server reponse stateinfores ==============================')
       //console.log(stateinfores.data.data.detail)
       // console.log(response.data)
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
 
     if (depPartents.data.message === 'success') {
       response.data.data.depPartents = depPartents.data.data.detail
+
       // console.log('server reponse depParent ==============================')
       // console.log(depPartents.data.data.detail)
       // console.log(response.data)

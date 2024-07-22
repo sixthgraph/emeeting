@@ -1,5 +1,4 @@
 // Type Imports
-import type { ThemeColor } from '@core/types'
 
 export type DepartmentsType = {
   dep: string

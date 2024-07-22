@@ -51,5 +51,5 @@ class FormBuilder extends Component {
   }
 }
 
-// eslint-disable-next-line react/no-deprecated
+// eslint-disable-next-line react/no-deprecated, import/no-named-as-default-member
 ReactDOM.render(<FormBuilder />, $('#form-render'))

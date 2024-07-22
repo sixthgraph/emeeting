@@ -14,9 +14,6 @@ import Chip from '@mui/material/Chip'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 
-import Switch from '@mui/material/Switch'
-import { FormControlLabel } from '@mui/material'
-
 // Component Imports
 import DialogCloseButton from '../DialogCloseButton'
 import CustomTextField from '@core/components/mui/TextField'
