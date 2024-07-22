@@ -44,6 +44,7 @@ import axios from '@/utils/axios'
 import WorkButton from './WorkButton'
 import FileUploaderMultiple from './FileUploaderMultiple'
 import DocumentListTable from '../workV2/DocumentListTable'
+import typography from '../../../components/themeV2/overrides/typography'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -104,13 +105,23 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   })
 
   const activity = workData.activity
-  let action = []
+  const action = []
   let j: any
   const elem: any = activity
 
+  console.log('---activity---')
+  console.log(activity)
+
   for (j in elem) {
-    action = elem[j].actions
+    const newData = { blockId: elem[j].blockId, acitons: elem[j].actions }
+
+    action.push(newData)
+
+    //action = elem[j].actions
   }
+
+  console.log('----action---')
+  console.log(action)
 
   console.log('----workData---')
   console.log(workData)
@@ -410,12 +421,35 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               <DocumentListTable />
             </TabPanel>
             <TabPanel value='3'>
-              {action.map((item: any) => {
+              {activity.map((item: any) => {
+                const itemBlockId = item.blockId
+                const itemActions = item.actions
+
+                let date = ''
+                let user = ''
+                let detail = ''
+
+                itemActions.map((itemAction: any) => {
+                  console.log('itemAction===')
+                  console.log(itemBlockId)
+                  console.log(itemAction.Date)
+                  console.log(itemAction.user)
+                  console.log(itemAction.detail)
+                  console.log('--------------')
+
+                  //date = itemBlockId
+                  date = itemAction.Date
+                  user = itemAction.user
+                  detail = itemAction.detail
+                })
+
                 return (
-                  <div key={item.Date}>
-                    <Typography>{item.Date}</Typography>
-                    <Typography>{item.user}</Typography>
-                    <Typography>{item.detail}</Typography>
+                  <div key={item.blockId}>
+                    {item.blockId}
+
+                    {/* <Typography>{date}</Typography>
+                    <Typography>{user}</Typography>
+                    <Typography>{detail}</Typography> */}
                   </div>
                 )
               })}
@@ -438,13 +472,24 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               p: 2
             }}
           >
-            <Button variant='contained' onClick={() => handleEditwork()} className='mr-2' color='info' type='submit'>
-              Save
-            </Button>
+            {condionData && (
+              <>
+                <Button
+                  variant='contained'
+                  onClick={() => handleEditwork()}
+                  className='mr-2'
+                  color='info'
+                  type='submit'
+                >
+                  Save
+                </Button>
 
-            <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
-              Finish
-            </Button>
+                <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                  Finish
+                </Button>
+              </>
+            )}
+
             <Link href={'/en/todo'}>
               <Button variant='contained' color='inherit'>
                 close
