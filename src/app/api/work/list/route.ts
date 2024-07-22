@@ -39,16 +39,33 @@ export async function POST(req: NextRequest) {
     })
 
     if (wip == '' || wip == null) {
-      const resnp2 = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${workflowid}/startpoint`, {
-        headers
+      const curwip = workinprocess.filter(item => {
+        //item.action == '', item.uid == email
+        return item.action == ''
+
+        //return item
       })
 
-      const condata = resnp2.data
+      console.log('---curwip--')
+      console.log(curwip)
 
-      workinfo.workflowid = workinfo.workinprocess[0].rid
-      workinfo.blockid = 'startpoint'
-      workinfo.curuid = workinfo.workinprocess[0].uid
-      workinfo.curdep = workinfo.workinprocess[0].dep
+      workinfo.workflowid = curwip[0].rid
+      workinfo.blockid = curwip[0].pid
+      workinfo.curuid = curwip[0].uid
+      workinfo.curdep = curwip[0].dep
+
+      const resnp2 = await axios.get(
+        `${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${curwip[0].rid}/${curwip[0].pid}`,
+        {
+          headers
+        }
+      )
+
+      let condata = resnp2.data
+
+      if (curwip[0].uid !== email) {
+        condata = null
+      }
 
       const response2 = NextResponse.json({
         message: res.data.message,
