@@ -18,6 +18,7 @@ export type MyrequestType = {
   workflowid: string
   routename: string
   datein: string
+  workinprocessid: string
 }
 
 export type MyrequestTypeWithAction = MyrequestType & {

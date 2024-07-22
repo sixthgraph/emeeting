@@ -246,13 +246,9 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
           >
             <div className='flex flex-col '>
               <Typography color='text.primary' className='font-medium'>
-                {row.original.subject}
+                {row.original.subject ? row.original.subject : '-'}
               </Typography>
-              <Typography variant='body2' color='text.disabled'>
-                Request Date : {formatshortdate(row.original.createdate)}
-              </Typography>
-
-              {/* <div className='flex flex-col'>
+              <div className='flex flex-col'>
                 <div>
                   <Typography color='text.primary' className='font-xs text-slate-400'>
                     {row.original.routename}
@@ -260,13 +256,43 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
                 </div>
                 <div className=''>
                   {row.original.status && (
-                    <Chip variant='tonal' size='small' className='mr-2' label={row.original.status} color='warning' />
+                    <Chip
+                      variant='tonal'
+                      size='small'
+                      title='Work type'
+                      className='mr-2'
+                      label={row.original.status}
+                      color='warning'
+                    />
                   )}
                   {row.original.currentdeptname && (
-                    <Chip variant='tonal' size='small' label={row.original.currentdeptname} color='info' />
+                    <Chip
+                      variant='tonal'
+                      size='small'
+                      title='Request by Department'
+                      label={row.original.currentdeptname}
+                      color='info'
+                    />
                   )}
                 </div>
-              </div> */}
+              </div>
+            </div>
+          </Link>
+        )
+      }),
+      columnHelper.accessor('createdate', {
+        header: 'Request Date',
+        cell: ({ row }) => (
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
+            }}
+          >
+            <div className='flex items-center gap-2'>
+              <Typography className='capitalize' color='text.primary'>
+                {formatshortdate(row.original.createdate)}
+              </Typography>
             </div>
           </Link>
         )
@@ -278,30 +304,13 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
             <Typography color='text.primary' className='font-medium'>
               {row.original.processname}
             </Typography>
-            <Typography variant='body2' color='text.disabled'>
-              Received Date : {formatshortdate(row.original.datein)}
+            <Typography variant='body2' color='text.disabled' title='Received Date'>
+              {formatshortdate(row.original.datein)}
             </Typography>
           </>
         )
       }),
 
-      // columnHelper.accessor('createdate', {
-      //   header: 'Request Date',
-      //   cell: ({ row }) => (
-      //     <Link
-      //       href={{
-      //         pathname: '/en/work',
-      //         query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
-      //       }}
-      //     >
-      //       <div className='flex items-center gap-2'>
-      //         <Typography className='capitalize' color='text.primary'>
-      //           {formatshortdate(row.original.createdate)}
-      //         </Typography>
-      //       </div>
-      //     </Link>
-      //   )
-      // }),
       columnHelper.accessor('action', {
         header: 'Tracking',
         cell: ({}) => (
@@ -403,7 +412,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search Todo'
+              placeholder='Search My Request'
               className='is-full sm:is-auto'
             />
           </div>

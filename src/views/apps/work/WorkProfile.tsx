@@ -421,35 +421,22 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               <DocumentListTable />
             </TabPanel>
             <TabPanel value='3'>
-              {activity.map((item: any) => {
-                const itemBlockId = item.blockId
-                const itemActions = item.actions
+              {/* {activityBlockName} */}
 
-                let date = ''
-                let user = ''
-                let detail = ''
-
-                itemActions.map((itemAction: any) => {
-                  console.log('itemAction===')
-                  console.log(itemBlockId)
-                  console.log(itemAction.Date)
-                  console.log(itemAction.user)
-                  console.log(itemAction.detail)
-                  console.log('--------------')
-
-                  //date = itemBlockId
-                  date = itemAction.Date
-                  user = itemAction.user
-                  detail = itemAction.detail
-                })
-
+              {activity.map((item: any, index: any) => {
                 return (
-                  <div key={item.blockId}>
-                    {item.blockId}
-
-                    {/* <Typography>{date}</Typography>
-                    <Typography>{user}</Typography>
-                    <Typography>{detail}</Typography> */}
+                  <div key={index}>
+                    <h3>{item.blockId}</h3>
+                    {item.actions.map((act: any, ind: any) => {
+                      return (
+                        <div key={ind}>
+                          <Typography>{act.user}</Typography>
+                          <Typography>{formatshortdate(act.Date)}</Typography>
+                          <Typography>{act.detail}</Typography>
+                          <Typography>-----</Typography>
+                        </div>
+                      )
+                    })}
                   </div>
                 )
               })}
