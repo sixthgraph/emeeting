@@ -63,11 +63,7 @@ import CustomTextField from '@core/components/mui/TextField'
 
 // import CustomAvatar from '@core/components/mui/Avatar'
 
-// // Util Imports
-
-// import { getLocalizedUrl } from '@/utils/i18n'
-
-// // Style Imports
+// Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
 declare module '@tanstack/table-core' {

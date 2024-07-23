@@ -1,28 +1,19 @@
 'use client'
 
-// // React Imports
 import { useEffect, useState, useMemo } from 'react'
 
-// // Next Imports
-// // import Link from 'next/link'
-// // import { useParams } from 'next/navigation'
-
-// // MUI Imports
-// // import { NextResponse } from 'next/server'
+import { useSearchParams } from 'next/navigation'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
-import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 
-// // Third-party Imports
 import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -39,39 +30,19 @@ import {
 } from '@tanstack/react-table'
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-
-// // Type Imports
 import axios from 'axios'
 
-// import type { Locale } from '@configs/i18n'
-
 import TablePaginationComponent from '@components/TablePaginationComponent'
-
-// import type { ThemeColor } from '@core/types'
 import type {
   PositionsDepType,
   PositionsDepTypeWithAction,
-  PositionsType,
   DepType,
   PositionFilterType
 } from '@/types/apps/positionTypes'
 
-// // Component Imports
-//import TableFilters from './TableFilters'
 import GroupDrawerForm from './PositionDepDrawerForm'
-
 import CustomTextField from '@core/components/mui/TextField'
-// import CustomAvatar from '@core/components/mui/Avatar'
-
-// // Util Imports
-import { getInitials } from '@/utils/getInitials'
-// import { getLocalizedUrl } from '@/utils/i18n'
-
-// // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { integer, null_ } from 'valibot'
-import { useSearchParams } from 'next/navigation'
-import { any } from 'zod'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -88,18 +59,18 @@ const handleRefresh = () => {
     window.location.reload()
   }, 100)
 }
-// // Styled Components
-const Icon = styled('i')({})
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
-  //   // Store the itemRank info
+
+  // Store the itemRank info
   addMeta({
     itemRank
   })
-  //   // Return if the item should be filtered in/out
+
+  // Return if the item should be filtered in/out
   return itemRank.passed
 }
 
@@ -162,15 +133,12 @@ type Props = {
 
 const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   const searchParams = useSearchParams()
-  var depID = searchParams.get('dep')
+  let depID = searchParams.get('dep')
 
   if (depID == null) {
     depID = ''
   }
 
-  // console.log('tableData 222222')
-  //console.log(depID)
-  //console.log(tableData)
   positionData?.map(position => {
     const id = String(position.positioncode)
 
@@ -183,7 +151,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
       remark: String(position.remark)
     }
   })
-  //console.log('positionData === ', positionData)
+
   depData?.map(department => {
     const id = String(department.dep)
 
@@ -204,23 +172,15 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
 
   const [globalFilter, setGlobalFilter] = useState('')
 
-  // const [updateData, setUpdateData] = useState(...[initialData])
-
-  //console.log('table data =', data)
-  //console.log('position data =', data)
-
-  // Hooks
-  //const { lang: locale } = useParams()
-
   const PositionDepDrawerOpenHandle = () => {
-    var level = '0'
-    var datalength = 0
-    var deppath = ''
+    let level = '0'
+    let deppath = ''
+
     if (tableData?.length) {
-      datalength = tableData?.length
       level = ''
 
       const index = tableData?.findIndex(x => x.dep == String(depID))
+
       deppath = tableData[Number(index)].path
     }
 
@@ -307,6 +267,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
           />
         )
       },
+
       // columnHelper.accessor('dep', {
       //   header: 'Dep',
       //   cell: ({ row }) => (
@@ -327,6 +288,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
           </div>
         )
       }),
+
       // columnHelper.accessor('path', {
       //   header: 'Path',
       //   cell: ({ row }) => (
@@ -377,6 +339,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
           </div>
         )
       }),
+
       // columnHelper.accessor('positionref', {
       //   header: 'Positionref',
       //   cell: ({ row }) => (
@@ -410,13 +373,16 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
                 initialData.positionlevel = row.original.positionlevel
                 initialData.positionpath = row.original.positionpath
                 initialData.positionref = row.original.positionref
-                var parentpath = row.original.positionpath.split(',')
-                var parent = ''
+
+                const parentpath = row.original.positionpath.split(',')
+                let parent = ''
+
                 parent = parentpath[parentpath.length - 2]
                 initialData.positionparent = parent
 
-                var deppath = row.original.path.split(',')
-                var depparent = ''
+                const deppath = row.original.path.split(',')
+                let depparent = ''
+
                 depparent = deppath[deppath.length - 2]
                 initialData.depparent = depparent
 
@@ -585,4 +551,5 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
     </>
   )
 }
+
 export default PositionDepListTable

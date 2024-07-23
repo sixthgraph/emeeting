@@ -1,43 +1,34 @@
 // React Imports
 import { useEffect, useState } from 'react'
 
-// MUI Imports
-//import { NextResponse } from 'next/server'
-//import { useRouter, useParams } from 'next/navigation'
+//import { useParams, useSearchParams } from 'next/navigation'
 
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 
-import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-import { InputAdornment } from '@mui/material'
 
-// Third-party Imports
-import { Controller, useForm } from 'react-hook-form'
-import { valibotResolver } from '@hookform/resolvers/valibot'
-import type { SubmitHandler } from 'react-hook-form'
-import type { Input } from 'valibot'
-import classnames from 'classnames'
+//import type { SubmitHandler } from 'react-hook-form'
 
 import axios from 'axios'
 
 // import { any } from 'zod'
 
+import { useSession } from 'next-auth/react'
+
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { StateinfoFormDataType, StateinfosType } from '@/types/apps/stateinfoTypes'
-import { useSession } from 'next-auth/react'
-import router, { useRouter } from 'next/router'
-import { StateinfoFormSchema } from '@/schemas/stateinfoSchema'
-import { useParams, useSearchParams } from 'next/navigation'
+
+//import type { StateinfoFormSchema } from '@/schemas/stateinfoSchema'
 
 // Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-import { Locale } from '@/configs/i18n'
+//import { getLocalizedUrl } from '@/utils/i18n'
+//import type { Locale } from '@/configs/i18n'
 
 type Props = {
   open: boolean
@@ -47,11 +38,11 @@ type Props = {
   handleClose: () => void
 }
 
-type FormData = Input<typeof StateinfoFormSchema>
+//type FormData = Input<typeof StateinfoFormSchema>
 
-type ErrorType = {
-  message: string[]
-}
+// type ErrorType = {
+//   message: string[]
+// }
 
 // Vars
 const initialData = {
@@ -69,15 +60,14 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
   //const router = useRouter()
   //const params = useParams()
   //const { lang: locale } = params
-  const searchParams = useSearchParams()
-  const { lang: locale } = useParams()
+  // const searchParams = useSearchParams()
+  // const { lang: locale } = useParams()
 
   // States
   const [formData, setFormData] = useState<StateinfoFormDataType>(initialData)
-  //const [errors, setErrors] = useState<any[]>([])
-  const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
-  const [signupStatus, setSignupStatus] = useState<string>('')
+  //const [errors, setErrors] = useState<any[]>([])
+  //const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
   const { data: session } = useSession()
   const emailData = session?.user.email
@@ -89,31 +79,111 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
     }, 100)
   }
 
-  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-    try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, {
-        statecode: data.statecode,
-        desc: data.desc,
-        redirect: false
-      })
+  // const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+  //   try {
+  //     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, {
+  //       statecode: data.statecode,
+  //       desc: data.desc,
+  //       redirect: false
+  //     })
 
-      if (res && res.data.success) {
-        const redirectURL = searchParams.get('redirectTo') ?? '/stateinfo'
+  //     if (res && res.data.success) {
+  //       const redirectURL = searchParams.get('redirectTo') ?? '/stateinfo'
 
-        router.push(getLocalizedUrl(redirectURL, locale as Locale))
-      }
-    } catch (error: any) {
-      // console.log('error === ', error)
+  //       router.push(getLocalizedUrl(redirectURL, locale as Locale))
+  //     }
+  //   } catch (error: any) {
+  //     // console.log('error === ', error)
 
-      if (error) {
-        //setErrorState(error.response.data)
-        console.log(error.response.data.error)
-        setSignupStatus(error.response.data.error)
-      }
-    }
-  }
+  //     if (error) {
+  //       //setErrorState(error.response.data)
+  //       console.log(error.response.data.error)
+  //       setSignupStatus(error.response.data.error)
+  //     }
+  //   }
+  // }
 
-  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault()
+
+  //   setFormData(initialData)
+
+  //   //Add
+  //   try {
+  //     formData.create_by = String(emailData)
+  //     formData.update_by = String(emailData)
+
+  //     //====const parsedData = StateinfoFormSchema.safeParse(formData)
+
+  //     // if (!parsedData.success) {
+  //     //   const errArr: any[] = []
+  //     //   const { errors: err } = parsedData.error
+
+  //     //   //sg here
+  //     //   for (let i = 0; i < err.length; i++) {
+  //     //     errArr.push({ for: err[i].path[0], message: err[i].message })
+  //     //     setErrors(errArr)
+  //     //   }
+
+  //     //   setErrors(errArr)
+
+  //     //   throw err
+  //     // }
+
+  //     // console.log('Form submitted successfully', parsedData.data)
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, formData)
+
+  //     console.log('Add response===', response.data)
+
+  //     if (response.data.success) {
+  //       console.log('Add success')
+
+  //       if (tableData) {
+  //         const addData: any = {
+  //           statecode: formData.statecode,
+  //           desc: formData.desc,
+  //           ref: formData.ref,
+  //           remark: formData.remark,
+  //           create_date: '',
+  //           create_by: emailData,
+  //           update_date: '',
+  //           update_by: emailData
+  //         }
+
+  //         console.log('add ====' + emailData)
+
+  //         console.log(addData)
+
+  //         //tableData.push(addData)
+  //         tableData.push(addData)
+  //       }
+
+  //       console.log(tableData)
+
+  //       setData(tableData)
+  //       handleClose()
+  //       handleRefresh()
+  //     } else {
+  //       console.log('add failed.')
+  //     }
+  //   } catch (error: any) {
+  //     console.log('Add stateinfo failed. ', error.message)
+  //   }
+  // }
+
+  // const {
+  //   control,
+  //   handleSubmit,
+  //   formState: { errors }
+  // } = useForm<FormData>({
+  //   resolver: valibotResolver(StateinfoFormSchema),
+  //   defaultValues: {
+  //     statecode: '',
+  //     desc: ''
+  //   }
+  // })
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setFormData(initialData)
@@ -122,6 +192,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
     try {
       formData.create_by = String(emailData)
       formData.update_by = String(emailData)
+
       //====const parsedData = StateinfoFormSchema.safeParse(formData)
 
       // if (!parsedData.success) {
@@ -158,6 +229,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
             update_date: '',
             update_by: emailData
           }
+
           console.log('add ====' + emailData)
 
           console.log(addData)
@@ -178,18 +250,6 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
       console.log('Add stateinfo failed. ', error.message)
     }
   }
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<FormData>({
-    resolver: valibotResolver(StateinfoFormSchema),
-    defaultValues: {
-      statecode: '',
-      desc: ''
-    }
-  })
 
   //Reset
   const handleReset = () => {
@@ -213,7 +273,9 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
         handleClose()
 
         const index = tableData?.findIndex(x => x.statecode == formData.statecode)
+
         console.log('index=>' + index)
+
         if (tableData) {
           //const newUpdate = { ...tableData[Number(foundIndex)], formData }
           // tableData[Number(index)].password = formData.password
@@ -282,7 +344,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
             )}
           /> */}
         {/* {errors.find(error => error.for === 'statecode')?.message} */}
-        <form autoComplete='off' onSubmit={handleOnSubmit} className='flex flex-col gap-6 p-6'>
+        <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           <CustomTextField
             label='Statecode'
             fullWidth

@@ -1,10 +1,6 @@
 // React Imports
 import { useEffect, useState } from 'react'
 
-// MUI Imports
-//import { NextResponse } from 'next/server'
-//import { useRouter, useParams } from 'next/navigation'
-
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
@@ -14,21 +10,12 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-import { InputAdornment } from '@mui/material'
 
 import axios from 'axios'
-
-// import { any } from 'zod'
-
-// import { any } from 'zod'
 
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { DepType, PositionDepFormDataType, PositionFilterType, PositionsDepType } from '@/types/apps/positionTypes'
-import { addPositionDepFormSchema } from '@/schemas/positionSchema'
-import { useSession } from 'next-auth/react'
-import router, { useRouter } from 'next/router'
-import { integer } from 'valibot'
 
 type Props = {
   open: boolean
@@ -63,10 +50,12 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
 
   // States
   const [formData, setFormData] = useState<PositionDepFormDataType>(initialData)
+
   const [errors, setErrors] = useState<any[]>([])
 
+  setErrors([])
+
   const handleRefresh = () => {
-    //router.reload()
     setTimeout(() => {
       window.location.reload()
     }, 100)
@@ -80,7 +69,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
     //Add
     try {
       //formdata for add
-      var positionlevel = parseInt(formData.positionlevel, 10)
+      const positionlevel = parseInt(formData.positionlevel, 10)
 
       const newData: any = {
         dep: formData.dep,
@@ -153,7 +142,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
   //Update
   const handleUpdateData = async () => {
     try {
-      var positionlevel = parseInt(formData.positionlevel, 10)
+      const positionlevel = parseInt(formData.positionlevel, 10)
 
       const newData: any = {
         dep: formData.dep,
@@ -161,6 +150,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
         level: positionlevel,
         path: formData.positionpath
       }
+
       const response = await axios.post('/api/departments/positions/update', newData)
 
       console.log('position formdate=====')
@@ -197,14 +187,17 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
     setFormData(updateData)
   }, [open, updateData])
 
-  const getParentPositionPath = (parentData: String) => {
-    var path = ''
-    var level = '1'
+  const getParentPositionPath = (parentData: any) => {
+    let path = ''
+    let level = '1'
+
     if (tableData?.length) {
       const index = tableData?.findIndex(x => x.positioncode == String(parentData))
+
       path = tableData[Number(index)].positionpath
       level = tableData[Number(index)].positionlevel + 1
     }
+
     return { path: path, level: level }
   }
 

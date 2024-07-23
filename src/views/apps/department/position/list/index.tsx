@@ -1,7 +1,9 @@
 import Grid from '@mui/material/Grid'
 
 // Type Imports
-import type { DepType, PositionFilterType, PositionsDepType, PositionsType } from '@/types/apps/positionTypes'
+//import type { DepType, PositionFilterType, PositionsDepType, PositionsType } from '@/types/apps/positionTypes'
+
+import type { DepType, PositionFilterType, PositionsDepType } from '@/types/apps/positionTypes'
 
 // Component Imports
 import PositionDepListTable from './PositionDepListTable'

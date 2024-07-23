@@ -5,29 +5,24 @@ import { useEffect, useState } from 'react'
 //import { NextResponse } from 'next/server'
 //import { useRouter, useParams } from 'next/navigation'
 
+//import router, { useRouter } from 'next/router'
+
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 
-import MenuItem from '@mui/material/MenuItem'
+//import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
-// Component Imports
-import { InputAdornment } from '@mui/material'
-
 import axios from 'axios'
 
-// import { any } from 'zod'
-
-// import { any } from 'zod'
+import { useSession } from 'next-auth/react'
 
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { PositionFormDataType, PositionsType } from '@/types/apps/positionTypes'
 import { addPositionFormSchema } from '@/schemas/positionSchema'
-import { useSession } from 'next-auth/react'
-import router, { useRouter } from 'next/router'
 
 type Props = {
   open: boolean

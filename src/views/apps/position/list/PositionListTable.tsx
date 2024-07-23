@@ -14,10 +14,10 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
+
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
-import { styled } from '@mui/material/styles'
+
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -55,10 +55,12 @@ import type { PositionsType, PositionsTypeWithAction } from '@/types/apps/positi
 import GroupDrawerForm from './PositionDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
+
 // import CustomAvatar from '@core/components/mui/Avatar'
 
 // // Util Imports
-import { getInitials } from '@/utils/getInitials'
+//import { getInitials } from '@/utils/getInitials'
+
 // import { getLocalizedUrl } from '@/utils/i18n'
 
 // // Style Imports
@@ -79,17 +81,20 @@ const handleRefresh = () => {
     window.location.reload()
   }, 100)
 }
+
 // // Styled Components
-const Icon = styled('i')({})
+//const Icon = styled('i')({})
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
+
   //   // Store the itemRank info
   addMeta({
     itemRank
   })
+
   //   // Return if the item should be filtered in/out
   return itemRank.passed
 }
@@ -186,8 +191,6 @@ const PositionListTable = ({ tableData }: Props) => {
 
         // //todo update tableData
         const em: any = positioncode
-        console.log('==== look positioncode')
-        console.log(positioncode)
 
         const newUpdate = tableData?.filter(el => el.positioncode !== em.positioncode)
 
@@ -274,6 +277,7 @@ const PositionListTable = ({ tableData }: Props) => {
           </div>
         )
       }),
+
       //   columnHelper.accessor('ref', {
       //     header: 'Ref',
       //     cell: ({ row }) => (
@@ -477,4 +481,5 @@ const PositionListTable = ({ tableData }: Props) => {
     </>
   )
 }
+
 export default PositionListTable
