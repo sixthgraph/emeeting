@@ -445,8 +445,9 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                           <TimelineContent>
                             <Card>
                               <CardContent>
-                                <Typography variant='h5' className='mbe-4'>
-                                  {item.blockId}
+                                <Typography variant='h5' className='mbe-4 text-left'>
+                                  {/* {item.blockId} */}
+                                  {item.actions[0].processname}
                                 </Typography>
 
                                 {item.actions.map((act: any, ind: any) => {
@@ -460,13 +461,13 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                                     <div key={ind} className='flex gap-5 flex-col'>
                                       {curUser !== act.user && (
                                         <div className='flex items-center gap-2.5'>
-                                          <CustomAvatar src='/images/avatars/1.png' size={32} />
+                                          <CustomAvatar src={act.avatar} size={32} />
                                           <div className='flex flex-col flex-wrap '>
                                             <Typography variant='body2' className='font-medium'>
-                                              {act.user}
+                                              {act.name}
                                             </Typography>
                                             <Typography variant='body2' className='text-left'>
-                                              CEO of Pixinvent
+                                              {act.depname} / {act.positionname}
                                             </Typography>
                                           </div>
                                         </div>

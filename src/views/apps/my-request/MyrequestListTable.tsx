@@ -38,6 +38,8 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 import { IconButton } from '@mui/material'
 
+import { useSession } from 'next-auth/react'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import type { MyrequestType, MyrequestTypeWithAction } from '@/types/apps/myrequestTypes'
 
@@ -56,6 +58,7 @@ import CustomTextField from '@core/components/mui/TextField'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 import TrackingDrawerInfo from '../new-request/list/TrackingDrawerInfo'
+import axios from '@/utils/axios'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -149,70 +152,70 @@ type Props = {
 }
 
 const MyrequestListTable = ({ tableData, depData }: Props) => {
-  console.log('tableData =====')
-  console.log(tableData)
+  // console.log('tableData =====')
+  // console.log(tableData)
 
   console.log('depData ===')
   console.log(depData)
 
-  // const router = useRouter()
+  const { data: session } = useSession()
 
   // Hooks
   const { lang: locale } = useParams()
-
-  // depData?.map(dep => {
-  //   const id = String(dep.dep)
-
-  //   depObj[id] = {
-  //     dep: String(dep.dep),
-  //     depname: String(dep.depname),
-  //     docuname: Number(dep.docuname),
-  //     path: String(dep.path),
-  //     sort: Number(dep.sort),
-  //     statecode: String(dep.statecode)
-  //   }
-  // })
-
-  // console.log('depObj==')
-  // console.log(depObj)
-
-  console.log('tableData === ')
-  console.log(tableData)
 
   // States
   //const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
+  const [activityData, setActivityData] = useState([])
+  const [workInfo, setWorkInfo] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [trackingOpen, setTrackingOpen] = useState(false)
 
-  // Vars
-  const initialData = {
-    fullName: '',
-    username: '',
-    password: '',
-    email: '',
-    company: '',
-    country: '',
-    contact: '',
-    role: '',
-    plan: '',
-    status: ''
+  const getData = async ({ wid, dep }: { wid?: any; dep?: any }) => {
+    // Vars
+    // const session = await getServerSession(options)
+
+    try {
+      const reqBody = {
+        wid: wid,
+        dep: dep,
+        token: session?.user.token,
+        email: session?.user.email
+      }
+
+      const headers = {
+        Authorization: `Bearer ${reqBody.token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/list`, reqBody, { headers })
+
+      if (response.data.message === 'success') {
+        return response
+      } else {
+        throw new Error('Failed to fetch workdata')
+      }
+    } catch (err: any) {
+      console.log('--work/list response ---')
+      console.log(err)
+
+      throw new Error(err.message)
+    }
   }
 
-  const userDrawerOpenHandle = () => {
-    // initialData = {
-    //   fullName: '',
-    //   username: '',
-    //   password: '',
-    //   email: '',
-    //   company: '',
-    //   country: '',
-    //   contact: '',
-    //   role: '',
-    //   plan: '',
-    //   status: ''
-    // }
+  const userDrawerOpenHandle = async (wid: any, dep: any, subject: any) => {
+    const res = await getData({ wid, dep })
+
+    const activity = res.data.data.activity
+    const work: any = { wid: wid, subject: subject }
+
+    setWorkInfo(work)
+
+    setActivityData(activity)
+
     setTrackingOpen(true)
   }
 
@@ -312,10 +315,21 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
       }),
 
       columnHelper.accessor('action', {
-        header: 'Tracking',
-        cell: ({}) => (
+        header: () => (
+          <div
+            style={{
+              textAlign: 'center'
+            }}
+          >
+            Tracking
+          </div>
+        ),
+
+        cell: ({ row }) => (
           <div className='text-center'>
-            <IconButton onClick={() => userDrawerOpenHandle()}>
+            <IconButton
+              onClick={() => userDrawerOpenHandle(row.original.wid, row.original.currentdept, row.original.subject)}
+            >
               <i className='tabler-route-scan text-[22px] text-textSecondary' />
             </IconButton>
           </div>
@@ -396,7 +410,6 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
     <>
       <Card>
         <CardHeader title='My Request' className='pbe-4' />
-        {/* <TableFilters depData={depData} setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -493,7 +506,8 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
       </Card>
       <TrackingDrawerInfo
         open={trackingOpen}
-        trackingData={initialData}
+        trackingData={activityData}
+        workInfo={workInfo}
         handleClose={() => setTrackingOpen(!trackingOpen)}
       />
     </>
