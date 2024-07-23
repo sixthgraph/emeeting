@@ -50,7 +50,7 @@ const getData = async ({
     } else {
       throw new Error('Failed to fetch workdata')
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log('--work/list response ---')
     console.log(err)
 
@@ -62,9 +62,9 @@ const workPage = async ({ searchParams }: any) => {
   // const wid = searchParams.wid
   // const dep = searchParams.dep
 
-  const { wid, dep, wip, workflowid, blockid } = searchParams
+  const { wid, dep, wip } = searchParams
 
-  const res = await getData({ wid, dep, wip, workflowid, blockid })
+  const res = await getData({ wid, dep, wip })
 
   const data = res.data
   const conditionData = res.data.conditionData

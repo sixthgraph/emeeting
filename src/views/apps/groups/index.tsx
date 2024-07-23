@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import { useSession } from 'next-auth/react'
 import Grid from '@mui/material/Grid'
 
@@ -14,13 +15,11 @@ import GroupListTable from './GroupListTable'
 const GroupList = ({
   groupData,
   updateToken,
-  userData,
-  email
+  userData
 }: {
   groupData?: GroupType[]
   updateToken?: string
   userData?: UsersType[]
-  email?: string
 }) => {
   const { data: session, update } = useSession()
   const [tokenData, setTokenData] = useState(session?.user.token)
@@ -48,7 +47,7 @@ const GroupList = ({
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <GroupListTable tableData={groupData} userData={userData} email={email} />
+        <GroupListTable tableData={groupData} userData={userData} />
       </Grid>
     </Grid>
   )

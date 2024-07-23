@@ -30,7 +30,14 @@ const FileUploader = () => {
   // Hooks
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+      // setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+
+      if (acceptedFiles?.length) {
+        setFiles(previousFiles => [
+          ...previousFiles,
+          ...acceptedFiles.map(file => Object.assign(file, { preview: URL.createObjectURL(file) }))
+        ])
+      }
     }
   })
 

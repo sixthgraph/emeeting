@@ -159,7 +159,7 @@ let initialData = {
   avatar: '',
   avatarcolor: '',
   password: '',
-  dep: '',
+  dep: [''],
   position: '',
   role: 0,
   status: ''
@@ -227,7 +227,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       avatar: '',
       avatarcolor: '',
       password: '',
-      dep: '',
+      dep: [''],
       position: '',
       role: 0,
       status: ''

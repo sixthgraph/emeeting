@@ -65,10 +65,9 @@ const GroupListApp = async () => {
   const usersData = await getDataUser()
   const groupData = data.data.detail
   const updateToken = data.token
-  const email = data.email
   const userData = usersData.data.detail
 
-  return <GroupList groupData={groupData} updateToken={updateToken} userData={userData} email={email} />
+  return <GroupList groupData={groupData} updateToken={updateToken} userData={userData} />
 }
 
 export default GroupListApp

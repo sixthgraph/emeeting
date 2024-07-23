@@ -42,6 +42,10 @@ const WorkButton = async ({ workData, paramsData }: { workData: any; paramsData:
   const workflowid = paramsData.workflowid
   const blockid = paramsData.blockid
 
+  const handlesendwork = (data: any) => {
+    console.log(data)
+  }
+
   return (
     <footer
       className='w-full content-center'
@@ -68,7 +72,7 @@ const WorkButton = async ({ workData, paramsData }: { workData: any; paramsData:
             Save
           </Button>
 
-          <Button variant='contained' onClick={() => handlesendwork(formData)} className='mr-2' type='submit'>
+          <Button variant='contained' onClick={() => handlesendwork('formData')} className='mr-2' type='submit'>
             Finish
           </Button>
           <Link href={'/en/todo'}>

@@ -1,28 +1,19 @@
 'use client'
 
-// // React Imports
+// React Imports
 import { useEffect, useState, useMemo } from 'react'
-
-// // Next Imports
-// // import Link from 'next/link'
-// // import { useParams } from 'next/navigation'
-
-// // MUI Imports
-// // import { NextResponse } from 'next/server'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
+
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
-import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import Avatar from '@mui/material/Avatar'
-import MuiAvatar from '@mui/material/Avatar'
 
 //AKK IMPORT DIALOG
 import Dialog from '@mui/material/Dialog'
@@ -32,7 +23,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-import { useSession } from 'next-auth/react'
 
 // // Third-party Imports
 import classnames from 'classnames'
@@ -69,15 +59,15 @@ import GroupDrawerForm from './GroupDrawerForm'
 import type { UsersType } from '@/types/apps/userTypes'
 
 import CustomTextField from '@core/components/mui/TextField'
+
 // import CustomAvatar from '@core/components/mui/Avatar'
 
-// // Util Imports
-import { getInitials } from '@/utils/getInitials'
+// Util Imports
+
 // import { getLocalizedUrl } from '@/utils/i18n'
 
-// // Style Imports
+//Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { any, object, string } from 'zod'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -88,17 +78,16 @@ declare module '@tanstack/table-core' {
   }
 }
 
-// // Styled Components
-const Icon = styled('i')({})
-
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
-  //   // Store the itemRank info
+
+  // Store the itemRank info
   addMeta({
     itemRank
   })
+
   //   // Return if the item should be filtered in/out
   return itemRank.passed
 }
@@ -140,12 +129,12 @@ let initialData = {
   member: []
 }
 
-let idData = {
-  groupid: Number(string)
-}
+// const idData = {
+//   groupid: Number(string)
+// }
 
 // member AKK HERE
-const memberObj: MemberType = {}
+// const memberObj: MemberType = {}
 
 // Column Definitions
 const columnHelper = createColumnHelper<GroupTypeWithAction>()
@@ -159,27 +148,32 @@ type Props = {
 
 // AKK select/add user
 
-const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
+const GroupListTable = ({ tableData, userData }: Props) => {
   // AKK HERE
   // States
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
-  const [user, setusersData] = useState(...[userData])
+
+  // const [user, setusersData] = useState(...[userData])
+
   const [globalFilter, setGlobalFilter] = useState('')
   const [members, setMembers] = useState([])
 
   //AKK
-  const { data: session, update } = useSession()
-  const [emailData, setEmailData] = useState(session?.user.email)
+  // const { data: session, update } = useSession()
+  // const [emailData, setEmailData] = useState(session?.user.email)
   const [memberopen, setmemberOpen] = useState(false)
+
   // const [members, setmembers] = useState([])
   // var members = ['admin@excelink.co.th', 'chulapak@excelink.co.th', 'supachai@excelink.co.th']
-  var mbs = []
+  // const mbs = []
+
   const handleClickOpen = async (groupid: object, member: any) => {
-    var i: any
-    var elem: any = member
+    let i: any
+    const elem: any = member
+
     for (i in elem) {
       setMembers(elem[i])
     }
@@ -190,8 +184,9 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   // console.log(setmembers(members))
   const handleDialogClose = () => setmemberOpen(false)
 
-  const handleCloseeee = (value: string) => {
+  const handleCloseeee = () => {
     setmemberOpen(false)
+
     // setSelectedValue(value)
   }
 
@@ -238,6 +233,7 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
       console.log('Delete group failed. ', error.message)
     }
   }
+
   // Table Columns config
   const columns = useMemo<ColumnDef<GroupTypeWithAction, any>[]>(
     () => [
@@ -477,7 +473,7 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
 
         <List className='pt-0 px-0'>
           {members?.map((email, index) => (
-            <ListItem key={email} disablePadding onClick={() => handleCloseeee(email)}>
+            <ListItem key={index} disablePadding onClick={() => handleCloseeee()}>
               <ListItemButton>
                 <ListItemAvatar>
                   <Avatar>
@@ -496,10 +492,10 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
         tableData={tableData}
         userData={userData}
         updateData={initialData}
-        // updateIDData={idData}
         handleClose={() => setAddGroupOpen(!addGroupOpen)}
       />
     </>
   )
 }
-export default GruopListTable
+
+export default GroupListTable

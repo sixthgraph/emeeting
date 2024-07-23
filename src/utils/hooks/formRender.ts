@@ -57,6 +57,12 @@ export const getEdata = async (workData: any) => {
   return workData
 }
 
+declare global {
+  interface JQuery {
+    formRender(data: any): void
+  }
+}
+
 export const formRenderV1 = (dataObj: string) => {
   let i: any
   const elem: any = dataObj

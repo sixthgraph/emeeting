@@ -9,12 +9,10 @@ import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 
-import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-import { InputAdornment } from '@mui/material'
 
 import axios from 'axios'
 
@@ -22,15 +20,13 @@ import axios from 'axios'
 
 // import { any } from 'zod'
 
+import { useSession } from 'next-auth/react'
+
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { GroupFormDataType, GroupType } from '@/types/apps/groupTypes'
 import type { UsersType } from '@/types/apps/userTypes'
 import { addGroupFormSchema } from '@/schemas/formSchema'
-
-import { useSession } from 'next-auth/react'
-import { group } from 'console'
-import { number, string } from 'zod'
 
 type Props = {
   open: boolean
@@ -44,39 +40,30 @@ type Props = {
 }
 
 // Vars
-var initialData = {
+const initialData = {
   groupid: '',
   groupname: '',
   createby: '',
   member: []
 }
 
-var idData = {
-  groupid: Number(string)
-}
-
-const GroupDrawerForm = ({
-  open,
-  setData,
-  updateData,
-  // updateIDData,
-  tableData,
-  userData,
-  email,
-  handleClose
-}: Props) => {
+const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<GroupFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
 
-  const { data: session, update } = useSession()
-  const [emailData, setEmailData] = useState(session?.user.email)
+  const { data: session } = useSession()
+
+  // const [emailData, setEmailData] = useState(session?.user.email)
+
+  const emailData = session?.user.email
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setFormData(initialData)
     console.log(initialData)
+
     //setFormData({ groupname: 'eeeee', createby: 'fasdfadsf', member: [] })
 
     console.log('formData')
@@ -200,6 +187,7 @@ const GroupDrawerForm = ({
             placeholder=''
             inputProps={{ minlength: 3, maxLength: 150 }}
             value={formData.groupid}
+
             //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
             // onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
           />
@@ -208,8 +196,7 @@ const GroupDrawerForm = ({
             fullWidth
             placeholder=''
             inputProps={{ minlength: 3, maxLength: 150 }}
-            value={formData.groupname}
-            //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
+            value={formData.groupname} //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
             onChange={e =>
               setFormData({
                 groupid: formData.groupid,
