@@ -103,6 +103,9 @@ export default withAuth(
         redirectUrl += `?${searchParamsStr}`
       }
 
+      console.log('middle redirect url === ')
+      console.log(redirectUrl)
+
       return localizedRedirect(redirectUrl, locale, request)
     }
 

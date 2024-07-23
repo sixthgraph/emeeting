@@ -40,6 +40,8 @@ import TimelineConnector from '@mui/lab/TimelineConnector'
 
 import TimelineContent from '@mui/lab/TimelineContent'
 
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent'
+
 import { navigate } from './redirect'
 
 // Type Imports
@@ -119,6 +121,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   console.log(workData)
   console.log('----condionData---')
   console.log(condionData)
+  console.log('----activity---')
+  console.log(activity)
 
   // const searchParams = useSearchParams()
 
@@ -422,45 +426,58 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                     {activity.map((item: any, index: any) => {
                       return (
                         <TimelineItem key={index}>
+                          <TimelineOppositeContent>
+                            <Typography variant='caption' component='div' className='mbs-0'>
+                              {formatshortdate(item.actions[0].Date)}
+                            </Typography>
+                          </TimelineOppositeContent>
                           <TimelineSeparator>
                             <TimelineDot color='primary' />
                             <TimelineConnector />
                           </TimelineSeparator>
                           <TimelineContent>
-                            <h3>{item.blockId}</h3>
+                            <Card>
+                              <CardContent>
+                                <Typography variant='h5' className='mbe-4'>
+                                  {item.blockId}
+                                </Typography>
 
-                            {item.actions.map((act: any, ind: any) => {
-                              let curUser = ''
+                                {item.actions.map((act: any, ind: any) => {
+                                  let curUser = ''
 
-                              if (ind !== 0) {
-                                curUser = act.user
-                              }
+                                  if (ind !== 0) {
+                                    curUser = act.user
+                                  }
 
-                              return (
-                                <div key={ind} className='flex gap-5 flex-col'>
-                                  {curUser !== act.user && (
-                                    <div className='flex items-center gap-2.5'>
-                                      <CustomAvatar src='/images/avatars/1.png' size={32} />
-                                      <div className='flex flex-col flex-wrap'>
-                                        <Typography variant='body2' className='font-medium'>
-                                          {act.user}
+                                  return (
+                                    <div key={ind} className='flex gap-5 flex-col'>
+                                      {curUser !== act.user && (
+                                        <div className='flex items-center gap-2.5'>
+                                          <CustomAvatar src='/images/avatars/1.png' size={32} />
+                                          <div className='flex flex-col flex-wrap '>
+                                            <Typography variant='body2' className='font-medium'>
+                                              {act.user}
+                                            </Typography>
+                                            <Typography variant='body2' className='text-left'>
+                                              CEO of Pixinvent
+                                            </Typography>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      <div className='flex flex-wrap items-center justify-between gap-x-2 mbe-2.5'>
+                                        <Typography className='font-medium' color='text.primary'>
+                                          {act.detail}
                                         </Typography>
-                                        <Typography variant='body2'>CEO of Pixinvent</Typography>
+                                        <Typography variant='caption' color='text.disabled'>
+                                          {formatshortdate(act.Date)}
+                                        </Typography>
                                       </div>
                                     </div>
-                                  )}
-
-                                  <div className='flex flex-wrap items-center justify-between gap-x-2 mbe-2.5'>
-                                    <Typography className='font-medium' color='text.primary'>
-                                      {act.detail}
-                                    </Typography>
-                                    <Typography variant='caption' color='text.disabled'>
-                                      {formatshortdate(act.Date)}
-                                    </Typography>
-                                  </div>
-                                </div>
-                              )
-                            })}
+                                  )
+                                })}
+                              </CardContent>
+                            </Card>
                           </TimelineContent>
                         </TimelineItem>
                       )
