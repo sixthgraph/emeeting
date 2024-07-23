@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography'
 import { Button, Dialog, DialogContent, DialogTitle, Icon } from '@mui/material'
 
 // Style Imports
+
 import tableStyles from '@core/styles/table.module.css'
 import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 import FileUploader from './create/FileUploader'
@@ -60,7 +61,7 @@ const data: DataType[] = [
   }
 ]
 
-const DocumentListTable = () => {
+const DocumentListTable = ({ docData }: { docData?: any }) => {
   const [open, setOpen] = useState<boolean>(false)
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -145,7 +146,7 @@ const DocumentListTable = () => {
         <DialogContent>
           <div className='align-middle border-dashed border-2 border-gray-300 min-h-[20rem] min-w-[30rem]'>
             <div className='mt-10 align-middle'>
-              <FileUploader />
+              <FileUploader attmData={docData} />
             </div>
           </div>
         </DialogContent>

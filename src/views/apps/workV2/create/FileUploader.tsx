@@ -12,13 +12,20 @@ import Typography from '@mui/material/Typography'
 // Third-party Imports
 import { useDropzone } from 'react-dropzone'
 
+//import { async } from '../../../../app/api/work/list/route'
+
+import axios from '@/utils/axios'
+
 type FileProp = {
   name: string
   type: string
   size: number
 }
 
-const FileUploader = () => {
+const FileUploader = ({ attmData }: { attmData?: any }) => {
+  const wid = attmData.wid
+  const email = attmData.email
+
   // States
   const [files, setFiles] = useState<File[]>([])
 
@@ -28,6 +35,12 @@ const FileUploader = () => {
   }, [files])
 
   // Hooks
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   onDrop: (acceptedFiles: File[]) => {
+  //     setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+  //   }
+  // })
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[]) => {
       // setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
@@ -46,6 +59,31 @@ const FileUploader = () => {
       return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file as any)} />
     } else {
       return <i className='tabler-file-description' />
+    }
+  }
+
+  const handleUploadFile = async () => {
+    console.log('--attmData--')
+    console.log(wid)
+    console.log(email)
+    const form = new FormData()
+
+    form.append('wid', wid)
+    form.append('id', email)
+
+    //form.append('my_buffer', new Blob([1, 2, 3]))
+    form.append('my_file', files[0])
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
+
+      if (response.data.message === 'success') {
+        console.log('---Call attachment/add success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+    } catch (error: any) {
+      console.log('attachment/add failed. ', error.message)
     }
   }
 
@@ -106,7 +144,9 @@ const FileUploader = () => {
             <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
               Remove All
             </Button>
-            <Button variant='contained'>Upload Files</Button>
+            <Button onClick={() => handleUploadFile()} variant='contained'>
+              Upload Files
+            </Button>
           </div>
         </>
       ) : null}

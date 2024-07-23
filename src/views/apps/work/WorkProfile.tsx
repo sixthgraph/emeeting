@@ -42,6 +42,8 @@ import TimelineContent from '@mui/lab/TimelineContent'
 
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent'
 
+import { useSession } from 'next-auth/react'
+
 import { navigate } from './redirect'
 
 // Type Imports
@@ -113,7 +115,12 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   //   }
   // })
 
-  // console.log(session)
+  const { data: session } = useSession()
+
+  const documentData = {
+    wid: workData.wid,
+    email: session?.user.email
+  }
 
   const activity = workData.activity
 
@@ -416,7 +423,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               />
             </TabPanel>
             <TabPanel value='2'>
-              <DocumentListTable />
+              <DocumentListTable docData={documentData} />
             </TabPanel>
             <TabPanel value='3'>
               <Card>
