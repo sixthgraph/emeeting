@@ -63,7 +63,8 @@ import TablePaginationComponent from '@components/TablePaginationComponent'
 import type { GroupType, GroupTypeWithAction, MemberType } from '@/types/apps/groupTypes'
 
 // // Component Imports
-import TableFilters from './TableFilters'
+// import TableFilters from './TableFilters'
+
 import GroupDrawerForm from './GroupDrawerForm'
 import type { UsersType } from '@/types/apps/userTypes'
 
@@ -133,9 +134,14 @@ const DebouncedInput = ({
 
 // // Vars
 let initialData = {
+  groupid: '',
   groupname: '',
   createby: '',
   member: []
+}
+
+let idData = {
+  groupid: Number(string)
 }
 
 // member AKK HERE
@@ -155,11 +161,6 @@ type Props = {
 
 const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   // AKK HERE
-
-  console.log('tableData')
-  console.log(tableData)
-  console.log(userData)
-
   // States
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -176,12 +177,7 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
   // const [members, setmembers] = useState([])
   // var members = ['admin@excelink.co.th', 'chulapak@excelink.co.th', 'supachai@excelink.co.th']
   var mbs = []
-  const handleClickOpen = async (groupid: object, member: string[]) => {
-    console.log('groupid')
-    console.log(groupid)
-    console.log('member')
-    console.log(member)
-
+  const handleClickOpen = async (groupid: object, member: any) => {
     var i: any
     var elem: any = member
     for (i in elem) {
@@ -201,10 +197,16 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
 
   const GroupDrawerOpenHandle = () => {
     initialData = {
+      groupid: '',
       groupname: '',
       createby: '',
       member: []
     }
+
+    // let idData = {
+    //   groupid: Number(string)
+    // }
+
     setAddGroupOpen(true)
   }
 
@@ -218,7 +220,7 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
 
         //todo update tableData
         const em: any = groupid
-        const newUpdate = tableData?.filter(el => el.groupid == em.groupid)
+        const newUpdate = tableData?.filter(el => el.groupid !== em.groupid)
 
         console.log('newUpdate === ', newUpdate)
         setData(newUpdate)
@@ -311,6 +313,8 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
             <IconButton
               onClick={() => {
                 // initialData.password = ''
+                // initialData.groupid = row.original.groupid
+                initialData.groupid = row.original.groupid
                 initialData.groupname = row.original.groupname
                 setAddGroupOpen(!addGroupOpen)
               }}
@@ -492,6 +496,7 @@ const GruopListTable = ({ tableData, memberData, userData, email }: Props) => {
         tableData={tableData}
         userData={userData}
         updateData={initialData}
+        // updateIDData={idData}
         handleClose={() => setAddGroupOpen(!addGroupOpen)}
       />
     </>

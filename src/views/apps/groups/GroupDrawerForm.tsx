@@ -30,6 +30,7 @@ import { addGroupFormSchema } from '@/schemas/formSchema'
 
 import { useSession } from 'next-auth/react'
 import { group } from 'console'
+import { number, string } from 'zod'
 
 type Props = {
   open: boolean
@@ -44,12 +45,26 @@ type Props = {
 
 // Vars
 var initialData = {
+  groupid: '',
   groupname: '',
   createby: '',
   member: []
 }
 
-const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email, handleClose }: Props) => {
+var idData = {
+  groupid: Number(string)
+}
+
+const GroupDrawerForm = ({
+  open,
+  setData,
+  updateData,
+  // updateIDData,
+  tableData,
+  userData,
+  email,
+  handleClose
+}: Props) => {
   // States
   const [formData, setFormData] = useState<GroupFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
@@ -61,7 +76,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
     e.preventDefault()
 
     setFormData(initialData)
-    //console.log(emailData)
+    console.log(initialData)
     //setFormData({ groupname: 'eeeee', createby: 'fasdfadsf', member: [] })
 
     console.log('formData')
@@ -97,6 +112,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
 
         if (tableData) {
           const updateData: any = {
+            groupid: formData.groupid,
             groupname: formData.groupname,
             createby: String(emailData),
             member: ''
@@ -119,6 +135,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
   const handleReset = () => {
     handleClose()
     setFormData({
+      groupid: '',
       groupname: '',
       createby: '',
       member: []
@@ -127,7 +144,6 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
 
   // Update
   const handleUpdateData = async () => {
-    console.log('handleUpdateData')
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, formData)
 
@@ -135,16 +151,17 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
         console.log('Update user success.')
         handleClose()
 
-        // const index = tableData?.findIndex(x => x.createby == emailData)
-        // console.log('noonn ', emailData)
-        // // setData(index)
+        const index = tableData?.findIndex(x => x.groupname == formData.groupname)
 
-        // if (tableData) {
-        //   tableData[Number(index)].groupname = formData.groupname
-        //   tableData[Number(index)].member = formData.member
-        // }
+        console.log('newUpdate === ', index)
+        setData(index)
 
-        // setData(tableData)
+        if (tableData) {
+          tableData[Number(index)].groupname = formData.groupname
+          tableData[Number(index)].member = formData.member
+        }
+
+        setData(tableData)
       }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
@@ -178,13 +195,29 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, email
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           <CustomTextField
+            label='groupid'
+            fullWidth
+            placeholder=''
+            inputProps={{ minlength: 3, maxLength: 150 }}
+            value={formData.groupid}
+            //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
+            // onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
+          />
+          <CustomTextField
             label='Groupname'
             fullWidth
             placeholder=''
             inputProps={{ minlength: 3, maxLength: 150 }}
             value={formData.groupname}
             //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
-            onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
+            onChange={e =>
+              setFormData({
+                groupid: formData.groupid,
+                groupname: e.target.value,
+                createby: String(emailData),
+                member: []
+              })
+            }
           />
           {errors.find(error => error.for === 'Groupname')?.message}
 

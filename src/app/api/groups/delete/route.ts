@@ -13,11 +13,10 @@ import { options } from './../../auth/[...nextauth]/options'
 export async function POST(req: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
-
   const reqBody = await req.json()
 
   try {
-    const response = await fetch(`https://rd.infoma.net/routeflow-api/deleteusergroup?id=${reqBody.GroupId}`, {
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/deleteusergroup?id=${reqBody.GroupId}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

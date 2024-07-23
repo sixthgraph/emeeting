@@ -1,7 +1,7 @@
 // Type Imports
 
 export type GroupType = {
-  groupid: number
+  groupid: string
   itemno: any
   groupname: string
   createby: string
@@ -9,6 +9,7 @@ export type GroupType = {
 }
 
 export type GroupFormDataType = {
+  groupid: string
   groupname: string
   createby: string
   member: string[]
