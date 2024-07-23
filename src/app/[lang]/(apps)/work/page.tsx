@@ -9,15 +9,17 @@ import WorkDetailV2 from '@/views/apps/workV2'
 const getData = async ({
   wid,
   dep,
-  wip,
-  workflowid,
-  blockid
+  wip
+
+  // workflowid,
+  // blockid
 }: {
   wid?: any
   dep?: any
   wip?: any
-  workflowid?: any
-  blockid?: any
+
+  // workflowid?: any
+  // blockid?: any
 }) => {
   // Vars
   const session = await getServerSession(options)
@@ -27,8 +29,9 @@ const getData = async ({
       wid: wid,
       dep: dep,
       wip: wip,
-      workflowid: workflowid,
-      blockid: blockid,
+
+      // workflowid: workflowid,
+      // blockid: blockid,
       token: session?.user.token,
       email: session?.user.email
     }
@@ -50,6 +53,7 @@ const getData = async ({
   } catch (err) {
     console.log('--work/list response ---')
     console.log(err)
+
     throw new Error(err.message)
   }
 }

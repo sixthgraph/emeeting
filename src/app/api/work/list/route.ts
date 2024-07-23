@@ -10,13 +10,13 @@ import axios from 'axios'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
-  const { wid, dep, token, email, wip, workflowid, blockid } = reqBody
+  const { wid, dep, token, email, wip } = reqBody
 
-  console.log(workflowid)
-  console.log(blockid)
+  // console.log(workflowid)
+  // console.log(blockid)
 
-  console.log('reqBody---')
-  console.log(reqBody)
+  // console.log('reqBody---')
+  // console.log(reqBody)
 
   try {
     const headers = {

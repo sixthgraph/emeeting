@@ -1,5 +1,5 @@
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // MUI Imports
 import List from '@mui/material/List'
@@ -21,6 +21,11 @@ type FileProp = {
 const FileUploader = () => {
   // States
   const [files, setFiles] = useState<File[]>([])
+
+  useEffect(() => {
+    console.log('files ----')
+    console.log(files)
+  }, [files])
 
   // Hooks
   const { getRootProps, getInputProps } = useDropzone({
