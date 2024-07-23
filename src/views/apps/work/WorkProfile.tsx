@@ -5,11 +5,9 @@ import type { SyntheticEvent } from 'react'
 
 // MUI Imports
 import Script from 'next/script'
-import { redirect, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 import Link from 'next/link'
-
-import { useSession } from 'next-auth/react'
 
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
@@ -28,7 +26,19 @@ import type { AccordionProps } from '@mui/material/Accordion'
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
-import { Box, Button, CardActions, LinearProgress } from '@mui/material'
+import { Box, Button, CardActions, CardHeader, LinearProgress } from '@mui/material'
+
+import Timeline from '@mui/lab/Timeline'
+
+import TimelineItem from '@mui/lab/TimelineItem'
+
+import TimelineSeparator from '@mui/lab/TimelineSeparator'
+
+import TimelineDot from '@mui/lab/TimelineDot'
+
+import TimelineConnector from '@mui/lab/TimelineConnector'
+
+import TimelineContent from '@mui/lab/TimelineContent'
 
 import { navigate } from './redirect'
 
@@ -94,33 +104,16 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   const params = useParams()
   const { lang: locale } = params
 
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect('/api/auth/signin?callbackUrl=/en/users/profile')
-    }
-  })
+  // const { data: session } = useSession({
+  //   required: true,
+  //   onUnauthenticated() {
+  //     redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+  //   }
+  // })
 
-  console.log(session)
+  // console.log(session)
 
   const activity = workData.activity
-  const action = []
-  let j: any
-  const elem: any = activity
-
-  console.log('---activity---')
-  console.log(activity)
-
-  for (j in elem) {
-    const newData = { blockId: elem[j].blockId, acitons: elem[j].actions }
-
-    action.push(newData)
-
-    //action = elem[j].actions
-  }
-
-  console.log('----action---')
-  console.log(action)
 
   console.log('----workData---')
   console.log(workData)
@@ -422,25 +415,59 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               <DocumentListTable />
             </TabPanel>
             <TabPanel value='3'>
-              {/* {activityBlockName} */}
-
-              {activity.map((item: any, index: any) => {
-                return (
-                  <div key={index}>
-                    <h3>{item.blockId}</h3>
-                    {item.actions.map((act: any, ind: any) => {
+              <Card>
+                <CardHeader title='Work Activity Timeline' />
+                <CardContent>
+                  <Timeline position='alternate'>
+                    {activity.map((item: any, index: any) => {
                       return (
-                        <div key={ind}>
-                          <Typography>{act.user}</Typography>
-                          <Typography>{formatshortdate(act.Date)}</Typography>
-                          <Typography>{act.detail}</Typography>
-                          <Typography>-----</Typography>
-                        </div>
+                        <TimelineItem key={index}>
+                          <TimelineSeparator>
+                            <TimelineDot color='primary' />
+                            <TimelineConnector />
+                          </TimelineSeparator>
+                          <TimelineContent>
+                            <h3>{item.blockId}</h3>
+
+                            {item.actions.map((act: any, ind: any) => {
+                              let curUser = ''
+
+                              if (ind !== 0) {
+                                curUser = act.user
+                              }
+
+                              return (
+                                <div key={ind} className='flex gap-5 flex-col'>
+                                  {curUser !== act.user && (
+                                    <div className='flex items-center gap-2.5'>
+                                      <CustomAvatar src='/images/avatars/1.png' size={32} />
+                                      <div className='flex flex-col flex-wrap'>
+                                        <Typography variant='body2' className='font-medium'>
+                                          {act.user}
+                                        </Typography>
+                                        <Typography variant='body2'>CEO of Pixinvent</Typography>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  <div className='flex flex-wrap items-center justify-between gap-x-2 mbe-2.5'>
+                                    <Typography className='font-medium' color='text.primary'>
+                                      {act.detail}
+                                    </Typography>
+                                    <Typography variant='caption' color='text.disabled'>
+                                      {formatshortdate(act.Date)}
+                                    </Typography>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </TimelineContent>
+                        </TimelineItem>
                       )
                     })}
-                  </div>
-                )
-              })}
+                  </Timeline>
+                </CardContent>
+              </Card>
             </TabPanel>
           </CardContent>
         </Card>
