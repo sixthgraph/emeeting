@@ -12,31 +12,16 @@ export async function POST(req: NextRequest) {
 
   console.log('reqBody update=====')
   console.log(reqBody)
-  console.log(reqBody.groupid)
-
-  const updateData: any = {
-    groupname: reqBody.groupname,
-    createby: reqBody.createby,
-    member: reqBody.member
-  }
-
-  console.log('updateData update=====')
-  console.log(updateData)
 
   try {
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updateusergroup?id=${reqBody.groupid}`, {
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updateusergroup`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         cache: 'force-cache'
       },
-      body: JSON.stringify(updateData)
+      body: JSON.stringify(reqBody)
     })
-
-    console.log('noon reqBody')
-    console.log(JSON.stringify(reqBody))
-    console.log('noon updateData')
-    console.log(JSON.stringify(updateData))
 
     const data = await response.json()
 

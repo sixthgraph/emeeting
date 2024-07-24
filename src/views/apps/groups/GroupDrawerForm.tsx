@@ -138,7 +138,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
         console.log('Update user success.')
         handleClose()
 
-        const index = tableData?.findIndex(x => x.groupname == formData.groupname)
+        const index = tableData?.findIndex(x => x.groupid !== formData.groupid)
 
         console.log('newUpdate === ', index)
         setData(index)
@@ -181,7 +181,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          <CustomTextField
+          {/* <CustomTextField
             label='groupid'
             fullWidth
             placeholder=''
@@ -190,7 +190,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
 
             //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
             // onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
-          />
+          /> */}
           <CustomTextField
             label='Groupname'
             fullWidth
