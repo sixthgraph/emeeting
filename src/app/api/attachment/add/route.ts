@@ -23,8 +23,9 @@ export async function POST(request: NextRequest) {
 
     const headers = {
       Accept: '*/*',
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'multipart/form-data'
+      Authorization: `Bearer ${token}`
+
+      // 'Content-Type': 'multipart/form-data'
     }
 
     const reqBody = await request.json()

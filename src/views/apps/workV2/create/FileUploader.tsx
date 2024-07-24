@@ -14,7 +14,9 @@ import { useDropzone } from 'react-dropzone'
 
 //import { async } from '../../../../app/api/work/list/route'
 
-import axios from '@/utils/axios'
+import { useSession } from 'next-auth/react'
+
+//import axios from '@/utils/axios'
 
 type FileProp = {
   name: string
@@ -26,6 +28,10 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
   const wid = attmData.wid
   const email = attmData.email
   const dep = attmData.dep
+
+  const { data: session } = useSession()
+
+  const token = session?.user.token
 
   // States
   const [files, setFiles] = useState<File[]>([])
@@ -67,6 +73,16 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
     console.log('--attmData--')
     console.log(wid)
     console.log(email)
+
+    const headers = {
+      Accept: '*/*',
+      Authorization: `Bearer ${token}`,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+
+      // 'Content-Type': 'multipart/form-data'
+    }
+
     const form = new FormData()
 
     form.append('wid', wid)
@@ -77,15 +93,26 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
     form.append('file', files[0])
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
+      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
+      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
+        method: 'POST',
+        body: form,
+
+        headers: headers
+      })
+
+      console.log('response createattachment from client call------')
+      console.log(response)
 
       if (response.data.message === 'success') {
-        console.log('---Call attachment/add success.------------------')
+        console.log('---createattachment from client call success.------------------')
       } else {
         console.log(response.data.message)
       }
     } catch (error: any) {
-      console.log('attachment/add failed. ', error.message)
+      console.log('createattachment from client call failed. ', error.message)
     }
   }
 
