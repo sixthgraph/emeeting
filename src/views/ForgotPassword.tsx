@@ -1,10 +1,13 @@
 'use client'
 
 // Next Imports
+import { useState } from 'react'
+
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 // MUI Imports
+
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
@@ -28,6 +31,7 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
 import { getLocalizedUrl } from '@/utils/i18n'
+import axios from '@/utils/axios'
 
 // Styled Custom Components
 const ForgotPasswordIllustration = styled('img')(({ theme }) => ({
@@ -54,6 +58,12 @@ const MaskImg = styled('img')({
 })
 
 const ForgotPassword = ({ mode }: { mode: SystemMode }) => {
+  const router = useRouter()
+
+  const [user, setUser] = useState({
+    email: ''
+  })
+
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
   const lightImg = '/images/pages/auth-mask-light.png'
@@ -68,6 +78,23 @@ const ForgotPassword = ({ mode }: { mode: SystemMode }) => {
   const authBackground = useImageVariant(mode, lightImg, darkImg)
 
   const characterIllustration = useImageVariant(mode, lightIllustration, darkIllustration)
+
+  const onSubmit = async () => {
+    console.log('submit start')
+
+    try {
+      console.log(`${process.env.NEXT_PUBLIC_API_URL}/forgot-password`)
+      console.log(user)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/forgot-password`, user)
+
+      console.log('Send email success. ', response.data)
+
+      router.push('/')
+    } catch (error: any) {
+      console.log('Send email failed. ', error.message)
+    } finally {
+    }
+  }
 
   return (
     <div className='flex bs-full justify-center'>
@@ -92,8 +119,21 @@ const ForgotPassword = ({ mode }: { mode: SystemMode }) => {
             <Typography>Enter your email and we&#39;ll send you instructions to reset your password</Typography>
           </div>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()} className='flex flex-col gap-6'>
-            <CustomTextField autoFocus fullWidth label='Email' placeholder='Enter your email' />
-            <Button fullWidth variant='contained' type='submit'>
+            <CustomTextField
+              autoFocus
+              fullWidth
+              label='Email'
+              onChange={e => setUser({ ...user, email: e.target.value })}
+              placeholder='Enter your email'
+            />
+            <Button
+              fullWidth
+              onClick={() => {
+                onSubmit()
+              }}
+              variant='contained'
+              type='submit'
+            >
               Send Reset Link
             </Button>
             <Typography className='flex justify-center items-center' color='primary'>
