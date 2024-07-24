@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
       workinfo.blockid = curwip[0].pid
       workinfo.curuid = curwip[0].uid
       workinfo.curdep = curwip[0].dep
+      workinfo.datein = curwip[0].Datein
 
       const resnp2 = await axios.get(
         `${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${curwip[0].rid}/${curwip[0].pid}`,
