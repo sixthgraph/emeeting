@@ -322,7 +322,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
             <Grid className='flex flex-col gap-0'>
               <Grid className=' flex lg:flex-row sm:flex-col md:flex-col gap-4'>
                 <Grid className='md:flex-1 flex gap-4'>
-                  <div className='flex border-solid border-2 border-amber-400 rounded-bs-md item-start border-backgroundPaper bg-backgroundPaper'>
+                  <div className='flex rounded-bs-md item-start border-backgroundPaper bg-backgroundPaper'>
                     {workData &&
                       getAvatar({
                         avatar: workData?.usercreateinfo[0].avatar,
@@ -370,7 +370,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               </Grid>
               <Grid className='flex gap-4 '>
                 <div className='flex-none w-14'></div>
-                <div className='flex-1 pl-1'>
+                <div className='flex-1'>
                   <Typography className='text-xs mt-2'>Subject :</Typography>
                   <Typography className='flex-1 font-semibold text-slate-900 text-left'>{workData.subject}</Typography>
                 </div>
@@ -536,6 +536,9 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               p: 2
             }}
           >
+            <Button variant='contained' className='mr-2' type='submit'>
+              Send Back
+            </Button>
             {condionData && (
               <>
                 <Button
@@ -548,18 +551,23 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                   Save
                 </Button>
 
-                <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                {/* <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
                   Finish
-                </Button>
+                </Button> */}
               </>
             )}
 
-            <Button variant='contained' className='mr-2' type='submit'>
-              Send Back
-            </Button>
-            <Button variant='contained' className='mr-2' type='submit'>
-              Finish-End
-            </Button>
+            {condionData !== 'end-process' && condionData !== null && (
+              <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                Finish
+              </Button>
+            )}
+
+            {condionData === 'end-process' && (
+              <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                End Finish
+              </Button>
+            )}
 
             <Link href={'/en/todo'}>
               <Button variant='contained' color='inherit'>

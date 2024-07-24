@@ -67,9 +67,19 @@ export async function POST(req: NextRequest) {
 
       let condata = resnp2.data
 
-      if (curwip[0].uid !== email) {
+      console.log('condata---')
+      console.log(condata)
+
+      if (curwip[0].uid !== email && condata !== null) {
         condata = null
+      } else {
+        if (condata == null && curwip[0].uid == email) {
+          condata = 'end-process'
+        }
       }
+
+      console.log('condata2---')
+      console.log(condata)
 
       const response2 = NextResponse.json({
         message: res.data.message,

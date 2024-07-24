@@ -262,7 +262,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}`
             }}
           >
             <div className='flex items-center gap-4'>
@@ -306,7 +306,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}`
             }}
           >
             <div className='flex flex-col '>
@@ -363,7 +363,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}&blockid=${row.original.blockid}`
+              query: `wid=${row.original.wid}`
             }}
           >
             <div className='flex items-center gap-2'>
