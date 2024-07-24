@@ -119,7 +119,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
 
   const documentData = {
     wid: workData.wid,
-    email: session?.user.email
+    email: session?.user.email,
+    dep: workData.curdep
   }
 
   const activity = workData.activity

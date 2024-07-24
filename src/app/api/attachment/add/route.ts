@@ -22,8 +22,9 @@ export async function POST(request: NextRequest) {
     const token = serverSession?.user.token
 
     const headers = {
+      Accept: '*/*',
       Authorization: `Bearer ${token}`,
-      cache: 'force-cache'
+      'Content-Type': 'multipart/form-data'
     }
 
     const reqBody = await request.json()
@@ -32,19 +33,23 @@ export async function POST(request: NextRequest) {
 
     form.append('wid', reqBody.wid)
     form.append('id', reqBody.id)
-    form.append('dep', '66542134cf450c9ba79c2e23')
+    form.append('dep', reqBody.dep)
 
-    // form.append('file', '/Users/chulapakboonyasopon/Downloads/IMG_0887.JPG')
-    form.append('file', 'blob:http://localhost:3000/46f22899-7b07-492b-9f9c-a9666761deb1')
+    form.append(
+      'file',
+      '/Users/chulapakboonyasopon/Library/CloudStorage/OneDrive-Personal/เอกสาร/INFOMA_WORK_FLOW_ORGANIZATION_1.01.docx'
+    )
+
+    // form.append('file', 'blob:http://localhost:3000/46f22899-7b07-492b-9f9c-a9666761deb1')
 
     // //form.append('my_buffer', new Blob([1, 2, 3]))
-    // form.append('my_file', reqBody.my_file)
+    // form.append('file', reqBody.file)
 
     console.log('createattachment reqBody')
 
     //console.log(`${process.env.ROUTE_FLOW_API_URL}/createattachment`)
     console.log(form)
-    console.log(reqBody.my_file.path)
+    console.log(reqBody.file)
 
     //const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createattachment`, form, { headers })
 
@@ -54,7 +59,7 @@ export async function POST(request: NextRequest) {
       headers: headers
     })
 
-    const data = await res.text()
+    const data = await res.json()
 
     console.log(data)
 

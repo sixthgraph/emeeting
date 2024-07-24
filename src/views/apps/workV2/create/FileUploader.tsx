@@ -25,6 +25,7 @@ type FileProp = {
 const FileUploader = ({ attmData }: { attmData?: any }) => {
   const wid = attmData.wid
   const email = attmData.email
+  const dep = attmData.dep
 
   // States
   const [files, setFiles] = useState<File[]>([])
@@ -70,9 +71,10 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
 
     form.append('wid', wid)
     form.append('id', email)
+    form.append('dep', dep)
 
     //form.append('my_buffer', new Blob([1, 2, 3]))
-    form.append('my_file', files[0])
+    form.append('file', files[0])
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
