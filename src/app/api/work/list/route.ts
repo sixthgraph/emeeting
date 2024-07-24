@@ -86,6 +86,7 @@ export async function POST(req: NextRequest) {
 
       workinfo.curuid = dataObj[0].uid
       workinfo.curdep = dataObj[0].dep
+      workinfo.datein = dataObj[0].Datein
       workinfo.workflowid = rid
       workinfo.blockid = pid
 
