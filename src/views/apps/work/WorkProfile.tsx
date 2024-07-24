@@ -26,7 +26,7 @@ import type { AccordionProps } from '@mui/material/Accordion'
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
-import { Box, Button, CardActions, CardHeader, LinearProgress } from '@mui/material'
+import { Box, Button, CardActions, CardHeader, Chip, Grid, LinearProgress } from '@mui/material'
 
 import Timeline from '@mui/lab/Timeline'
 
@@ -131,6 +131,9 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   console.log(condionData)
   console.log('----activity---')
   console.log(activity)
+
+  console.log(activity[0].actions[0].depname)
+  console.log(activity[0].actions[0].positionname)
 
   // const searchParams = useSearchParams()
 
@@ -315,46 +318,66 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     <>
       <TabContext value={value}>
         <Card variant='outlined'>
-          {/* <CardMedia image={data?.coverImg} className='bs-[250px]' /> */}
-          <CardContent className='flex gap-5 p-0 item-stretch flex-col'>
-            <div className='flex p-5 items-stretch gap-4 w-full rounded-lg bg-stripes-cyan text-center'>
-              <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
-                {workData &&
-                  getAvatar({
-                    avatar: workData?.usercreateinfo[0].avatar,
-                    fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname
-                  })}
-
-                {/* workData?.usercreateinfo[0].firstname */}
-              </div>
-              <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Request by:</Typography>
-                <Typography className='font-semibold text-slate-900'>
-                  {workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname}
-                </Typography>
-                <Typography className='text-xs mt-2'>Work ID:</Typography>
-                <Typography className='font-semibold text-slate-900'>{workData.wid}</Typography>
-              </div>
-              <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Create Date:</Typography>
-                <Typography className='font-semibold text-slate-900'>
-                  {formatshortdate(workData?.Registerdate)}
-                </Typography>
-                <Typography className='text-xs mt-2'>Subject:</Typography>
-                <Typography className='font-semibold text-slate-900 text-left'>{workData.subject}</Typography>
-              </div>
-              {/* <div className='flex-1 flex flex-col items-start justify-end'> */}
-              <div className='flex-none w-59 flex flex-col'>
-                <div className='flex flex-row'>
-                  <Typography color='text.disabled' sx={{ paddingRight: 4 }}>
-                    Work progress
+          <CardContent className='flex p-4 pb-0 gap-2 item-stretch flex-col'>
+            <Grid className='flex flex-col gap-0'>
+              <Grid className=' flex lg:flex-row sm:flex-col md:flex-col gap-4'>
+                <Grid className='md:flex-1 flex gap-4'>
+                  <div className='flex border-solid border-2 border-amber-400 rounded-bs-md item-start border-backgroundPaper bg-backgroundPaper'>
+                    {workData &&
+                      getAvatar({
+                        avatar: workData?.usercreateinfo[0].avatar,
+                        fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname
+                      })}
+                  </div>
+                  <div className='flex flex-1 flex flex-col items-start justify-start'>
+                    <Typography className='text-xs'>Request by:</Typography>
+                    <Typography className='font-semibold text-slate-900'>
+                      {workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname}
+                    </Typography>
+                    <Chip
+                      color='primary'
+                      variant='tonal'
+                      label={`${activity[0].actions[0].depname} / ${activity[0].actions[0].positionname}`}
+                      size='small'
+                    />
+                    <Typography className='text-xs mt-2'>Work ID:</Typography>
+                    <Typography className='font-semibold text-slate-900'>{workData.wid}</Typography>
+                  </div>
+                </Grid>
+                <Grid className='md:flex-1 '>
+                  {/* <div className='border-solid border-2 border-amber-400'> */}
+                  <Typography className='text-xs'>Create Date:</Typography>
+                  <Typography className='font-semibold text-slate-900'>
+                    {formatshortdate(workData?.Registerdate)}
                   </Typography>
-                  <Typography className='font-semibold text-slate-900'>50%</Typography>
+                  <Typography className='text-xs mt-8'>Recieved Date :</Typography>
+                  <Typography className='font-semibold text-slate-900 text-left'>
+                    {formatshortdate(workData.datein)}
+                  </Typography>
+                  {/* </div> */}
+                </Grid>
+                <Grid className=' w-59 '>
+                  <div className='flex-none w-59 flex flex-col'>
+                    <div className='flex flex-row'>
+                      <Typography color='text.disabled' sx={{ paddingRight: 4 }}>
+                        Work progress
+                      </Typography>
+                      <Typography className='font-semibold text-slate-900'>50%</Typography>
+                    </div>
+                    <LinearProgress value={50} variant='determinate' color='success' className='mt-2 mr-2 min-bs-1' />
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid className='flex gap-4 '>
+                <div className='flex-none w-14'></div>
+                <div className='flex-1 pl-1'>
+                  <Typography className='text-xs mt-2'>Subject :</Typography>
+                  <Typography className='flex-1 font-semibold text-slate-900 text-left'>{workData.subject}</Typography>
                 </div>
-                <LinearProgress value={50} variant='determinate' color='success' className='mt-2 mr-2 min-bs-1' />
-              </div>
-            </div>
-            <div className='flex flex-1'>
+              </Grid>
+            </Grid>
+
+            <Grid className='flex flex-1'>
               <Box sx={{ width: '100%', typography: 'body1' }}>
                 <Box>
                   <TabList onChange={handleChange} aria-label='lab API tabs example'>
@@ -388,7 +411,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                   </TabList>
                 </Box>
               </Box>
-            </div>
+            </Grid>
           </CardContent>
         </Card>
         <Card variant='outlined'>
