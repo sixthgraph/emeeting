@@ -554,6 +554,13 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               </>
             )}
 
+            <Button variant='contained' className='mr-2' type='submit'>
+              Send Back
+            </Button>
+            <Button variant='contained' className='mr-2' type='submit'>
+              Finish-End
+            </Button>
+
             <Link href={'/en/todo'}>
               <Button variant='contained' color='inherit'>
                 close
