@@ -1,5 +1,5 @@
 // React Imports
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -51,9 +51,11 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
   // States
   const [formData, setFormData] = useState<PositionDepFormDataType>(initialData)
 
-  const [errors, setErrors] = useState<any[]>([])
+  //const [errors, setErrors] = useState<any[]>([])
 
   // setErrors([])
+
+  const errors: any[] = []
 
   const handleRefresh = () => {
     setTimeout(() => {
