@@ -36,10 +36,7 @@ export async function POST(request: NextRequest) {
     form.append('id', reqBody.id)
     form.append('dep', reqBody.dep)
 
-    form.append(
-      'file',
-      '/Users/chulapakboonyasopon/Library/CloudStorage/OneDrive-Personal/เอกสาร/INFOMA_WORK_FLOW_ORGANIZATION_1.01.docx'
-    )
+    form.append('file', '/Users/sixthgraph/Desktop/avatar.png')
 
     // form.append('file', 'blob:http://localhost:3000/46f22899-7b07-492b-9f9c-a9666761deb1')
 

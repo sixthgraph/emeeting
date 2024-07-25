@@ -18,24 +18,29 @@ import { useSession } from 'next-auth/react'
 
 // import axios from '@/utils/axios'
 
+//import axios from '@/utils/axios'
+
 type FileProp = {
   name: string
   type: string
   size: number
 }
 
-const FileUploader = ({ attmData }: { attmData?: any }) => {
+const FileUploaderCloudinary = ({ attmData }: { attmData?: any }) => {
   // States
   const [files, setFiles] = useState<File[]>([])
+
   const wid = attmData.wid
   const email = attmData.email
   const dep = attmData.dep
+
+  console.log(wid, email, dep)
 
   const { data: session } = useSession()
 
   const token = session?.user.token
 
-  // console.log(token)
+  console.log(token)
 
   useEffect(() => {
     console.log('files ----')
@@ -71,52 +76,24 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
   }
 
   const handleUploadFile = async () => {
-    console.log('--attmData--')
-    console.log(wid)
-    console.log(email)
+    if (!files?.length) return
 
-    const headers = {
-      Accept: '*/*',
-      Authorization: `Bearer ${token}`
+    const formData = new FormData()
 
-      // 'Access-Control-Allow-Origin': '*',
-      // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+    files.forEach(file => formData.append('file', file))
+    formData.append('upload_preset', 'frendsbook')
 
-      // 'Content-Type': 'multipart/form-data'
-    }
+    const URL: any = process.env.NEXT_PUBLIC_CLOUDINARY_URL
 
-    const form = new FormData()
+    console.log('URL')
+    console.log(URL)
 
-    form.append('wid', wid)
-    form.append('id', email)
-    form.append('dep', dep)
+    const data = await fetch(URL, {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
 
-    //form.append('my_buffer', new Blob([1, 2, 3]))
-    form.append('file', files[0])
-
-    try {
-      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
-      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
-        method: 'POST',
-        body: form,
-        headers: headers
-
-        // mode: 'no-cors'
-      })
-
-      console.log('response createattachment from client call------')
-      console.log(response)
-
-      // if (response.data.message === 'success') {
-      //   console.log('---createattachment from client call success.------------------')
-      // } else {
-      //   console.log(response.data.message)
-      // }
-    } catch (error: any) {
-      console.log('createattachment from client call failed. ', error.message)
-    }
+    console.log(data)
   }
 
   const handleRemoveFile = (file: FileProp) => {
@@ -186,4 +163,4 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
   )
 }
 
-export default FileUploader
+export default FileUploaderCloudinary
