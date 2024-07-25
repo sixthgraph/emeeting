@@ -53,7 +53,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
 
   const [errors, setErrors] = useState<any[]>([])
 
-  setErrors([])
+  // setErrors([])
 
   const handleRefresh = () => {
     setTimeout(() => {
@@ -183,9 +183,9 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
     }
   }
 
-  useEffect(() => {
-    setFormData(updateData)
-  }, [open, updateData])
+  // useEffect(() => {
+  //   setFormData(updateData)
+  // }, [open, updateData])
 
   const getParentPositionPath = (parentData: any) => {
     let path = ''
