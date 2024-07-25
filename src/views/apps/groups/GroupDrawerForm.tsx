@@ -102,7 +102,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
             groupid: formData.groupid,
             groupname: formData.groupname,
             createby: String(emailData),
-            member: ''
+            member: formData.member
           }
 
           tableData.push(updateData)
@@ -182,11 +182,11 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           {/* <CustomTextField
-            label='groupid'
+            label='member'
             fullWidth
             placeholder=''
             inputProps={{ minlength: 3, maxLength: 150 }}
-            value={formData.groupid}
+            value={formData.member}
 
             //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
             // onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
@@ -202,7 +202,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
                 groupid: formData.groupid,
                 groupname: e.target.value,
                 createby: String(emailData),
-                member: []
+                member: formData.member
               })
             }
           />

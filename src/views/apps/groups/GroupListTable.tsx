@@ -1,7 +1,11 @@
 'use client'
 
-// React Imports
+// MUI Imports
 import { useEffect, useState, useMemo } from 'react'
+
+// React Imports
+
+// import styled from "styled-components";
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -126,7 +130,7 @@ let initialData = {
   groupid: '',
   groupname: '',
   createby: '',
-  member: []
+  member: ['']
 }
 
 // const idData = {
@@ -195,7 +199,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
       groupid: '',
       groupname: '',
       createby: '',
-      member: []
+      member: ['']
     }
 
     // let idData = {
@@ -312,6 +316,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
                 // initialData.groupid = row.original.groupid
                 initialData.groupid = row.original.groupid
                 initialData.groupname = row.original.groupname
+                initialData.member = row.original.member
                 setAddGroupOpen(!addGroupOpen)
               }}
             >
@@ -359,7 +364,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Filters' className='pbe-4' />
+        <CardHeader title='User Group' className='pbe-4' />
         {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
@@ -399,6 +404,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
         </div>
         <div className='overflow-x-auto'>
           <table className={tableStyles.table}>
+            {/* <thead style={{ backgroundColor: 'pink' }}> */}
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
