@@ -25,6 +25,8 @@ type FileProp = {
 }
 
 const FileUploader = ({ attmData }: { attmData?: any }) => {
+  // States
+  const [files, setFiles] = useState<File[]>([])
   const wid = attmData.wid
   const email = attmData.email
   const dep = attmData.dep
@@ -32,9 +34,6 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
   const { data: session } = useSession()
 
   const token = session?.user.token
-
-  // States
-  const [files, setFiles] = useState<File[]>([])
 
   useEffect(() => {
     console.log('files ----')
@@ -106,11 +105,11 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
       console.log('response createattachment from client call------')
       console.log(response)
 
-      if (response.data.message === 'success') {
-        console.log('---createattachment from client call success.------------------')
-      } else {
-        console.log(response.data.message)
-      }
+      // if (response.data.message === 'success') {
+      //   console.log('---createattachment from client call success.------------------')
+      // } else {
+      //   console.log(response.data.message)
+      // }
     } catch (error: any) {
       console.log('createattachment from client call failed. ', error.message)
     }

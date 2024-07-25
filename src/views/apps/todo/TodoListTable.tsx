@@ -151,6 +151,12 @@ type Props = {
 }
 
 const TodoListTable = ({ tableData, depData }: Props) => {
+  // States
+  //const [rowSelection, setRowSelection] = useState({})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [data, setData] = useState(...[tableData])
+  const [globalFilter, setGlobalFilter] = useState('')
+
   console.log('tableData =====')
   console.log(tableData)
   console.log('depData =====')
@@ -210,12 +216,6 @@ const TodoListTable = ({ tableData, depData }: Props) => {
 
     return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
-
-  // States
-  //const [rowSelection, setRowSelection] = useState({})
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[tableData])
-  const [globalFilter, setGlobalFilter] = useState('')
 
   // Table Columns config
   const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(

@@ -105,6 +105,7 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData, condionData }: { workData: any; condionData: any }) => {
+  const [value, setValue] = useState('1')
   const params = useParams()
   const { lang: locale } = params
 
@@ -140,8 +141,6 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
   // const workflowid = searchParams.get('workflowid')
   // const blockid = searchParams.get('blockid')
   // const dep = searchParams.get('dep')
-
-  const [value, setValue] = useState('1')
 
   // const paramsData = {
   //   workflowid: workflowid,
@@ -324,6 +323,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                 <Grid className='md:flex-1 flex gap-4'>
                   <div className='flex rounded-bs-md item-start border-backgroundPaper bg-backgroundPaper'>
                     {workData &&
+                      workData?.usercreateinfo[0] &&
                       getAvatar({
                         avatar: workData?.usercreateinfo[0].avatar,
                         fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname

@@ -152,6 +152,15 @@ type Props = {
 }
 
 const MyrequestListTable = ({ tableData, depData }: Props) => {
+  // States
+  //const [rowSelection, setRowSelection] = useState({})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [data, setData] = useState(...[tableData])
+  const [activityData, setActivityData] = useState([])
+  const [workInfo, setWorkInfo] = useState([])
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [trackingOpen, setTrackingOpen] = useState(false)
+
   // console.log('tableData =====')
   // console.log(tableData)
 
@@ -162,15 +171,6 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
 
   // Hooks
   const { lang: locale } = useParams()
-
-  // States
-  //const [rowSelection, setRowSelection] = useState({})
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[tableData])
-  const [activityData, setActivityData] = useState([])
-  const [workInfo, setWorkInfo] = useState([])
-  const [globalFilter, setGlobalFilter] = useState('')
-  const [trackingOpen, setTrackingOpen] = useState(false)
 
   const getData = async ({ wid, dep }: { wid?: any; dep?: any }) => {
     // Vars

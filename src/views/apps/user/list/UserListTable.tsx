@@ -176,6 +176,12 @@ type Props = {
 
 const UserListTable = ({ tableData, roleData, depData }: Props) => {
   //console.log('depData === ', depData)
+  // States
+  const [addUserOpen, setAddUserOpen] = useState(false)
+  const [rowSelection, setRowSelection] = useState({})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [data, setData] = useState(...[tableData])
+  const [globalFilter, setGlobalFilter] = useState('')
 
   depData?.map(dep => {
     const id = String(dep.dep)
@@ -197,13 +203,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     //TODO UPDATE ROUTE FLOW API FIELD FOR "ICON, COLOR" AND REPLACE userRoleObj with userRoleObj2
     roleObj[Number(id)] = { icon: 'tabler-crown', color: 'error', name: String(name) }
   })
-
-  // States
-  const [addUserOpen, setAddUserOpen] = useState(false)
-  const [rowSelection, setRowSelection] = useState({})
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[tableData])
-  const [globalFilter, setGlobalFilter] = useState('')
 
   console.log('data =====')
   console.log(data)

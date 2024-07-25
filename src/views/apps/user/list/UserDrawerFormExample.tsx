@@ -53,14 +53,13 @@ const initialData = {
 }
 
 const UserDrawerFormExample = ({ open, updateData, handleClose }: Props) => {
+  const [isPasswordShown, setIsPasswordShown] = useState(false)
   const router = useRouter()
   const params = useParams()
   const { lang: locale } = params
 
   // States
   const [formData, setFormData] = useState<FormDataType>(initialData)
-
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 

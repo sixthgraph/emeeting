@@ -132,6 +132,13 @@ type Props = {
 }
 
 const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
+  // States
+  const [addPositionDepOpen, setAddPositionDepOpen] = useState(false)
+  const [rowSelection, setRowSelection] = useState({})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [data, setData] = useState(...[tableData])
+  const [globalFilter, setGlobalFilter] = useState('')
+
   const searchParams = useSearchParams()
   let depID = searchParams.get('dep')
 
@@ -163,14 +170,6 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
       sort: Number(department.Sort)
     }
   })
-
-  // States
-  const [addPositionDepOpen, setAddPositionDepOpen] = useState(false)
-  const [rowSelection, setRowSelection] = useState({})
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[tableData])
-
-  const [globalFilter, setGlobalFilter] = useState('')
 
   const PositionDepDrawerOpenHandle = () => {
     let level = '0'

@@ -58,11 +58,11 @@ const MaskImg = styled('img')({
 })
 
 const ForgotPassword = ({ mode }: { mode: SystemMode }) => {
-  const router = useRouter()
-
   const [user, setUser] = useState({
     email: ''
   })
+
+  const router = useRouter()
 
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'

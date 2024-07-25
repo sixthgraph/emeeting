@@ -143,6 +143,14 @@ type Props = {
 }
 
 const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props) => {
+  // States
+  const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
+  const [rowSelection, setRowSelection] = useState({})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [data, setData] = useState(...[tableData])
+
+  const [globalFilter, setGlobalFilter] = useState('')
+
   stateinfoData?.map(stateinfo => {
     const id = String(stateinfo.statecode)
 
@@ -167,14 +175,6 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
 
   //console.log('stateinfopData === ', stateinfoData)
   //console.log('parentData === ', depParentData)
-
-  // States
-  const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
-  const [rowSelection, setRowSelection] = useState({})
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[tableData])
-
-  const [globalFilter, setGlobalFilter] = useState('')
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
