@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL
 
 //const BASE_AUTH_URL = 'https://rd.infoma.net/routeflow-api'
 

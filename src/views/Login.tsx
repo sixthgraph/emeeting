@@ -137,7 +137,7 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
       username: data.email,
       password: data.password,
       redirect: true,
-      callbackUrl: props.callbackUrl ?? 'http://localhost:3000'
+      callbackUrl: props.callbackUrl ?? process.env.NEXT_PUBLIC_APP_URL
     })
 
     if (res && res.ok && res.error === null) {
