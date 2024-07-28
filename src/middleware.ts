@@ -95,6 +95,7 @@ export default withAuth(
     // If the user is not logged in and is trying to access a private route, redirect to the login page
     if (!isUserLoggedIn && privateRoute) {
       // console.log('goto redirect')
+      //let redirectUrl = process.env.NEXT_PUBLIC_BASEPATH + '/login'
       let redirectUrl = '/login'
 
       if (!(pathname === '/' || pathname === `/${locale}`)) {

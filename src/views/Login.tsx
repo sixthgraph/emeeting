@@ -135,13 +135,14 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   )
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  const defaultCallbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}${process.env.NEXT_PUBLIC_BASEPATH}`
 
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     const res = await signIn('credentials', {
       username: data.email,
       password: data.password,
       redirect: true,
-      callbackUrl: props.callbackUrl ?? process.env.NEXT_PUBLIC_APP_URL
+      callbackUrl: props.callbackUrl ?? defaultCallbackUrl
     })
 
     if (res && res.ok && res.error === null) {
