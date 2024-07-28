@@ -53,7 +53,11 @@ const UserActivityTimeLine = () => {
               </div>
               <Typography className='mbe-2'>Invoices have been paid to the company</Typography>
               <div className='flex items-center gap-2.5 is-fit bg-actionHover rounded plb-[5px] pli-2.5'>
-                <img height={20} alt='invoice.pdf' src='/images/icons/pdf-document.png' />
+                <img
+                  height={20}
+                  alt='invoice.pdf'
+                  src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/icons/pdf-document.png`}
+                />
                 <Typography className='font-medium'>invoices.pdf</Typography>
               </div>
             </TimelineContent>
@@ -74,7 +78,7 @@ const UserActivityTimeLine = () => {
               </div>
               <Typography className='mbe-2'>Project meeting with john @10:15am</Typography>
               <div className='flex items-center gap-2.5'>
-                <CustomAvatar src='/images/avatars/1.png' size={32} />
+                <CustomAvatar src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/1.png`} size={32} />
                 <div className='flex flex-col flex-wrap'>
                   <Typography variant='body2' className='font-medium'>
                     Lester McCarthy (Client)
@@ -100,9 +104,9 @@ const UserActivityTimeLine = () => {
               </div>
               <Typography className='mbe-2'>6 team members in a project</Typography>
               <AvatarGroup total={6} className='pull-up'>
-                <Avatar alt='Travis Howard' src='/images/avatars/1.png' />
-                <Avatar alt='Agnes Walker' src='/images/avatars/4.png' />
-                <Avatar alt='John Doe' src='/images/avatars/2.png' />
+                <Avatar alt='Travis Howard' src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/1.png`} />
+                <Avatar alt='Agnes Walker' src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/4.png`} />
+                <Avatar alt='John Doe' src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/2.png`} />
               </AvatarGroup>
             </TimelineContent>
           </TimelineItem>

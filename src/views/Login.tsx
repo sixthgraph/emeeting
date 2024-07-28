@@ -95,12 +95,16 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
   // Vars
-  const darkImg = '/images/pages/auth-mask-dark.png'
-  const lightImg = '/images/pages/auth-mask-light.png'
-  const darkIllustration = '/images/illustrations/auth/V3-login-dark.png'
-  const lightIllustration = '/images/illustrations/auth/V3-login-light.png'
-  const borderedDarkIllustration = '/images/illustrations/auth/V3-login-dark-border.png'
-  const borderedLightIllustration = '/images/illustrations/auth/V3-login-light-border.png'
+  const darkImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/auth-mask-dark.png'
+  const lightImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/auth-mask-light.png'
+  const darkIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-login-dark.png'
+  const lightIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-login-light.png'
+
+  const borderedDarkIllustration =
+    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-login-dark-border.png'
+
+  const borderedLightIllustration =
+    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-login-light-border.png'
 
   // Hooks
   // const router = useRouter()
@@ -269,7 +273,9 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
             <Button
               color='secondary'
               className='self-center text-textPrimary'
-              startIcon={<img src='/images/logos/google.png' alt='Google' width={22} />}
+              startIcon={
+                <img src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/logos/google.png`} alt='Google' width={22} />
+              }
               sx={{ '& .MuiButton-startIcon': { marginInlineEnd: 3 } }}
               onClick={() => signIn('google')}
             >

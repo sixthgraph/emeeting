@@ -30,8 +30,8 @@ const MaskImg = styled('img')({
 
 const NotFound = ({ mode }: { mode: SystemMode }) => {
   // Vars
-  const darkImg = '/images/pages/misc-mask-dark.png'
-  const lightImg = '/images/pages/misc-mask-light.png'
+  const darkImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/misc-mask-dark.png'
+  const lightImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/misc-mask-light.png'
 
   // Hooks
   const theme = useTheme()
@@ -53,7 +53,7 @@ const NotFound = ({ mode }: { mode: SystemMode }) => {
         </Button>
         <img
           alt='error-404-illustration'
-          src='/images/illustrations/characters/1.png'
+          src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/illustrations/characters/1.png`}
           className='object-cover bs-[400px] md:bs-[450px] lg:bs-[500px] mbs-10 md:mbs-14 lg:mbs-20'
         />
       </div>

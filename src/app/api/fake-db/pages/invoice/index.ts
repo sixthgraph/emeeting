@@ -33,7 +33,7 @@ export const db: InvoiceType[] = [
     name: 'Stephanie Burns',
     service: 'UI/UX Design & Development',
     total: 5219,
-    avatar: '/images/avatars/1.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
     invoiceStatus: 'Downloaded',
     balance: 0,
     dueDate: `15 ${currentMonth} ${now.getFullYear()}`
@@ -195,7 +195,7 @@ export const db: InvoiceType[] = [
     name: 'Jamie Jones',
     service: 'Unlimited Extended License',
     total: 5200,
-    avatar: '/images/avatars/1.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
     invoiceStatus: 'Partial Payment',
     balance: 0,
     dueDate: `17 ${currentMonth} ${now.getFullYear()}`
@@ -357,7 +357,7 @@ export const db: InvoiceType[] = [
     name: 'Monica Fuller',
     service: 'Unlimited Extended License',
     total: 2032,
-    avatar: '/images/avatars/1.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
     invoiceStatus: 'Partial Payment',
     balance: 0,
     dueDate: `30 ${currentMonth} ${now.getFullYear()}`
@@ -536,7 +536,7 @@ export const db: InvoiceType[] = [
     name: 'Mrs. Jodi Chapman',
     service: 'Unlimited Extended License',
     total: 2825,
-    avatar: '/images/avatars/1.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
     invoiceStatus: 'Partial Payment',
     balance: '-$459',
     dueDate: `14 ${currentMonth} ${now.getFullYear()}`

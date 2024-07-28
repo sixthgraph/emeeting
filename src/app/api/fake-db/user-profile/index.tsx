@@ -35,31 +35,31 @@ export const db: DB = {
           isFriend: true,
           connections: '45',
           name: 'Cecilia Payne',
-          avatar: '/images/avatars/2.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png'
         },
         {
           isFriend: false,
           connections: '1.32k',
           name: 'Curtis Fletcher',
-          avatar: '/images/avatars/3.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png'
         },
         {
           isFriend: false,
           connections: '125',
           name: 'Alice Stone',
-          avatar: '/images/avatars/4.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png'
         },
         {
           isFriend: true,
           connections: '456',
           name: 'Darrell Barnes',
-          avatar: '/images/avatars/5.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png'
         },
         {
           isFriend: true,
           connections: '1.2k',
           name: 'Eugenia Moore',
-          avatar: '/images/avatars/8.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/8.png'
         }
       ],
       teamsTech: [
@@ -68,35 +68,35 @@ export const db: DB = {
           ChipColor: 'error',
           chipText: 'Developer',
           title: 'React Developers',
-          avatar: '/images/logos/react-bg.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/react-bg.png'
         },
         {
           members: 122,
           chipText: 'Support',
           ChipColor: 'primary',
           title: 'Support Team',
-          avatar: '/images/icons/support-bg.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/icons/support-bg.png'
         },
         {
           members: 7,
           ChipColor: 'info',
           chipText: 'Designer',
           title: 'UI Designer',
-          avatar: '/images/logos/figma-bg.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/figma-bg.png'
         },
         {
           members: 289,
           ChipColor: 'error',
           chipText: 'Developer',
           title: 'Vue.js Developers',
-          avatar: '/images/logos/vue-bg.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/vue-bg.png'
         },
         {
           members: 24,
           chipText: 'Marketing',
           ChipColor: 'secondary',
           title: 'Digital Marketing',
-          avatar: '/images/logos/twitter-bg.png'
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/twitter-bg.png'
         }
       ],
       projectTable: [
@@ -105,12 +105,12 @@ export const db: DB = {
           title: 'BGC eCommerce App',
           subtitle: 'React Project',
           leader: 'Eileen',
-          avatar: '/images/logos/react-bg.png',
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/react-bg.png',
           avatarGroup: [
-            '/images/avatars/1.png',
-            '/images/avatars/2.png',
-            '/images/avatars/3.png',
-            '/images/avatars/4.png'
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png'
           ],
           status: 78
         },
@@ -119,8 +119,11 @@ export const db: DB = {
           leader: 'Owen',
           title: 'Falcon Logo Design',
           subtitle: 'Figma Project',
-          avatar: '/images/logos/figma-bg.png',
-          avatarGroup: ['/images/avatars/5.png', '/images/avatars/6.png'],
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/figma-bg.png',
+          avatarGroup: [
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png'
+          ],
           status: 18
         },
         {
@@ -128,12 +131,12 @@ export const db: DB = {
           title: 'Dashboard Design',
           subtitle: 'VueJs Project',
           leader: 'Keith',
-          avatar: '/images/logos/vue-bg.png',
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/vue-bg.png',
           avatarGroup: [
-            '/images/avatars/7.png',
-            '/images/avatars/8.png',
-            '/images/avatars/1.png',
-            '/images/avatars/2.png'
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/8.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png'
           ],
           status: 62
         },
@@ -142,12 +145,12 @@ export const db: DB = {
           title: 'Foodista Mobile App',
           subtitle: 'Xamarin Project',
           leader: 'Merline',
-          avatar: '/images/icons/mobile-bg.png',
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/icons/mobile-bg.png',
           avatarGroup: [
-            '/images/avatars/3.png',
-            '/images/avatars/4.png',
-            '/images/avatars/5.png',
-            '/images/avatars/6.png'
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png'
           ],
           status: 8
         },
@@ -156,8 +159,12 @@ export const db: DB = {
           leader: 'Harmonia',
           title: 'Dojo React Project',
           subtitle: 'Python Project',
-          avatar: '/images/logos/python-bg.png',
-          avatarGroup: ['/images/avatars/7.png', '/images/avatars/8.png', '/images/avatars/1.png'],
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/python-bg.png',
+          avatarGroup: [
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/8.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png'
+          ],
           status: 36
         },
         {
@@ -165,12 +172,12 @@ export const db: DB = {
           leader: 'Allyson',
           title: 'Blockchain Website',
           subtitle: 'Sketch Project',
-          avatar: '/images/logos/sketch-bg.png',
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/sketch-bg.png',
           avatarGroup: [
-            '/images/avatars/2.png',
-            '/images/avatars/3.png',
-            '/images/avatars/4.png',
-            '/images/avatars/5.png'
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png'
           ],
           status: 92
         },
@@ -179,12 +186,12 @@ export const db: DB = {
           title: 'Hoffman Website',
           subtitle: 'HTML Project',
           leader: 'Georgie',
-          avatar: '/images/logos/html-bg.png',
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/html-bg.png',
           avatarGroup: [
-            '/images/avatars/6.png',
-            '/images/avatars/7.png',
-            '/images/avatars/8.png',
-            '/images/avatars/1.png'
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/8.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png'
           ],
           status: 88
         },
@@ -193,12 +200,12 @@ export const db: DB = {
           title: 'eCommerce Website',
           subtitle: 'React Project',
           leader: 'Eileen',
-          avatar: '/images/logos/react-bg.png',
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/react-bg.png',
           avatarGroup: [
-            '/images/avatars/1.png',
-            '/images/avatars/2.png',
-            '/images/avatars/3.png',
-            '/images/avatars/4.png'
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png'
           ],
           status: 78
         },
@@ -207,8 +214,11 @@ export const db: DB = {
           leader: 'Owen',
           title: 'Retro Logo Design',
           subtitle: 'Figma Project',
-          avatar: '/images/logos/figma-bg.png',
-          avatarGroup: ['/images/avatars/5.png', '/images/avatars/6.png'],
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/figma-bg.png',
+          avatarGroup: [
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png'
+          ],
           status: 18
         },
         {
@@ -216,12 +226,12 @@ export const db: DB = {
           title: 'Admin Dashboard',
           subtitle: 'VueJs Project',
           leader: 'Keith',
-          avatar: '/images/logos/vue-bg.png',
+          avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/vue-bg.png',
           avatarGroup: [
-            '/images/avatars/7.png',
-            '/images/avatars/8.png',
-            '/images/avatars/1.png',
-            '/images/avatars/2.png'
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/8.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
+            process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png'
           ],
           status: 62
         }
@@ -231,11 +241,11 @@ export const db: DB = {
       {
         extraMembers: 9,
         title: 'React Developers',
-        avatar: '/images/logos/react-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/react-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/1.png', name: 'Vinnie Mostowy' },
-          { avatar: '/images/avatars/2.png', name: 'Allen Rieske' },
-          { avatar: '/images/avatars/3.png', name: 'Julee Rossignol' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png', name: 'Vinnie Mostowy' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png', name: 'Allen Rieske' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png', name: 'Julee Rossignol' }
         ],
         description:
           'We don’t make assumptions about the rest of your technology stack, so you can develop new features.',
@@ -253,11 +263,11 @@ export const db: DB = {
       {
         extraMembers: 4,
         title: 'Vue.js Dev Team',
-        avatar: '/images/logos/vue-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/vue-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/5.png', name: "Kaith D'souza" },
-          { avatar: '/images/avatars/6.png', name: 'John Doe' },
-          { avatar: '/images/avatars/7.png', name: 'Alan Walker' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png', name: "Kaith D'souza" },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png', name: 'John Doe' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png', name: 'Alan Walker' }
         ],
         description:
           'The development of Vue and its ecosystem is guided by an international team, some of whom have chosen.',
@@ -274,11 +284,11 @@ export const db: DB = {
       },
       {
         title: 'Creative Designers',
-        avatar: '/images/logos/xd-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/xd-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/1.png', name: 'Jimmy Ressula' },
-          { avatar: '/images/avatars/2.png', name: 'Kristi Lawker' },
-          { avatar: '/images/avatars/3.png', name: 'Danny Paul' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png', name: 'Jimmy Ressula' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png', name: 'Kristi Lawker' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png', name: 'Danny Paul' }
         ],
         description:
           'A design or product team is more than just the people on it. A team includes the people, the roles they play.',
@@ -295,11 +305,11 @@ export const db: DB = {
       },
       {
         title: 'Support Team',
-        avatar: '/images/icons/support-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/icons/support-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/5.png', name: 'Andrew Tye' },
-          { avatar: '/images/avatars/6.png', name: 'Rishi Swaat' },
-          { avatar: '/images/avatars/7.png', name: 'Rossie Kim' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png', name: 'Andrew Tye' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png', name: 'Rishi Swaat' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png', name: 'Rossie Kim' }
         ],
         description:
           'Support your team. Your customer support team is fielding the good, the bad, and the ugly on daily basis.',
@@ -313,11 +323,11 @@ export const db: DB = {
       {
         extraMembers: 7,
         title: 'Digital Marketing',
-        avatar: '/images/icons/social-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/icons/social-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/1.png', name: 'Kim Merchent' },
-          { avatar: '/images/avatars/2.png', name: "Sam D'souza" },
-          { avatar: '/images/avatars/3.png', name: 'Nurvi Karlos' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png', name: 'Kim Merchent' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png', name: "Sam D'souza" },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png', name: 'Nurvi Karlos' }
         ],
         description:
           'Digital marketing refers to advertising delivered through digital channels such as search engines, websites…',
@@ -335,11 +345,11 @@ export const db: DB = {
       {
         extraMembers: 2,
         title: 'Event',
-        avatar: '/images/logos/event-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/event-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/5.png', name: 'Vinnie Mostowy' },
-          { avatar: '/images/avatars/6.png', name: 'Allen Rieske' },
-          { avatar: '/images/avatars/7.png', name: 'Julee Rossignol' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png', name: 'Vinnie Mostowy' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png', name: 'Allen Rieske' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png', name: 'Julee Rossignol' }
         ],
         description:
           'Event is defined as a particular contest which is part of a program of contests. An example of an event is the long…',
@@ -352,11 +362,11 @@ export const db: DB = {
       },
       {
         title: 'Figma Resources',
-        avatar: '/images/logos/figma-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/figma-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/1.png', name: 'Andrew Mostowy' },
-          { avatar: '/images/avatars/2.png', name: 'Micky Ressula' },
-          { avatar: '/images/avatars/3.png', name: 'Michel Pal' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png', name: 'Andrew Mostowy' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png', name: 'Micky Ressula' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png', name: 'Michel Pal' }
         ],
         description:
           'Explore, install, use, and remix thousands of plugins and files published to the Figma Community by designers.',
@@ -374,11 +384,11 @@ export const db: DB = {
       {
         extraMembers: 8,
         title: 'Only Beginners',
-        avatar: '/images/logos/html-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/html-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/5.png', name: 'Kim Karlos' },
-          { avatar: '/images/avatars/6.png', name: 'Katy Turner' },
-          { avatar: '/images/avatars/7.png', name: 'Peter Adward' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png', name: 'Kim Karlos' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png', name: 'Katy Turner' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png', name: 'Peter Adward' }
         ],
         description:
           'Learn the basics of how websites work, front-end vs back-end. Learn basic HTML, CSS, and JavaScript.',
@@ -395,11 +405,11 @@ export const db: DB = {
       },
       {
         title: 'Python Developers',
-        avatar: '/images/logos/python-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/python-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/5.png', name: 'Kim Karlos' },
-          { avatar: '/images/avatars/6.png', name: 'Katy Turner' },
-          { avatar: '/images/avatars/7.png', name: 'Peter Adward' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png', name: 'Kim Karlos' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png', name: 'Katy Turner' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png', name: 'Peter Adward' }
         ],
         description:
           "Harness Python's versatility for web development, data analysis & system automation for cutting-edge solutions.",
@@ -427,12 +437,12 @@ export const db: DB = {
         members: '280 members',
         title: 'Social Banners',
         client: 'Christian Jimenez',
-        avatar: '/images/icons/social-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/icons/social-bg.png',
         description: 'We are Consulting, Software Development and Web Development Services.',
         avatarGroup: [
-          { avatar: '/images/avatars/1.png', name: 'Vinnie Mostowy' },
-          { avatar: '/images/avatars/2.png', name: 'Allen Rieske' },
-          { avatar: '/images/avatars/3.png', name: 'Julee Rossignol' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png', name: 'Vinnie Mostowy' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png', name: 'Allen Rieske' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png', name: 'Julee Rossignol' }
         ]
       },
       {
@@ -450,11 +460,11 @@ export const db: DB = {
         members: '1.1k members',
         title: 'Admin Template',
         client: 'Jeffrey Phillips',
-        avatar: '/images/logos/react-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/react-bg.png',
         avatarGroup: [
-          { avatar: '/images/avatars/4.png', name: "Kaith D'souza" },
-          { avatar: '/images/avatars/5.png', name: 'John Doe' },
-          { avatar: '/images/avatars/6.png', name: 'Alan Walker' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png', name: "Kaith D'souza" },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png', name: 'John Doe' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png', name: 'Alan Walker' }
         ],
         description: "Time is our most valuable asset, that's why we want to help you save it."
       },
@@ -473,12 +483,12 @@ export const db: DB = {
         startDate: '24/7/21',
         members: '458 members',
         client: 'Ricky McDonald',
-        avatar: '/images/logos/vue-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/vue-bg.png',
         description: 'Figma dashboard app design combines the user UI & UX.',
         avatarGroup: [
-          { avatar: '/images/avatars/7.png', name: 'Jimmy Ressula' },
-          { avatar: '/images/avatars/8.png', name: 'Kristi Lawker' },
-          { avatar: '/images/avatars/1.png', name: 'Danny Paul' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png', name: 'Jimmy Ressula' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/8.png', name: 'Kristi Lawker' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png', name: 'Danny Paul' }
         ]
       },
       {
@@ -496,12 +506,12 @@ export const db: DB = {
         members: '137 members',
         client: 'Hulda Wright',
         title: 'Create Website',
-        avatar: '/images/logos/html-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/html-bg.png',
         description: 'Your domain name should reflect your products or services so that your...',
         avatarGroup: [
-          { avatar: '/images/avatars/2.png', name: 'Andrew Tye' },
-          { avatar: '/images/avatars/3.png', name: 'Rishi Swaat' },
-          { avatar: '/images/avatars/4.png', name: 'Rossie Kim' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png', name: 'Andrew Tye' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png', name: 'Rishi Swaat' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png', name: 'Rossie Kim' }
         ]
       },
       {
@@ -519,12 +529,12 @@ export const db: DB = {
         budgetSpent: '$52.7k',
         client: 'Jerry Greene',
         title: 'Figma Dashboard',
-        avatar: '/images/logos/figma-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/figma-bg.png',
         description: "Time is our most valuable asset, that's why we want to help you save it.",
         avatarGroup: [
-          { avatar: '/images/avatars/5.png', name: 'Kim Merchent' },
-          { avatar: '/images/avatars/6.png', name: "Sam D'souza" },
-          { avatar: '/images/avatars/7.png', name: 'Nurvi Karlos' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png', name: 'Kim Merchent' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png', name: "Sam D'souza" },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/7.png', name: 'Nurvi Karlos' }
         ]
       },
       {
@@ -542,12 +552,12 @@ export const db: DB = {
         title: 'Logo Design',
         members: '16 members',
         client: 'Olive Strickland',
-        avatar: '/images/logos/xd-bg.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/xd-bg.png',
         description: 'Premium logo designs created by top logo designers. Create the branding.',
         avatarGroup: [
-          { avatar: '/images/avatars/8.png', name: 'Kim Karlos' },
-          { avatar: '/images/avatars/1.png', name: 'Katy Turner' },
-          { avatar: '/images/avatars/2.png', name: 'Peter Adward' }
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/8.png', name: 'Kim Karlos' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png', name: 'Katy Turner' },
+          { avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png', name: 'Peter Adward' }
         ]
       }
     ],
@@ -559,7 +569,7 @@ export const db: DB = {
         connections: '129',
         name: 'Mark Gilbert',
         designation: 'UI Designer',
-        avatar: '/images/avatars/1.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
         chips: [
           {
             title: 'Figma',
@@ -578,7 +588,7 @@ export const db: DB = {
         connections: '1.28k',
         name: 'Eugenia Parsons',
         designation: 'Developer',
-        avatar: '/images/avatars/2.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/2.png',
         chips: [
           {
             color: 'error',
@@ -597,7 +607,7 @@ export const db: DB = {
         connections: '890',
         name: 'Francis Byrd',
         designation: 'Developer',
-        avatar: '/images/avatars/3.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/3.png',
         chips: [
           {
             title: 'HTML',
@@ -616,7 +626,7 @@ export const db: DB = {
         connections: '890',
         name: 'Leon Lucas',
         designation: 'UI/UX Designer',
-        avatar: '/images/avatars/4.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/4.png',
         chips: [
           {
             title: 'Figma',
@@ -639,7 +649,7 @@ export const db: DB = {
         connections: '2.14k',
         name: 'Jayden Rogers',
         designation: 'Full Stack Developer',
-        avatar: '/images/avatars/5.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/5.png',
         chips: [
           {
             color: 'info',
@@ -662,7 +672,7 @@ export const db: DB = {
         designation: 'SEO',
         connections: '1.27k',
         name: 'Jeanette Powell',
-        avatar: '/images/avatars/6.png',
+        avatar: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/6.png',
         chips: [
           {
             title: 'Analysis',
@@ -681,8 +691,8 @@ export const db: DB = {
     location: 'Vatican City',
     joiningDate: 'April 2021',
     designation: 'UX Designer',
-    profileImg: '/images/avatars/1.png',
+    profileImg: process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/1.png',
     designationIcon: 'tabler-palette',
-    coverImg: '/images/pages/profile-banner.png'
+    coverImg: process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/profile-banner.png'
   }
 }

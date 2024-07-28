@@ -35,32 +35,32 @@ const connectedAccountsArr: ConnectedAccountsType[] = [
   {
     checked: true,
     title: 'Google',
-    logo: '/images/logos/google.png',
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/google.png',
     subtitle: 'Calendar and Contacts'
   },
   {
     checked: false,
     title: 'Slack',
-    logo: '/images/logos/slack.png',
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/slack.png',
     subtitle: 'Communications'
   },
   {
     checked: true,
     title: 'Github',
-    logo: '/images/logos/github.png',
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/github.png',
     subtitle: 'Manage your Git repositories'
   },
   {
     checked: true,
     title: 'Mailchimp',
     subtitle: 'Email marketing service',
-    logo: '/images/logos/mailchimp.png'
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/mailchimp.png'
   },
   {
     title: 'Asana',
     checked: false,
     subtitle: 'Task Communication',
-    logo: '/images/logos/asana.png'
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/asana.png'
   }
 ]
 
@@ -68,31 +68,31 @@ const socialAccountsArr: SocialAccountsType[] = [
   {
     title: 'Facebook',
     isConnected: false,
-    logo: '/images/logos/facebook.png'
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/facebook.png'
   },
   {
     title: 'Twitter',
     isConnected: true,
     username: '@Pixinvent',
-    logo: '/images/logos/twitter.png',
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/twitter.png',
     href: 'https://twitter.com/pixinvents'
   },
   {
     title: 'Linkedin',
     isConnected: true,
     username: '@Pixinvent',
-    logo: '/images/logos/linkedin.png',
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/linkedin.png',
     href: 'https://www.linkedin.com/company/pixinvent'
   },
   {
     title: 'Dribbble',
     isConnected: false,
-    logo: '/images/logos/dribbble.png'
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/dribbble.png'
   },
   {
     title: 'Behance',
     isConnected: false,
-    logo: '/images/logos/behance.png'
+    logo: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/behance.png'
   }
 ]
 

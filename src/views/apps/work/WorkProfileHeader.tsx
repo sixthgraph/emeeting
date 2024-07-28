@@ -18,7 +18,13 @@ const WorkProfileHeader = ({ workData }: { workData: any; data?: ProfileHeaderTy
         <div className='flex p-5 items-stretch gap-4 w-full rounded-lg bg-stripes-cyan text-center'>
           <div className='rounded-bs-md item-start border-[5px]  border-be-0  border-backgroundPaper bg-backgroundPaper'>
             {/* <img height={55} width={55} src={data?.profileImg} className='rounded' alt='Profile Background' /> */}
-            <Image src={`/images/avatars/1.png`} className='rounded' alt='Profile Background' height={55} width={55} />
+            <Image
+              src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/1.png`}
+              className='rounded'
+              alt='Profile Background'
+              height={55}
+              width={55}
+            />
           </div>
           <div className='flex-1 flex flex-col items-start justify-start'>
             <Typography className='text-xs'>Created by:</Typography>

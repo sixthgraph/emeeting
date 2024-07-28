@@ -313,6 +313,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
 
+  const basepath = process.env.NEXT_PUBLIC_BASEPATH
+
   return (
     <>
       <TabContext value={value}>
@@ -438,7 +440,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                 )
               })}
               <Script
-                src='/script/test-render.js'
+                src={`${basepath}/script/test-render.js`}
                 strategy='lazyOnload'
                 onReady={() => {
                   console.log('form render has loaded')

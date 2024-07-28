@@ -71,7 +71,7 @@ const projectTable: ProjectListDataType[] = [
     progressColor: 'success',
     projectType: 'React Project',
     projectTitle: 'BGC eCommerce App',
-    img: '/images/logos/react-bg.png'
+    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/react-bg.png'
   },
   {
     id: 2,
@@ -81,7 +81,7 @@ const projectTable: ProjectListDataType[] = [
     progressColor: 'error',
     projectType: 'Figma Project',
     projectTitle: 'Falcon Logo Design',
-    img: '/images/logos/figma-bg.png'
+    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/figma-bg.png'
   },
   {
     id: 3,
@@ -91,7 +91,7 @@ const projectTable: ProjectListDataType[] = [
     progressColor: 'primary',
     projectType: 'VueJs Project',
     projectTitle: 'Dashboard Design',
-    img: '/images/logos/vue-bg.png'
+    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/vue-bg.png'
   },
   {
     id: 4,
@@ -101,7 +101,7 @@ const projectTable: ProjectListDataType[] = [
     progressColor: 'error',
     projectType: 'Xamarin Project',
     projectTitle: 'Foodista Mobile App',
-    img: '/images/icons/mobile-bg.png'
+    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/icons/mobile-bg.png'
   },
   {
     id: 5,
@@ -111,7 +111,7 @@ const projectTable: ProjectListDataType[] = [
     progressColor: 'warning',
     projectType: 'Python Project',
     projectTitle: 'Dojo React Project',
-    img: '/images/logos/python-bg.png'
+    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/python-bg.png'
   },
   {
     id: 6,
@@ -121,7 +121,7 @@ const projectTable: ProjectListDataType[] = [
     progressColor: 'success',
     projectType: 'Sketch Project',
     projectTitle: 'Blockchain Website',
-    img: '/images/logos/sketch-bg.png'
+    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/sketch-bg.png'
   },
   {
     id: 7,
@@ -131,7 +131,7 @@ const projectTable: ProjectListDataType[] = [
     progressColor: 'success',
     projectType: 'HTML Project',
     projectTitle: 'Hoffman Website',
-    img: '/images/logos/html-bg.png'
+    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/html-bg.png'
   }
 ]
 

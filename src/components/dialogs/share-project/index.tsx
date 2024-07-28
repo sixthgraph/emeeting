@@ -47,49 +47,49 @@ type DataType = {
 
 const data: DataType[] = [
   {
-    avatar: '1.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '1.png',
     value: 'Can Edit',
     name: 'Lester Palmer',
     email: 'lester.palmer@gmail.com'
   },
   {
-    avatar: '2.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '2.png',
     value: 'Owner',
     name: 'Mittie Blair',
     email: 'mittie.blair@gmail.com'
   },
   {
-    avatar: '3.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '3.png',
     value: 'Can Comment',
     name: 'Marvin Wheeler',
     email: 'marvin.wheeler@gmail.com'
   },
   {
-    avatar: '4.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '4.png',
     value: 'Can View',
     name: 'Nannie Ford',
     email: 'nannie.ford@gmail.com'
   },
   {
-    avatar: '5.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '5.png',
     value: 'Can Edit',
     name: 'Julian Murphy',
     email: 'julian.murphy@gmail.com'
   },
   {
-    avatar: '6.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '6.png',
     value: 'Can View',
     name: 'Sophie Gilbert',
     email: 'sophie.gilbert@gmail.com'
   },
   {
-    avatar: '7.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '7.png',
     value: 'Can Comment',
     name: 'Chris Watkins',
     email: 'chris.watkins@gmail.com'
   },
   {
-    avatar: '8.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '8.png',
     value: 'Can Edit',
     name: 'Adelaide Nichols',
     email: 'adelaide.nichols@gmail.com'
@@ -98,27 +98,27 @@ const data: DataType[] = [
 
 const autocompleteOptions: OptionsType[] = [
   {
-    avatar: '1.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '1.png',
     name: 'Chandler Bing'
   },
   {
-    avatar: '2.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '2.png',
     name: 'Rachel Green'
   },
   {
-    avatar: '3.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '3.png',
     name: 'Joey Tribbiani'
   },
   {
-    avatar: '4.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '4.png',
     name: 'Pheobe Buffay'
   },
   {
-    avatar: '5.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '5.png',
     name: 'Ross Geller'
   },
   {
-    avatar: '8.png',
+    avatar: process.env.NEXT_PUBLIC_BASEPATH + '8.png',
     name: 'Monica Geller'
   }
 ]
@@ -167,7 +167,11 @@ const ShareProject = ({ open, setOpen }: ShareProjectProps) => {
             renderOption={(props, option) => (
               <ListItem {...props} key={option.name} sx={{ width: 'calc(100% - 1rem)' }}>
                 <ListItemAvatar>
-                  <CustomAvatar src={`/images/avatars/${option.avatar}`} alt={option.name} size={30} />
+                  <CustomAvatar
+                    src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/${option.avatar}`}
+                    alt={option.name}
+                    size={30}
+                  />
                 </ListItemAvatar>
                 <ListItemText primary={option.name} />
               </ListItem>
@@ -179,7 +183,7 @@ const ShareProject = ({ open, setOpen }: ShareProjectProps) => {
           <div className='flex flex-col flex-wrap gap-4'>
             {data.map((member, index) => (
               <div key={index} className='flex items-center is-full gap-4'>
-                <Avatar src={`/images/avatars/${member.avatar}`} alt={member.name} />
+                <Avatar src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/${member.avatar}`} alt={member.name} />
                 <div className='flex justify-between items-center is-full overflow-hidden'>
                   <div className='flex flex-col items-start overflow-hidden'>
                     <Typography className='truncate is-full' color='text.primary'>
