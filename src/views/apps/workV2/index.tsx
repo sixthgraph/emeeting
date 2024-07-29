@@ -12,6 +12,7 @@ import type { Data } from '@/types/pages/profileTypes'
 
 // Component Imports
 import WorkProfile from '../work/WorkProfile'
+import WorkMessage from './WorkMessage'
 
 const WorkDetailV2 = ({ data, conditiondata }: { data: Data; conditiondata: any }) => {
   const workData = data.data
@@ -28,7 +29,9 @@ const WorkDetailV2 = ({ data, conditiondata }: { data: Data; conditiondata: any 
       <Grid item xs={4}>
         <Card variant='outlined'>
           <CardHeader title='Messages' />
-          <CardContent>Chat content</CardContent>
+          <CardContent>
+            <WorkMessage />
+          </CardContent>
         </Card>
       </Grid>
     </Grid>
