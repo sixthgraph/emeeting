@@ -44,7 +44,7 @@ import TablePaginationComponent from '@components/TablePaginationComponent'
 import type { MyrequestType, MyrequestTypeWithAction } from '@/types/apps/myrequestTypes'
 
 // Component Imports
-// import TableFilters from './TableFilters'
+import TableFilters from './TableFilters'
 
 // import UserDrawerForm from './UserDrawerForm'
 
@@ -161,8 +161,8 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [trackingOpen, setTrackingOpen] = useState(false)
 
-  // console.log('tableData =====')
-  // console.log(tableData)
+  console.log('tableData =====')
+  console.log(tableData)
 
   console.log('depData ===')
   console.log(depData)
@@ -410,6 +410,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
     <>
       <Card>
         <CardHeader title='My Request' className='pbe-4' />
+        <TableFilters setData={setData} tableData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
