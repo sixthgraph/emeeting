@@ -41,7 +41,7 @@ import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
 import type { UsersType } from '@/types/apps/userTypes'
 
 // Component Imports
-// import TableFilters from './TableFilters'
+import TableFilters from './TableFilters'
 
 // import UserDrawerForm from './UserDrawerForm'
 
@@ -150,17 +150,17 @@ type Props = {
   depData?: any
 }
 
-const TodoListTable = ({ tableData, depData }: Props) => {
+const TodoListTable = ({ tableData }: Props) => {
   // States
   //const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  console.log('tableData =====')
-  console.log(tableData)
-  console.log('depData =====')
-  console.log(depData)
+  // console.log('tableData =====')
+  // console.log(tableData)
+  // console.log('depData 1 =====')
+  // console.log(depData)
 
   // Hooks
   const { lang: locale } = useParams()
@@ -245,17 +245,6 @@ const TodoListTable = ({ tableData, depData }: Props) => {
           </div>
         )
       }),
-
-      // columnHelper.accessor('processname', {
-      //   header: '',
-      //   cell: ({}) => (
-      //     <div className='flex items-center gap-4'>
-      //       <div className='flex flex-col'>
-      //         <Icon className='text-[22px] text-textSecondary tabler-mail' />
-      //       </div>
-      //     </div>
-      //   )
-      // }),
       columnHelper.accessor('createby', {
         header: 'Request By',
         cell: ({ row }) => (
@@ -425,7 +414,7 @@ const TodoListTable = ({ tableData, depData }: Props) => {
     <>
       <Card>
         <CardHeader title='Awaiting your action' className='pbe-4' />
-        {/* <TableFilters depData={depData} setData={setData} tableData={tableData} /> */}
+        <TableFilters setData={setData} tableData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select

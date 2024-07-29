@@ -97,6 +97,9 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
           <MenuItem href={`/${locale}/my-requests`} icon={<i className='tabler-inbox' />}>
             {dictionary['navigation'].myRequest}
           </MenuItem>
+          <MenuItem href={`/${locale}/sent`} icon={<i className='tabler-arrow-autofit-right' />}>
+            {dictionary['navigation'].sent}
+          </MenuItem>
           <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-inbox' />}>
             {dictionary['navigation'].comments}
           </MenuItem>

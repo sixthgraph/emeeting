@@ -9,57 +9,59 @@ import MenuItem from '@mui/material/MenuItem'
 // Type Imports
 //import type { UsersType } from '@/types/apps/userTypes'
 import type { TodoType } from '@/types/apps/todoTypes'
-import type { DepType } from '@/types/apps/userTypes'
 
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
 
-const TableFilters = ({
-  setData,
-  tableData,
-  depData
-}: {
-  setData: any
-  tableData?: TodoType[]
-  depData?: DepType[]
-}) => {
-  const [department, setDepartment] = useState<TodoType['basketid']>('')
+const TableFilters = ({ setData, tableData }: { setData: any; tableData?: TodoType[] }) => {
+  const [department, setDepartment] = useState<TodoType['currentdept']>('')
+  const [route, setRoute] = useState('')
   const myDep: any = []
-  const depObj: DepType = {}
-
-  depData?.map(dep => {
-    const id = String(dep.dep)
-
-    depObj[id] = {
-      dep: String(dep.dep),
-      depname: String(dep.depname),
-      docuname: Number(dep.docuname),
-      path: String(dep.path),
-      sort: Number(dep.sort),
-      statecode: String(dep.statecode)
-    }
-  })
-
-  tableData?.map((todo, index) => {
-    myDep[index] = {
-      dep: depObj[todo.basketid].dep,
-      depname: depObj[todo.basketid].depname,
-      docuname: depObj[todo.basketid].docuname,
-      path: depObj[todo.basketid].path,
-      sort: depObj[todo.basketid].sort,
-      statecode: depObj[todo.basketid].statecode
-    }
-  })
+  const myRoute: any = []
 
   useEffect(() => {
     const filteredData = tableData?.filter(todo => {
-      if (department && todo.basketid[0] !== department) return false
+      if (department && todo.currentdept !== department) return false
+      if (route && todo.workflowid !== route) return false
 
       return true
     })
 
     setData(filteredData)
-  }, [department, tableData, setData])
+  }, [department, route, tableData, setData])
+
+  tableData?.map(todo => {
+    const haveDep = myDep.find((item: any) => {
+      return item.dep == todo.currentdept
+    })
+
+    if (haveDep == undefined) {
+      const newData = {
+        dep: todo.currentdept,
+        depname: todo.currentdeptname
+      }
+
+      myDep.push(newData)
+    }
+  })
+
+  tableData?.map(todo => {
+    const haveRoute = myRoute.find((item: any) => {
+      return item.workflowid == todo.workflowid
+    })
+
+    if (haveRoute == undefined) {
+      const newData = {
+        workflowid: todo.workflowid,
+        routename: todo.routename
+      }
+
+      myRoute.push(newData)
+    }
+  })
+
+  console.log('myRoute == ')
+  console.log(myRoute)
 
   return (
     <CardContent>
@@ -74,9 +76,26 @@ const TableFilters = ({
             SelectProps={{ displayEmpty: true }}
           >
             <MenuItem value=''>Select Department</MenuItem>
-            {myDep?.map((dep: any) => (
-              <MenuItem key={dep.dep} value={dep.dep}>
+            {myDep?.map((dep: any, index: any) => (
+              <MenuItem key={index} value={dep.dep}>
                 {dep.depname}
+              </MenuItem>
+            ))}
+          </CustomTextField>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <CustomTextField
+            select
+            fullWidth
+            id='select-routeflow'
+            value={route}
+            onChange={e => setRoute(e.target.value)}
+            SelectProps={{ displayEmpty: true }}
+          >
+            <MenuItem value=''>Select RouteFlow</MenuItem>
+            {myRoute?.map((route: any, index: any) => (
+              <MenuItem key={index} value={route.workflowid}>
+                {route.routename}
               </MenuItem>
             ))}
           </CustomTextField>

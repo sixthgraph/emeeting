@@ -22,6 +22,8 @@ export async function GET() {
     // const depres = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
     const todoData = await response.json()
 
+    // const depData = await depres.json()
+
     const data = {
       todo: todoData.data.detail
 
