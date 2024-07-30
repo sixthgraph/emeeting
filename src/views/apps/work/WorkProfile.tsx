@@ -178,8 +178,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
 
     const reqBody = workData
 
-    delete reqBody.usercreateinfo
-    delete reqBody.workinprocess
+    // delete reqBody.usercreateinfo
+    // delete reqBody.workinprocess
 
     // delete reqBody.curdep
     // delete reqBody.curuid
@@ -538,9 +538,12 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               p: 2
             }}
           >
-            <Button variant='contained' className='mr-2' type='submit'>
-              Send Back
-            </Button>
+            {workData.blockid !== 'startpoint' && (
+              <Button variant='contained' className='mr-2' type='submit'>
+                Send Back
+              </Button>
+            )}
+
             {condionData && (
               <>
                 <Button
