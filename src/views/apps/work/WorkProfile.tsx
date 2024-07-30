@@ -236,19 +236,30 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     }
   }
 
-  // const handlesendbackwork = async (formData: any) => {
-  //   try {
-  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send`, formData)
+  const handlesendbackwork = async () => {
+    try {
+      const reqBody = {
+        wid: workData.wid,
+        senderuid: workData.senderuid,
+        senderpid: workData.senderpid,
+        rid: workData.workflowid
+      }
 
-  //     if (response.data.message === 'success') {
-  //       console.log('---Call sendbackwork success.------------------')
-  //     } else {
-  //       console.log(response.data.message)
-  //     }
-  //   } catch (error: any) {
-  //     console.log('Editwork failed. ', error.message)
-  //   }
-  // }
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/sendback`, reqBody)
+
+      if (response.data.message === 'success') {
+        console.log('---Call sendbackwork success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+
+      const path = `/en/todo`
+
+      navigate(path)
+    } catch (error: any) {
+      console.log('sendwork failed. ', error.message)
+    }
+  }
 
   // const handlerejectwork = async (formData: any) => {
   //   try {
@@ -538,13 +549,16 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               p: 2
             }}
           >
-            {workData.blockid !== 'startpoint' && (
-              <Button variant='contained' className='mr-2' type='submit'>
-                Send Back
-              </Button>
-            )}
+            {workData.blockid !== 'startpoint' &&
+              condionData !== 'end-process' &&
+              condionData !== null &&
+              workData.action == '' && (
+                <Button variant='contained' onClick={() => handlesendbackwork()} className='mr-2' type='submit'>
+                  Send Back
+                </Button>
+              )}
 
-            {condionData && (
+            {condionData && workData.action == '' && (
               <>
                 <Button
                   variant='contained'
@@ -562,13 +576,19 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               </>
             )}
 
-            {condionData !== 'end-process' && condionData !== null && (
+            {condionData !== 'end-process' && condionData !== null && workData.action == '' && (
               <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
-                Finish
+                Reject
               </Button>
             )}
 
-            {condionData === 'end-process' && (
+            {condionData !== 'end-process' && condionData !== null && workData.action == '' && (
+              <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                Approve
+              </Button>
+            )}
+
+            {condionData === 'end-process' && workData.action == '' && (
               <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
                 End Finish
               </Button>

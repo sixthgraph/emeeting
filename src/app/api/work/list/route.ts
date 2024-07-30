@@ -7,6 +7,7 @@ import axios from 'axios'
 
 //import RoleDialog from '../../../../components/dialogs/role-dialog/index'
 //import PricingDialog from '../../../../components/dialogs/pricing/index'
+import { null_ } from 'valibot'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
@@ -50,48 +51,68 @@ export async function POST(req: NextRequest) {
       })
 
       console.log('---curwip--')
-      console.log(curwip)
+      console.log(curwip.length)
 
-      workinfo.workflowid = curwip[0].rid
-      workinfo.blockid = curwip[0].pid
-      workinfo.curuid = curwip[0].uid
-      workinfo.curdep = curwip[0].dep
-      workinfo.datein = curwip[0].Datein
+      if (curwip.length == 0) {
+        const condata = null
 
-      const resnp2 = await axios.get(
-        `${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${curwip[0].rid}/${curwip[0].pid}`,
-        {
-          headers
-        }
-      )
+        const response2 = NextResponse.json({
+          message: res.data.message,
+          success: true,
+          data: workinfo,
+          conditionData: condata
+        })
 
-      let condata = resnp2.data
-
-      console.log('condata---')
-      console.log(condata)
-
-      if (curwip[0].uid !== email && condata !== null) {
-        condata = null
+        return response2
       } else {
-        if (condata == null && curwip[0].uid == email) {
-          condata = 'end-process'
+        workinfo.workflowid = curwip[0].rid
+        workinfo.blockid = curwip[0].pid
+        workinfo.curuid = curwip[0].uid
+        workinfo.curdep = curwip[0].dep
+        workinfo.datein = curwip[0].Datein
+
+        workinfo.senderuid = curwip[0].senderuid
+        workinfo.senderpid = curwip[0].senderpid
+        workinfo.action = curwip[0].action
+
+        const resnp2 = await axios.get(
+          `${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${curwip[0].rid}/${curwip[0].pid}`,
+          {
+            headers
+          }
+        )
+
+        let condata = resnp2.data
+
+        console.log('condata---')
+        console.log(condata)
+
+        if (curwip[0].uid !== email && condata !== null) {
+          condata = null
+        } else {
+          if (condata == null && curwip[0].uid == email) {
+            condata = 'end-process'
+          }
         }
+
+        console.log('condata2---')
+        console.log(condata)
+
+        const response2 = NextResponse.json({
+          message: res.data.message,
+          success: true,
+          data: workinfo,
+          conditionData: condata
+        })
+
+        return response2
       }
-
-      console.log('condata2---')
-      console.log(condata)
-
-      const response2 = NextResponse.json({
-        message: res.data.message,
-        success: true,
-        data: workinfo,
-        conditionData: condata
-      })
-
-      return response2
     }
 
     if (dataObj.length > 0) {
+      console.log('dataObj')
+      console.log(dataObj)
+
       const rid = dataObj[0].rid
       const pid = dataObj[0].pid
 
@@ -101,8 +122,10 @@ export async function POST(req: NextRequest) {
       workinfo.workflowid = rid
       workinfo.blockid = pid
 
-      console.log('dataObj')
-      console.log(dataObj)
+      workinfo.senderuid = dataObj[0].senderuid
+      workinfo.senderpid = dataObj[0].senderpid
+      workinfo.action = dataObj[0].action
+
       console.log(rid)
       console.log(pid)
 
