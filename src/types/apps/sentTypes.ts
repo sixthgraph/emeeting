@@ -1,4 +1,4 @@
-export type SentPageType = {
+export type SentType = {
   avatar: string
   blockid: string
   createby: string
@@ -21,6 +21,6 @@ export type SentPageType = {
   workinprocessid: string
 }
 
-export type SentTypeWithAction = SentPageType & {
+export type SentTypeWithAction = SentType & {
   action?: string
 }

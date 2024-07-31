@@ -4,11 +4,12 @@ import Grid from '@mui/material/Grid'
 
 // Type Imports
 import type { SentType } from '@/types/apps/sentTypes'
-import type { DepType } from '@/types/apps/userTypes'
 
-import SentListTable from './sentListTable'
+import SentListTable from './SentListTable'
 
-const SentList = ({ sentData, depData }: { sentData?: SentType[]; depData?: DepType[] }) => {
+// import type { DepType } from '@/types/apps/userTypes'
+
+const SentList = ({ sentData, depData }: { sentData?: SentType[]; depData?: any }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

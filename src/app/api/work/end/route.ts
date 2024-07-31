@@ -22,11 +22,13 @@ export async function POST(request: NextRequest) {
 
   try {
     const reqBody = await request.json()
+
     const res = await axios.post(
       `${process.env.ROUTE_FLOW_API_URL}/endofworkinfo?wid=${reqBody.wid}&id=${email}&blockid=${reqBody.blockid}`,
       reqBody,
       { headers }
     )
+
     const sent = res.data.data.detail
 
     const response = NextResponse.json({

@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json()
     const { email } = reqBody
     const wid = '66a9d14f068dfb7c8bf62cc1'
+
     console.log(reqBody)
 
     const mailresponse = await sendEmail(email, wid)
