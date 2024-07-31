@@ -1,4 +1,5 @@
-import { ContentWide } from '@core/svg/ContentWide'
+// import { ContentWide } from '@core/svg/ContentWide'
+
 import nodemailer from 'nodemailer'
 
 export const sendEmail = async (email: any, wid: any) => {

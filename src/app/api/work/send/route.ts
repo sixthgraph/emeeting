@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
 
     const mailresponse = await sendEmail(reqBody.uid, reqBody.wid)
 
+    console.log(mailresponse)
+
     const response = NextResponse.json({
       message: 'Send work successful',
       success: true,

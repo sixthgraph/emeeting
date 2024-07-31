@@ -285,6 +285,30 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     }
   }
 
+  const handleEndWork = async () => {
+    try {
+      const reqBody = {
+        wid: workData.wid,
+        rid: workData.workflowid,
+        blockid: workData.blockid
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/end`, reqBody)
+
+      if (response.data.message === 'success') {
+        console.log('---Call end success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+
+      const path = `/en/todo`
+
+      navigate(path)
+    } catch (error: any) {
+      console.log('reject failed. ', error.message)
+    }
+  }
+
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
   const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
@@ -300,6 +324,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
       )
     }
   }
+
+  //handleEndWork
 
   const formatshortdate = (date: any) => {
     const m_th_names = [
@@ -620,7 +646,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                   Reject
                 </Button>
 
-                <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                <Button variant='contained' onClick={() => handleEndWork()} className='mr-2' type='submit'>
                   End Finish
                 </Button>
               </>
