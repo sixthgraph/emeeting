@@ -9,6 +9,8 @@ import { getServerSession } from 'next-auth'
 
 import { options } from '../../auth/[...nextauth]/options'
 
+import { sendEmail } from '@/utils/mailer'
+
 export async function POST(request: NextRequest) {
   try {
     const serverSession = await getServerSession(options)
@@ -28,6 +30,8 @@ export async function POST(request: NextRequest) {
 
     console.log('----res send-----')
     console.log(res)
+
+    const mailresponse = await sendEmail(reqBody.uid, reqBody.wid)
 
     const response = NextResponse.json({
       message: 'Send work successful',

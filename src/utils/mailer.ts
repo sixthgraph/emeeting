@@ -1,6 +1,7 @@
+import { ContentWide } from '@core/svg/ContentWide'
 import nodemailer from 'nodemailer'
 
-export const sendEmail = async ({ email }: any) => {
+export const sendEmail = async (email: any, wid: any) => {
   console.log('start sendEmail')
 
   try {
@@ -21,8 +22,8 @@ export const sendEmail = async ({ email }: any) => {
     const mailOptions = {
       from: 'webmaster@excelink.co.th',
       to: email,
-      subject: 'Email from RouteFlow',
-      html: `<p>Click <a href="${process.env.NEXT_PUBLIC_APP_URL}">here</a> please...</p>`
+      subject: 'New work from RouteFlow',
+      html: `<p>Click <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/work?wid=${wid}">here</a> please...</p>`
     }
 
     console.log('mailOptions = ')
