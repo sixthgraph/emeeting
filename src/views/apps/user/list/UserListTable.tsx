@@ -204,17 +204,12 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     roleObj[Number(id)] = { icon: 'tabler-crown', color: 'error', name: String(name) }
   })
 
-  console.log('data =====')
-  console.log(data)
-
   // const [updateData, setUpdateData] = useState(...[initialData])
 
   // Hooks
   //const { lang: locale } = useParams()
 
   //console.log('data ===', data)
-
-  console.log('user list table load.')
 
   const userDrawerOpenHandle = () => {
     // sg here
@@ -305,16 +300,22 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         header: 'Department',
         cell: ({ row }) => (
           <>
-            {row.original.dep.map((dep: any) => {
-              return (
-                <div key={row.original.id} className='flex flex-row gap-2'>
-                  <Typography color='text.primary' className='font-medium'>
-                    {dep.depname}
-                  </Typography>
-                  <Typography variant='body2'>({dep.positionname})</Typography>
-                </div>
-              )
-            })}
+            {row.original.dep ? (
+              row.original.dep.map((dep: any, index: any) => {
+                return (
+                  <div key={index} className='flex flex-row gap-2'>
+                    <Typography color='text.primary' className='font-medium'>
+                      {dep.depname}
+                    </Typography>
+                    <Typography variant='body2'>({dep.positionname})</Typography>
+                  </div>
+                )
+              })
+            ) : (
+              <Typography color='text.primary' className='font-medium'>
+                -
+              </Typography>
+            )}
           </>
         )
       }),
