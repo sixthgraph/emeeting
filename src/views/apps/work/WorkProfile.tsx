@@ -257,23 +257,33 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
 
       navigate(path)
     } catch (error: any) {
-      console.log('sendwork failed. ', error.message)
+      console.log('sendbackwork failed. ', error.message)
     }
   }
 
-  // const handlerejectwork = async (formData: any) => {
-  //   try {
-  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/rejet`, formData)
+  const handlerejectwork = async () => {
+    try {
+      const reqBody = {
+        wid: workData.wid,
+        rid: workData.workflowid,
+        blockid: workData.blockid
+      }
 
-  //     if (response.data.message === 'success') {
-  //       console.log('---Call rejectwork success.------------------')
-  //     } else {
-  //       console.log(response.data.message)
-  //     }
-  //   } catch (error: any) {
-  //     console.log('Editwork failed. ', error.message)
-  //   }
-  // }
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/reject`, reqBody)
+
+      if (response.data.message === 'success') {
+        console.log('---Call reject success.------------------')
+      } else {
+        console.log(response.data.message)
+      }
+
+      const path = `/en/todo`
+
+      navigate(path)
+    } catch (error: any) {
+      console.log('reject failed. ', error.message)
+    }
+  }
 
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
@@ -577,7 +587,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
             )}
 
             {condionData !== 'end-process' && condionData !== null && workData.action == '' && (
-              <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+              <Button variant='contained' onClick={() => handlerejectwork()} className='mr-2' type='submit'>
                 Reject
               </Button>
             )}

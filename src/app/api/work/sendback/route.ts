@@ -13,8 +13,6 @@ export async function POST(request: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 
-  const email = serverSession?.user.email
-
   const headers = {
     Authorization: `Bearer ${token}`,
     cache: 'force-cache'
@@ -22,15 +20,15 @@ export async function POST(request: NextRequest) {
 
   try {
     const reqBody = await request.json()
-    const res = await axios.post(
-      `${process.env.ROUTE_FLOW_API_URL}/rejectworkinfo?wid=${reqBody.wid}&id=${email}&blockid=${reqBody.blockid}`,
-      reqBody,
-      { headers }
-    )
+
+    console.log('sendback reqbody---')
+    console.log(reqBody)
+
+    const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/sendback`, reqBody, { headers })
     const sent = res.data.data.detail
 
     const response = NextResponse.json({
-      message: 'rejectworkinfo work successful',
+      message: 'Send back work successful',
       success: true,
       data: sent
     })
