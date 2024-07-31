@@ -14,10 +14,12 @@
 
 # production
 /build
+/iisnode
 
 # misc
 .DS_Store
 *.pem
+*.config
 
 # debug
 npm-debug.log*
