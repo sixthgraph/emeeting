@@ -42,6 +42,14 @@ export async function POST(req: NextRequest) {
       return item.id === wip //'6699081a5848117c8af11a20'
     })
 
+    const myworkinprocess = workinprocess.filter((item: any) => {
+      return item.uid === email
+    })
+
+    if (myworkinprocess.length > 0) {
+      workinfo.datein = myworkinprocess[0].Datein
+    }
+
     if (wip == '' || wip == null) {
       const curwip = workinprocess.filter((item: any) => {
         //item.action == '', item.uid == email

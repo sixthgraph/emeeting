@@ -612,23 +612,38 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               </>
             )}
 
-            {condionData !== 'end-process' && condionData !== null && workData.action == '' && (
-              <Button
-                variant='contained'
-                color='info'
-                onClick={() => handlerejectwork()}
-                className='mr-2'
-                type='submit'
-              >
-                Reject
-              </Button>
-            )}
+            {condionData !== 'end-process' &&
+              condionData !== null &&
+              workData.action == '' &&
+              workData.blockid !== 'startpoint' && (
+                <Button
+                  variant='contained'
+                  color='info'
+                  onClick={() => handlerejectwork()}
+                  className='mr-2'
+                  type='submit'
+                >
+                  Reject
+                </Button>
+              )}
 
-            {condionData !== 'end-process' && condionData !== null && workData.action == '' && (
-              <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
-                Approve
-              </Button>
-            )}
+            {condionData !== 'end-process' &&
+              condionData !== null &&
+              workData.action == '' &&
+              workData.blockid !== 'startpoint' && (
+                <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                  Approve
+                </Button>
+              )}
+
+            {condionData !== 'end-process' &&
+              condionData !== null &&
+              workData.action == '' &&
+              workData.blockid == 'startpoint' && (
+                <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
+                  Send
+                </Button>
+              )}
 
             {condionData === 'end-process' && workData.action == '' && (
               <>

@@ -244,7 +244,7 @@ const SentListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}`
+              query: `wid=${row.original.wid}`
             }}
           >
             <div className='flex flex-col '>
@@ -289,7 +289,7 @@ const SentListTable = ({ tableData, depData }: Props) => {
           <Link
             href={{
               pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
+              query: `wid=${row.original.wid}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -303,14 +303,19 @@ const SentListTable = ({ tableData, depData }: Props) => {
       columnHelper.accessor('processname', {
         header: 'Work in Process',
         cell: ({ row }) => (
-          <>
+          <Link
+            href={{
+              pathname: '/en/work',
+              query: `wid=${row.original.wid}`
+            }}
+          >
             <Typography color='text.primary' className='font-medium'>
               {row.original.processname}
             </Typography>
             <Typography variant='body2' color='text.disabled' title='Received Date'>
               {formatshortdate(row.original.datein)}
             </Typography>
-          </>
+          </Link>
         )
       }),
 
