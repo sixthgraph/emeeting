@@ -21,12 +21,12 @@ import { useSession } from 'next-auth/react'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { PositionFormDataType, PositionsType } from '@/types/apps/positionTypes'
+import type { PositionsType } from '@/types/apps/positionTypes'
 import { addPositionFormSchema } from '@/schemas/positionSchema'
 
 type Props = {
   open: boolean
-  updateData: PositionFormDataType
+  updateData: any
   setData: any
   tableData?: PositionsType[]
   handleClose: () => void
@@ -36,7 +36,7 @@ type Props = {
 const initialData = {
   positioncode: '',
   desc: '',
-  level: '',
+  level: 0,
   ref: '',
   status: 'Y',
   remark: '',
@@ -52,7 +52,10 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
   //const { lang: locale } = params
 
   // States
-  const [formData, setFormData] = useState<PositionFormDataType>(initialData)
+  // const [formData, setFormData] = useState<PositionFormDataType>(initialData)
+
+  const [formData, setFormData] = useState(initialData)
+
   const [errors, setErrors] = useState<any[]>([])
 
   const { data: session } = useSession()
@@ -164,7 +167,7 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
 
           tableData[Number(index)].positioncode = formData.positioncode
           tableData[Number(index)].desc = formData.desc
-          tableData[Number(index)].level = formData.level
+          tableData[Number(index)].level = String(formData.level)
           tableData[Number(index)].ref = formData.ref
           tableData[Number(index)].status = formData.status
           tableData[Number(index)].remark = formData.remark
@@ -224,7 +227,7 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
             fullWidth
             placeholder=''
             value={formData.level}
-            onChange={e => setFormData({ ...formData, level: e.target.value })}
+            onChange={e => setFormData({ ...formData, level: Number(e.target.value) })}
           />
           {errors.find(error => error.for === 'level')?.message}
           <CustomTextField
