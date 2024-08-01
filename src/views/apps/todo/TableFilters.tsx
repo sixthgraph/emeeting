@@ -18,6 +18,10 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: TodoTy
   const [route, setRoute] = useState('')
   const myDep: any = []
   const myRoute: any = []
+  const myTask: any = []
+
+  console.log('myTask')
+  console.log(myTask)
 
   useEffect(() => {
     const filteredData = tableData?.filter(todo => {
@@ -98,6 +102,20 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: TodoTy
                 {route.routename}
               </MenuItem>
             ))}
+          </CustomTextField>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <CustomTextField
+            select
+            fullWidth
+            id='select-task'
+            value={route} // onChange={e => setRoute(e.target.value)}
+            SelectProps={{ displayEmpty: true }}
+          >
+            <MenuItem value=''>Select Task</MenuItem>
+            <MenuItem value='approve'>Approve</MenuItem>
+            <MenuItem value='sign'>Sign</MenuItem>
+            <MenuItem value='input'>input</MenuItem>
           </CustomTextField>
         </Grid>
       </Grid>
