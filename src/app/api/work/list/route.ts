@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
 
     if (myworkinprocess.length > 0) {
       workinfo.datein = myworkinprocess[0].Datein
+      workinfo.curdep = myworkinprocess[0].dep
     }
 
     if (wip == '' || wip == null) {
