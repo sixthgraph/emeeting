@@ -136,7 +136,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   let depName = ''
 
   {
-    tableData && (depName = tableData[Number(0)].depname)
+    tableData && tableData[Number(0)] && (depName = tableData[Number(0)].depname)
   }
 
   // States
