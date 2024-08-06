@@ -75,6 +75,13 @@ declare module '@tanstack/table-core' {
   }
 }
 
+const handleRefresh = () => {
+  //router.reload()
+  setTimeout(() => {
+    window.location.reload()
+  }, 100)
+}
+
 // // Styled Components
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
@@ -130,7 +137,8 @@ let initialData = {
   docuname: 0,
   path: '',
   parent: '',
-  sort: 0
+  sort: 0,
+  ref: ''
 }
 
 // Column Definitions
@@ -187,37 +195,42 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
     initialData = {
       dep: '',
       depname: '',
-      statecode: '',
+      statecode: '01',
       docuname: 0,
       path: '',
       parent: '',
-      sort: 0
+      sort: 0,
+      ref: ''
     }
     setAddDepartmentOpen(true)
   }
 
-  const handleDeleteDepartment = async (dep: object) => {
+  const handleDeleteDepartment = async (dep: object, path: any) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/delete`, dep)
+      if (path != ',') {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/delete`, dep)
 
-      if (response.data.message === 'success') {
-        console.log(response.data.data.detail)
+        if (response.data.message === 'success') {
+          console.log(response.data.data.detail)
 
-        //todo update tableData
-        const em: any = dep
-        const newUpdate = tableData?.filter(el => el.dep !== em.dep)
+          //todo update tableData
+          const em: any = dep
+          const newUpdate = tableData?.filter(el => el.dep !== em.dep)
 
-        console.log('newUpdate === ', newUpdate)
-        setData(newUpdate)
+          console.log('newUpdate === ', newUpdate)
+          setData(newUpdate)
+          tableData = data
+          console.log(tableData)
 
-        tableData = data
+          //todo update refresh token
+          console.log('Update token ===', response.data.token)
 
-        console.log(tableData)
-
-        //todo update refresh token
-        console.log('Update token ===', response.data.token)
+          handleRefresh()
+        } else {
+          console.error('Department delete failed')
+        }
       } else {
-        console.error('Department delete failed')
+        console.error('Can not delete root department')
       }
     } catch (error: any) {
       console.log('Delete Department failed. ', error.message)
@@ -302,7 +315,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeleteDepartment({ Dep: row.original.dep })
+                handleDeleteDepartment({ Dep: row.original.dep }, row.original.path)
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -310,6 +323,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
             <IconButton
               onClick={() => {
                 // initialData.password = ''
+                initialData.dep = row.original.dep
                 initialData.depname = row.original.depname
                 initialData.docuname = row.original.docuname
                 initialData.statecode = row.original.statecode

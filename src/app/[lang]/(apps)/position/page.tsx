@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import axios from 'axios'
 
 import { options } from '@/app/api/auth/[...nextauth]/options'
-import PositionList from '@/views/apps/position/list'
+import PositionList from '@/views/apps/position'
 
 const getData = async () => {
   const session = await getServerSession(options)

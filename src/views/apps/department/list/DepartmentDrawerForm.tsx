@@ -20,6 +20,7 @@ import axios from 'axios'
 // import { any } from 'zod'
 
 // import { any } from 'zod'
+import { useSession } from 'next-auth/react'
 
 import CustomTextField from '@core/components/mui/TextField'
 
@@ -29,11 +30,12 @@ import type {
   DepartmentsType,
   StateinfoType
 } from '@/types/apps/departmentTypes'
-import { addUserFormSchema } from '@/schemas/formSchema' //NP????
+
+import { addDepartmentFormSchema } from '@/schemas/departmentSchema' //NP????
 
 type Props = {
   open: boolean
-  updateData: DepartmentFormDataType
+  updateData: any
   setData: any
   tableData?: DepartmentsType[]
   stateinfoData?: StateinfoType[]
@@ -45,11 +47,17 @@ type Props = {
 const initialData = {
   dep: '',
   depname: '',
-  statecode: '',
+  statecode: '01',
   docuname: 0,
   path: '',
   parent: '',
-  sort: 0
+  sort: 0,
+  ref: '',
+  remark: '',
+  create_date: '',
+  create_by: '',
+  update_date: '',
+  update_by: ''
 }
 
 const DepartmentDrawerForm = ({
@@ -69,15 +77,18 @@ const DepartmentDrawerForm = ({
   const [formData, setFormData] = useState<DepartmentFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
 
+  const { data: session } = useSession()
+  const emailData = session?.user.email
+
   // const [isPasswordShown, setIsPasswordShown] = useState(false)
   // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  // const handleRefresh = () => {
-  //   //router.reload()
-  //   setTimeout(() => {
-  //     window.location.reload()
-  //   }, 100)
-  // }
+  const handleRefresh = () => {
+    //router.reload()
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -85,7 +96,11 @@ const DepartmentDrawerForm = ({
     setFormData(initialData)
 
     try {
-      const parsedData = addUserFormSchema.safeParse(formData)
+      console.log(formData.statecode)
+      formData.create_by = String(emailData)
+      formData.update_by = String(emailData)
+
+      const parsedData = addDepartmentFormSchema.safeParse(formData)
 
       if (!parsedData.success) {
         const errArr: any[] = []
@@ -103,7 +118,7 @@ const DepartmentDrawerForm = ({
       }
 
       console.log('Form submitted successfully', parsedData.data)
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/department/add`, formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/add`, formData)
 
       console.log('add department response===', response.data)
 
@@ -111,7 +126,7 @@ const DepartmentDrawerForm = ({
         console.log('add department success')
 
         if (tableData) {
-          const updateData: any = {
+          const addData: any = {
             depname: formData.depname,
             statecode: formData.statecode,
             docuname: formData.docuname,
@@ -119,11 +134,14 @@ const DepartmentDrawerForm = ({
             sort: formData.sort
           }
 
-          tableData.push(updateData)
+          console.log(addData)
+
+          tableData.push(addData)
         }
 
         setData(tableData)
         handleClose()
+        handleRefresh()
       } else {
         console.log('add department failed.')
       }
@@ -139,7 +157,10 @@ const DepartmentDrawerForm = ({
 
   const handleUpdateData = async () => {
     try {
-      const response = await axios.post('/api/department/update', formData)
+      console.log('dep=>' + formData.dep)
+      formData.update_by = String(emailData)
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/update`, formData)
 
       if (response.data.message === 'success') {
         console.log('Update department success.')
@@ -169,6 +190,18 @@ const DepartmentDrawerForm = ({
     setFormData(updateData)
   }, [open, updateData])
 
+  const getParentPath = (parentData: any) => {
+    let path = ','
+
+    if (tableData?.length) {
+      const index = tableData?.findIndex(x => x.dep == String(parentData))
+
+      path = tableData[Number(index)].path
+    }
+
+    return { path: path }
+  }
+
   return (
     <Drawer
       open={open}
@@ -196,7 +229,13 @@ const DepartmentDrawerForm = ({
             fullWidth
             id='select-department'
             value={formData.parent}
-            onChange={e => setFormData({ ...formData, parent: e.target.value })}
+            onChange={e =>
+              setFormData({
+                ...formData,
+                parent: e.target.value,
+                path: getParentPath(e.target.value).path + e.target.value + ','
+              })
+            }
             label='Parent Department'
           >
             {depParentData?.map((parentData: any) => {
@@ -257,7 +296,15 @@ const DepartmentDrawerForm = ({
             value={formData.sort}
             onChange={e => setFormData({ ...formData, sort: parseInt(e.target.value) })}
           />
-          {errors.find(error => error.for === 'docuname')?.message}
+          {errors.find(error => error.for === 'sort')?.message}
+          <CustomTextField
+            label='Ref'
+            fullWidth
+            placeholder=''
+            value={formData.ref}
+            onChange={e => setFormData({ ...formData, sort: parseInt(e.target.value) })}
+          />
+          {errors.find(error => error.for === 'ref')?.message}
           <div className='flex items-center gap-4'>
             {updateData.dep !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>

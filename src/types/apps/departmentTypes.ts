@@ -9,6 +9,12 @@ export type DepartmentsType = {
   path: string
   parent: string
   sort: number
+  ref: string
+  remark: string
+  create_date: string
+  create_by: string
+  update_date: string
+  update_by: string
 }
 
 export type DepartmentFormDataType = {
@@ -19,6 +25,12 @@ export type DepartmentFormDataType = {
   path: string
   parent: string
   sort: number
+  ref: string
+  remark: string
+  create_date: string
+  create_by: string
+  update_date: string
+  update_by: string
 }
 
 export type DepartmentsTypeWithAction = DepartmentsType & {

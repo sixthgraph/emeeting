@@ -13,19 +13,22 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json()
 
-    const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createposition`, reqBody, {
+    console.log('===createdepartment===')
+    console.log(reqBody)
+
+    const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createdepartment`, reqBody, {
       headers: {
         Authorization: `Bearer ${token}`,
         cache: 'force-cache'
       }
     })
 
-    const position = res.data.data.detail
+    const department = res.data.data.detail
 
     const response = NextResponse.json({
       message: 'Create successful',
       success: true,
-      data: position
+      data: department
     })
 
     return response

@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import axios from 'axios'
 
 import { options } from '@/app/api/auth/[...nextauth]/options'
-import StateinfoList from '@/views/apps/stateinfo/list'
+import StateinfoList from '@/views/apps/stateinfo'
 
 const getData = async () => {
   const session = await getServerSession(options)
@@ -33,7 +33,10 @@ const getData = async () => {
 const StateinfoListApp = async () => {
   // Vars
   const data = await getData()
-  const stateinfoData = data.data.detail
+
+  console.log('====response.data=====')
+  console.log(data.data.detail)
+  const stateinfoData = data.detail
 
   return <StateinfoList stateinfoData={stateinfoData} />
 }

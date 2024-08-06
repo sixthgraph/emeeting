@@ -47,7 +47,7 @@ import axios from 'axios'
 
 // import type { Locale } from '@configs/i18n'
 
-import TablePaginationComponent from '@components/TablePaginationComponent'
+//import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
 import type { StateinfosType, StateinfosTypeWithAction } from '@/types/apps/stateinfoTypes'
@@ -62,6 +62,7 @@ import CustomTextField from '@core/components/mui/TextField'
 
 // // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import TablePaginationComponent from '@/components/TablePaginationComponent'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -157,7 +158,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
   // Hooks
   //const { lang: locale } = useParams()
 
-  const StateinfoDrawerOpenHandle = () => {
+  const stateinfoDrawerOpenHandle = () => {
     initialData = {
       statecode: '',
       desc: '',
@@ -179,7 +180,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
         console.log('=====stateinfo')
         console.log(response.data)
 
-        // //todo update tableData
+        //todo update tableData
         const em: any = statecode
 
         console.log('==== look statecode')
@@ -250,27 +251,26 @@ const StateinfoListTable = ({ tableData }: Props) => {
           </div>
         )
       }),
-
-      //   columnHelper.accessor('ref', {
-      //     header: 'Ref',
-      //     cell: ({ row }) => (
-      //       <div className='flex flex-col'>
-      //         <Typography color='text.primary' className='font-medium'>
-      //           {row.original.ref}
-      //         </Typography>
-      //       </div>
-      //     )
-      //   }),
-      //   columnHelper.accessor('remark', {
-      //     header: 'Remark',
-      //     cell: ({ row }) => (
-      //       <div className='flex flex-col'>
-      //         <Typography color='text.primary' className='font-medium'>
-      //           {row.original.remark}
-      //         </Typography>
-      //       </div>
-      //     )
-      //   }),
+      columnHelper.accessor('ref', {
+        header: 'Ref',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.ref}
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('remark', {
+        header: 'Remark',
+        cell: ({ row }) => (
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {row.original.remark}
+            </Typography>
+          </div>
+        )
+      }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
@@ -369,7 +369,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
-              onClick={() => StateinfoDrawerOpenHandle()}
+              onClick={() => stateinfoDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
               Add New

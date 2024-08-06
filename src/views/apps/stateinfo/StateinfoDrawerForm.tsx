@@ -22,7 +22,7 @@ import { useSession } from 'next-auth/react'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { StateinfoFormDataType, StateinfosType } from '@/types/apps/stateinfoTypes'
+import type { StateinfosType } from '@/types/apps/stateinfoTypes'
 
 //import type { StateinfoFormSchema } from '@/schemas/stateinfoSchema'
 
@@ -32,7 +32,7 @@ import type { StateinfoFormDataType, StateinfosType } from '@/types/apps/statein
 
 type Props = {
   open: boolean
-  updateData: StateinfoFormDataType
+  updateData: any
   setData: any
   tableData?: StateinfosType[]
   handleClose: () => void
@@ -64,7 +64,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
   // const { lang: locale } = useParams()
 
   // States
-  const [formData, setFormData] = useState<StateinfoFormDataType>(initialData)
+  const [formData, setFormData] = useState(initialData)
 
   // const [errors, setErrors] = useState<any[]>([])
 

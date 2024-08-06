@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
     const stateinfores = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getstateinfo`, { headers })
     const depPartents = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
 
+    console.log('response.data')
+
+    console.log(response.data.data)
+
     if (stateinfores.data.message === 'success') {
       response.data.data.stateinfos = stateinfores.data.data.detail
 
