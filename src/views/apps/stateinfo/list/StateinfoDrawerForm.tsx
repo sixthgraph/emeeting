@@ -66,7 +66,14 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
   // States
   const [formData, setFormData] = useState<StateinfoFormDataType>(initialData)
 
-  //const [errors, setErrors] = useState<any[]>([])
+  // const [errors, setErrors] = useState<any[]>([])
+
+  // setErrors([])
+
+  const [errors, setErrors] = useState<any[]>([])
+
+  setErrors([])
+
   //const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
   const { data: session } = useSession()
@@ -352,7 +359,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
             value={formData.statecode}
             onChange={e => setFormData({ ...formData, statecode: e.target.value })}
           />
-          {/* {errors.find(error => error.for === 'statecode')?.message} */}
+          {errors.find(error => error.for === 'statecode')?.message}
           <CustomTextField
             label='Desc'
             fullWidth
