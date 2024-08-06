@@ -52,7 +52,7 @@ import type { PositionsType, PositionsTypeWithAction } from '@/types/apps/positi
 
 // // Component Imports
 //import TableFilters from './TableFilters'
-import GroupDrawerForm from './PositionDrawerForm'
+import PositionDrawerForm from './PositionDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 
@@ -471,7 +471,7 @@ const PositionListTable = ({ tableData }: Props) => {
         />
       </Card>
 
-      <GroupDrawerForm
+      <PositionDrawerForm
         open={addPositionOpen}
         setData={setData}
         tableData={tableData}

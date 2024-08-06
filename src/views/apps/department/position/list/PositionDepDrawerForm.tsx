@@ -1,5 +1,5 @@
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -8,10 +8,13 @@ import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+import type { SelectChangeEvent } from '@mui/material/Select'
 
 // Component Imports
 
 import axios from 'axios'
+
+import { Chip } from '@mui/material'
 
 import CustomTextField from '@core/components/mui/TextField'
 
@@ -43,19 +46,42 @@ const initialData = {
   depparent: ''
 }
 
-const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, positionData, handleClose }: Props) => {
-  //const router = useRouter()
-  //const params = useParams()
-  //const { lang: locale } = params
-
+const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionData, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<PositionDepFormDataType>(initialData)
+  const [positonName, setPositonName] = useState<string[]>([])
 
-  //const [errors, setErrors] = useState<any[]>([])
+  console.log('tableData === ')
+  console.log(tableData)
 
-  // setErrors([])
+  const posObjData: any[] = []
 
-  const errors: any[] = []
+  posObjData.push({
+    positioncode: '',
+    positiondesc: 'No Parent'
+  })
+
+  let i: any
+
+  for (i in tableData) {
+    let elem: any = []
+
+    tableData && (elem = tableData[i])
+
+    if (elem.positioncode !== updateData.positioncode) {
+      posObjData.push({
+        positioncode: elem.positioncode,
+        positiondesc: elem.positiondesc
+      })
+    }
+  }
+
+  useEffect(() => {
+    setFormData(updateData)
+  }, [open, updateData])
+
+  console.log('updateData ===')
+  console.log(updateData)
 
   const handleRefresh = () => {
     setTimeout(() => {
@@ -63,10 +89,23 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
     }, 100)
   }
 
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    console.log('event.target')
+    console.log(event.target)
+    setPositonName(event.target.value as string[])
+    console.log('positonName')
+    console.log(positonName)
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    setFormData(initialData)
+    console.log('positonName = ')
+    console.log(positonName)
+    console.log('dep id')
+    console.log(updateData.dep)
+
+    return
 
     //Add
     try {
@@ -185,19 +224,18 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
     }
   }
 
-  // useEffect(() => {
-  //   setFormData(updateData)
-  // }, [open, updateData])
-
   const getParentPositionPath = (parentData: any) => {
     let path = ''
     let level = '1'
 
-    if (tableData?.length) {
+    if (parentData == '') {
+      path = ''
+      level = '0'
+    } else if (tableData?.length) {
       const index = tableData?.findIndex(x => x.positioncode == String(parentData))
 
-      path = tableData[Number(index)].positionpath
-      level = tableData[Number(index)].positionlevel + 1
+      path = tableData[Number(index)]?.positionpath
+      level = tableData[Number(index)]?.positionlevel + 1
     }
 
     return { path: path, level: level }
@@ -214,7 +252,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
         {updateData.positioncode !== '' ? (
-          <Typography variant='h5'>Edit Position</Typography>
+          <Typography variant='h5'>Edit Position : {updateData.positiondesc}</Typography>
         ) : (
           <Typography variant='h5'>Add New Position</Typography>
         )}
@@ -225,119 +263,139 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, depData, 
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          <CustomTextField
-            label='Dep'
-            fullWidth
-            placeholder=''
-            value={formData.dep}
-            onChange={e => setFormData({ ...formData, dep: e.target.value })}
-          />
-          {errors.find(error => error.for === 'dep')?.message}
-          <CustomTextField
-            label='Dep Path'
-            fullWidth
-            placeholder=''
-            value={formData.path}
-            onChange={e => setFormData({ ...formData, path: e.target.value })}
-          />
-          {errors.find(error => error.for === 'path')?.message}
-          <CustomTextField
-            select
-            fullWidth
-            id='select-dep-parent'
-            value={formData.depparent}
-            onChange={e => setFormData({ ...formData, depparent: e.target.value })}
-            label='Department Position Parent'
-          >
-            {depData?.map((depParent: any) => {
-              return (
-                <MenuItem key={depParent.dep} value={depParent.dep}>
-                  {depParent.depname}
-                </MenuItem>
-              )
-            })}
-          </CustomTextField>
-          {errors.find(error => error.for === 'positioncode')?.message}
-          <CustomTextField
-            select
-            fullWidth
-            id='select-parent'
-            value={formData.positionparent}
-            onChange={e =>
-              setFormData({
-                ...formData,
-                positionparent: e.target.value,
-                positionpath: getParentPositionPath(e.target.value).path + e.target.value + ',',
-                positionlevel: getParentPositionPath(e.target.value).level
-              })
-            }
-            label='Position Parent'
-          >
-            {positionData?.map((parent: any) => {
-              return (
-                <MenuItem key={parent.positioncode} value={parent.positioncode}>
-                  {parent.desc}
-                </MenuItem>
-              )
-            })}
-          </CustomTextField>
-          {errors.find(error => error.for === 'positioncode')?.message}
-          {/* <CustomTextField
-            label='Position Parent'
-            fullWidth
-            placeholder=''
-            value={formData.positionparent}
-            onChange={e => setFormData({ ...formData, positionparent: e.target.value })}
-          />
-          {errors.find(error => error.for === 'positionparent')?.message} */}
-          <CustomTextField
-            select
-            fullWidth
-            id='select-position'
-            value={formData.positioncode}
-            onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
-            label='Position'
-          >
-            {positionData?.map((position: any) => {
-              return (
-                <MenuItem key={position.positioncode} value={position.positioncode}>
+          {updateData.positioncode !== '' ? (
+            <>
+              <CustomTextField label='Department Name' fullWidth placeholder='' disabled value={formData.depname} />
+              {/* <CustomTextField
+              label='Dep Path'
+              fullWidth
+              placeholder=''
+              value={formData.path}
+              onChange={e => setFormData({ ...formData, path: e.target.value })}
+            /> */}
+              {/* <CustomTextField
+              select
+              fullWidth
+              id='select-dep-parent'
+              value={formData.depparent}
+              onChange={e => setFormData({ ...formData, depparent: e.target.value })}
+              label='Department Parent'
+            >
+              {depData?.map((depParent: any) => {
+                return (
+                  <MenuItem key={depParent.dep} value={depParent.dep}>
+                    {depParent.depname}
+                  </MenuItem>
+                )
+              })}
+            </CustomTextField> */}
+              <CustomTextField
+                select
+                fullWidth
+                id='select-position'
+                value={formData.positioncode}
+                disabled
+                onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
+                label='Position Name'
+              >
+                {positionData?.map((position: any) => {
+                  return (
+                    <MenuItem key={position.positioncode} value={position.positioncode}>
+                      {position.desc}
+                    </MenuItem>
+                  )
+                })}
+              </CustomTextField>
+              <CustomTextField
+                select
+                fullWidth
+                id='select-parent'
+                value={formData.positionparent}
+                onChange={e =>
+                  setFormData({
+                    ...formData,
+                    positionparent: e.target.value,
+                    positionpath: getParentPositionPath(e.target.value).path + e.target.value + ',',
+                    positionlevel: getParentPositionPath(e.target.value).level
+                  })
+                }
+                label='Select Parent'
+              >
+                {posObjData?.map((parent: any, index: any) => {
+                  return (
+                    <MenuItem key={index} value={parent.positioncode}>
+                      {parent.positiondesc}
+                    </MenuItem>
+                  )
+                })}
+              </CustomTextField>
+              {/* <CustomTextField
+              label='Position Parent'
+              fullWidth
+              placeholder=''
+              value={formData.positionparent}
+              onChange={e => setFormData({ ...formData, positionparent: e.target.value })}
+            />
+            {errors.find(error => error.for === 'positionparent')?.message} */}
+
+              {/* <CustomTextField
+              label='Positioncode'
+              fullWidth
+              placeholder=''
+              value={formData.positioncode}
+              onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
+            />
+            {errors.find(error => error.for === 'positioncode')?.message} */}
+              <CustomTextField
+                label='level'
+                fullWidth
+                placeholder=''
+                value={formData.positionlevel}
+                onChange={e => setFormData({ ...formData, positionlevel: e.target.value })}
+              />
+              <CustomTextField
+                label='Path'
+                fullWidth
+                placeholder=''
+                value={formData.positionpath}
+                disabled
+                onChange={e => setFormData({ ...formData, positionpath: e.target.value })}
+              />
+            </>
+          ) : (
+            <CustomTextField
+              select
+              fullWidth
+              label='Select Position'
+              value={positonName}
+              id='select-position'
+              SelectProps={{
+                multiple: true, // @ts-ignore
+                onChange: e => handleChange(e),
+                renderValue: selected => (
+                  <div className='flex flex-wrap gap-1'>
+                    {(selected as unknown as string[]).map(value => (
+                      <Chip key={value} label={value} size='small' />
+                    ))}
+                  </div>
+                )
+              }}
+            >
+              {positionData?.map((position: any, index: any) => (
+                <MenuItem key={index} value={position.positioncode}>
                   {position.desc}
                 </MenuItem>
-              )
-            })}
-          </CustomTextField>
-          {errors.find(error => error.for === 'positioncode')?.message}
-          {/* <CustomTextField
-            label='Positioncode'
-            fullWidth
-            placeholder=''
-            value={formData.positioncode}
-            onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
-          />
-          {errors.find(error => error.for === 'positioncode')?.message} */}
-          <CustomTextField
-            label='level'
-            fullWidth
-            placeholder=''
-            value={formData.positionlevel}
-            onChange={e => setFormData({ ...formData, positionlevel: e.target.value })}
-          />
-          {errors.find(error => error.for === 'positionlevel')?.message}
-          {/* <CustomTextField
-            label='Path'
-            fullWidth
-            placeholder=''
-            value={formData.positionpath}
-            onChange={e => setFormData({ ...formData, positionpath: e.target.value })}
-          />
-          {errors.find(error => error.for === 'positionpath')?.message} */}
+              ))}
+            </CustomTextField>
+          )}
+
           <div className='flex items-center gap-4'>
             {updateData.positioncode !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
                 Edit
               </Button>
             ) : (
-              <Button variant='contained' type='submit'>
+              <Button variant='contained' onClick={() => handleSubmit} type='submit'>
                 Submit
               </Button>
             )}

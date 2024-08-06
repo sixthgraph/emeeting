@@ -132,6 +132,13 @@ type Props = {
 }
 
 const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
+  console.log(typeof tableData)
+  let depName = ''
+
+  {
+    tableData && (depName = tableData[Number(0)].depname)
+  }
+
   // States
   const [addPositionDepOpen, setAddPositionDepOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -267,26 +274,16 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
         )
       },
 
-      // columnHelper.accessor('dep', {
-      //   header: 'Dep',
+      // columnHelper.accessor('depname', {
+      //   header: 'Depname',
       //   cell: ({ row }) => (
       //     <div className='flex flex-col'>
       //       <Typography color='text.primary' className='font-medium'>
-      //         {row.original.dep}
+      //         {row.original.depname}
       //       </Typography>
       //     </div>
       //   )
       // }),
-      columnHelper.accessor('depname', {
-        header: 'Depname',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.depname}
-            </Typography>
-          </div>
-        )
-      }),
 
       // columnHelper.accessor('path', {
       //   header: 'Path',
@@ -432,7 +429,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Filters' className='pbe-4' />
+        <CardHeader title={depName} className='pbe-4' />
         {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
@@ -543,7 +540,6 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
         setData={setData}
         tableData={tableData}
         updateData={initialData}
-        depData={depData}
         positionData={positionData}
         handleClose={() => setAddPositionDepOpen(!addPositionDepOpen)}
       />

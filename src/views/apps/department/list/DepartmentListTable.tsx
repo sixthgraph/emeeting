@@ -57,7 +57,7 @@ import type {
 
 // // Component Imports
 import TableFilters from './TableFilters'
-import GroupDrawerForm from './DepartmentDrawerForm'
+import DepartmentDrawerForm from './DepartmentDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 
@@ -491,7 +491,7 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
         />
       </Card>
 
-      <GroupDrawerForm
+      <DepartmentDrawerForm
         open={addDepartmentOpen}
         setData={setData}
         tableData={tableData}
