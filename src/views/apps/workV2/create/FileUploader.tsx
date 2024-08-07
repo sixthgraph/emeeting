@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import ListItem from '@mui/material/ListItem'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
+import DialogActions from '@mui/material/DialogActions'
 
 // Third-party Imports
 import { useDropzone } from 'react-dropzone'
@@ -140,7 +141,7 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
         </div>
       </div>
       <IconButton onClick={() => handleRemoveFile(file)}>
-        <i className='tabler-x text-xl' />
+        <i className='tabler-x text-xl text-right' />
       </IconButton>
     </ListItem>
   ))
@@ -172,14 +173,14 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
       {files.length ? (
         <>
           <List>{fileList}</List>
-          <div className='buttons'>
+          <DialogActions className='buttons justify-end'>
             <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
               Remove All
             </Button>
             <Button onClick={() => handleUploadFile()} variant='contained'>
               Upload Files
             </Button>
-          </div>
+          </DialogActions>
         </>
       ) : null}
     </>

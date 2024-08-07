@@ -195,7 +195,6 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, handleClose }: 
             label='Groupname'
             fullWidth
             placeholder=''
-            inputProps={{ minlength: 3, maxLength: 150 }}
             value={formData.groupname} //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
             onChange={e =>
               setFormData({

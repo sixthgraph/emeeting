@@ -105,36 +105,33 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData, condionData }: { workData: any; condionData: any }) => {
-  const [value, setValue] = useState('1')
-  const params = useParams()
-  const { lang: locale } = params
+  const eformData = workData.eformdata
+  let i: any
+  const eform: any = eformData
 
-  // const { data: session } = useSession({
-  //   required: true,
-  //   onUnauthenticated() {
-  //     redirect('/api/auth/signin?callbackUrl=/en/users/profile')
-  //   }
-  // })
+  for (i in eform) {
+    eformData[i]._id = eform[i].Id
+  }
 
   const { data: session } = useSession()
 
   const documentData = {
     wid: workData.wid,
     email: session?.user.email,
-    dep: workData.curdep
+    dep: workData.curdep,
+    attachment: workData.attachment
   }
+
+  const [value, setValue] = useState('1')
+  const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
+  const params = useParams()
+  const { lang: locale } = params
+  const basepath = process.env.NEXT_PUBLIC_BASEPATH
 
   const activity = workData.activity
 
-  console.log('----workData---')
-  console.log(workData)
-  console.log('----condionData---')
-  console.log(condionData)
-  console.log('----activity---')
-  console.log(activity)
-
-  console.log(activity[0].actions[0].depname)
-  console.log(activity[0].actions[0].positionname)
+  // const attactmentData = workData.attachment
+  // console.log(attactmentData)
 
   // const searchParams = useSearchParams()
 
@@ -152,16 +149,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
     setValue(newValue)
   }
 
-  const eformData = workData.eformdata
-  let i: any
-  const eform: any = eformData
-
-  for (i in eform) {
-    eformData[i]._id = eform[i].Id
-  }
-
   // States
-  const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
 
   const handleAccordionChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false)
@@ -359,8 +347,6 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
 
     return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
-
-  const basepath = process.env.NEXT_PUBLIC_BASEPATH
 
   return (
     <>

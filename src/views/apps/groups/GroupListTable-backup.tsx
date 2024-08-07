@@ -22,18 +22,12 @@ import Avatar from '@mui/material/Avatar'
 //AKK IMPORT DIALOG
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import Chip from '@mui/material/Chip'
-import type { SelectChangeEvent } from '@mui/material/Select'
 
 import ListItemText from '@mui/material/ListItemText'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-
-import { useSession } from 'next-auth/react'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -56,8 +50,6 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Type Imports
 import axios from 'axios'
 
-import DialogCloseButton from '@components/dialogs/DialogCloseButton'
-
 // Util Imports
 // import { getInitials } from '@/utils/getInitials'
 
@@ -66,7 +58,7 @@ import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type { GroupType, GroupTypeWithAction, MemberType, GroupFormDataType } from '@/types/apps/groupTypes'
+import type { GroupType, GroupTypeWithAction, MemberType } from '@/types/apps/groupTypes'
 
 // // Component Imports
 // import TableFilters from './TableFilters'
@@ -137,13 +129,20 @@ const DebouncedInput = ({
   return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
 }
 
-// Vars
+// Vars÷
 let initialData = {
   groupid: '',
   groupname: '',
   createby: '',
   member: ['']
 }
+
+// const idData = {
+//   groupid: Number(string)
+// }
+
+// member AKK HERE
+// const memberObj: MemberType = {}
 
 // Column Definitions
 const columnHelper = createColumnHelper<GroupTypeWithAction>()
@@ -153,16 +152,13 @@ type Props = {
   memberData?: MemberType[]
   userData?: UsersType[]
   email?: string
-  updateData: GroupFormDataType
 }
 
 // AKK select/add user
 
-const GroupListTable = ({ tableData, userData, updateData }: Props) => {
+const GroupListTable = ({ tableData, userData }: Props) => {
   // AKK HERE
   // States
-  const [formData, setFormData] = useState<GroupFormDataType>(initialData)
-  const [personName, setPersonName] = useState<string[]>([])
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -177,47 +173,10 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   // const { data: session, update } = useSession()
   // const [emailData, setEmailData] = useState(session?.user.email)
   const [memberopen, setmemberOpen] = useState(false)
-  const { data: session } = useSession()
-  const emailData = session?.user.email
 
   // const [members, setmembers] = useState([])
-  useEffect(() => {
-    setFormData(updateData)
-  }, [updateData])
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log('noon test')
-
-    setFormData(initialData)
-    console.log(initialData)
-
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, formData)
-
-      if (response.data.success) {
-        console.log('Create success')
-
-        if (tableData) {
-          const updateData: any = {
-            groupid: formData.groupid,
-            groupname: formData.groupname,
-            createby: String(emailData),
-            member: formData.member
-          }
-
-          tableData.push(updateData)
-        }
-
-        setData(tableData)
-        handleCloseeee()
-      } else {
-        console.log('Create failed.')
-      }
-    } catch {
-      console.log('Update user failed.')
-    }
-  }
+  // var members = ['admin@excelink.co.th', 'chulapak@excelink.co.th', 'supachai@excelink.co.th']
+  // const mbs = []
 
   const handleClickOpen = async (groupid: object, member: any) => {
     let i: any
@@ -231,7 +190,7 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   }
 
   // console.log(setmembers(members))
-  // const handleDialogClose = () => setmemberOpen(false)
+  const handleDialogClose = () => setmemberOpen(false)
 
   const handleCloseeee = () => {
     setmemberOpen(false)
@@ -246,18 +205,12 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
       createby: '',
       member: ['']
     }
-    setAddGroupOpen(true)
-  }
 
-  // Reset
-  const handleReset = () => {
-    handleCloseeee()
-    setFormData({
-      groupid: '',
-      groupname: '',
-      createby: '',
-      member: []
-    })
+    // let idData = {
+    //   groupid: Number(string)
+    // }
+
+    setAddGroupOpen(true)
   }
 
   // Delete
@@ -422,22 +375,6 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   //   }
   // }
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    setPersonName(event.target.value as string[])
-  }
-
-  const ITEM_HEIGHT = 48
-  const ITEM_PADDING_TOP = 8
-
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        width: 250,
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-      }
-    }
-  }
-
   return (
     <>
       <Card>
@@ -545,7 +482,7 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
           }}
         />
       </Card>
-      {/* <Dialog
+      <Dialog
         onClick={() => {
           handleDialogClose()
         }}
@@ -568,87 +505,6 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
             </ListItem>
           ))}
         </List>
-      </Dialog> */}
-      {/* AKK Customized Dialog */}
-      <Dialog
-        fullWidth
-        open={memberopen}
-        onClose={handleCloseeee}
-        maxWidth='md'
-        scroll='body'
-        sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
-      >
-        <DialogCloseButton onClick={() => handleCloseeee()} disableRipple>
-          <i className='tabler-x' />
-        </DialogCloseButton>
-        <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16'>
-          Team member
-          <Typography component='span' className='flex flex-col text-center'>
-            Share project with the team member
-          </Typography>
-        </DialogTitle>
-        <form onSubmit={e => e.preventDefault()}>
-          <DialogContent className='MuiDialogContent-root flex flex-col gap-6 pbs-0 sm:pli-16 sm:pbe-16 mui-18zuta7'>
-            <div>
-              <CustomTextField
-                select
-                fullWidth
-                label='Add Members'
-                value={personName}
-                id='demo-multiple-chip'
-                SelectProps={{
-                  multiple: true,
-                  MenuProps,
-                  onChange: () => handleChange,
-                  renderValue: selected => (
-                    <div className='flex flex-wrap gap-1'>
-                      {(selected as unknown as string[]).map(value => (
-                        <Chip key={value} label={value} size='small' />
-                      ))}
-                    </div>
-                  )
-                }}
-              >
-                {userData?.map((name, index) => (
-                  <MenuItem key={index} value={name.email}>
-                    {name.firstname + ' ' + name.lastname}
-                  </MenuItem>
-                ))}
-              </CustomTextField>
-            </div>
-            <div className='flex flex-col gap-4'>
-              {members.length} Members
-              <List className='pt-0 px-0'>
-                {members?.map((email, index) => (
-                  <ListItem key={index} disablePadding onClick={() => handleCloseeee()}>
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <i className='tabler-user' />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={email} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </div>
-          </DialogContent>
-          <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
-            {updateData?.groupname !== '' ? (
-              <Button variant='contained' onClick={() => handleSubmit} type='submit'>
-                Submit
-              </Button>
-            ) : (
-              <Button variant='contained' type='submit'>
-                Submit
-              </Button>
-            )}
-            <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
-              Cancel
-            </Button>
-          </DialogActions>
-        </form>
       </Dialog>
       <GroupDrawerForm
         open={addGroupOpen}
