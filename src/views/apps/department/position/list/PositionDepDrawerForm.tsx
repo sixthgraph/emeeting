@@ -18,13 +18,13 @@ import { Chip } from '@mui/material'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-import type { DepType, PositionDepFormDataType, PositionFilterType, PositionsDepType } from '@/types/apps/positionTypes'
+import type { DepType, PositionDepFormDataType, PositionFilterType } from '@/types/apps/positionTypes'
 
 type Props = {
   open: boolean
   updateData: PositionDepFormDataType
   setData: any
-  tableData?: PositionsDepType[]
+  tableData?: any
   depData?: DepType[]
   positionData?: PositionFilterType[]
   handleClose: () => void
@@ -76,6 +76,26 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
     }
   }
 
+  console.log('positionData')
+  console.log(positionData)
+
+  const havePosition = (pc: any) => {
+    const result = tableData.find((item: any) => item.positioncode === pc)
+
+    return result
+  }
+
+  const addPosObjData = positionData?.filter(item => {
+    if (havePosition(item.positioncode) !== undefined) {
+      return false
+    }
+
+    return true
+  })
+
+  console.log('addPosObjData')
+  console.log(addPosObjData)
+
   useEffect(() => {
     setFormData(updateData)
   }, [open, updateData])
@@ -100,70 +120,31 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    console.log('positonName = ')
-    console.log(positonName)
-    console.log('dep id')
-    console.log(updateData.dep)
+    const dataArr = positonName
+    const updatePosData = []
 
-    return
-
-    //Add
-    try {
-      //formdata for add
-      const positionlevel = parseInt(formData.positionlevel, 10)
-
-      const newData: any = {
-        dep: formData.dep,
-        positioncode: formData.positioncode,
-        level: positionlevel,
-        path: formData.positionpath
+    for (let i = 0; i < dataArr.length; i++) {
+      const newData = {
+        dep: updateData.dep,
+        positioncode: dataArr[i],
+        path: ',',
+        level: 0
       }
 
-      // const parsedData = addPositionDepFormSchema.safeParse(newData)
+      updatePosData.push(newData)
+    }
 
-      // if (!parsedData.success) {
-      //   const errArr: any[] = []
-      //   const { errors: err } = parsedData.error
+    console.log('updatePosData === ')
+    console.log(updatePosData)
 
-      //   //sg here
-      //   for (let i = 0; i < err.length; i++) {
-      //     errArr.push({ for: err[i].path[0], message: err[i].message })
-      //     setErrors(errArr)
-      //   }
-
-      //   setErrors(errArr)
-
-      //   throw err
-      // }
-
-      // console.log('Form submitted successfully', parsedData.data)
-
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/positions/add`, newData)
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/positions/add`, updatePosData)
 
       console.log('Add response===', response.data)
 
       if (response.data.success) {
         console.log('Add success')
 
-        // if (tableData) {
-        //   const addData: any = {
-        //     dep: formData.dep,
-        //     positioncode: formData.positioncode,
-        //     positiondesc: formData.positiondesc,
-        //     positionlevel: formData.positionlevel,
-        //     positionpath: formData.positionpath,
-        //     positionref: formData.ref
-        //   }
-
-        //   console.log(addData)
-
-        //   //tableData.push(addData)
-        //   tableData.push(addData)
-        // }
-
-        // console.log(tableData)
-
-        // setData(tableData)
         handleClose()
         handleRefresh()
       } else {
@@ -202,7 +183,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
         console.log('Update position success.')
         handleClose()
 
-        const index = tableData?.findIndex(x => x.positioncode == formData.positioncode)
+        const index = tableData?.findIndex((x: any) => x.positioncode == formData.positioncode)
 
         if (tableData) {
           //const newUpdate = { ...tableData[Number(foundIndex)], formData }
@@ -232,7 +213,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
       path = ''
       level = '0'
     } else if (tableData?.length) {
-      const index = tableData?.findIndex(x => x.positioncode == String(parentData))
+      const index = tableData?.findIndex((x: any) => x.positioncode == String(parentData))
 
       path = tableData[Number(index)]?.positionpath
       level = tableData[Number(index)]?.positionlevel + 1
@@ -381,7 +362,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
                 )
               }}
             >
-              {positionData?.map((position: any, index: any) => (
+              {addPosObjData?.map((position: any, index: any) => (
                 <MenuItem key={index} value={position.positioncode}>
                   {position.desc}
                 </MenuItem>

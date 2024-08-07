@@ -40,7 +40,7 @@ import type {
   PositionFilterType
 } from '@/types/apps/positionTypes'
 
-import GroupDrawerForm from './PositionDepDrawerForm'
+import PositionDepDrawerForm from './PositionDepDrawerForm'
 import CustomTextField from '@core/components/mui/TextField'
 import tableStyles from '@core/styles/table.module.css'
 
@@ -535,7 +535,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
         />
       </Card>
 
-      <GroupDrawerForm
+      <PositionDepDrawerForm
         open={addPositionDepOpen}
         setData={setData}
         tableData={tableData}

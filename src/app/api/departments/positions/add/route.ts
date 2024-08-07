@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     console.log('reqBody add ==== ', reqBody)
 
-    const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createdepposition`, reqBody, {
+    const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createdeppositions`, reqBody, {
       headers: {
         Authorization: `Bearer ${token}`,
         cache: 'force-cache'
