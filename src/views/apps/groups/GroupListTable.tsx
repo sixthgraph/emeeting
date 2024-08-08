@@ -153,7 +153,7 @@ type Props = {
   memberData?: MemberType[]
   userData?: UsersType[]
   email?: string
-  updateData: GroupFormDataType
+  updateData?: GroupFormDataType
 }
 
 // AKK select/add user
@@ -182,7 +182,7 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
 
   // const [members, setmembers] = useState([])
   useEffect(() => {
-    setFormData(updateData)
+    updateData && setFormData(updateData)
   }, [updateData])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
