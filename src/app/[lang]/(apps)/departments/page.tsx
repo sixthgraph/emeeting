@@ -34,9 +34,8 @@ const DepartmentListApp = async () => {
   const data = await getData()
   const departmentData = data.data.detail
   const stateinfoData = data.data.stateinfos
-  const depParentData = data.data.depPartents
 
-  return <DepartmentList departmentData={departmentData} stateinfoData={stateinfoData} depParentData={depParentData} />
+  return <DepartmentList departmentData={departmentData} stateinfoData={stateinfoData} />
 }
 
 export default DepartmentListApp

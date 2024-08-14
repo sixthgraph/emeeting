@@ -7,40 +7,13 @@ export async function POST(req: NextRequest) {
   const reqBody = await req.json()
   const { token } = reqBody
 
-  //console.log('server token ==', token)
-
-  // const serverSession = await getServerSession(options)
-  // const token2 = serverSession?.user.token
-
-  // console.log('server token dep ==', token2)
-
   try {
     const headers = { Authorization: `Bearer ${token}`, 'Cache-Control': 'no-cache', Pragma: 'no-cache', Expires: '0' }
-
     const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getdepartmentlist`, { headers })
     const stateinfores = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getstateinfo`, { headers })
-    const depPartents = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
-
-    console.log('response.data')
-
-    console.log(response.data.data)
 
     if (stateinfores.data.message === 'success') {
       response.data.data.stateinfos = stateinfores.data.data.detail
-
-      // console.log('server reponse stateinfores ==============================')
-      //console.log(stateinfores.data.data.detail)
-      // console.log(response.data)
-      // console.log('end server reponse stateinfores ==============================')
-    }
-
-    if (depPartents.data.message === 'success') {
-      response.data.data.depPartents = depPartents.data.data.detail
-
-      // console.log('server reponse depParent ==============================')
-      // console.log(depPartents.data.data.detail)
-      // console.log(response.data)
-      // console.log('end server reponse depPartents ==============================')
     }
 
     return NextResponse.json(response.data)

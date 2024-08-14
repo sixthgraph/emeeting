@@ -48,12 +48,7 @@ import axios from 'axios'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
-import type {
-  DepartmentsType,
-  DepartmentsTypeWithAction,
-  StateinfoType,
-  DepParentType
-} from '@/types/apps/departmentTypes'
+import type { DepartmentsType, DepartmentsTypeWithAction, StateinfoType } from '@/types/apps/departmentTypes'
 
 // // Component Imports
 import TableFilters from './TableFilters'
@@ -127,9 +122,7 @@ const DebouncedInput = ({
 }
 
 const stateinfoObj: StateinfoType = {}
-const parentObj: DepParentType = {}
 
-// // Vars
 let initialData = {
   dep: '',
   depname: '',
@@ -147,10 +140,9 @@ const columnHelper = createColumnHelper<DepartmentsTypeWithAction>()
 type Props = {
   tableData?: DepartmentsType[]
   stateinfoData?: StateinfoType[]
-  depParentData?: DepParentType[]
 }
 
-const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props) => {
+const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   // States
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -167,29 +159,6 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
       desc: String(stateinfo.desc)
     }
   })
-
-  depParentData?.map(depParent => {
-    const id = String(depParent.dep)
-
-    parentObj[id] = {
-      dep: String(depParent.Dep),
-      depname: String(depParent.Depname),
-      docuname: Number(depParent.Docuname),
-      path: String(depParent.Path),
-      sort: Number(depParent.Sort),
-      statecode: String(depParent.Statecode)
-    }
-  })
-
-  //console.log('stateinfopData === ', stateinfoData)
-  //console.log('parentData === ', depParentData)
-
-  // const [updateData, setUpdateData] = useState(...[initialData])
-
-  //console.log('table data =', data)
-
-  // Hooks
-  //const { lang: locale } = useParams()
 
   const DepartmentDrawerOpenHandle = () => {
     initialData = {
@@ -497,7 +466,6 @@ const DepartmentListTable = ({ tableData, stateinfoData, depParentData }: Props)
         tableData={tableData}
         updateData={initialData}
         stateinfoData={stateinfoData}
-        depParentData={depParentData}
         handleClose={() => setAddDepartmentOpen(!addDepartmentOpen)}
       />
     </>
