@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react'
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -133,6 +133,7 @@ type Props = {
 
 const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   console.log(typeof tableData)
+  const router = useRouter()
   let depName = ''
 
   {
@@ -209,36 +210,12 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
 
   const handleDeletePositionDep = async (positionDepData: object) => {
     try {
-      // const deleteData: any = {
-      //   dep: depData.dep,
-      //   positioncode: positionData.Positioncode
-      // }
-
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/departments/positions/delete`,
         positionDepData
       )
 
       if (response.data.message === 'success') {
-        console.log('=====positioninfo')
-        console.log(response.data)
-
-        // //todo update tableData
-        // const em: any = positionDepData.positioncode
-        // console.log('==== look positioncode')
-        // console.log(positioncode)
-
-        // const newUpdate = tableData?.filter(el => el.positioncode !== em.positioncode)
-
-        // console.log('newUpdate === ', newUpdate)
-        // setData(newUpdate)
-
-        // tableData = data
-
-        // console.log(tableData)
-
-        //todo update refresh token
-        console.log('Update token ===', response.data.token)
         handleRefresh()
       } else {
         console.error('Position delete failed')
@@ -429,7 +406,17 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title={depName} className='pbe-4' />
+        <CardHeader
+          action={
+            <IconButton onClick={() => router.push(`/en/departments`)} aria-label='Back to Department' color='primary'>
+              <i className='tabler-arrow-badge-left' />
+              {/* <Typography color='gray'>Back</Typography> */}
+            </IconButton>
+          }
+          onHover
+          title={`Department > Position : ${depName}`}
+          className='pbe-4'
+        />
         {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField

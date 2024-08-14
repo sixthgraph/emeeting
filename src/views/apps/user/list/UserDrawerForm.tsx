@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-import { InputAdornment } from '@mui/material'
+import { Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment } from '@mui/material'
 
 import axios from 'axios'
 
@@ -26,6 +26,7 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import type { DepType, RoleType, UserFormDataType, UsersType } from '@/types/apps/userTypes'
 import { addUserFormSchema } from '@/schemas/formSchema'
+import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 
 type Props = {
   open: boolean
@@ -53,9 +54,15 @@ const initialData = {
 }
 
 const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depData, handleClose }: Props) => {
-  //const router = useRouter()
-  //const params = useParams()
-  //const { lang: locale } = params
+  console.log('updateData ===')
+  console.log(updateData)
+
+  const userDepData = updateData.dep
+
+  console.log('UserDepData === ')
+  console.log(userDepData)
+  console.log('depData === ')
+  console.log(depData)
 
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
@@ -63,6 +70,20 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
 
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+
+  const [openAddDep, setOpenAddDep] = useState<boolean>(false)
+
+  const handleAddDepOpen = () => setOpenAddDep(true)
+
+  const handleCloseAddDep = () => setOpenAddDep(false)
+
+  const handleDeleteDepPosition = (depid: any) => {
+    console.log('delete' + depid)
+  }
+
+  const handleAddDep = () => {
+    console.log('add new dep')
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -138,7 +159,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
 
   const handleUpdateData = async () => {
     try {
-      const response = await axios.post('/api/users/update', formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, formData)
 
       if (response.data.message === 'success') {
         console.log('Update user success.')
@@ -245,32 +266,59 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             />
           )}
           {errors.find(error => error.for === 'email')?.message}
-          <CustomTextField
-            select
-            fullWidth
-            id='select-department'
-            value={formData.dep}
-            onChange={e => setFormData({ ...formData, dep: [e.target.value] })}
-            label='Department'
-          >
-            {/* todo */}
-            {depData?.map((dep: any) => {
-              return (
-                <MenuItem key={dep.dep} value={dep.dep}>
-                  {dep.depname}
-                </MenuItem>
-              )
-            })}
-          </CustomTextField>
-          {errors.find(error => error.for === 'department')?.message}
-          <CustomTextField
-            label='Position'
-            fullWidth
-            placeholder=''
-            value={formData.position}
-            onChange={e => setFormData({ ...formData, position: e.target.value })}
-          />
-          {errors.find(error => error.for === 'position')?.message}
+          <div className='flex gap-4 flex-col'>
+            <Typography className='text-xs font-medium'>Department</Typography>
+            <div className='flex gap-4 flex-col'>
+              {userDepData?.map((dep: any, index: any) => {
+                return (
+                  <Chip
+                    key={index}
+                    label={`${dep.depname} / ${dep.positionname}`}
+                    color='primary'
+                    className='flex-none'
+                    onDelete={() => handleDeleteDepPosition(dep.depid)}
+                    deleteIcon={<i className='tabler-trash-x' />}
+                  />
+                )
+              })}
+              <Chip
+                label='Add new department'
+                color='primary'
+                variant='outlined'
+                onClick={handleAddDepOpen}
+                icon={<i className='tabler-square-rounded-plus' />}
+              />
+            </div>
+          </div>
+          {/**
+             *
+            // <CustomTextField
+            //   select
+            //   fullWidth
+            //   id='select-department'
+            //   value={formData.dep}
+            //   onChange={e => setFormData({ ...formData, dep: [e.target.value] })}
+            //   label='Department'
+            // >
+
+            //   {depData?.map((dep: any) => {
+            //     return (
+            //       <MenuItem key={dep.dep} value={dep.dep}>
+            //         {dep.depname}
+            //       </MenuItem>
+            //     )
+            //   })}
+            // </CustomTextField>
+            // {errors.find(error => error.for === 'department')?.message}
+            // <CustomTextField
+            //   label='Position'
+            //   fullWidth
+            //   placeholder=''
+            //   value={formData.position}
+            //   onChange={e => setFormData({ ...formData, position: e.target.value })}
+            // />
+            // {errors.find(error => error.for === 'position')?.message}
+             */}
           <CustomTextField
             select
             fullWidth
@@ -319,6 +367,56 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
           </div>
         </form>
       </div>
+
+      <Dialog
+        onClose={handleCloseAddDep}
+        aria-labelledby='customized-dialog-title'
+        open={openAddDep}
+        PaperProps={{ sx: { overflow: 'visible' } }}
+      >
+        <DialogTitle id='customized-dialog-title'>
+          <Typography variant='h5' component='span'>
+            Add Department and Position
+          </Typography>
+          <DialogCloseButton onClick={handleCloseAddDep} disableRipple>
+            <i className='tabler-x' />
+          </DialogCloseButton>
+        </DialogTitle>
+        <DialogContent>
+          <CustomTextField
+            select
+            fullWidth
+            id='select-department'
+            value={formData.dep}
+            onChange={e => setFormData({ ...formData, dep: [e.target.value] })}
+            label='Department'
+            className='mb-4'
+          >
+            {depData?.map((dep: any) => {
+              return (
+                <MenuItem key={dep.dep} value={dep.dep}>
+                  {dep.depname}
+                </MenuItem>
+              )
+            })}
+          </CustomTextField>
+          <CustomTextField
+            label='Position'
+            fullWidth
+            placeholder=''
+            value={formData.position}
+            onChange={e => setFormData({ ...formData, position: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAddDep} variant='tonal' color='secondary'>
+            Close
+          </Button>
+          <Button onClick={handleAddDep} variant='contained'>
+            Add Department
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Drawer>
   )
 }

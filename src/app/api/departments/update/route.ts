@@ -16,6 +16,9 @@ export async function POST(req: NextRequest) {
 
   const reqBody = await req.json()
 
+  console.log('update department reqBody ====')
+  console.log(reqBody)
+
   try {
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updatedepartment`, {
       method: 'POST',
