@@ -84,8 +84,13 @@ export async function POST(req: NextRequest) {
         workinfo.senderpid = curwip[0].senderpid
         workinfo.action = curwip[0].action
 
+        console.log('uri getnextprocess')
+        console.log(
+          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`
+        )
+
         const resnp2 = await axios.get(
-          `${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${curwip[0].rid}/${curwip[0].pid}`,
+          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`,
           {
             headers
           }
@@ -138,7 +143,7 @@ export async function POST(req: NextRequest) {
       console.log(rid)
       console.log(pid)
 
-      const resnp = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/getnextprocess/${rid}/${pid}`, {
+      const resnp = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getnextprocess/${rid}/${pid}`, {
         headers
       })
 
