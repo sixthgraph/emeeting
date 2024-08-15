@@ -104,10 +104,15 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
   paddingBlockStart: `${theme.spacing(6)} !important`
 }))
 
-const WorkProfile = ({ workData, condionData }: { workData: any; condionData: any }) => {
-  const eformData = workData.eformdata
+const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: any }) => {
+  console.log('workData ===')
+  console.log(workData)
+  const eformData = workData?.eformdata
   let i: any
   const eform: any = eformData
+
+  console.log('condionData -----')
+  console.log(condionData)
 
   for (i in eform) {
     eformData[i]._id = eform[i].Id
@@ -193,6 +198,9 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
       handlesendwork()
     })
   }
+
+  console.log('---condionData')
+  console.log(condionData)
 
   const handlesendwork = async () => {
     try {
@@ -572,8 +580,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
             }}
           >
             {workData.blockid !== 'startpoint' &&
-              condionData !== 'end-process' &&
-              condionData !== null &&
+              condionData[0] !== 'end-process' &&
+              condionData[0] !== 'null' &&
               workData.action == '' && (
                 <Button variant='contained' onClick={() => handlesendbackwork()} className='mr-2' type='submit'>
                   Send Back
@@ -598,8 +606,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
               </>
             )}
 
-            {condionData !== 'end-process' &&
-              condionData !== null &&
+            {condionData[0] !== 'end-process' &&
+              condionData[0] !== 'null' &&
               workData.action == '' &&
               workData.blockid !== 'startpoint' && (
                 <Button
@@ -613,8 +621,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                 </Button>
               )}
 
-            {condionData !== 'end-process' &&
-              condionData !== null &&
+            {condionData[0] !== 'end-process' &&
+              condionData[0] !== 'null' &&
               workData.action == '' &&
               workData.blockid !== 'startpoint' && (
                 <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
@@ -622,8 +630,8 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                 </Button>
               )}
 
-            {condionData !== 'end-process' &&
-              condionData !== null &&
+            {condionData[0] !== 'end-process' &&
+              condionData[0] !== 'null' &&
               workData.action == '' &&
               workData.blockid == 'startpoint' && (
                 <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
@@ -631,7 +639,7 @@ const WorkProfile = ({ workData, condionData }: { workData: any; condionData: an
                 </Button>
               )}
 
-            {condionData === 'end-process' && workData.action == '' && (
+            {condionData[0] === 'end-process' && workData.action == '' && (
               <>
                 <Button variant='contained' onClick={() => handlesendbackwork()} className='mr-2' type='submit'>
                   Send Back

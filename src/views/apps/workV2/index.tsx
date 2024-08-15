@@ -15,7 +15,7 @@ import WorkProfile from '../work/WorkProfile'
 import WorkMessage from './WorkMessage'
 
 const WorkDetailV2 = ({ data, conditiondata }: { data: Data; conditiondata: any }) => {
-  const workData = data.data
+  const workData = data?.data
 
   return (
     <Grid container spacing={6}>

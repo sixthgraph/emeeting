@@ -52,9 +52,10 @@ const getData = async ({
     }
   } catch (err: any) {
     console.log('--work/list response ---')
-    console.log(err)
 
-    throw new Error(err.message)
+    // console.log(err)
+
+    //throw new Error(err.message)
   }
 }
 
@@ -66,8 +67,8 @@ const workPage = async ({ searchParams }: any) => {
 
   const res = await getData({ wid, dep, wip })
 
-  const data = res.data
-  const conditionData = res.data.conditionData
+  const data = res?.data
+  const conditionData = res?.data.conditionData
 
   // return <WorkDetail workData={searchParams} data={data} tabContentList={tabContentList(data)} />
   return <WorkDetailV2 data={data} conditiondata={conditionData} />
