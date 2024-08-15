@@ -51,7 +51,7 @@ const getData = async ({
       throw new Error('Failed to fetch workdata')
     }
   } catch (err: any) {
-    console.log('--work/list response ---')
+    console.log('--work/list response ---' + err)
 
     // console.log(err)
 
@@ -70,8 +70,13 @@ const workPage = async ({ searchParams }: any) => {
   const data = res?.data
   const conditionData = res?.data.conditionData
 
+  if (data) {
+    return <WorkDetailV2 data={data} conditiondata={conditionData} />
+  } else {
+    return <>!!! Work Data not found !!!</>
+  }
+
   // return <WorkDetail workData={searchParams} data={data} tabContentList={tabContentList(data)} />
-  return <WorkDetailV2 data={data} conditiondata={conditionData} />
 }
 
 export default workPage

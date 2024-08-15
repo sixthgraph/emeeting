@@ -121,10 +121,10 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
   const { data: session } = useSession()
 
   const documentData = {
-    wid: workData.wid,
+    wid: workData?.wid,
     email: session?.user.email,
-    dep: workData.curdep,
-    attachment: workData.attachment
+    dep: workData?.curdep,
+    attachment: workData?.attachment
   }
 
   const [value, setValue] = useState('1')

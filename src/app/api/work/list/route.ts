@@ -35,11 +35,11 @@ export async function POST(req: NextRequest) {
 
     const workinprocess = res.data.data.detail.workinprocess
 
-    // console.log('res.data.data')
-    // console.log(res.data.data.detail)
+    console.log('workinfo')
+    console.log(workinfo)
 
-    // console.log('--workinprocess---')
-    // console.log(workinprocess)
+    console.log('--workinprocess---')
+    console.log(workinprocess)
 
     const dataObj = workinprocess.filter((item: any) => {
       return item.id === wip //'6699081a5848117c8af11a20'
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
           conditionData: condataObj
         })
 
-        console.log('response2')
+        console.log('---response2')
         console.log(response2)
 
         return response2
@@ -96,65 +96,74 @@ export async function POST(req: NextRequest) {
           `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`
         )
 
-        const resnp2 = await axios.get(
-          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`,
-          {
-            headers
+        try {
+          const resnp2 = await axios.get(
+            `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`,
+            {
+              headers
+            }
+          )
+
+          console.log('resnp2')
+          console.log(resnp2.data.data)
+
+          let condata = resnp2.data.data
+
+          const condataDetail = condata.detail
+
+          console.log('condataDetail')
+          console.log(condataDetail)
+
+          let condataObj = []
+
+          if (condataDetail) {
+            console.log('have condata')
+
+            for (let i = 0; i < condataDetail.length; i++) {
+              condataObj.push(condataDetail[i])
+            }
+          } else {
+            console.log('condata null')
           }
-        )
 
-        console.log('resnp2')
-        console.log(resnp2.data.data)
+          console.log('condata---')
+          console.log(condata)
 
-        let condata = resnp2.data.data
-
-        const condataDetail = condata.detail
-
-        console.log('condataDetail')
-        console.log(condataDetail)
-
-        let condataObj = []
-
-        if (condataDetail) {
-          console.log('have condata')
-
-          for (let i = 0; i < condataDetail.length; i++) {
-            condataObj.push(condataDetail[i])
+          if (curwip[0].uid !== email && condata !== null) {
+            condata = null
+            condataObj = ['null']
+          } else {
+            if (condata == null && curwip[0].uid == email) {
+              condata = 'end-process'
+              condataObj = ['end-process']
+            }
           }
-        } else {
-          console.log('condata null')
+
+          const response2 = NextResponse.json({
+            message: res.data.message,
+            success: true,
+            data: workinfo,
+            conditionData: condataObj
+          })
+
+          console.log('response222')
+          console.log(response2)
+
+          return response2
+        } catch (err: any) {
+          //error call getnextprocess
+
+          console.log('error call getnextprocess\n' + err)
+
+          const response2 = NextResponse.json({
+            message: res.data.message,
+            success: true,
+            data: workinfo,
+            conditionData: ['null']
+          })
+
+          return response2
         }
-
-        console.log('condata---')
-        console.log(condata)
-
-        if (curwip[0].uid !== email && condata !== null) {
-          condata = null
-          condataObj = ['null']
-        } else {
-          if (condata == null && curwip[0].uid == email) {
-            condata = 'end-process'
-            condataObj = ['end-process']
-          }
-        }
-
-        // console.log('condataObj[0]---')
-        // console.log(condataObj[0])
-
-        // console.log('res.data.data.detail')
-        // console.log(res.data.data.detail)
-
-        const response2 = NextResponse.json({
-          message: res.data.message,
-          success: true,
-          data: workinfo,
-          conditionData: condataObj
-        })
-
-        console.log('response222')
-        console.log(response2)
-
-        return response2
       }
     }
 
