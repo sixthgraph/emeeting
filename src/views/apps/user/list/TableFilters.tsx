@@ -12,14 +12,15 @@ import type { UsersType } from '@/types/apps/userTypes'
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
 
-const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersType[] }) => {
+const TableFilters = ({ setData, tableData, depData }: { setData: any; tableData?: UsersType[]; depData?: any }) => {
   // States
   const [role, setRole] = useState<UsersType['role']>('')
 
   //const [plan, setPlan] = useState<UsersType['currentPlan']>('')
   const [status, setStatus] = useState<UsersType['status']>('')
 
-  // console.log('tableData === >', tableData)
+  console.log('tableData === >', tableData)
+  console.log('depData222 === >', depData)
 
   useEffect(() => {
     const filteredData = tableData?.filter(user => {
@@ -57,22 +58,6 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersT
             <MenuItem value='4'>Super User</MenuItem>
           </CustomTextField>
         </Grid>
-        {/* <Grid item xs={12} sm={4}>
-          <CustomTextField
-            select
-            fullWidth
-            id='select-plan'
-            value={plan}
-            onChange={e => setPlan(e.target.value)}
-            SelectProps={{ displayEmpty: true }}
-          >
-            <MenuItem value=''>Select Plan</MenuItem>
-            <MenuItem value='basic'>Basic</MenuItem>
-            <MenuItem value='company'>Company</MenuItem>
-            <MenuItem value='enterprise'>Enterprise</MenuItem>
-            <MenuItem value='team'>Team</MenuItem>
-          </CustomTextField>
-        </Grid> */}
         <Grid item xs={12} sm={4}>
           <CustomTextField
             select
@@ -86,6 +71,25 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: UsersT
             <MenuItem value='pending'>Pending</MenuItem>
             <MenuItem value='active'>Active</MenuItem>
             <MenuItem value='inactive'>Inactive</MenuItem>
+          </CustomTextField>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <CustomTextField
+            select
+            fullWidth
+            id='select-department'
+            value={status}
+            onChange={e => setStatus(e.target.value)}
+            SelectProps={{ displayEmpty: true }}
+          >
+            <MenuItem value=''>Select Department</MenuItem>
+            {depData.map((dep: any, index: any) => {
+              return (
+                <MenuItem key={index} value={dep.dep}>
+                  {dep.depname}
+                </MenuItem>
+              )
+            })}
           </CustomTextField>
         </Grid>
       </Grid>

@@ -248,7 +248,7 @@ const PositionListTable = ({ tableData }: Props) => {
         )
       }),
       columnHelper.accessor('desc', {
-        header: 'Desc',
+        header: 'Position Name',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
@@ -367,7 +367,7 @@ const PositionListTable = ({ tableData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Filters' className='pbe-4' />
+        <CardHeader title='Position' className='pbe-4' />
         {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField

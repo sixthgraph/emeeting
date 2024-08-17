@@ -247,29 +247,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
           {updateData.positioncode !== '' ? (
             <>
               <CustomTextField label='Department Name' fullWidth placeholder='' disabled value={formData.depname} />
-              {/* <CustomTextField
-              label='Dep Path'
-              fullWidth
-              placeholder=''
-              value={formData.path}
-              onChange={e => setFormData({ ...formData, path: e.target.value })}
-            /> */}
-              {/* <CustomTextField
-              select
-              fullWidth
-              id='select-dep-parent'
-              value={formData.depparent}
-              onChange={e => setFormData({ ...formData, depparent: e.target.value })}
-              label='Department Parent'
-            >
-              {depData?.map((depParent: any) => {
-                return (
-                  <MenuItem key={depParent.dep} value={depParent.dep}>
-                    {depParent.depname}
-                  </MenuItem>
-                )
-              })}
-            </CustomTextField> */}
+
               <CustomTextField
                 select
                 fullWidth

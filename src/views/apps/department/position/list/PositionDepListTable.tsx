@@ -132,7 +132,8 @@ type Props = {
 }
 
 const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
-  console.log(typeof tableData)
+  console.log('tableData')
+  console.log(tableData)
   const router = useRouter()
   let depName = ''
 
@@ -283,11 +284,14 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
         )
       }),
       columnHelper.accessor('positiondesc', {
-        header: 'Positiondesc',
+        header: 'Position Name',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
-              {row.original.positiondesc}
+              {/* {row.original.positiondesc} */}
+              {row.original.path.split(',').length <= 2
+                ? row.original.positiondesc
+                : '='.repeat(row.original.positionpath.split(',').length - 1) + ' ' + row.original.positiondesc}
             </Typography>
           </div>
         )
@@ -414,7 +418,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
             </IconButton>
           }
           onHover
-          title={`Department > Position : ${depName}`}
+          title={`Department > Position > ${depName}`}
           className='pbe-4'
         />
         {/* <TableFilters setData={setData} tableData={tableData} /> */}

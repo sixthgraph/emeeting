@@ -323,12 +323,16 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         header: 'Role',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Icon
-              className={row.original.role && userRoleObj[row.original.role].icon}
-              sx={{ color: `var(--mui-palette-${row.original.role && userRoleObj[row.original.role].color}-main)` }}
-            />
+            {roleObj[row.original.role] && (
+              <Icon
+                className={row.original.role && userRoleObj[row.original.role].icon}
+                sx={{ color: `var(--mui-palette-${row.original.role && userRoleObj[row.original.role].color}-main)` }}
+              />
+            )}
+
             <Typography className='capitalize' color='text.primary'>
-              {row.original.role && roleObj[row.original.role].name}
+              {/* {row.original.role && roleObj[row.original.role].name} */}
+              {row.original.role && roleObj[row.original.role] ? roleObj[row.original.role]?.name : '-'}
             </Typography>
           </div>
         )
@@ -338,13 +342,17 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         header: 'Status',
         cell: ({ row }) => (
           <div className='flex items-center gap-3'>
-            <Chip
-              variant='tonal'
-              className='capitalize'
-              label={row.original.status}
-              color={userStatusObj[row.original.status]}
-              size='small'
-            />
+            {row.original.status ? (
+              <Chip
+                variant='tonal'
+                className='capitalize'
+                label={row.original.status}
+                color={userStatusObj[row.original.status]}
+                size='small'
+              />
+            ) : (
+              '-'
+            )}
           </div>
         )
       }),
@@ -381,9 +389,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         enableSorting: false
       })
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
-  )
+  ) // sg bug here
 
   // Table config
   const table = useReactTable({
@@ -429,7 +436,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     <>
       <Card>
         <CardHeader title='Filters' className='pbe-4' />
-        <TableFilters setData={setData} tableData={tableData} />
+        <TableFilters setData={setData} tableData={tableData} depData={depData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -508,11 +515,11 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
                 {table
                   .getRowModel()
                   .rows.slice(0, table.getState().pagination.pageSize)
-                  .map(row => {
+                  .map((row: any, index: any) => {
                     return (
-                      <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
-                        {row.getVisibleCells().map(cell => (
-                          <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                      <tr key={index} className={classnames({ selected: row.getIsSelected() })}>
+                        {row.getVisibleCells().map((cell: any, idx: any) => (
+                          <td key={idx}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                         ))}
                       </tr>
                     )

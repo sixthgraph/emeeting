@@ -1,10 +1,6 @@
 // React Imports
 import { useEffect, useState } from 'react'
 
-// MUI Imports
-//import { NextResponse } from 'next/server'
-//import { useRouter, useParams } from 'next/navigation'
-
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
@@ -14,13 +10,21 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
 // Component Imports
-import { Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment } from '@mui/material'
+import {
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText
+} from '@mui/material'
 
 import axios from 'axios'
 
-// import { any } from 'zod'
-
-// import { any } from 'zod'
+import { useSession } from 'next-auth/react'
 
 import CustomTextField from '@core/components/mui/TextField'
 
@@ -57,32 +61,120 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
   console.log('updateData ===')
   console.log(updateData)
 
-  const userDepData = updateData.dep
-
-  console.log('UserDepData === ')
-  console.log(userDepData)
-  console.log('depData === ')
-  console.log(depData)
+  // let userDepData = updateData.dep
 
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
+  const [count, setCount] = useState(0)
+  const [userDepData, setUserDepData] = useState<any[]>(updateData.dep)
   const [errors, setErrors] = useState<any[]>([])
-
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-
+  const [selDep, setSelectDep] = useState<any>('')
+  const [selDepName, setSelectDepName] = useState<any>('')
+  const [selPosition, setSelectPosition] = useState<any[]>([])
+  const [updatePosition, setUpdatePosition] = useState<any>('')
+  const [updatePositionName, setUpdatePositionName] = useState<any>('')
   const [openAddDep, setOpenAddDep] = useState<boolean>(false)
 
-  const handleAddDepOpen = () => setOpenAddDep(true)
+  useEffect(() => {
+    setFormData(updateData)
+    setUserDepData(updateData.dep)
+  }, [open, updateData])
+
+  useEffect(() => {
+    //userDepData change ----
+    setUserDepData(updateData.dep)
+  }, [count])
+
+  const { data: session } = useSession()
+  const token = session?.user.token
+
+  const getPositionDep = async (event: any) => {
+    const dep = event.target.value
+    const depname = event.explicitOriginalTarget.innerText
+
+    setSelectDep(dep)
+    setSelectDepName(depname)
+    setUpdatePosition('')
+    setUpdatePositionName('')
+
+    try {
+      const reqBody = {
+        dep: dep,
+        token: session?.user.token
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/positions/list`, reqBody, {
+        headers
+      })
+
+      if (response.data.message === 'success') {
+        const resultPositon = response.data.data.detail
+
+        setSelectPosition(resultPositon)
+
+        return resultPositon
+      } else {
+        return 'Position not found'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getSelectPostion = (event: any) => {
+    const position = event.target.value
+    const positionname = event.explicitOriginalTarget.innerText
+
+    setUpdatePosition(position)
+    setUpdatePositionName(positionname)
+  }
+
+  const handleAddDepOpen = () => {
+    setOpenAddDep(true)
+    setSelectDep('')
+    setSelectDepName('')
+    setUpdatePosition('')
+    setUpdatePositionName('')
+  }
 
   const handleCloseAddDep = () => setOpenAddDep(false)
 
-  const handleDeleteDepPosition = (depid: any) => {
-    console.log('delete' + depid)
+  const handleDeleteDepPosition = (depid: any, positionid: any) => {
+    const index = updateData.dep.findIndex((x: any) => x.depid === depid && x.positionid === positionid)
+
+    if (index > -1) {
+      updateData.dep.splice(index, 1) // 2nd parameter means remove one item only
+    }
+
+    setCount(count + 1)
   }
 
   const handleAddDep = () => {
-    console.log('add new dep')
+    const updateNewDep: any = {
+      depid: selDep,
+      depname: selDepName,
+      positionid: updatePosition,
+      positionname: updatePositionName
+    }
+
+    if (updateData.dep !== null) {
+      updateData.dep.push(updateNewDep)
+    } else {
+      const newDep: any = []
+      newDep.push(updateNewDep)
+      updateData.dep = newDep
+
+      setCount(count + 1)
+    }
+
+    handleCloseAddDep()
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -186,10 +278,6 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
     }
   }
 
-  useEffect(() => {
-    setFormData(updateData)
-  }, [open, updateData])
-
   return (
     <Drawer
       open={open}
@@ -228,7 +316,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             onChange={e => setFormData({ ...formData, lastname: e.target.value })}
           />
           {errors.find(error => error.for === 'lastname')?.message}
-          <CustomTextField
+          {/* <CustomTextField
             fullWidth
             label='Password'
             placeholder='············'
@@ -246,7 +334,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
               )
             }}
           />
-          {errors.find(error => error.for === 'password')?.message}
+          {errors.find(error => error.for === 'password')?.message} */}
           {updateData.email !== '' ? (
             <CustomTextField
               label='Email'
@@ -266,59 +354,60 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             />
           )}
           {errors.find(error => error.for === 'email')?.message}
-          <div className='flex gap-4 flex-col'>
-            <Typography className='text-xs font-medium'>Department</Typography>
-            <div className='flex gap-4 flex-col'>
-              {userDepData?.map((dep: any, index: any) => {
-                return (
-                  <Chip
-                    key={index}
-                    label={`${dep.depname} / ${dep.positionname}`}
-                    color='primary'
-                    className='flex-none'
-                    onDelete={() => handleDeleteDepPosition(dep.depid)}
-                    deleteIcon={<i className='tabler-trash-x' />}
-                  />
-                )
-              })}
+
+          <div className='flex flex-col'>
+            <div className='flex flex-row'>
+              <label className=' text-xs flex-1 '>Department</label>
               <Chip
-                label='Add new department'
-                color='primary'
+                label='Add'
+                size='small'
                 variant='outlined'
-                onClick={handleAddDepOpen}
+                className='text-xs'
                 icon={<i className='tabler-square-rounded-plus' />}
+                onClick={handleAddDepOpen}
               />
             </div>
+            <div className='flex gap-4 flex-col'>
+              <List>
+                {userDepData.length > 0 ? (
+                  userDepData?.map((dep: any, index: any) => {
+                    return (
+                      <>
+                        <ListItem
+                          key={index}
+                          disablePadding
+                          secondaryAction={
+                            <IconButton
+                              edge='end'
+                              size='small'
+                              onClick={() => handleDeleteDepPosition(`${dep.depid}`, `${dep.positionid}`)}
+                            >
+                              <i className='tabler-trash-x' />
+                            </IconButton>
+                          }
+                        >
+                          <ListItemButton>
+                            <ListItemText primary={`${dep.depname}`} secondary={dep.positionname} />
+                          </ListItemButton>
+                        </ListItem>
+                        <Divider className='m-0' />
+                      </>
+                    )
+                  })
+                ) : (
+                  <>
+                    <ListItem disablePadding>
+                      <ListItemButton>
+                        <ListItemText primary={`Department not found`} />
+                      </ListItemButton>
+                    </ListItem>
+                    <Divider className='m-0' />
+                  </>
+                )}
+              </List>
+            </div>
           </div>
-          {/**
-             *
-            // <CustomTextField
-            //   select
-            //   fullWidth
-            //   id='select-department'
-            //   value={formData.dep}
-            //   onChange={e => setFormData({ ...formData, dep: [e.target.value] })}
-            //   label='Department'
-            // >
 
-            //   {depData?.map((dep: any) => {
-            //     return (
-            //       <MenuItem key={dep.dep} value={dep.dep}>
-            //         {dep.depname}
-            //       </MenuItem>
-            //     )
-            //   })}
-            // </CustomTextField>
-            // {errors.find(error => error.for === 'department')?.message}
-            // <CustomTextField
-            //   label='Position'
-            //   fullWidth
-            //   placeholder=''
-            //   value={formData.position}
-            //   onChange={e => setFormData({ ...formData, position: e.target.value })}
-            // />
-            // {errors.find(error => error.for === 'position')?.message}
-             */}
           <CustomTextField
             select
             fullWidth
@@ -387,8 +476,8 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             select
             fullWidth
             id='select-department'
-            value={formData.dep}
-            onChange={e => setFormData({ ...formData, dep: [e.target.value] })}
+            value={selDep} //onChange={e => setSelectDep(e.target.value)} // sg here
+            onChange={e => getPositionDep(e)} // sg here
             label='Department'
             className='mb-4'
           >
@@ -401,12 +490,22 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             })}
           </CustomTextField>
           <CustomTextField
-            label='Position'
+            select
             fullWidth
-            placeholder=''
-            value={formData.position}
-            onChange={e => setFormData({ ...formData, position: e.target.value })}
-          />
+            id='select-positon'
+            value={updatePosition} //onChange={e => setSelectDep(e.target.value)} // sg here
+            onChange={e => getSelectPostion(e)} // sg here
+            label='Position'
+            className='mb-4'
+          >
+            {selPosition?.map((position: any, index: any) => {
+              return (
+                <MenuItem key={index} value={position.positioncode}>
+                  {position.positiondesc}
+                </MenuItem>
+              )
+            })}
+          </CustomTextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAddDep} variant='tonal' color='secondary'>

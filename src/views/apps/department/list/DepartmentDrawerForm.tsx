@@ -151,7 +151,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
     setFormData(initialData)
   }
 
-  const handleInsertMany = () => {
+  const handleInsertMany = async () => {
     const insertObj = []
     const depnameStr = insertData.depname
     const re = /\n/gi
@@ -185,6 +185,38 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
 
     console.log('insertObj === ')
     console.log(insertObj)
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/addMany`, insertObj)
+
+      console.log('add department response===', response.data)
+
+      if (response.data.success) {
+        console.log('add department success')
+
+        // if (tableData) {
+        //   const addData: any = {
+        //     depname: formData.depname,
+        //     statecode: formData.statecode,
+        //     docuname: formData.docuname,
+        //     path: formData.path,
+        //     sort: formData.sort
+        //   }
+
+        //   console.log(addData)
+
+        //   tableData.push(addData)
+        // }
+
+        // setData(tableData)
+        handleClose()
+        handleRefresh()
+      } else {
+        console.log('add department failed.')
+      }
+    } catch (error: any) {
+      console.log('Add department failed. ', error.message)
+    }
   }
 
   const handleUpdateData = async () => {
