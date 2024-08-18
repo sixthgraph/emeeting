@@ -62,6 +62,7 @@ import type {
 // Component Imports
 import TableFilters from './TableFilters'
 import UserDrawerForm from './UserDrawerForm'
+import UsersDrawerForm from './UsersDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -159,7 +160,7 @@ let initialData = {
   avatar: '',
   avatarcolor: '',
   password: '',
-  dep: [''],
+  dep: ['null'],
   position: '',
   role: 0,
   status: ''
@@ -178,6 +179,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   //console.log('depData === ', depData)
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
+  const [addUsersOpen, setAddUsersOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
@@ -221,12 +223,29 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       avatar: '',
       avatarcolor: '',
       password: '',
-      dep: [''],
+      dep: ['null'],
       position: '',
       role: 0,
       status: ''
     }
     setAddUserOpen(true)
+  }
+  const usersDrawerOpenHandle = () => {
+    // sg here
+    initialData = {
+      firstname: '',
+      lastname: '',
+      fullName: '',
+      email: '',
+      avatar: '',
+      avatarcolor: '',
+      password: '',
+      dep: ['null'],
+      position: '',
+      role: 0,
+      status: ''
+    }
+    setAddUsersOpen(true)
   }
 
   const handleDeleteUser = async (email: object) => {
@@ -435,7 +454,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Filters' className='pbe-4' />
+        <CardHeader title='Users' className='pbe-4' />
         <TableFilters setData={setData} tableData={tableData} depData={depData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
@@ -465,11 +484,19 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
             </Button>
             <Button
               variant='contained'
-              startIcon={<i className='tabler-plus' />}
+              startIcon={<i className='tabler-user-plus' />}
               onClick={() => userDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
-              Add New User
+              Add User
+            </Button>
+            <Button
+              variant='outlined'
+              startIcon={<i className='tabler-users-plus' />}
+              onClick={() => usersDrawerOpenHandle()}
+              className='is-full sm:is-auto'
+            >
+              Add Users
             </Button>
           </div>
         </div>
@@ -546,6 +573,15 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         roleData={roleData}
         depData={depData}
         handleClose={() => setAddUserOpen(!addUserOpen)}
+      />
+      <UsersDrawerForm
+        open={addUsersOpen}
+        setData={setData}
+        tableData={tableData}
+        updateData={initialData}
+        roleData={roleData}
+        depData={depData}
+        handleClose={() => setAddUsersOpen(!addUsersOpen)}
       />
     </>
   )

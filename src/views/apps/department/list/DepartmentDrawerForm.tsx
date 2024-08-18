@@ -418,12 +418,12 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
               </Button>
             ) : (
               <>
-                <Button variant='contained' type='submit'>
+                {/* <Button variant='contained' type='submit'>
                   Submit
-                </Button>
+                </Button> */}
 
                 <Button variant='contained' onClick={() => handleInsertMany()} type='button'>
-                  Insert Many
+                  Submit
                 </Button>
               </>
             )}

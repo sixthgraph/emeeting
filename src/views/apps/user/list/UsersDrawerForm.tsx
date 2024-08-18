@@ -57,13 +57,22 @@ const initialData = {
   role: 0,
   status: ''
 }
+const initialInsertData = {
+  userData: '',
+  password: '',
+  role: 0,
+  status: '',
+  dep: []
+}
 
-const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depData, handleClose }: Props) => {
+const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depData, handleClose }: Props) => {
   if (updateData.dep.length == 1) {
     if (updateData.dep[0] == 'null') {
       updateData.dep = []
     }
   }
+
+  // let userDepData = updateData.dep
 
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
@@ -77,6 +86,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
   const [updatePositionName, setUpdatePositionName] = useState<any>('')
   const [openAddDep, setOpenAddDep] = useState<boolean>(false)
   const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const [insertData, setInsertData] = useState(initialInsertData)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   useEffect(() => {
@@ -87,7 +97,13 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
   useEffect(() => {
     //userDepData change ----
     setUserDepData(updateData.dep)
+    console.log('use Dep list change to ----')
+    console.log(userDepData)
+    console.log('count change')
   }, [count])
+
+  console.log('use Dep list ----')
+  console.log(userDepData)
 
   const { data: session } = useSession()
   const token = session?.user.token
@@ -238,6 +254,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
   }
 
   const handleReset = () => {
+    // sg today
     handleClose()
     setFormData({
       firstname: '',
@@ -251,6 +268,13 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
       position: '',
       role: 0,
       status: ''
+    })
+    setInsertData({
+      userData: '',
+      password: '',
+      role: 0,
+      status: '',
+      dep: []
     })
   }
 
@@ -282,7 +306,79 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
       console.log('Update user failed. ', error.message)
     }
   }
+  const handleInsertMany = async () => {
+    const insertObj = []
+    const userDataStr = insertData.userData
+    const re = /\n/gi
+    const result = userDataStr.replace(re, ',')
+    const resultObj = result.split(',')
 
+    let i: any
+    const n: any = resultObj
+
+    for (i in n) {
+      if (n[i] !== '') {
+        const userInfo = n[i]
+
+        const userObj = userInfo.split('\t')
+        console.log('userObj ---')
+        console.log(userObj)
+
+        const newData = {
+          firstname: userObj[0],
+          lastname: userObj[1],
+          fullName: userObj[0] + ' ' + userObj[1],
+          email: userObj[2],
+          password: insertData.password,
+          avatar: '',
+          avatarcolor: '',
+          dep: updateData.dep,
+          position: '',
+          role: insertData.role,
+          status: insertData.status
+        }
+
+        insertObj.push(newData)
+      } //if
+    } //for
+
+    console.log('insertObj === ')
+    console.log(insertObj)
+
+    return
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/addMany`, insertObj)
+
+      console.log('add department response===', response.data)
+
+      if (response.data.success) {
+        console.log('add department success')
+
+        // if (tableData) {
+        //   const addData: any = {
+        //     depname: formData.depname,
+        //     statecode: formData.statecode,
+        //     docuname: formData.docuname,
+        //     path: formData.path,
+        //     sort: formData.sort
+        //   }
+
+        //   console.log(addData)
+
+        //   tableData.push(addData)
+        // }
+
+        // setData(tableData)
+        // handleClose()
+        // handleRefresh()
+      } else {
+        console.log('add department failed.')
+      }
+    } catch (error: any) {
+      console.log('Add department failed. ', error.message)
+    }
+  }
   return (
     <Drawer
       open={open}
@@ -294,9 +390,9 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
         {updateData.email !== '' ? (
-          <Typography variant='h5'>Edit User</Typography>
+          <Typography variant='h5'>Edit Multiple User</Typography>
         ) : (
-          <Typography variant='h5'>Add New User</Typography>
+          <Typography variant='h5'>Add Multiple User</Typography>
         )}
         <IconButton onClick={handleReset}>
           <i className='tabler-x text-textPrimary' />
@@ -305,7 +401,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          <CustomTextField
+          {/* <CustomTextField
             label='Firstname'
             fullWidth
             placeholder=''
@@ -320,15 +416,24 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             value={formData.lastname}
             onChange={e => setFormData({ ...formData, lastname: e.target.value })}
           />
-          {errors.find(error => error.for === 'lastname')?.message}
+          {errors.find(error => error.for === 'lastname')?.message} */}
+
+          <CustomTextField
+            rows={16}
+            multiline
+            value={insertData.userData} // sg today
+            label='Firstname, Lastname, Email'
+            onChange={e => setInsertData({ ...insertData, userData: e.target.value })}
+          />
+
           <CustomTextField
             fullWidth
             label='Password'
             placeholder='············'
             autoComplete='off'
             type={isPasswordShown ? 'text' : 'password'}
-            value={formData.password}
-            onChange={e => setFormData({ ...formData, password: e.target.value })}
+            value={insertData.password}
+            onChange={e => setInsertData({ ...insertData, password: e.target.value })}
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
@@ -340,7 +445,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             }}
           />
           {errors.find(error => error.for === 'password')?.message}
-          {updateData.email !== '' ? (
+          {/* {updateData.email !== '' ? (
             <CustomTextField
               label='Email'
               disabled
@@ -358,7 +463,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
               onChange={e => setFormData({ ...formData, email: e.target.value })}
             />
           )}
-          {errors.find(error => error.for === 'email')?.message}
+          {errors.find(error => error.for === 'email')?.message} */}
 
           <div className='flex flex-col'>
             <div className='flex flex-row'>
@@ -374,7 +479,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             </div>
             <div className='flex gap-4 flex-col'>
               <List>
-                {userDepData.length > 0 ? (
+                {userDepData.length > 0 && userDepData[0] !== 'null' ? ( // sg here
                   userDepData?.map((dep: any, index: any) => {
                     return (
                       <>
@@ -417,8 +522,8 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             select
             fullWidth
             id='Role'
-            value={formData.role}
-            onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
+            value={insertData.role}
+            onChange={e => setInsertData({ ...insertData, role: Number(e.target.value) })}
             label='Role'
           >
             {/* todo */}
@@ -435,8 +540,8 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             select
             fullWidth
             id='select-status'
-            value={formData.status}
-            onChange={e => setFormData({ ...formData, status: e.target.value })}
+            value={insertData.status}
+            onChange={e => setInsertData({ ...insertData, status: e.target.value })}
             label='Status'
           >
             <MenuItem value='pending'>Pending</MenuItem>
@@ -450,7 +555,10 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
                 Edit
               </Button>
             ) : (
-              <Button variant='contained' type='submit'>
+              // <Button variant='contained' type='submit'>
+              //   Submit
+              // </Button>
+              <Button variant='contained' type='button' onClick={() => handleInsertMany()}>
                 Submit
               </Button>
             )}
@@ -525,4 +633,4 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
   )
 }
 
-export default UserDrawerForm
+export default UsersDrawerForm

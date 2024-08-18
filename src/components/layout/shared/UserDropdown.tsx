@@ -98,9 +98,11 @@ const UserDropdown = () => {
     }
   }
 
-  const { data: session } = useSession({
-    required: true
-  })
+  // const { data: session } = useSession({
+  //   required: true
+  // })
+
+  const { data: session } = useSession()
 
   const userData: any = session?.user
 

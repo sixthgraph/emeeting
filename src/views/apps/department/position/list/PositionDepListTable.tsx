@@ -43,6 +43,7 @@ import type {
 import PositionDepDrawerForm from './PositionDepDrawerForm'
 import CustomTextField from '@core/components/mui/TextField'
 import tableStyles from '@core/styles/table.module.css'
+import { Chip } from '@mui/material'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -412,13 +413,17 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
       <Card>
         <CardHeader
           action={
-            <IconButton onClick={() => router.push(`/en/departments`)} aria-label='Back to Department' color='primary'>
-              <i className='tabler-arrow-badge-left' />
-              {/* <Typography color='gray'>Back</Typography> */}
-            </IconButton>
+            <Chip
+              label='Back'
+              size='small'
+              variant='outlined'
+              className='text-xs'
+              icon={<i className='tabler-arrow-badge-left' />}
+              onClick={() => router.push(`/en/departments`)}
+            />
           }
           onHover
-          title={`Department > Position > ${depName}`}
+          title={`Position list of ${depName}`}
           className='pbe-4'
         />
         {/* <TableFilters setData={setData} tableData={tableData} /> */}

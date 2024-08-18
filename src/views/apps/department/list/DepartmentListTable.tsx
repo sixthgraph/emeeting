@@ -356,7 +356,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Department' className='pbe-4' />
+        <CardHeader title='Departments' className='pbe-4' />
         <TableFilters setData={setData} tableData={tableData} depData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
