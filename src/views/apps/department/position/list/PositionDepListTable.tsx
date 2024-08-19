@@ -32,6 +32,8 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import axios from 'axios'
 
+import { Chip } from '@mui/material'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import type {
   PositionsDepType,
@@ -43,7 +45,6 @@ import type {
 import PositionDepDrawerForm from './PositionDepDrawerForm'
 import CustomTextField from '@core/components/mui/TextField'
 import tableStyles from '@core/styles/table.module.css'
-import { Chip } from '@mui/material'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {

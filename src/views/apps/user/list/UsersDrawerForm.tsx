@@ -57,6 +57,7 @@ const initialData = {
   role: 0,
   status: ''
 }
+
 const initialInsertData = {
   userData: '',
   password: '',
@@ -189,6 +190,7 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
       setCount(count + 1)
     } else {
       const newDep: any = []
+
       newDep.push(updateNewDep)
       updateData.dep = newDep
 
@@ -306,6 +308,7 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
       console.log('Update user failed. ', error.message)
     }
   }
+
   const handleInsertMany = async () => {
     const insertObj = []
     const userDataStr = insertData.userData
@@ -321,6 +324,7 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
         const userInfo = n[i]
 
         const userObj = userInfo.split('\t')
+
         console.log('userObj ---')
         console.log(userObj)
 
@@ -379,6 +383,7 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
       console.log('Add department failed. ', error.message)
     }
   }
+
   return (
     <Drawer
       open={open}
@@ -555,12 +560,13 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
                 Edit
               </Button>
             ) : (
-              // <Button variant='contained' type='submit'>
-              //   Submit
-              // </Button>
               <Button variant='contained' type='button' onClick={() => handleInsertMany()}>
                 Submit
               </Button>
+
+              // <Button variant='contained' type='submit'>
+              //   Submit
+              // </Button>
             )}
 
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>

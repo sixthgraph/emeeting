@@ -87,7 +87,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
   useEffect(() => {
     //userDepData change ----
     setUserDepData(updateData.dep)
-  }, [count])
+  }, [count, updateData.dep])
 
   const { data: session } = useSession()
   const token = session?.user.token
@@ -173,6 +173,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
       setCount(count + 1)
     } else {
       const newDep: any = []
+
       newDep.push(updateNewDep)
       updateData.dep = newDep
 
