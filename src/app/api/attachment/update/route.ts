@@ -13,15 +13,27 @@ export async function POST(req: NextRequest) {
   console.log('reqBody update=====')
   console.log(reqBody)
 
+  const today = new Date()
+
+  const update: any = {
+    uid: reqBody.uid,
+    attachdate: today
+  }
+
+  console.log(update)
+
   try {
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updateattachment`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        cache: 'force-cache'
-      },
-      body: JSON.stringify(reqBody)
-    })
+    const response = await fetch(
+      `${process.env.ROUTE_FLOW_API_URL}/updateattachment?wid=${reqBody.wid}&uid=${reqBody.uid}&dep=${reqBody.dep}&id=${reqBody.itemno}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          cache: 'force-cache'
+        },
+        body: JSON.stringify(update)
+      }
+    )
 
     const data = await response.json()
 

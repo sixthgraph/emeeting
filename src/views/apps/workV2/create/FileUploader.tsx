@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import DialogActions from '@mui/material/DialogActions'
 
+// import axios from 'axios'
+
 // Third-party Imports
 import { useDropzone } from 'react-dropzone'
 
@@ -25,7 +27,7 @@ type FileProp = {
   size: number
 }
 
-const FileUploader = ({ attmData }: { attmData?: any }) => {
+const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }) => {
   // States
   const [files, setFiles] = useState<File[]>([])
   const wid = attmData.wid
@@ -49,6 +51,11 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
   //     setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
   //   }
   // })
+  // if (fileData.filename == undefined) {
+  //   console.log('ว่าง')
+  // } else {
+  //   console.log('ไม่ว่าง')
+  // }
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[]) => {
@@ -127,6 +134,56 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
     setFiles([...filtered])
   }
 
+  const handleEditFile = async () => {
+    console.log('--attmData--')
+
+    const headers = {
+      Accept: '*/*',
+      Authorization: `Bearer ${token}`
+    }
+
+    // console.log(attmData)
+    const form = new FormData()
+
+    form.append('wid', wid)
+    form.append('id', email)
+    form.append('dep', dep)
+    form.append('itemno', fileData.itemno)
+    form.append('file', files[0])
+
+    // const updateData: any = {
+    //   wid: wid,
+    //   uid: email,
+    //   dep: dep,
+    //   itemno: fileData.itemno,
+    //   file: files[0]
+    // }
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_FLOW_API_URL}/updateattachment?wid=${wid}&uid=${email}&dep=${dep}&id=${fileData.itemno}`,
+        {
+          method: 'POST',
+          body: form,
+          headers: headers
+        }
+      )
+
+      console.log('response updateattachment from client call------')
+      const data = response.json()
+
+      console.log('----- DATA -----')
+      console.log(data)
+
+      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/update`, form)
+
+      // if (response.data.message === 'success') {
+      //   console.log('Update user success.')
+      // }
+    } catch (error: any) {
+      console.log('update from client call failed. ', error.message)
+    }
+  }
+
   const fileList = files.map((file: FileProp) => (
     <ListItem key={file.name}>
       <div className='file-details'>
@@ -170,7 +227,25 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
           </Typography>
         </div>
       </div>
-      {files.length ? (
+      {/* {files.length ? (
+        <>
+          <List>{fileList}</List>
+
+          <DialogActions className='buttons justify-end'>
+            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
+              Remove All
+            </Button>
+            <Button onClick={() => handleUploadFile()} variant='contained'>
+              Upload Files
+            </Button>
+            <Button onClick={() => handleEditFile()} variant='contained'>
+              Edit Files
+            </Button>
+          </DialogActions>
+        </>
+      ) : null} */}
+
+      {files.length >= 1 ? (
         <>
           <List>{fileList}</List>
           <DialogActions className='buttons justify-end'>
@@ -180,9 +255,26 @@ const FileUploader = ({ attmData }: { attmData?: any }) => {
             <Button onClick={() => handleUploadFile()} variant='contained'>
               Upload Files
             </Button>
+            <Button onClick={() => handleEditFile()} variant='contained'>
+              Edit Files
+            </Button>
           </DialogActions>
         </>
       ) : null}
+
+      {/* {files.length === 1 ? (
+        <>
+          <List>{fileList}</List>
+          <DialogActions className='buttons justify-end'>
+            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
+              Remove All
+            </Button>
+            <Button onClick={() => handleEditFile()} variant='contained'>
+              Edit Files
+            </Button>
+          </DialogActions>
+        </>
+      ) : null} */}
     </>
   )
 }

@@ -29,51 +29,6 @@ import FileUploader from './create/FileUploader'
 
 // import FileUploaderCloudinary from './create/FileUploaderCloudinary'
 
-// type DataType = {
-//   docType: string
-//   docTitle: string
-//   imgName: string
-//   uploadDate: string
-//   uploadBy: string
-//   uploadEmail: string
-// }
-
-// Vars
-// const data: DataType[] = [
-//   {
-//     docType: 'jpg',
-//     docTitle: 'สำเนาบัตรประจำตัวประชาชน',
-//     imgName: 'visa',
-//     uploadDate: `17 Mar ${new Date().getFullYear()}`,
-//     uploadBy: 'Supachai Naowakul',
-//     uploadEmail: 'sixthgraph@gmail.com'
-//   },
-//   {
-//     docType: 'pdf',
-//     docTitle: 'สำเนาทะเบียนบ้าน',
-//     imgName: 'visa',
-//     uploadDate: `17 Mar ${new Date().getFullYear()}`,
-//     uploadBy: 'Supachai Naowakul',
-//     uploadEmail: 'sixthgraph@gmail.com'
-//   },
-//   {
-//     docType: 'xls',
-//     docTitle: 'สำเนาทะเบียนบ้าน',
-//     imgName: 'visa',
-//     uploadDate: `17 Mar ${new Date().getFullYear()}`,
-//     uploadBy: 'Supachai Naowakul',
-//     uploadEmail: 'sixthgraph@gmail.com'
-//   },
-//   {
-//     docType: 'doc',
-//     docTitle: 'หนังสือรับรองรายได้',
-//     imgName: 'visa',
-//     uploadDate: `17 Mar ${new Date().getFullYear()}`,
-//     uploadBy: 'Supachai Naowakul',
-//     uploadEmail: 'sixthgraph@gmail.com'
-//   }
-// ]
-
 const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => {
   console.log('NOON TEST === docData === ')
   console.log(docData.attachment)
@@ -81,6 +36,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
   const [open, setOpen] = useState<boolean>(false)
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deletefile, setDeleteFile] = useState({})
+  const [editfile, setEditFile] = useState({})
 
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -130,14 +86,6 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
 
   // Delete
   const handleDeleteFile = async () => {
-    console.log('TEST --- wid, itemno ---')
-
-    // const reqBody = {
-    //   wid: docData.wid
-
-    //   // itemno: deletefile
-    // }
-
     const reqBody = deletefile
 
     try {
@@ -155,6 +103,11 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
     console.log(reqBody)
     console.log(deletefile)
     handleCloseConfirm()
+  }
+
+  const handleReset = () => {
+    handleClose()
+    setEditFile({})
   }
 
   return (
@@ -198,13 +151,12 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
                   </td>
                   <td className='pli-2 plb-3'>
                     <div className='flex flex-col'>
+                      {/* {row.attachname}
+                      <br></br>
+                      {row.attachname.replace('D:\\routeflow', 'routefile')} */}
                       <Link
-                        href={
-                          {
-                            // pathname: '/en/work'
-                            // query: `wid=${row.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}`
-                          }
-                        }
+                        target='_blank'
+                        href={'https://rd.infoma.net' + row.attachname.replace('D:\\routeflow', '\\routefile')}
                       >
                         <Typography color='text.primary'>{row.filename}</Typography>
                       </Link>
@@ -216,7 +168,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
                     </Typography>
                   </td>
                   <td className='pli-2 plb-3 pie-6 text-right'>
-                    <Typography color='text.primary'>{row.uploadBy}</Typography>
+                    <Typography color='text.primary'>{row.uid}</Typography>
                   </td>
                   <td className='pli-2 plb-3 pie-6 text-right'>
                     <IconButton
@@ -229,7 +181,13 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
                     >
                       <i className='tabler-trash text-[22px] text-textSecondary' />
                     </IconButton>
-                    <IconButton onClick={handleClickOpen}>
+                    <IconButton
+                      onClick={() => {
+                        // handleEditFile()
+                        handleClickOpen()
+                        setEditFile({ filename: row.filename, dep: row.dep, itemno: row.itemno })
+                      }}
+                    >
                       <i className='tabler-paperclip text-[22px] text-textSecondary' />
                     </IconButton>
                   </td>
@@ -255,14 +213,14 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
           <Typography variant='h5' component='span'>
             Upload Files
           </Typography>
-          <DialogCloseButton onClick={handleClose} disableRipple>
+          <DialogCloseButton onClick={handleReset} disableRipple>
             <i className='tabler-x' />
           </DialogCloseButton>
         </DialogTitle>
         <DialogContent>
           <div className='align-middle border-dashed border-2 border-gray-300 min-h-[20rem] min-w-[30rem]'>
             <div className='mt-10 align-middle'>
-              <FileUploader attmData={docData} />
+              <FileUploader attmData={docData} fileData={editfile} />
               {/* <FileUploaderCloudinary attmData={docData} /> */}
             </div>
           </div>
