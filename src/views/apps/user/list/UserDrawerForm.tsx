@@ -87,14 +87,16 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
   useEffect(() => {
     //userDepData change ----
     setUserDepData(updateData.dep)
-  }, [count, updateData.dep])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count])
 
   const { data: session } = useSession()
   const token = session?.user.token
 
   const getPositionDep = async (event: any) => {
     const dep = event.target.value
-    const depname = event.explicitOriginalTarget.innerText
+    const curdep = depData?.find(elem => elem.dep == dep)
+    const depname = curdep?.depname
 
     setSelectDep(dep)
     setSelectDepName(depname)
@@ -134,7 +136,11 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
 
   const getSelectPostion = (event: any) => {
     const position = event.target.value
-    const positionname = event.explicitOriginalTarget.innerText
+
+    // const positionname = event.explicitOriginalTarget.innerText
+
+    const curPosition = selPosition.find(elem => elem.positioncode == position)
+    const positionname = curPosition?.positiondesc
 
     setUpdatePosition(position)
     setUpdatePositionName(positionname)
@@ -487,9 +493,9 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             label='Department'
             className='mb-4'
           >
-            {depData?.map((dep: any) => {
+            {depData?.map((dep: any, index: any) => {
               return (
-                <MenuItem key={dep.dep} value={dep.dep}>
+                <MenuItem key={index} value={dep.dep}>
                   {dep.depname}
                 </MenuItem>
               )
