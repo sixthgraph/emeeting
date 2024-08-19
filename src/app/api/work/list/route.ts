@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
     console.log('--workinprocess---')
     console.log(workinprocess)
 
-    const dataObj = workinprocess.filter((item: any) => {
-      return item.id === wip //'6699081a5848117c8af11a20'
-    })
+    // const dataObj = workinprocess.filter((item: any) => {
+    //   return item.id === wip //'6699081a5848117c8af11a20'
+    // })
 
     const myworkinprocess = workinprocess.filter((item: any) => {
       return item.uid === email
@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
             condata = null
             condataObj = ['null']
           } else {
-            if (condata == null && curwip[0].uid == email) {
+            if (condata.detail == null && curwip[0].uid == email) {
               condata = 'end-process'
               condataObj = ['end-process']
             }
@@ -165,42 +165,6 @@ export async function POST(req: NextRequest) {
           return response2
         }
       }
-    }
-
-    if (dataObj.length > 0) {
-      console.log('dataObj')
-      console.log(dataObj)
-
-      const rid = dataObj[0].rid
-      const pid = dataObj[0].pid
-
-      workinfo.curuid = dataObj[0].uid
-      workinfo.curdep = dataObj[0].dep
-      workinfo.datein = dataObj[0].Datein
-      workinfo.workflowid = rid
-      workinfo.blockid = pid
-
-      workinfo.senderuid = dataObj[0].senderuid
-      workinfo.senderpid = dataObj[0].senderpid
-      workinfo.action = dataObj[0].action
-
-      console.log(rid)
-      console.log(pid)
-
-      const resnp = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getnextprocess/${rid}/${pid}`, {
-        headers
-      })
-
-      const response = NextResponse.json({
-        message: res.data.message,
-        success: true,
-        data: workinfo,
-        conditionData: resnp.data
-      })
-
-      return response
-    } else {
-      return NextResponse.json({ error: 'data not found.' }, { status: 500 })
     }
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })

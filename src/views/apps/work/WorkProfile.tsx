@@ -588,7 +588,7 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
                 </Button>
               )}
 
-            {condionData && workData.action == '' && (
+            {condionData[0] !== 'null' && condionData[0] !== 'end-process' && workData.action == '' && (
               <>
                 <Button
                   variant='contained'
