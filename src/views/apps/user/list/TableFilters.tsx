@@ -18,16 +18,25 @@ const TableFilters = ({ setData, tableData, depData }: { setData: any; tableData
 
   //const [plan, setPlan] = useState<UsersType['currentPlan']>('')
   const [status, setStatus] = useState<UsersType['status']>('')
+  const [department, setDepartment] = useState('')
 
   console.log('tableData === >', tableData)
   console.log('depData222 === >', depData)
 
   useEffect(() => {
-    const filteredData = tableData?.filter(user => {
+    const filteredData = tableData?.filter((user: any) => {
       if (role && String(user.role) !== role) return false
 
-      // if (plan && user.currentPlan !== plan) return false
       if (status && user.status !== status) return false
+
+      console.log('department == ')
+      console.log(department)
+
+      const foundUser = user.dep.filter((userdep: any) => {
+        return userdep.depid == department
+      })
+
+      if (department !== '' && foundUser == 0) return false
 
       return true
     })
@@ -36,7 +45,7 @@ const TableFilters = ({ setData, tableData, depData }: { setData: any; tableData
     // }, [role, plan, status, tableData, setData])
 
     setData(filteredData)
-  }, [role, status, tableData, setData])
+  }, [role, status, department, tableData, setData])
 
   return (
     <CardContent>
@@ -78,8 +87,8 @@ const TableFilters = ({ setData, tableData, depData }: { setData: any; tableData
             select
             fullWidth
             id='select-department'
-            value={status}
-            onChange={e => setStatus(e.target.value)}
+            value={department}
+            onChange={e => setDepartment(e.target.value)}
             SelectProps={{ displayEmpty: true }}
           >
             <MenuItem value=''>Select Department</MenuItem>

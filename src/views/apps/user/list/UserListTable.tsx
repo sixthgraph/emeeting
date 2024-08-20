@@ -3,13 +3,6 @@
 // React Imports
 import { useEffect, useState, useMemo } from 'react'
 
-// Next Imports
-// import Link from 'next/link'
-// import { useParams } from 'next/navigation'
-
-// MUI Imports
-// import { NextResponse } from 'next/server'
-
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
