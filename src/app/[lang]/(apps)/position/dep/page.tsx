@@ -46,12 +46,6 @@ const positionDepPage = async ({ searchParams }: any) => {
   const positionData = data.data.positions
   const depData = data.data.departments
 
-  // console.log('data.data.deps===============')
-  // console.log(data.data.departments)
-  // console.log('end data.data.deps===============')
-
-  // console.log('positionDepData====')
-  // console.log(positionDepData)
   return <PositionDepList positionDepData={positionDepData} positionData={positionData} depData={depData} />
 }
 

@@ -20,6 +20,8 @@ import EditUserInfo from '@components/dialogs/edit-user-info'
 import ConfirmationDialog from '@components/dialogs/confirmation-dialog'
 import OpenDialogOnElementClick from '@components/dialogs/OpenDialogOnElementClick'
 import CustomAvatar from '@core/components/mui/Avatar'
+import type { UsersType } from '@/types/apps/userTypes'
+import { getInitials } from '@/utils/getInitials'
 
 const UserDetails = () => {
   const { data: session } = useSession({
@@ -29,7 +31,7 @@ const UserDetails = () => {
     }
   })
 
-  console.log('session')
+  console.log('session.user')
   console.log(session)
 
   // Vars
@@ -37,7 +39,8 @@ const UserDetails = () => {
   const email = session?.user.email
   const role: any = session?.user.role
   const roles = ['Admin', 'Worker', 'Viewer', 'Super User']
-  const avatar = session?.user.avatar
+  const userAvatar: any = session?.user.avatar
+  const userFullname: any = session?.user.name
   const userRole = roles[role - 1]
 
   const userData = {
@@ -61,6 +64,28 @@ const UserDetails = () => {
     variant
   })
 
+  const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
+    const { avatar, fullName } = params
+
+    if (avatar) {
+      return (
+        <>
+          <CustomAvatar variant='rounded' src={avatar} size={120} />
+          <Typography variant='h5'>{`${userData.name}`}</Typography>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <CustomAvatar variant='rounded' size={120}>
+            {getInitials(fullName as string)}
+          </CustomAvatar>
+          <Typography variant='h5'>{`${userData.name}`}</Typography>
+        </>
+      )
+    }
+  }
+
   return (
     <>
       <Card>
@@ -68,8 +93,7 @@ const UserDetails = () => {
           <div className='flex flex-col gap-6'>
             <div className='flex items-center justify-center flex-col gap-4'>
               <div className='flex flex-col items-center gap-4'>
-                <CustomAvatar alt='user-profile' src={avatar} variant='rounded' size={120} />
-                <Typography variant='h5'>{`${userData.name}`}</Typography>
+                {session?.user && getAvatar({ avatar: userAvatar, fullName: userFullname })}
               </div>
               <Chip label={userRole} color='secondary' size='small' variant='tonal' />
             </div>

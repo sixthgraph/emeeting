@@ -423,7 +423,6 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
               onClick={() => router.push(`/en/departments`)}
             />
           }
-          onHover
           title={`Position list of ${depName}`}
           className='pbe-4'
         />

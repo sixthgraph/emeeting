@@ -3,13 +3,6 @@
 // // React Imports
 import { useEffect, useState, useMemo } from 'react'
 
-// // Next Imports
-// // import Link from 'next/link'
-// // import { useParams } from 'next/navigation'
-
-// // MUI Imports
-// // import { NextResponse } from 'next/server'
-
 import Link from 'next/link'
 
 import Card from '@mui/material/Card'
@@ -68,13 +61,6 @@ declare module '@tanstack/table-core' {
   interface FilterMeta {
     itemRank: RankingInfo
   }
-}
-
-const handleRefresh = () => {
-  //router.reload()
-  setTimeout(() => {
-    window.location.reload()
-  }, 100)
 }
 
 // // Styled Components
@@ -143,12 +129,13 @@ type Props = {
 }
 
 const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
+  console.log('departmentlist table start ---')
+
   // States
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
-
   const [globalFilter, setGlobalFilter] = useState('')
 
   stateinfoData?.map(stateinfo => {
@@ -159,6 +146,12 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       desc: String(stateinfo.desc)
     }
   })
+
+  const handleRefresh = () => {
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
+  }
 
   const DepartmentDrawerOpenHandle = () => {
     initialData = {
@@ -291,7 +284,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
             </IconButton>
             <IconButton
               onClick={() => {
-                // initialData.password = ''
                 initialData.dep = row.original.dep
                 initialData.depname = row.original.depname
                 initialData.docuname = row.original.docuname

@@ -1,10 +1,6 @@
 // React Imports
 import { useEffect, useState } from 'react'
 
-// MUI Imports
-//import { NextResponse } from 'next/server'
-//import { useRouter, useParams } from 'next/navigation'
-
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
@@ -17,9 +13,6 @@ import Divider from '@mui/material/Divider'
 
 import axios from 'axios'
 
-// import { any } from 'zod'
-
-// import { any } from 'zod'
 import { useSession } from 'next-auth/react'
 
 import CustomTextField from '@core/components/mui/TextField'
@@ -61,26 +54,14 @@ const initialInsertData = {
 }
 
 const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoData, handleClose }: Props) => {
-  //const router = useRouter()
-  //const params = useParams()
-  //const { lang: locale } = params
-
   // States
   const [formData, setFormData] = useState<DepartmentFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
-
   const [insertData, setInsertData] = useState(initialInsertData)
-
-  console.log(insertData)
-
   const { data: session } = useSession()
   const emailData = session?.user.email
 
-  // const [isPasswordShown, setIsPasswordShown] = useState(false)
-  // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-
   const handleRefresh = () => {
-    //router.reload()
     setTimeout(() => {
       window.location.reload()
     }, 100)
@@ -168,7 +149,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
           depname: n[i],
           statecode: '01',
           docuname: 0,
-          path: insertData.path,
+          path: ',' + insertData.path,
           parent: insertData.parent,
           sort: 0,
           ref: '',
@@ -248,6 +229,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
   }
 
   useEffect(() => {
+    console.log('useEffect start')
     setFormData(updateData)
   }, [open, updateData])
 
@@ -405,6 +387,10 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
                 rows={16}
                 multiline
                 label='Department Name'
+                InputLabelProps={{
+                  shrink: true
+                }}
+                placeholder='Enter your department name'
                 onChange={e => setInsertData({ ...insertData, depname: e.target.value })}
               />
             </>

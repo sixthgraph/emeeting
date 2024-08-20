@@ -230,6 +230,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     }
     setAddUserOpen(true)
   }
+
   const usersDrawerOpenHandle = () => {
     // sg here
     initialData = {
@@ -408,6 +409,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         enableSorting: false
       })
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   ) // sg bug here
 

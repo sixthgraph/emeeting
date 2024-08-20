@@ -4,8 +4,7 @@ import Grid from '@mui/material/Grid'
 
 // Type Imports
 import type { SentType } from '@/types/apps/sentTypes'
-
-import SentListTable from './SentListTable'
+import SentListTable from './sentListTable'
 
 // import type { DepType } from '@/types/apps/userTypes'
 
