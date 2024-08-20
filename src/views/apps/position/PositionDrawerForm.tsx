@@ -90,6 +90,7 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
   const handleInsertMany = async () => {
     console.log('insertData == ')
     console.log(insertData)
+
     let maxPosition: any = await getMaxPositionCode()
     const insertObj = []
     const depnameStr = insertData.desc
@@ -116,12 +117,12 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
           status: 'Y',
           remark: '',
           create_date: '',
-          create_by: '',
+          create_by: String(emailData),
           update_date: '',
-          update_by: ''
+          update_by: String(emailData)
         }
 
-        maxPosition++
+        //maxPosition++
 
         insertObj.push(newData)
       } //if

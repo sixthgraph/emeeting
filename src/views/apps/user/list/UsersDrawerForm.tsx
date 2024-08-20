@@ -112,7 +112,11 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
 
   const getPositionDep = async (event: any) => {
     const dep = event.target.value
-    const depname = event.explicitOriginalTarget.innerText
+
+    //const depname = event.explicitOriginalTarget.innerText
+
+    const curdep = depData?.find(elem => elem.dep == dep)
+    const depname = curdep?.depname
 
     setSelectDep(dep)
     setSelectDepName(depname)
@@ -152,7 +156,11 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
 
   const getSelectPostion = (event: any) => {
     const position = event.target.value
-    const positionname = event.explicitOriginalTarget.innerText
+
+    // const positionname = event.explicitOriginalTarget.innerText
+
+    const curPosition = selPosition.find(elem => elem.positioncode == position)
+    const positionname = curPosition?.positiondesc
 
     setUpdatePosition(position)
     setUpdatePositionName(positionname)
@@ -310,11 +318,19 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
     }
   }
 
+  const handleRefresh = () => {
+    //router.reload()
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
+  }
+
   const handleInsertMany = async () => {
     const insertObj = []
     const userDataStr = insertData.userData
     const re = /\n/gi
-    const result = userDataStr.replace(re, ',')
+    const reComma = ', '
+    const result = userDataStr.replaceAll(reComma, '\t').replace(re, ',')
     const resultObj = result.split(',')
 
     let i: any
@@ -347,18 +363,13 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
       } //if
     } //for
 
-    console.log('insertObj === ')
-    console.log(insertObj)
-
-    return
-
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/addMany`, insertObj)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/addMany`, insertObj)
 
-      console.log('add department response===', response.data)
+      console.log('add users response===', response.data)
 
       if (response.data.success) {
-        console.log('add department success')
+        console.log('add users success')
 
         // if (tableData) {
         //   const addData: any = {
@@ -375,13 +386,13 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
         // }
 
         // setData(tableData)
-        // handleClose()
-        // handleRefresh()
+        handleClose()
+        handleRefresh()
       } else {
-        console.log('add department failed.')
+        console.log('add users failed.')
       }
     } catch (error: any) {
-      console.log('Add department failed. ', error.message)
+      console.log('Add users failed. ', error.message)
     }
   }
 

@@ -155,9 +155,9 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
           ref: '',
           remark: '',
           create_date: '',
-          create_by: '',
+          create_by: String(emailData),
           update_date: '',
-          update_by: ''
+          update_by: String(emailData)
         }
 
         insertObj.push(newData)
@@ -241,8 +241,6 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
 
       if (index > 0) {
         path = tableData[Number(index)].path
-      } else {
-        path = ''
       }
     }
 
