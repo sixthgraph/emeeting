@@ -64,7 +64,9 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
       updateData.dep = []
     }
   }
+
   console.log('add user drawer start')
+
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
   const [count, setCount] = useState(0)
