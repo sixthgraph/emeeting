@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useDeferredValue, useEffect, useState } from 'react'
 import type { SyntheticEvent } from 'react'
 
 // MUI Imports
@@ -109,6 +109,8 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   const userData: any = session?.user
   const eformData = []
 
+  const userDefaultDep: string = userData?.dep[0].depid
+
   for (let i = 0; i < workData.length; i++) {
     const newData = {
       id: workData[i]._id,
@@ -207,19 +209,19 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                 <Typography className='text-xs flex'>Created by:</Typography>
                 <Typography className='font-bold flex pb-4'>{session?.user ? session.user.name : '--'}</Typography>
                 <FormControl variant='standard' fullWidth>
-                  <InputLabel id='department-select-label'>Select department</InputLabel>
+                  <InputLabel id='department-select-label'>Select department </InputLabel>
                   <Select
                     label='Select department'
                     labelId='department-select-label'
                     id='department-select'
-                    defaultValue=''
+                    defaultValue={userDefaultDep.toString()}
                     className='text-left' // onChange={e => (initialData.Registerdep = e.target.value)}
                     onChange={e => setFormData({ ...formData, Registerdep: e.target.value })}
                   >
                     {userData &&
-                      userData.dep.map((dep: any) => {
+                      userData.dep.map((dep: any, index: any) => {
                         return (
-                          <MenuItem key={dep.depid} value={dep.depid}>
+                          <MenuItem key={index} value={dep.depid}>
                             {dep.depname} / {dep.positionname}
                           </MenuItem>
                         )

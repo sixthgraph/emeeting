@@ -390,7 +390,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
                     <Typography color='text.primary' className='font-medium'>
                       {dep.depname}
                     </Typography>
-                    <Typography variant='body2'>({dep.positionname})</Typography>
+                    <Typography variant='body2'>{dep.positionname}</Typography>
                   </div>
                 )
               })
