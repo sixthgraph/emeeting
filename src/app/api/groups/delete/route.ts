@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   const reqBody = await req.json()
 
   try {
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/deleteusergroup?id=${reqBody.GroupId}`, {
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/deleteusergroup?id=${reqBody.groupid}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

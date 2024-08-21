@@ -189,9 +189,10 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
 
         if (response.data.message === 'success') {
           console.log(response.data.data.detail)
+          handleCloseConfirm()
 
           //todo update tableData
-          const em: any = reqBody.Dep
+          const em: any = dep
           const newUpdate = tableData?.filter(el => el.dep !== em.dep)
 
           console.log('newUpdate === ', newUpdate)

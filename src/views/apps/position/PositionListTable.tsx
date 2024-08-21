@@ -22,6 +22,13 @@ import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 
+// Style Imports
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+
 // // Third-party Imports
 import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
@@ -158,6 +165,11 @@ const PositionListTable = ({ tableData }: Props) => {
 
   const [globalFilter, setGlobalFilter] = useState('')
 
+  //Alert
+  const [confirm, setConfirm] = useState<boolean>(false)
+  const [deletePos, setDeletePos] = useState<any>({})
+  const handleCloseConfirm = () => setConfirm(false)
+
   // const [updateData, setUpdateData] = useState(...[initialData])
 
   console.log('table data =', data)
@@ -181,13 +193,17 @@ const PositionListTable = ({ tableData }: Props) => {
     setAddPositionOpen(true)
   }
 
-  const handleDeletePosition = async (positioncode: object) => {
+  const handleDeletePosition = async () => {
+    const reqBody: any = deletePos
+    const positioncode: object = { positioncode: reqBody.positioncode }
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/delete`, positioncode)
 
       if (response.data.message === 'success') {
         console.log('=====positioninfo')
         console.log(response.data)
+        handleCloseConfirm()
 
         // //todo update tableData
         const em: any = positioncode
@@ -304,7 +320,8 @@ const PositionListTable = ({ tableData }: Props) => {
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeletePosition({ positioncode: row.original.positioncode })
+                setConfirm(true)
+                setDeletePos({ positioncode: row.original.positioncode, desc: row.original.desc })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -470,6 +487,32 @@ const PositionListTable = ({ tableData }: Props) => {
           }}
         />
       </Card>
+
+      <Dialog
+        open={confirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
+          <br></br>
+          Are you sure?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText className='text-center' id='alert-dialog-description'>
+            Do you want to delete {deletePos.desc} ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
+          <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
+            Cancal
+          </Button>
+          <Button variant='contained' onClick={handleDeletePosition}>
+            Yes, delete it?
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <PositionDrawerForm
         open={addPositionOpen}

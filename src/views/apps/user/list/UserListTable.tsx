@@ -40,6 +40,16 @@ import axios from 'axios'
 
 //import type { Locale } from '@configs/i18n'
 
+import Dialog from '@mui/material/Dialog'
+
+import DialogActions from '@mui/material/DialogActions'
+
+import DialogTitle from '@mui/material/DialogTitle'
+
+import DialogContent from '@mui/material/DialogContent'
+
+import DialogContentText from '@mui/material/DialogContentText'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
@@ -62,6 +72,8 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
 import { getInitials } from '@/utils/getInitials'
+
+// Style Imports
 
 //import { getLocalizedUrl } from '@/utils/i18n'
 
@@ -180,11 +192,16 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [updateDatas, setUpdateDatas] = useState<any[]>()
 
+  //Alert
+  const [confirm, setConfirm] = useState<boolean>(false)
+  const [deleteUser, setDeleteUser] = useState<any>({})
+  const handleCloseConfirm = () => setConfirm(false)
+
   useEffect(() => {
     const rowData: any[] = []
     const data = table.getSelectedRowModel().rows
 
-    for (var row of data) {
+    for (const row of data) {
       rowData.push(row.original)
     }
 
@@ -228,7 +245,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     const rowData: any[] = []
     const data = table.getSelectedRowModel().rows
 
-    for (var row of data) {
+    for (const row of data) {
       rowData.push(row.original)
     }
 
@@ -285,17 +302,22 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     setOpenMode('edit')
     setAddUsersOpen(true)
     console.log(updateDatas)
+
     // getRowSelect()
 
     //console.log(rowSelection)
   }
 
-  const handleDeleteUser = async (email: object) => {
+  const handleDeleteUser = async () => {
+    const reqBody: any = deleteUser
+    const email: object = { email: reqBody.email }
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/delete`, email)
 
       if (response.data.message === 'success') {
         console.log(response.data.data.detail)
+        handleCloseConfirm()
 
         //todo update tableData
         const em: any = email
@@ -423,7 +445,13 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeleteUser({ email: row.original.email })
+                setConfirm(true)
+                setDeleteUser({
+                  email: row.original.email,
+                  fullname: row.original.firstname + ' ' + row.original.lastname
+                })
+
+                // handleDeleteUser({ email: row.original.email })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -473,6 +501,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     enableRowSelection: true, //enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     globalFilterFn: fuzzyFilter,
+
     //onRowSelectionChange: setRowSelection,
     onRowSelectionChange: setRowSelection, //hoist up the row selection state to your own scope
     getCoreRowModel: getCoreRowModel(),
@@ -617,6 +646,31 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
           }}
         />
       </Card>
+      <Dialog
+        open={confirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
+          <br></br>
+          Are you sure?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText className='text-center' id='alert-dialog-description'>
+            Do you want to delete {deleteUser.fullname} ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
+          <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
+            Cancal
+          </Button>
+          <Button variant='contained' onClick={handleDeleteUser}>
+            Yes, delete it?
+          </Button>
+        </DialogActions>
+      </Dialog>
       <UsersDrawerForm
         open={addUsersOpen}
         setData={setData}

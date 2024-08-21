@@ -24,6 +24,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
+import DialogContentText from '@mui/material/DialogContentText'
 import Chip from '@mui/material/Chip'
 
 // import type { SelectChangeEvent } from '@mui/material/Select'
@@ -183,6 +184,11 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   const { data: session } = useSession()
   const emailData = session?.user.email
 
+  //Alert
+  const [confirm, setConfirm] = useState<boolean>(false)
+  const [deleteGroup, setDeleteGroup] = useState<any>({})
+  const handleCloseConfirm = () => setConfirm(false)
+
   // const [members, setmembers] = useState([])
   useEffect(() => {
     updateData && setFormData(updateData)
@@ -190,7 +196,6 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('noon test')
 
     setFormData(initialData)
     console.log(initialData)
@@ -264,12 +269,18 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   }
 
   // Delete
-  const handleDeleteGroup = async (groupid: object) => {
+  const handleDeleteGroup = async () => {
+    const reqBody: any = deleteGroup
+    const groupid: object = { groupid: reqBody.groupid }
+
+    console.log(groupid)
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/delete`, groupid)
 
       if (response.data.message === 'success') {
         console.log(response.data.data.detail)
+        handleCloseConfirm()
 
         //todo update tableData
         const em: any = groupid
@@ -359,7 +370,8 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeleteGroup({ GroupId: row.original.groupid })
+                setConfirm(true)
+                setDeleteGroup({ groupid: row.original.groupid, groupname: row.original.groupname })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -658,6 +670,32 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
           </DialogActions>
         </form>
       </Dialog>
+      <Dialog
+        open={confirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
+          <br></br>
+          Are you sure?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText className='text-center' id='alert-dialog-description'>
+            Do you want to delete {deleteGroup.groupname} ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
+          <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
+            Cancal
+          </Button>
+          <Button variant='contained' onClick={handleDeleteGroup}>
+            Yes, delete it?
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <GroupDrawerForm
         open={addGroupOpen}
         setData={setData}
