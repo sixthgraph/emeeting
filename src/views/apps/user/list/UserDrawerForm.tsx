@@ -64,7 +64,7 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
       updateData.dep = []
     }
   }
-
+  console.log('add user drawer start')
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
   const [count, setCount] = useState(0)
@@ -429,9 +429,9 @@ const UserDrawerForm = ({ open, setData, updateData, tableData, roleData, depDat
             label='Role'
           >
             {/* todo */}
-            {roleData?.map((role: any) => {
+            {roleData?.map((role: any, index: any) => {
               return (
-                <MenuItem key={role.roleid} value={role.roleid}>
+                <MenuItem key={index} value={role.roleid}>
                   {role.rolename}
                 </MenuItem>
               )

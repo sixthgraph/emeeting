@@ -20,7 +20,8 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText
+  ListItemText,
+  ListSubheader
 } from '@mui/material'
 
 import axios from 'axios'
@@ -35,11 +36,13 @@ import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 
 type Props = {
   open: boolean
-  updateData: UserFormDataType
+  updateData: any
   setData: any
   tableData?: UsersType[]
   roleData?: RoleType[]
   depData?: DepType[]
+  rowData?: any
+  mode?: any
   handleClose: () => void
 }
 
@@ -66,7 +69,17 @@ const initialInsertData = {
   dep: []
 }
 
-const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depData, handleClose }: Props) => {
+const UsersDrawerForm = ({
+  open,
+  setData,
+  updateData,
+  tableData,
+  roleData,
+  depData,
+  rowData,
+  mode,
+  handleClose
+}: Props) => {
   if (updateData.dep.length == 1) {
     if (updateData.dep[0] == 'null') {
       updateData.dep = []
@@ -75,10 +88,14 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
 
   // let userDepData = updateData.dep
 
+  console.log('updateData ----- on start 5555')
+  console.log(updateData)
+
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
   const [count, setCount] = useState(0)
-  const [userDepData, setUserDepData] = useState<any[]>(updateData.dep)
+  // const [userDepData, setUserDepData] = useState<any[]>(updateData.dep)
+  const [userDepData, setUserDepData] = useState<any[]>([])
   const [errors, setErrors] = useState<any[]>([])
   const [selDep, setSelectDep] = useState<any>('')
   const [selDepName, setSelectDepName] = useState<any>('')
@@ -93,19 +110,15 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
   useEffect(() => {
     setFormData(updateData)
     setUserDepData(updateData.dep)
+    console.log('open')
   }, [open, updateData])
 
   useEffect(() => {
     //userDepData change ----
+    console.log('-------change-------')
     setUserDepData(updateData.dep)
-    console.log('use Dep list change to ----')
-    console.log(userDepData)
-    console.log('count change')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count])
-
-  console.log('use Dep list ----')
-  console.log(userDepData)
 
   const { data: session } = useSession()
   const token = session?.user.token
@@ -265,6 +278,8 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
   }
 
   const handleReset = () => {
+    console.log('handleReste ------------------')
+    console.log(userDepData)
     // sg today
     handleClose()
     setFormData({
@@ -283,38 +298,57 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
     setInsertData({
       userData: '',
       password: '',
-      role: 0,
-      status: '',
+      role: 2,
+      status: 'active',
       dep: []
     })
   }
 
   const handleUpdateData = async () => {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, formData)
+    console.log('handleUpdateData start')
 
-      if (response.data.message === 'success') {
-        console.log('Update user success.')
-        handleClose()
-
-        const index = tableData?.findIndex(x => x.email == formData.email)
-
-        if (tableData) {
-          //const newUpdate = { ...tableData[Number(foundIndex)], formData }
-          // tableData[Number(index)].password = formData.password
-          //tableData[Number(index)]
-          tableData[Number(index)].firstname = formData.firstname
-          tableData[Number(index)].lastname = formData.lastname
-          tableData[Number(index)].dep = formData.dep
-          tableData[Number(index)].position = formData.position
-          tableData[Number(index)].role = String(formData.role)
-          tableData[Number(index)].status = formData.status
+    const reqUpdateData: any = {
+      email: [],
+      dep: [
+        {
+          depid: '',
+          depname: '',
+          positionid: '',
+          positionname: ''
         }
+      ],
+      role: 2,
+      status: 'Active'
+    }
 
-        setData(tableData)
+    for (let row of rowData) {
+      const rowEmail: any = row.email
+      reqUpdateData.email.push(rowEmail)
+    }
+
+    reqUpdateData.role = insertData.role
+    reqUpdateData.status = insertData.status
+    reqUpdateData.dep = userDepData
+
+    console.log('reqUpdateData')
+    console.log(reqUpdateData)
+
+    //return
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/updateMany`, reqUpdateData)
+
+      console.log('Update many users response===', response.data)
+
+      if (response.data.success) {
+        console.log('add users success')
+        handleClose()
+        handleRefresh()
+      } else {
+        console.log('update users failed.')
       }
     } catch (error: any) {
-      console.log('Update user failed. ', error.message)
+      console.log('Update users failed. ', error.message)
     }
   }
 
@@ -406,7 +440,7 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
-        {updateData.email !== '' ? (
+        {mode != 'add' ? (
           <Typography variant='h5'>Edit Multiple User</Typography>
         ) : (
           <Typography variant='h5'>Add Multiple User</Typography>
@@ -418,51 +452,36 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          {/* <CustomTextField
-            label='Firstname'
-            fullWidth
-            placeholder=''
-            value={formData.firstname}
-            onChange={e => setFormData({ ...formData, firstname: e.target.value })}
-          />
-          {errors.find(error => error.for === 'firstname')?.message}
-          <CustomTextField
-            label='Lastname'
-            fullWidth
-            placeholder='johndoe'
-            value={formData.lastname}
-            onChange={e => setFormData({ ...formData, lastname: e.target.value })}
-          />
-          {errors.find(error => error.for === 'lastname')?.message} */}
+          {mode == 'add' ? (
+            <>
+              <CustomTextField
+                rows={16}
+                multiline
+                value={insertData.userData} // sg today
+                label='Firstname, Lastname, Email'
+                onChange={e => setInsertData({ ...insertData, userData: e.target.value })}
+              />
 
-          <CustomTextField
-            rows={16}
-            multiline
-            value={insertData.userData} // sg today
-            label='Firstname, Lastname, Email'
-            onChange={e => setInsertData({ ...insertData, userData: e.target.value })}
-          />
-
-          <CustomTextField
-            fullWidth
-            label='Password'
-            placeholder='············'
-            autoComplete='off'
-            type={isPasswordShown ? 'text' : 'password'}
-            value={insertData.password}
-            onChange={e => setInsertData({ ...insertData, password: e.target.value })}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                    <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-          {errors.find(error => error.for === 'password')?.message}
-          {/* {updateData.email !== '' ? (
+              <CustomTextField
+                fullWidth
+                label='Password'
+                placeholder='············'
+                autoComplete='off'
+                type={isPasswordShown ? 'text' : 'password'}
+                value={insertData.password}
+                onChange={e => setInsertData({ ...insertData, password: e.target.value })}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                        <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
+              {errors.find(error => error.for === 'password')?.message}
+              {/* {updateData.email !== '' ? (
             <CustomTextField
               label='Email'
               disabled
@@ -482,92 +501,199 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
           )}
           {errors.find(error => error.for === 'email')?.message} */}
 
-          <div className='flex flex-col'>
-            <div className='flex flex-row'>
-              <label className=' text-xs flex-1 '>Department</label>
-              <Chip
-                label='Add'
-                size='small'
-                variant='outlined'
-                className='text-xs'
-                icon={<i className='tabler-square-rounded-plus' />}
-                onClick={handleAddDepOpen}
-              />
-            </div>
-            <div className='flex gap-4 flex-col'>
-              <List>
-                {userDepData.length > 0 && userDepData[0] !== 'null' ? ( // sg here
-                  userDepData?.map((dep: any, index: any) => {
+              <div className='flex flex-col'>
+                <div className='flex flex-row'>
+                  <label className=' text-xs flex-1 '>Department</label>
+                  <Chip
+                    label='Add'
+                    size='small'
+                    variant='outlined'
+                    className='text-xs'
+                    icon={<i className='tabler-square-rounded-plus' />}
+                    onClick={handleAddDepOpen}
+                  />
+                </div>
+                <div className='flex gap-4 flex-col'>
+                  <List>
+                    {userDepData.length > 0 && userDepData[0] !== 'null' ? ( // sg here
+                      userDepData?.map((dep: any, index: any) => {
+                        return (
+                          <>
+                            <ListItem
+                              key={index}
+                              disablePadding
+                              secondaryAction={
+                                <IconButton
+                                  edge='end'
+                                  size='small'
+                                  onClick={() => handleDeleteDepPosition(`${dep.depid}`, `${dep.positionid}`)}
+                                >
+                                  <i className='tabler-trash-x' />
+                                </IconButton>
+                              }
+                            >
+                              <ListItemButton>
+                                <ListItemText primary={`${dep.depname}`} secondary={dep.positionname} />
+                              </ListItemButton>
+                            </ListItem>
+                            <Divider className='m-0' />
+                          </>
+                        )
+                      })
+                    ) : (
+                      <>
+                        <ListItem disablePadding>
+                          <ListItemButton>
+                            <ListItemText primary={`Department not found`} />
+                          </ListItemButton>
+                        </ListItem>
+                        <Divider className='m-0' />
+                      </>
+                    )}
+                  </List>
+                </div>
+              </div>
+
+              <CustomTextField
+                select
+                fullWidth
+                id='Role'
+                value={insertData.role}
+                onChange={e => setInsertData({ ...insertData, role: Number(e.target.value) })}
+                label='Role'
+              >
+                {/* todo */}
+                {roleData?.map((role: any, index: any) => {
+                  return (
+                    <MenuItem key={index} value={role.roleid}>
+                      {role.rolename}
+                    </MenuItem>
+                  )
+                })}
+              </CustomTextField>
+              {errors.find(error => error.for === 'role')?.message}
+              <CustomTextField
+                select
+                fullWidth
+                id='select-status'
+                value={insertData.status}
+                onChange={e => setInsertData({ ...insertData, status: e.target.value })}
+                label='Status'
+              >
+                <MenuItem value='pending'>Pending</MenuItem>
+                <MenuItem value='active'>Active</MenuItem>
+                <MenuItem value='inactive'>Inactive</MenuItem>
+              </CustomTextField>
+              {errors.find(error => error.for === 'status')?.message}
+            </>
+          ) : (
+            <>
+              <div className='flex flex-col'>
+                <label className=' text-xs flex-1 '>User list</label>
+                <List>
+                  {rowData?.map((row: any, index: any) => {
                     return (
                       <>
-                        <ListItem
-                          key={index}
-                          disablePadding
-                          secondaryAction={
-                            <IconButton
-                              edge='end'
-                              size='small'
-                              onClick={() => handleDeleteDepPosition(`${dep.depid}`, `${dep.positionid}`)}
-                            >
-                              <i className='tabler-trash-x' />
-                            </IconButton>
-                          }
-                        >
+                        <ListItem key={index} disablePadding>
                           <ListItemButton>
-                            <ListItemText primary={`${dep.depname}`} secondary={dep.positionname} />
+                            <ListItemText primary={`${row.firstname} ${row.lastname}`} secondary={row.email} />
                           </ListItemButton>
                         </ListItem>
                         <Divider className='m-0' />
                       </>
                     )
-                  })
-                ) : (
-                  <>
-                    <ListItem disablePadding>
-                      <ListItemButton>
-                        <ListItemText primary={`Department not found`} />
-                      </ListItemButton>
-                    </ListItem>
-                    <Divider className='m-0' />
-                  </>
-                )}
-              </List>
-            </div>
-          </div>
+                  })}
+                </List>
+              </div>
+              <div className='flex flex-col'>
+                <div className='flex flex-row'>
+                  <label className=' text-xs flex-1 '>Update Department</label>
+                  <Chip
+                    label='Add'
+                    size='small'
+                    variant='outlined'
+                    className='text-xs'
+                    icon={<i className='tabler-square-rounded-plus' />}
+                    onClick={handleAddDepOpen}
+                  />
+                </div>
+                <div className='flex gap-4 flex-col'>
+                  <List>
+                    {userDepData.length > 0 && userDepData[0] !== 'null' ? ( // sg here
+                      userDepData?.map((dep: any, index: any) => {
+                        return (
+                          <>
+                            <ListItem
+                              key={index}
+                              disablePadding
+                              secondaryAction={
+                                <IconButton
+                                  edge='end'
+                                  size='small'
+                                  onClick={() => handleDeleteDepPosition(`${dep.depid}`, `${dep.positionid}`)}
+                                >
+                                  <i className='tabler-trash-x' />
+                                </IconButton>
+                              }
+                            >
+                              <ListItemButton>
+                                <ListItemText primary={`${dep.depname}`} secondary={dep.positionname} />
+                              </ListItemButton>
+                            </ListItem>
+                            <Divider className='m-0' />
+                          </>
+                        )
+                      })
+                    ) : (
+                      <>
+                        <ListItem disablePadding>
+                          <ListItemButton>
+                            <ListItemText primary={`Department not found`} />
+                          </ListItemButton>
+                        </ListItem>
+                        <Divider className='m-0' />
+                      </>
+                    )}
+                  </List>
+                </div>
+              </div>
 
-          <CustomTextField
-            select
-            fullWidth
-            id='Role'
-            value={insertData.role}
-            onChange={e => setInsertData({ ...insertData, role: Number(e.target.value) })}
-            label='Role'
-          >
-            {/* todo */}
-            {roleData?.map((role: any) => {
-              return (
-                <MenuItem key={role.roleid} value={role.roleid}>
-                  {role.rolename}
-                </MenuItem>
-              )
-            })}
-          </CustomTextField>
-          {errors.find(error => error.for === 'role')?.message}
-          <CustomTextField
-            select
-            fullWidth
-            id='select-status'
-            value={insertData.status}
-            onChange={e => setInsertData({ ...insertData, status: e.target.value })}
-            label='Status'
-          >
-            <MenuItem value='pending'>Pending</MenuItem>
-            <MenuItem value='active'>Active</MenuItem>
-            <MenuItem value='inactive'>Inactive</MenuItem>
-          </CustomTextField>
-          {errors.find(error => error.for === 'status')?.message}
+              <CustomTextField
+                select
+                fullWidth
+                id='Role'
+                value={insertData.role}
+                onChange={e => setInsertData({ ...insertData, role: Number(e.target.value) })}
+                label='Role'
+              >
+                {/* todo */}
+                {roleData?.map((role: any, index: any) => {
+                  return (
+                    <MenuItem key={index} value={role.roleid}>
+                      {role.rolename}
+                    </MenuItem>
+                  )
+                })}
+              </CustomTextField>
+              {errors.find(error => error.for === 'role')?.message}
+              <CustomTextField
+                select
+                fullWidth
+                id='select-status'
+                value={insertData.status}
+                onChange={e => setInsertData({ ...insertData, status: e.target.value })}
+                label='Status'
+              >
+                <MenuItem value='pending'>Pending</MenuItem>
+                <MenuItem value='active'>Active</MenuItem>
+                <MenuItem value='inactive'>Inactive</MenuItem>
+              </CustomTextField>
+              {errors.find(error => error.for === 'status')?.message}
+            </>
+          )}
+
           <div className='flex items-center gap-4'>
-            {updateData.email !== '' ? (
+            {mode !== 'add' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
                 Edit
               </Button>
@@ -612,9 +738,9 @@ const UsersDrawerForm = ({ open, setData, updateData, tableData, roleData, depDa
             label='Department'
             className='mb-4'
           >
-            {depData?.map((dep: any) => {
+            {depData?.map((dep: any, index: any) => {
               return (
-                <MenuItem key={dep.dep} value={dep.dep}>
+                <MenuItem key={index} value={dep.dep}>
                   {dep.depname}
                 </MenuItem>
               )

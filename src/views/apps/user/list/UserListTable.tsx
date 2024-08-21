@@ -32,7 +32,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel
 } from '@tanstack/react-table'
-import type { ColumnDef, FilterFn } from '@tanstack/react-table'
+import type { ColumnDef, FilterFn, RowSelectionState } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // Type Imports
@@ -172,11 +172,24 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   //console.log('depData === ', depData)
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
+  const [openMode, setOpenMode] = useState('add')
   const [addUsersOpen, setAddUsersOpen] = useState(false)
-  const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [updateDatas, setUpdateDatas] = useState<any[]>()
+
+  useEffect(() => {
+    const rowData: any[] = []
+    const data = table.getSelectedRowModel().rows
+
+    for (var row of data) {
+      rowData.push(row.original)
+    }
+
+    setUpdateDatas(rowData)
+  }, [rowSelection])
 
   depData?.map(dep => {
     const id = String(dep.dep)
@@ -205,6 +218,31 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   //const { lang: locale } = useParams()
 
   //console.log('data ===', data)
+  const getRowSelect = () => {
+    //console.log(table.getState().rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
+    console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
+    // console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
+    // console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
+    // console.log(rowSelection)
+
+    const rowData: any[] = []
+    const data = table.getSelectedRowModel().rows
+
+    for (var row of data) {
+      rowData.push(row.original)
+    }
+
+    setTimeout(() => {
+      setUpdateDatas(rowData)
+      console.log('updateDatas')
+      console.log(updateDatas)
+    }, 100)
+
+    // console.log('rowData')
+    // console.log(rowData)
+
+    console.log('---------------')
+  }
 
   const userDrawerOpenHandle = () => {
     // sg here
@@ -239,7 +277,17 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       role: 0,
       status: ''
     }
+    setOpenMode('add')
     setAddUsersOpen(true)
+  }
+
+  const handleOpenEditUsers = () => {
+    setOpenMode('edit')
+    setAddUsersOpen(true)
+    console.log(updateDatas)
+    // getRowSelect()
+
+    //console.log(rowSelection)
   }
 
   const handleDeleteUser = async (email: object) => {
@@ -425,7 +473,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     enableRowSelection: true, //enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     globalFilterFn: fuzzyFilter,
-    onRowSelectionChange: setRowSelection,
+    //onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: setRowSelection, //hoist up the row selection state to your own scope
     getCoreRowModel: getCoreRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),
@@ -492,6 +541,14 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
               className='is-full sm:is-auto'
             >
               Add Users
+            </Button>
+            <Button
+              variant='outlined'
+              startIcon={<i className='tabler-user-edit' />}
+              onClick={() => handleOpenEditUsers()}
+              className='is-full sm:is-auto'
+            >
+              Edit Users
             </Button>
           </div>
         </div>
@@ -560,6 +617,17 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
           }}
         />
       </Card>
+      <UsersDrawerForm
+        open={addUsersOpen}
+        setData={setData}
+        tableData={tableData}
+        updateData={initialData}
+        roleData={roleData}
+        depData={depData}
+        rowData={updateDatas}
+        mode={openMode}
+        handleClose={() => setAddUsersOpen(!addUsersOpen)}
+      />
       <UserDrawerForm
         open={addUserOpen}
         setData={setData}
@@ -568,15 +636,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         roleData={roleData}
         depData={depData}
         handleClose={() => setAddUserOpen(!addUserOpen)}
-      />
-      <UsersDrawerForm
-        open={addUsersOpen}
-        setData={setData}
-        tableData={tableData}
-        updateData={initialData}
-        roleData={roleData}
-        depData={depData}
-        handleClose={() => setAddUsersOpen(!addUsersOpen)}
       />
     </>
   )

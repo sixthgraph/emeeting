@@ -31,13 +31,15 @@ const TableFilters = ({ setData, tableData, depData }: { setData: any; tableData
 
       for (let elm of posObj) {
         const postObj: any = elm
-        const check = positionData.find((item: any) => item.positionid == postObj.positionid)
-        if (check == undefined) {
-          const newData = {
-            positionid: postObj.positionid,
-            positionname: postObj.positionname
+        if (postObj.positionid) {
+          const check = positionData.find((item: any) => item.positionid == postObj.positionid)
+          if (check == undefined) {
+            const newData = {
+              positionid: postObj.positionid,
+              positionname: postObj.positionname
+            }
+            positionData.push(newData)
           }
-          positionData.push(newData)
         }
       }
     }
