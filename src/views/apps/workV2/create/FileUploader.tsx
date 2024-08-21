@@ -255,14 +255,14 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
             <Button onClick={() => handleUploadFile()} variant='contained'>
               Upload Files
             </Button>
-            <Button onClick={() => handleEditFile()} variant='contained'>
+            {/* <Button onClick={() => handleEditFile()} variant='contained'>
               Edit Files
-            </Button>
+            </Button> */}
           </DialogActions>
         </>
       ) : null}
 
-      {/* {files.length === 1 ? (
+      {files.length === 1 ? (
         <>
           <List>{fileList}</List>
           <DialogActions className='buttons justify-end'>
@@ -274,7 +274,7 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
             </Button>
           </DialogActions>
         </>
-      ) : null} */}
+      ) : null}
     </>
   )
 }

@@ -149,7 +149,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
           depname: n[i],
           statecode: '01',
           docuname: 0,
-          path: ',' + insertData.path,
+          path: insertData.path,
           parent: insertData.parent,
           sort: 0,
           ref: '',

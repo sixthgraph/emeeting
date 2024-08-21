@@ -25,7 +25,8 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Chip from '@mui/material/Chip'
-import type { SelectChangeEvent } from '@mui/material/Select'
+
+// import type { SelectChangeEvent } from '@mui/material/Select'
 
 import ListItemText from '@mui/material/ListItemText'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -154,6 +155,8 @@ type Props = {
   userData?: UsersType[]
   email?: string
   updateData?: GroupFormDataType
+
+  // onChange?: (e?: Event) => void
 }
 
 // AKK select/add user
@@ -422,7 +425,8 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   //   }
   // }
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
+  // const handleChange = (event: SelectChangeEvent<string[]>) => {
+  const handleChange = (event: any) => {
     setPersonName(event.target.value as string[])
   }
 
@@ -599,7 +603,11 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
                 SelectProps={{
                   multiple: true,
                   MenuProps,
-                  onChange: () => handleChange,
+
+                  // onChange={handleChange}
+                  // onChange: handleChange,
+
+                  onChange: e => handleChange(e),
                   renderValue: selected => (
                     <div className='flex flex-wrap gap-1'>
                       {(selected as unknown as string[]).map(value => (
@@ -645,7 +653,7 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
               </Button>
             )}
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
-              Cancel
+              Cancel2
             </Button>
           </DialogActions>
         </form>

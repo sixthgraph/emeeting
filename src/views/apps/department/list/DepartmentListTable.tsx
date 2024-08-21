@@ -15,6 +15,13 @@ import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 
+// Style Imports
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+
 // // Third-party Imports
 import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
@@ -138,6 +145,11 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
 
+  //Alert
+  const [confirm, setConfirm] = useState<boolean>(false)
+  const [deleteDep, setDeleteDep] = useState<any>({})
+  const handleCloseConfirm = () => setConfirm(false)
+
   stateinfoData?.map(stateinfo => {
     const id = String(stateinfo.statecode)
 
@@ -167,16 +179,19 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
     setAddDepartmentOpen(true)
   }
 
-  const handleDeleteDepartment = async (dep: object, path: any) => {
+  const handleDeleteDepartment = async () => {
+    const reqBody: any = deleteDep
+    const dep: object = { Dep: reqBody.Dep }
+
     try {
-      if (path != ',') {
+      if (reqBody.path != ',') {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/delete`, dep)
 
         if (response.data.message === 'success') {
           console.log(response.data.data.detail)
 
           //todo update tableData
-          const em: any = dep
+          const em: any = reqBody.Dep
           const newUpdate = tableData?.filter(el => el.dep !== em.dep)
 
           console.log('newUpdate === ', newUpdate)
@@ -277,11 +292,13 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeleteDepartment({ Dep: row.original.dep }, row.original.path)
+                setConfirm(true)
+                setDeleteDep({ Dep: row.original.dep, path: row.original.path, depname: row.original.depname })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
             </IconButton>
+
             <IconButton
               onClick={() => {
                 initialData.dep = row.original.dep
@@ -451,6 +468,32 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
           }}
         />
       </Card>
+
+      <Dialog
+        open={confirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
+          <br></br>
+          Are you sure?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText className='text-center' id='alert-dialog-description'>
+            Do you want to delete {deleteDep.depname} ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
+          <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
+            Cancal
+          </Button>
+          <Button variant='contained' onClick={handleDeleteDepartment}>
+            Yes, delete it?
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <DepartmentDrawerForm
         open={addDepartmentOpen}
