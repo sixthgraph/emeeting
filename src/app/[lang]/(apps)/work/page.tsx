@@ -69,9 +69,13 @@ const workPage = async ({ searchParams }: any) => {
 
   const data = res?.data
   const conditionData = res?.data.conditionData
+  const commentData = res?.data.commentData
+
+  console.log('---page res worklist')
+  console.log(commentData)
 
   if (data) {
-    return <WorkDetailV2 data={data} conditiondata={conditionData} />
+    return <WorkDetailV2 data={data} conditiondata={conditionData} commentdata={commentData} />
   } else {
     return <>!!! Work Data not found !!!</>
   }

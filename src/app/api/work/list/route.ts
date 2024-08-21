@@ -41,6 +41,19 @@ export async function POST(req: NextRequest) {
     console.log('--workinprocess---')
     console.log(workinprocess)
 
+    const res_comment = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`, {
+      headers
+    })
+
+    let commentdata = res_comment.data.data.detail
+
+    if (!commentdata) {
+      commentdata = null
+    }
+
+    console.log('***commentdata')
+    console.log(commentdata)
+
     // const dataObj = workinprocess.filter((item: any) => {
     //   return item.id === wip //'6699081a5848117c8af11a20'
     // })
@@ -73,7 +86,8 @@ export async function POST(req: NextRequest) {
           message: res.data.message,
           success: true,
           data: workinfo,
-          conditionData: condataObj
+          conditionData: condataObj,
+          commentData: commentdata
         })
 
         console.log('---response2')
@@ -143,7 +157,8 @@ export async function POST(req: NextRequest) {
             message: res.data.message,
             success: true,
             data: workinfo,
-            conditionData: condataObj
+            conditionData: condataObj,
+            commentData: commentdata
           })
 
           console.log('response222')

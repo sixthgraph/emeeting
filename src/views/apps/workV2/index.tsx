@@ -14,7 +14,7 @@ import type { Data } from '@/types/pages/profileTypes'
 import WorkProfile from '../work/WorkProfile'
 import WorkMessage from './WorkMessage'
 
-const WorkDetailV2 = ({ data, conditiondata }: { data: Data; conditiondata: any }) => {
+const WorkDetailV2 = ({ data, conditiondata, commentdata }: { data: Data; conditiondata: any; commentdata: any }) => {
   const workData = data?.data
 
   return (
@@ -22,7 +22,7 @@ const WorkDetailV2 = ({ data, conditiondata }: { data: Data; conditiondata: any 
       <Grid item xs={8}>
         <Grid container spacing={6}>
           <Grid item xs={12} className='flex flex-col gap-6'>
-            <WorkProfile workData={workData} condionData={conditiondata} />
+            <WorkProfile workData={workData} condionData={conditiondata} commentData={commentdata} />
           </Grid>
         </Grid>
       </Grid>

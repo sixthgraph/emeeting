@@ -104,7 +104,15 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
   paddingBlockStart: `${theme.spacing(6)} !important`
 }))
 
-const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: any }) => {
+const WorkProfile = ({
+  workData,
+  condionData,
+  commentData
+}: {
+  workData?: any
+  condionData?: any
+  commentData: any
+}) => {
   console.log('workData ===')
   console.log(workData)
   const eformData = workData?.eformdata
@@ -113,6 +121,9 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
 
   console.log('condionData -----')
   console.log(condionData)
+
+  console.log('commentData -----')
+  console.log(commentData)
 
   for (i in eform) {
     eformData[i]._id = eform[i].Id
