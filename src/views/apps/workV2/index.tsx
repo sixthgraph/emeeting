@@ -22,7 +22,7 @@ const WorkDetailV2 = ({ data, conditiondata, commentdata }: { data: Data; condit
       <Grid item xs={8}>
         <Grid container spacing={6}>
           <Grid item xs={12} className='flex flex-col gap-6'>
-            <WorkProfile workData={workData} condionData={conditiondata} commentData={commentdata} />
+            <WorkProfile workData={workData} condionData={conditiondata} />
           </Grid>
         </Grid>
       </Grid>
@@ -30,7 +30,7 @@ const WorkDetailV2 = ({ data, conditiondata, commentdata }: { data: Data; condit
         <Card variant='outlined'>
           <CardHeader title='Messages' />
           <CardContent>
-            <WorkMessage />
+            <WorkMessage commentData={commentdata} />
           </CardContent>
         </Card>
       </Grid>
