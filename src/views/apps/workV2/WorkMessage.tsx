@@ -177,86 +177,87 @@ const WorkMessage = ({ commentData }: { commentData?: any }) => {
         }}
       />
       <Typography className='mt-10'>start real draw messages</Typography>
-      {commentData.map((item: any) => {
-        return (
-          <>
-            {/* // start user profile */}
-            <div className='flex flex-col mb-3'>
-              <div className='flex flex-row '>
-                <div className='flex  me-5'>
-                  {getAvatar({
-                    avatar: '/images/avatars/300-21.jpg',
-                    fullName: 'Carles Nilson'
-                  })}
-                </div>
-                <div className='flex flex-col flex-1 '>
-                  <a href='#' className='font-semibold text-slate-900'>
-                    {item.registeruid}
-                  </a>
-                  <span className='text-sm'>{item.registerdate}</span>
+      {commentData &&
+        commentData.map((item: any) => {
+          return (
+            <>
+              {/* // start user profile */}
+              <div className='flex flex-col mb-3'>
+                <div className='flex flex-row '>
+                  <div className='flex  me-5'>
+                    {getAvatar({
+                      avatar: '/images/avatars/300-21.jpg',
+                      fullName: 'Carles Nilson'
+                    })}
+                  </div>
+                  <div className='flex flex-col flex-1 '>
+                    <a href='#' className='font-semibold text-slate-900'>
+                      {item.registeruid}
+                    </a>
+                    <span className='text-sm'>{item.registerdate}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            {/* //end user profile */}
-            {/* //start message */}
-            <div className='text-slate-600 text-sm mb-4'>{item.message}</div>
-            {/* //end message */}
-            {/* start reply tool */}
-            <div className='mb-4'>
-              <Chip
-                label='reply'
-                size='small'
-                className='mr-2'
-                icon={<i className='tabler-message' />}
-                onClick={handleClick}
-              />
-              <Chip label='150' size='small' icon={<i className='tabler-heart' />} onClick={handleClick} />
-            </div>
-            {/* start reply content */}
+              {/* //end user profile */}
+              {/* //start message */}
+              <div className='text-slate-600 text-sm mb-4'>{item.message}</div>
+              {/* //end message */}
+              {/* start reply tool */}
+              <div className='mb-4'>
+                <Chip
+                  label='reply'
+                  size='small'
+                  className='mr-2'
+                  icon={<i className='tabler-message' />}
+                  onClick={handleClick}
+                />
+                <Chip label='150' size='small' icon={<i className='tabler-heart' />} onClick={handleClick} />
+              </div>
+              {/* start reply content */}
 
-            {item.reply &&
-              item.reply.map((itemReply: any) => {
-                return (
-                  <div className='flex flex-row mb-7 ps-10'>
-                    <div className=' me-5'>
-                      {getAvatar({
-                        avatar: '/images/avatars/300-14.jpg',
-                        fullName: 'Carles Nilson'
-                      })}
-                    </div>
-                    <div className='flex flex-col '>
-                      <div className='flex flex-row align-items-center flex-wrap mb-1'>
-                        <div className='flex-1'>
-                          <a href='#' className='font-semibold text-slate-900 me-2'>
-                            {itemReply.registeruid}
-                          </a>
-                          <span className='text-gray-400 text-sm'>{itemReply.registerdate}</span>
-                        </div>
-
-                        <div className='flex flex-none text-gray-400 text-sm'>
-                          <a href='#' className='ms-auto text-gray-400  fs-7 me-2'>
-                            Reply
-                          </a>
-                          <a href='#' className='btn btn-sm btn-icon btn-clear btn-active-light-danger' title='Love'>
-                            <span className='m-0'>
-                              <i className='tabler-heart-filled text-lg' />
-                            </span>
-                          </a>
-                        </div>
+              {item.reply &&
+                item.reply.map((itemReply: any) => {
+                  return (
+                    <div className='flex flex-row mb-7 ps-10'>
+                      <div className=' me-5'>
+                        {getAvatar({
+                          avatar: '/images/avatars/300-14.jpg',
+                          fullName: 'Carles Nilson'
+                        })}
                       </div>
+                      <div className='flex flex-col '>
+                        <div className='flex flex-row align-items-center flex-wrap mb-1'>
+                          <div className='flex-1'>
+                            <a href='#' className='font-semibold text-slate-900 me-2'>
+                              {itemReply.registeruid}
+                            </a>
+                            <span className='text-gray-400 text-sm'>{itemReply.registerdate}</span>
+                          </div>
 
-                      <span className='text-slate-600 text-sm pt-1'>{itemReply.message}</span>
+                          <div className='flex flex-none text-gray-400 text-sm'>
+                            <a href='#' className='ms-auto text-gray-400  fs-7 me-2'>
+                              Reply
+                            </a>
+                            <a href='#' className='btn btn-sm btn-icon btn-clear btn-active-light-danger' title='Love'>
+                              <span className='m-0'>
+                                <i className='tabler-heart-filled text-lg' />
+                              </span>
+                            </a>
+                          </div>
+                        </div>
+
+                        <span className='text-slate-600 text-sm pt-1'>{itemReply.message}</span>
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
 
-            {/* end reply content */}
-            <Divider className='mb-3' />
-            {/* end reply tool */}
-          </>
-        ) // return
-      })}
+              {/* end reply content */}
+              <Divider className='mb-3' />
+              {/* end reply tool */}
+            </>
+          ) // return
+        })}
       <CustomTextField
         id='message-input'
         fullWidth
