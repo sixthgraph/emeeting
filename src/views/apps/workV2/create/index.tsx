@@ -16,19 +16,19 @@ const WorkCreate = ({ data }: { data: any }) => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={8}>
+      <Grid item xs={12}>
         <Grid container spacing={6}>
           <Grid item xs={12} className='flex flex-col gap-6'>
             <CreateWorkProfile workData={data} />
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={4}>
+      {/* <Grid item xs={4}>
         <Card variant='outlined'>
           <CardHeader title='Messages' />
           <CardContent>Chat content</CardContent>
         </Card>
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }

@@ -89,7 +89,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   console.log('CreateWorkProfile----')
   console.log(workData)
 
-  const initialData = {
+  const initialData: any = {
     Registerdep: '',
     Subject: ''
   }
@@ -109,7 +109,9 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   const userData: any = session?.user
   const eformData = []
 
-  const userDefaultDep: string = userData?.dep[0].depid
+  let userDefaultDep: string = ''
+
+  userData?.dep && (userDefaultDep = userData?.dep[0].depid)
 
   for (let i = 0; i < workData.length; i++) {
     const newData = {
@@ -213,8 +215,8 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                   <Select
                     label='Select department'
                     labelId='department-select-label'
-                    id='department-select'
-                    defaultValue={userDefaultDep.toString()}
+                    value={formData.Registerdep}
+                    id='department-select' //defaultValue={userDefaultDep.toString()}
                     className='text-left' // onChange={e => (initialData.Registerdep = e.target.value)}
                     onChange={e => setFormData({ ...formData, Registerdep: e.target.value })}
                   >
