@@ -236,9 +236,12 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
     try {
       const reqBody = {
         wid: workData.wid,
-        senderuid: workData.senderuid,
+        uid: workData.curuid,
+        dep: workData.curdep,
+        pid: workData.blockid,
+        rid: workData.workflowid,
         senderpid: workData.senderpid,
-        rid: workData.workflowid
+        senderuid: workData.senderuid
       }
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/sendback`, reqBody)
