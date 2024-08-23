@@ -11,6 +11,7 @@ import { options } from '../../auth/[...nextauth]/options'
 export async function POST(request: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
+  const email = serverSession?.user.email
 
   try {
     const headers = {
@@ -55,6 +56,8 @@ export async function POST(request: NextRequest) {
     //   "itemno": 1, //item of level0
     //   "reply_itemno": 1 //item of level1 to reply
     // }
+
+    reqBody.registeruid = email
 
     console.log('reqBody === ')
     console.log(reqBody)

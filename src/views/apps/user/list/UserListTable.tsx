@@ -235,31 +235,31 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   //const { lang: locale } = useParams()
 
   //console.log('data ===', data)
-  const getRowSelect = () => {
-    //console.log(table.getState().rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
-    console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
-    // console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
-    // console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
-    // console.log(rowSelection)
+  // const getRowSelect = () => {
+  //   //console.log(table.getState().rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
+  //   console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
+  //   // console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
+  //   // console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
+  //   // console.log(rowSelection)
 
-    const rowData: any[] = []
-    const data = table.getSelectedRowModel().rows
+  //   const rowData: any[] = []
+  //   const data = table.getSelectedRowModel().rows
 
-    for (const row of data) {
-      rowData.push(row.original)
-    }
+  //   for (const row of data) {
+  //     rowData.push(row.original)
+  //   }
 
-    setTimeout(() => {
-      setUpdateDatas(rowData)
-      console.log('updateDatas')
-      console.log(updateDatas)
-    }, 100)
+  //   setTimeout(() => {
+  //     setUpdateDatas(rowData)
+  //     console.log('updateDatas')
+  //     console.log(updateDatas)
+  //   }, 100)
 
-    // console.log('rowData')
-    // console.log(rowData)
+  //   // console.log('rowData')
+  //   // console.log(rowData)
 
-    console.log('---------------')
-  }
+  //   console.log('---------------')
+  // }
 
   const userDrawerOpenHandle = () => {
     // sg here

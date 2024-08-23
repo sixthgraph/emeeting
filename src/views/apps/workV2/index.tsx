@@ -17,6 +17,11 @@ import WorkMessage from './WorkMessage'
 const WorkDetailV2 = ({ data, conditiondata, commentdata }: { data: Data; conditiondata: any; commentdata: any }) => {
   const workData = data?.data
 
+  const commentWorkData = {
+    wid: workData.wid,
+    registeruid: workData.registeruid
+  }
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={8}>
@@ -27,12 +32,12 @@ const WorkDetailV2 = ({ data, conditiondata, commentdata }: { data: Data; condit
         </Grid>
       </Grid>
       <Grid item xs={4}>
-        <Card variant='outlined'>
+        {/* <Card variant='outlined'>
           <CardHeader title='Messages' />
-          <CardContent>
-            <WorkMessage commentData={commentdata} />
-          </CardContent>
-        </Card>
+          <CardContent style={{ maxHeight: '600px', overflow: 'auto' }}> */}
+        <WorkMessage commentData={commentdata} commentWorkData={commentWorkData} />
+        {/* </CardContent>
+        </Card> */}
       </Grid>
     </Grid>
   )
