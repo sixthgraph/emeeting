@@ -243,7 +243,7 @@ const SentListTable = ({ tableData, depData }: Props) => {
         cell: ({ row }) => (
           <Link
             href={{
-              pathname: '/en/work',
+              pathname: `/${locale}/work`,
               query: `wid=${row.original.wid}`
             }}
           >
@@ -288,7 +288,7 @@ const SentListTable = ({ tableData, depData }: Props) => {
         cell: ({ row }) => (
           <Link
             href={{
-              pathname: '/en/work',
+              pathname: `/${locale}/work`,
               query: `wid=${row.original.wid}`
             }}
           >
@@ -305,7 +305,7 @@ const SentListTable = ({ tableData, depData }: Props) => {
         cell: ({ row }) => (
           <Link
             href={{
-              pathname: '/en/work',
+              pathname: `/${locale}/work`,
               query: `wid=${row.original.wid}`
             }}
           >

@@ -243,7 +243,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
         cell: ({ row }) => (
           <Link
             href={{
-              pathname: '/en/work',
+              pathname: `/${locale}/work`,
               query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}`
             }}
           >
@@ -288,8 +288,8 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
         cell: ({ row }) => (
           <Link
             href={{
-              pathname: '/en/work',
-              query: `wid=${row.original.wid}&dep=${row.original.currentdept}&workflowid=${row.original.workflowid}&blockid=startpoint`
+              pathname: `/${locale}/work`,
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}`
             }}
           >
             <div className='flex items-center gap-2'>
@@ -303,14 +303,19 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
       columnHelper.accessor('processname', {
         header: 'Work in Process',
         cell: ({ row }) => (
-          <>
+          <Link
+            href={{
+              pathname: `/${locale}/work`,
+              query: `wid=${row.original.wid}&wip=${row.original.workinprocessid}&workflowid=${row.original.workflowid}`
+            }}
+          >
             <Typography color='text.primary' className='font-medium'>
               {row.original.processname}
             </Typography>
             <Typography variant='body2' color='text.disabled' title='Received Date'>
               {formatshortdate(row.original.datein)}
             </Typography>
-          </>
+          </Link>
         )
       }),
 

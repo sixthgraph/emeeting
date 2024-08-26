@@ -250,7 +250,7 @@ const TodoListTable = ({ tableData }: Props) => {
         cell: ({ row }) => (
           <Link
             href={{
-              pathname: '/en/work',
+              pathname: `/${locale}/work`,
               query: `wid=${row.original.wid}`
             }}
           >
@@ -294,7 +294,7 @@ const TodoListTable = ({ tableData }: Props) => {
         ) => (
           <Link
             href={{
-              pathname: '/en/work',
+              pathname: `/${locale}/work`,
               query: `wid=${row.original.wid}`
             }}
           >
@@ -351,7 +351,7 @@ const TodoListTable = ({ tableData }: Props) => {
         cell: ({ row }) => (
           <Link
             href={{
-              pathname: '/en/work',
+              pathname: `/${locale}/work`,
               query: `wid=${row.original.wid}`
             }}
           >
