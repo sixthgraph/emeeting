@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -41,10 +42,8 @@ const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
 
 const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; commentWorkData?: any }) => {
   const { data: session } = useSession()
-  const userEmail = session?.user.email
-
-  console.log('userEmail')
-  console.log(userEmail)
+  const [commentList, setCommentList] = useState<any>(commentData)
+  const token = session?.user.token
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialData = {
@@ -94,6 +93,7 @@ const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; comm
         setNewMessage(initialData)
         setReplyRef(initialReplyRef)
         setOpenReply(false)
+        getWorkMessage()
       } else {
         console.log(response.data.message)
       }
@@ -137,11 +137,25 @@ const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; comm
     console.log(newMessage)
   }
 
+  const getWorkMessage = async () => {
+    const reqBody = {
+      wid: commentData[0].wid,
+      token: token
+    }
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/comment/list`, reqBody)
+      const newCommentData = response.data
+
+      if (newCommentData) {
+        setCommentList(newCommentData)
+      }
+    } catch (error: any) {
+      console.log('Get work comment failed. ', error.message)
+    }
+  }
+
   const handleSendMessage = async () => {
-    console.info('You clicked send message.')
-
-    console.log(newMessage)
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, newMessage)
 
@@ -150,6 +164,7 @@ const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; comm
         setNewMessage(initialData)
         setReplyRef(initialReplyRef)
         setOpenReply(false)
+        getWorkMessage()
       } else {
         console.log(response.data.message)
       }
@@ -197,8 +212,8 @@ const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; comm
         <CardHeader title='Messages' />
         <CardContent className='pb-0' style={{ maxHeight: '560px', overflow: 'auto' }}>
           {/* <CardContent className='pb-0' style={{ maxHeight: '100%', overflow: 'auto' }}> */}
-          {commentData &&
-            commentData.map((item: any, index: any) => {
+          {commentList &&
+            commentList.map((item: any, index: any) => {
               return (
                 <div key={index}>
                   {/* // start user profile */}
@@ -378,6 +393,9 @@ const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; comm
           )}
         </CardActions>
       </Card>
+      <Button variant='contained' onClick={getWorkMessage}>
+        Test get comment
+      </Button>
     </>
   )
 }
