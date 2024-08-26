@@ -124,6 +124,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
     wid: workData?.wid,
     email: session?.user.email,
     dep: workData?.curdep,
+    rid: workData?.workflowid,
+    pid: workData?.blockid,
     attachment: workData?.attachment
   }
 
