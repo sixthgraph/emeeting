@@ -479,6 +479,11 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
                 <div className='flex-1'>
                   <Typography className='text-xs mt-2'>Subject :</Typography>
                   <Typography className='flex-1 font-semibold text-slate-900 text-left'>{workData.subject}</Typography>
+                  <div>
+                    <Typography color='text.primary' className='font-xs text-slate-400'>
+                      {workData.routename}
+                    </Typography>
+                  </div>
                 </div>
               </Grid>
             </Grid>
