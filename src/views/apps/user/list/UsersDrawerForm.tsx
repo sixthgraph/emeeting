@@ -20,8 +20,7 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
-  ListSubheader
+  ListItemText
 } from '@mui/material'
 
 import axios from 'axios'
@@ -94,6 +93,7 @@ const UsersDrawerForm = ({
   // States
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
   const [count, setCount] = useState(0)
+
   // const [userDepData, setUserDepData] = useState<any[]>(updateData.dep)
   const [userDepData, setUserDepData] = useState<any[]>([])
   const [errors, setErrors] = useState<any[]>([])
@@ -280,7 +280,7 @@ const UsersDrawerForm = ({
   const handleReset = () => {
     console.log('handleReste ------------------')
     console.log(userDepData)
-    // sg today
+
     handleClose()
     setFormData({
       firstname: '',
@@ -321,8 +321,9 @@ const UsersDrawerForm = ({
       status: 'Active'
     }
 
-    for (let row of rowData) {
+    for (const row of rowData) {
       const rowEmail: any = row.email
+
       reqUpdateData.email.push(rowEmail)
     }
 

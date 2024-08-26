@@ -27,7 +27,15 @@ type FileProp = {
   size: number
 }
 
-const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }) => {
+const FileUploader = ({
+  attmData,
+  fileData,
+  handleClose
+}: {
+  attmData?: any
+  fileData?: any
+  handleClose: () => void
+}) => {
   // States
   const [files, setFiles] = useState<File[]>([])
   const wid = attmData.wid
@@ -40,10 +48,10 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
 
   const token = session?.user.token
 
-  const [open, setOpen] = useState<boolean>(false)
-  const handleClose = () => setOpen(false)
+  //const [open, setOpen] = useState<boolean>(false)
+  // const handleClose = () => setOpen(false)
 
-  console.log(open)
+  // console.log(open)
 
   // console.log(token)
 

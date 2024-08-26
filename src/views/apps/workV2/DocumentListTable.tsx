@@ -1,7 +1,7 @@
 'use client'
 
 // MUI Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // import { redirect } from 'next/navigation'
 import { useParams } from 'next/navigation'
@@ -31,23 +31,35 @@ import FileUploader from './create/FileUploader'
 // import FileUploaderCloudinary from './create/FileUploaderCloudinary'
 
 const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => {
-  console.log('NOON TEST === docData === ')
-  console.log(docData)
-
   const [open, setOpen] = useState<boolean>(false)
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deletefile, setDeleteFile] = useState({})
   const [editfile, setEditFile] = useState({})
+  const [attachmentList, setAttachmentList] = useState<any>(docData?.attachment)
 
   const { data: session } = useSession()
 
   const token = session?.user.token
+
+  console.log('NOON TEST === docData === ')
+  console.log(docData.attachment)
+  console.log(attachmentList)
+
+  useEffect(() => {
+    if (!open) {
+      handleGetDocument()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
 
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleCloseConfirm = () => setConfirm(false)
 
   const handleGetDocument = async () => {
+    console.log('start handleGetDocument')
+
     const reqBody = {
       wid: docData.wid,
       itemno: '',
@@ -57,8 +69,9 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/list`, reqBody)
 
-      console.log('response')
-      console.log(response)
+      const resData = response.data.data
+
+      setAttachmentList(resData)
 
       // if (response.data.message === 'success') {
       //   console.log('---Call Editwork success.------------------')
@@ -96,7 +109,9 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
       curr_month = d.getMonth(),
       curr_year: number = d.getFullYear() + 543
 
-    const formattedDate = d.toLocaleString()
+    let formattedDate = d.toLocaleString()
+
+    formattedDate = formattedDate.replace(' ', ',')
     const curr_time = formattedDate.split(',')[1]
 
     if (locale == 'th') {
@@ -166,7 +181,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
               </tr>
             </thead>
             <tbody>
-              {docData.attachment.map((row: any, index: any) => (
+              {attachmentList.map((row: any, index: any) => (
                 <tr key={index} className='border-0'>
                   <td className='pis-6 pli-2 plb-3'>
                     <div className='flex items-center gap-4'>
@@ -197,7 +212,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
                   </td>
                   <td className='pli-2 plb-3'>
                     <Typography variant='body2' color='text.disabled'>
-                      {formatshortdate(row.Attachdate)}
+                      {formatshortdate(row.attachdate)}
                     </Typography>
                   </td>
                   <td className='pli-2 plb-3 pie-6 text-right'>
@@ -253,7 +268,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
         <DialogContent>
           <div className='align-middle border-dashed border-2 border-gray-300 min-h-[20rem] min-w-[30rem]'>
             <div className='mt-10 align-middle'>
-              <FileUploader attmData={docData} fileData={editfile} />
+              <FileUploader handleClose={() => setOpen(!open)} attmData={docData} fileData={editfile} />
               {/* <FileUploaderCloudinary attmData={docData} /> */}
             </div>
           </div>
