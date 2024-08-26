@@ -15,12 +15,12 @@ export async function POST(req: NextRequest) {
   const token = serverSession?.user.token
   const reqBody = await req.json()
 
-  console.log('reqBody update=====')
+  console.log('reqBody delete=====')
   console.log(reqBody)
 
   try {
     const response = await fetch(
-      `${process.env.ROUTE_FLOW_API_URL}/deleteattachment?wid=${reqBody.wid}&uid=${reqBody.uid}&dep=${reqBody.dep}&id=${reqBody.itemno}`,
+      `${process.env.ROUTE_FLOW_API_URL}/deleteattachment?wid=${reqBody.wid}&uid=${reqBody.uid}&dep=${reqBody.dep}&id=${reqBody.itemno}&rid=${reqBody.rid}&pid=${reqBody.pid}`,
       {
         method: 'POST',
         headers: {

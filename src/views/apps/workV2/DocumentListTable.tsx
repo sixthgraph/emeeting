@@ -131,6 +131,9 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
   const handleDeleteFile = async () => {
     const reqBody = deletefile
 
+    console.log(' delete attm reqbody')
+    console.log(reqBody)
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/delete`, reqBody)
 
@@ -178,7 +181,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
               </tr>
             </thead>
             <tbody>
-              {attachmentList.map((row: any, index: any) => (
+              {attachmentList?.map((row: any, index: any) => (
                 <tr key={index} className='border-0'>
                   <td className='pis-6 pli-2 plb-3'>
                     <div className='flex items-center gap-4'>
@@ -221,7 +224,14 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
                       onClick={() => {
                         // handleDeleteFile({ wid: row.wid }, { itemno: row.itemno })
                         setConfirm(true)
-                        setDeleteFile({ wid: row.wid, uid: row.uid, dep: row.dep, itemno: row.itemno })
+                        setDeleteFile({
+                          wid: row.wid,
+                          uid: row.uid,
+                          dep: row.dep,
+                          itemno: row.itemno,
+                          rid: docData.rid,
+                          pid: docData.pid
+                        })
                       }}
                     >
                       <i className='tabler-trash text-[22px] text-textSecondary' />

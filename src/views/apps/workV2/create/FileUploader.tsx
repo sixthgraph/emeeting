@@ -119,6 +119,9 @@ const FileUploader = ({
     //form.append('my_buffer', new Blob([1, 2, 3]))
     form.append('file', files[0])
 
+    console.log('----form body createattachment from client call------')
+    console.log(form)
+
     try {
       // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
       // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
@@ -168,7 +171,7 @@ const FileUploader = ({
     form.append('dep', dep)
     form.append('rid', rid)
     form.append('pid', pid)
-    form.append('itemno', fileData.itemno)
+    form.append('id', fileData.itemno)
     form.append('file', files[0])
 
     // const updateData: any = {
@@ -178,6 +181,10 @@ const FileUploader = ({
     //   itemno: fileData.itemno,
     //   file: files[0]
     // }
+
+    console.log('----form body updateattachment from client call------')
+    console.log(form)
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_FLOW_API_URL}/updateattachment?wid=${wid}&uid=${email}&dep=${dep}&id=${fileData.itemno}`,
