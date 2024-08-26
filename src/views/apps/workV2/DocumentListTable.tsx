@@ -159,14 +159,9 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
         <CardHeader
           title='Documents'
           action={
-            <>
-              <Button onClick={handleGetDocument} className='mr-2' variant='contained'>
-                Get Document
-              </Button>
-              <Button onClick={handleClickOpen} variant='contained'>
-                Upload
-              </Button>
-            </>
+            <Button onClick={handleClickOpen} variant='contained'>
+              Upload
+            </Button>
           }
         />
         <div className='overflow-x-auto'>
