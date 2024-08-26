@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -139,7 +138,7 @@ const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; comm
 
   const getWorkMessage = async () => {
     const reqBody = {
-      wid: commentData[0].wid,
+      wid: commentWorkData.wid,
       token: token
     }
 
@@ -393,9 +392,6 @@ const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; comm
           )}
         </CardActions>
       </Card>
-      <Button variant='contained' onClick={getWorkMessage}>
-        Test get comment
-      </Button>
     </>
   )
 }

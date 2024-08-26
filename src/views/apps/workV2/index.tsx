@@ -2,11 +2,6 @@
 
 // MUI Imports
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-
-// Type Imports
-import { CardHeader } from '@mui/material'
 
 import type { Data } from '@/types/pages/profileTypes'
 
@@ -32,12 +27,7 @@ const WorkDetailV2 = ({ data, conditiondata, commentdata }: { data: Data; condit
         </Grid>
       </Grid>
       <Grid item xs={4}>
-        {/* <Card variant='outlined'>
-          <CardHeader title='Messages' />
-          <CardContent style={{ maxHeight: '600px', overflow: 'auto' }}> */}
         <WorkMessage commentData={commentdata} commentWorkData={commentWorkData} />
-        {/* </CardContent>
-        </Card> */}
       </Grid>
     </Grid>
   )
