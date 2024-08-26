@@ -26,7 +26,20 @@ import type { AccordionProps } from '@mui/material/Accordion'
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
-import { Box, Button, CardActions, CardHeader, Chip, Grid, LinearProgress } from '@mui/material'
+import {
+  Box,
+  Button,
+  CardActions,
+  CardHeader,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  LinearProgress
+} from '@mui/material'
 
 import Timeline from '@mui/lab/Timeline'
 
@@ -56,6 +69,7 @@ import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import axios from '@/utils/axios'
 
 import DocumentListTable from '../workV2/DocumentListTable'
+import dialog from '../../../components/themeV2/overrides/dialog'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -105,6 +119,8 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: any }) => {
+  const [open, setOpen] = useState<boolean>(false)
+
   console.log('workData ===')
   console.log(workData)
   const eformData = workData?.eformdata
@@ -130,6 +146,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
   }
 
   const [value, setValue] = useState('1')
+  const [dialogTitle, setDialogTitle] = useState('Title')
+  const [dialogMsg, setDialogMsg] = useState('Msg')
   const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
   const params = useParams()
   const { lang: locale } = params
@@ -155,6 +173,12 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
+
+  const handleOpenDialog = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => setOpen(false)
 
   // States
 
@@ -223,6 +247,23 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
   console.log(condionData)
 
   const handlesendwork = async () => {
+    if (condionData.length > 1) {
+      setDialogTitle('Title 1')
+      setDialogMsg('Msg 1')
+
+      handleOpenDialog()
+
+      return
+    }
+
+    if (condionData.length == 0 || !condionData) {
+      setDialogTitle('Title 2')
+      setDialogMsg('Msg 2')
+      handleOpenDialog()
+
+      return
+    }
+
     try {
       const reqBody = {
         wid: workData.wid,
@@ -697,6 +738,21 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
         </Card>
       </footer>
 
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>{dialogTitle}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>{dialogMsg}</DialogContentText>
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense'>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>Agree</Button>
+        </DialogActions>
+      </Dialog>
       {/* <WorkButton workData={workData} paramsData={paramsData} /> */}
     </>
   )

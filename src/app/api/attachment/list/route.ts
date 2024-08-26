@@ -5,11 +5,14 @@ import axios from 'axios'
 
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
-  const { token } = reqBody
+
+  const { token, wid, itemno } = reqBody
 
   try {
     const headers = { Authorization: `Bearer ${token}`, 'Cache-Control': 'no-cache', Pragma: 'no-cache', Expires: '0' }
-    const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getattachment`, { headers })
+    const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getattachment?wid=${wid}}&id=${itemno}`, {
+      headers
+    })
 
     return NextResponse.json(response.data)
   } catch (error: any) {
