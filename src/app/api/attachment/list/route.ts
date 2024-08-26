@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     console.log(wid)
     console.log(itemno)
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getattachment?wid=${wid}}&id=${itemno}`)
+
     console.log('----- attm list-------------')
     console.log(response.data)
 
