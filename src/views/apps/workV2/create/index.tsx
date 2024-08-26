@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { Card, CardContent, CardHeader, Grid } from '@mui/material'
+import { Grid } from '@mui/material'
 
 import CreateWorkProfile from './CreateWorkProfile'
 

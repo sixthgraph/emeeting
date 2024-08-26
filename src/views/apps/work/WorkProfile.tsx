@@ -195,9 +195,27 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
     }
   }
 
+  const handleNotificateion = async () => {
+    console.log('start handleNotificateion')
+  }
+
+  const handleDecision = async () => {
+    console.log('start handleDecision')
+  }
+
+  const handleTask = async () => {
+    console.log('start handleTask')
+  }
+
   const handleEditAndSendWork = async () => {
     handleEditwork().then(() => {
-      handlesendwork()
+      handleTask().then(() => {
+        handleDecision().then(() => {
+          handlesendwork().then(() => {
+            handleNotificateion()
+          })
+        })
+      })
     })
   }
 
