@@ -16,6 +16,7 @@ import { Button, Dialog, DialogContent, DialogTitle, Icon, IconButton } from '@m
 
 // Type Imports
 import axios from 'axios'
+import { useSession } from 'next-auth/react'
 
 // Style Imports
 import DialogActions from '@mui/material/DialogActions'
@@ -31,16 +32,43 @@ import FileUploader from './create/FileUploader'
 
 const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => {
   console.log('NOON TEST === docData === ')
-  console.log(docData.attachment)
+  console.log(docData)
 
   const [open, setOpen] = useState<boolean>(false)
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deletefile, setDeleteFile] = useState({})
   const [editfile, setEditFile] = useState({})
 
+  const { data: session } = useSession()
+
+  const token = session?.user.token
+
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleCloseConfirm = () => setConfirm(false)
+
+  const handleGetDocument = async () => {
+    const reqBody = {
+      wid: docData.wid,
+      itemno: '',
+      token: token
+    }
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/list`, reqBody)
+
+      console.log('response')
+      console.log(response)
+
+      // if (response.data.message === 'success') {
+      //   console.log('---Call Editwork success.------------------')
+      // } else {
+      //   console.log(response.data.message)
+      // }
+    } catch (error: any) {
+      console.log('Editwork failed. ', error.message)
+    }
+  }
 
   // Hooks
   const { lang: locale } = useParams()
@@ -116,9 +144,14 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
         <CardHeader
           title='Documents'
           action={
-            <Button onClick={handleClickOpen} variant='contained'>
-              Upload
-            </Button>
+            <>
+              <Button onClick={handleGetDocument} className='mr-2' variant='contained'>
+                Get Document
+              </Button>
+              <Button onClick={handleClickOpen} variant='contained'>
+                Upload
+              </Button>
+            </>
           }
         />
         <div className='overflow-x-auto'>
@@ -185,7 +218,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
                       onClick={() => {
                         // handleEditFile()
                         handleClickOpen()
-                        setEditFile({ filename: row.filename, dep: row.dep, itemno: row.itemno })
+                        setEditFile({ filename: row.filename, dep: row.dep, itemno: row.itemno, btype: 'edit' })
                       }}
                     >
                       <i className='tabler-paperclip text-[22px] text-textSecondary' />

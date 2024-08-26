@@ -69,7 +69,6 @@ import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import axios from '@/utils/axios'
 
 import DocumentListTable from '../workV2/DocumentListTable'
-import dialog from '../../../components/themeV2/overrides/dialog'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({

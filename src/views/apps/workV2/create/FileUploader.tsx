@@ -33,10 +33,17 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
   const wid = attmData.wid
   const email = attmData.email
   const dep = attmData.dep
+  const rid = attmData.rid
+  const pid = attmData.pid
 
   const { data: session } = useSession()
 
   const token = session?.user.token
+
+  const [open, setOpen] = useState<boolean>(false)
+  const handleClose = () => setOpen(false)
+
+  console.log(open)
 
   // console.log(token)
 
@@ -98,6 +105,8 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
     form.append('wid', wid)
     form.append('id', email)
     form.append('dep', dep)
+    form.append('rid', rid)
+    form.append('pid', pid)
 
     //form.append('my_buffer', new Blob([1, 2, 3]))
     form.append('file', files[0])
@@ -122,6 +131,7 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
       // } else {
       //   console.log(response.data.message)
       // }
+      handleClose()
     } catch (error: any) {
       console.log('createattachment from client call failed. ', error.message)
     }
@@ -148,6 +158,8 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
     form.append('wid', wid)
     form.append('id', email)
     form.append('dep', dep)
+    form.append('rid', rid)
+    form.append('pid', pid)
     form.append('itemno', fileData.itemno)
     form.append('file', files[0])
 
@@ -179,6 +191,7 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
       // if (response.data.message === 'success') {
       //   console.log('Update user success.')
       // }
+      handleClose()
     } catch (error: any) {
       console.log('update from client call failed. ', error.message)
     }
@@ -227,25 +240,8 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
           </Typography>
         </div>
       </div>
-      {/* {files.length ? (
-        <>
-          <List>{fileList}</List>
 
-          <DialogActions className='buttons justify-end'>
-            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
-              Remove All
-            </Button>
-            <Button onClick={() => handleUploadFile()} variant='contained'>
-              Upload Files
-            </Button>
-            <Button onClick={() => handleEditFile()} variant='contained'>
-              Edit Files
-            </Button>
-          </DialogActions>
-        </>
-      ) : null} */}
-
-      {files.length >= 1 ? (
+      {files.length >= 1 && fileData.btype === undefined ? (
         <>
           <List>{fileList}</List>
           <DialogActions className='buttons justify-end'>
@@ -255,14 +251,11 @@ const FileUploader = ({ attmData, fileData }: { attmData?: any; fileData?: any }
             <Button onClick={() => handleUploadFile()} variant='contained'>
               Upload Files
             </Button>
-            {/* <Button onClick={() => handleEditFile()} variant='contained'>
-              Edit Files
-            </Button> */}
           </DialogActions>
         </>
       ) : null}
 
-      {files.length === 1 ? (
+      {files.length == 1 && fileData.btype === 'edit' ? (
         <>
           <List>{fileList}</List>
           <DialogActions className='buttons justify-end'>

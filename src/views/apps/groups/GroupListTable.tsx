@@ -162,26 +162,20 @@ type Props = {
 
 // AKK select/add user
 
-const GroupListTable = ({ tableData, userData, updateData }: Props) => {
-  // AKK HERE
+const GroupListTable = ({ tableData, userData }: Props) => {
   // States
-  const [formData, setFormData] = useState<GroupFormDataType>(initialData)
   const [personName, setPersonName] = useState<string[]>([])
+  const [dataGroup, setDataGroup] = useState<any>({})
   const [addGroupOpen, setAddGroupOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
 
-  // const [user, setusersData] = useState(...[userData])
-
   const [globalFilter, setGlobalFilter] = useState('')
   const [members, setMembers] = useState([])
-
-  //AKK
-  // const { data: session, update } = useSession()
-  // const [emailData, setEmailData] = useState(session?.user.email)
   const [memberopen, setmemberOpen] = useState(false)
   const { data: session } = useSession()
+
   const emailData = session?.user.email
 
   //Alert
@@ -189,45 +183,22 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   const [deleteGroup, setDeleteGroup] = useState<any>({})
   const handleCloseConfirm = () => setConfirm(false)
 
-  // const [members, setmembers] = useState([])
-  useEffect(() => {
-    updateData && setFormData(updateData)
-  }, [updateData])
+  const handleSubmitMember = async () => {
+    console.log('SubmitMember-statr')
+    console.log(personName)
+    console.log(members)
+    console.log(dataGroup.groupname)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    setFormData(initialData)
-    console.log(initialData)
-
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, formData)
-
-      if (response.data.success) {
-        console.log('Create success')
-
-        if (tableData) {
-          const updateData: any = {
-            groupid: formData.groupid,
-            groupname: formData.groupname,
-            createby: String(emailData),
-            member: formData.member
-          }
-
-          tableData.push(updateData)
-        }
-
-        setData(tableData)
-        handleCloseeee()
-      } else {
-        console.log('Create failed.')
-      }
-    } catch {
-      console.log('Update user failed.')
+    const updateFormdata: any = {
+      groupid: dataGroup.groupid,
+      groupname: dataGroup.groupname,
+      createby: String(emailData)
     }
+
+    console.log(updateFormdata)
   }
 
-  const handleClickOpen = async (groupid: object, member: any) => {
+  const handleClickOpenMember = async (groupid: object, member: any) => {
     let i: any
     const elem: any = member
 
@@ -236,6 +207,7 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
     }
 
     setmemberOpen(true)
+    setDataGroup(groupid)
   }
 
   // console.log(setmembers(members))
@@ -260,12 +232,6 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
   // Reset
   const handleReset = () => {
     handleCloseeee()
-    setFormData({
-      groupid: '',
-      groupname: '',
-      createby: '',
-      member: []
-    })
   }
 
   // Delete
@@ -348,19 +314,15 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
             <Button
               variant='tonal'
               onClick={() => {
-                handleClickOpen({ groupid: row.original.groupid }, { member: row.original.member })
+                handleClickOpenMember(
+                  { groupid: row.original.groupid, groupname: row.original.groupname },
+                  { member: row.original.member }
+                )
               }}
             >
-              {row.original.member.length}
+              {String(row.original.member) == '' ? 0 : null}
+              {String(row.original.member) != '' ? row.original.member.length : null}
             </Button>
-            {/* <Typography color='text.primary' className='font-medium'>
-              {row.original.member.length}
-            </Typography> */}
-            {/* {row.original.member.map(member => (
-              <Typography color='text.primary' className='font-medium'>
-                {member}
-              </Typography>
-            ))} */}
           </div>
         )
       }),
@@ -426,16 +388,6 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
-
-  // const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
-  //   const { avatar, fullName } = params
-
-  //   if (avatar) {
-  //     return <CustomAvatar src={avatar} size={34} />
-  //   } else {
-  //     return <CustomAvatar size={34}>{getInitials(fullName as string)}</CustomAvatar>
-  //   }
-  // }
 
   // const handleChange = (event: SelectChangeEvent<string[]>) => {
   const handleChange = (event: any) => {
@@ -561,31 +513,6 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
           }}
         />
       </Card>
-      {/* <Dialog
-        onClick={() => {
-          handleDialogClose()
-        }}
-        aria-labelledby='simple-dialog-title'
-        open={memberopen}
-      >
-        <DialogTitle id='simple-dialog-title'>Member</DialogTitle>
-
-        <List className='pt-0 px-0'>
-          {members?.map((email, index) => (
-            <ListItem key={index} disablePadding onClick={() => handleCloseeee()}>
-              <ListItemButton>
-                <ListItemAvatar>
-                  <Avatar>
-                    <i className='tabler-user' />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={email} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Dialog> */}
-      {/* AKK Customized Dialog */}
       <Dialog
         fullWidth
         open={memberopen}
@@ -615,10 +542,6 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
                 SelectProps={{
                   multiple: true,
                   MenuProps,
-
-                  // onChange={handleChange}
-                  // onChange: handleChange,
-
                   onChange: e => handleChange(e),
                   renderValue: selected => (
                     <div className='flex flex-wrap gap-1'>
@@ -655,15 +578,9 @@ const GroupListTable = ({ tableData, userData, updateData }: Props) => {
             </div>
           </DialogContent>
           <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
-            {updateData?.groupname !== '' ? (
-              <Button variant='contained' onClick={() => handleSubmit} type='submit'>
-                Submit
-              </Button>
-            ) : (
-              <Button variant='contained' type='submit'>
-                Submit
-              </Button>
-            )}
+            <Button variant='contained' onClick={() => handleSubmitMember()} type='submit'>
+              Submit
+            </Button>
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
               Cancel2
             </Button>
