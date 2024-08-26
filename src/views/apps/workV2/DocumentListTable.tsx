@@ -145,7 +145,9 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
 
     console.log(reqBody)
     console.log(deletefile)
-    handleCloseConfirm()
+
+    handleCloseConfirm() // sg here
+    handleGetDocument()
   }
 
   const handleReset = () => {

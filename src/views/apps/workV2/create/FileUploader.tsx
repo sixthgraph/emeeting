@@ -111,7 +111,7 @@ const FileUploader = ({
     const form = new FormData()
 
     form.append('wid', wid)
-    form.append('id', email)
+    form.append('uid', email)
     form.append('dep', dep)
     form.append('rid', rid)
     form.append('pid', pid)
@@ -164,7 +164,7 @@ const FileUploader = ({
     const form = new FormData()
 
     form.append('wid', wid)
-    form.append('id', email)
+    form.append('uid', email)
     form.append('dep', dep)
     form.append('rid', rid)
     form.append('pid', pid)
