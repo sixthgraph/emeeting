@@ -11,13 +11,14 @@ export async function POST(req: NextRequest) {
   try {
     const headers = { Authorization: `Bearer ${token}`, 'Cache-Control': 'no-cache', Pragma: 'no-cache', Expires: '0' }
 
-    const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getattachment?wid=${wid}}&id=${itemno}`, {
+    const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getattachment?wid=${wid}&id=${itemno}`, {
       headers
     })
 
     console.log(wid)
     console.log(itemno)
-    console.log('------------------')
+    console.log(`${process.env.ROUTE_FLOW_API_URL}/getattachment?wid=${wid}}&id=${itemno}`)
+    console.log('----- attm list-------------')
     console.log(response.data)
 
     return NextResponse.json(response.data)
