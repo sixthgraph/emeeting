@@ -5,9 +5,7 @@ import type { SyntheticEvent } from 'react'
 
 // MUI Imports
 import Script from 'next/script'
-import { useParams } from 'next/navigation'
-
-import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
@@ -69,8 +67,6 @@ import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import axios from '@/utils/axios'
 
 import DocumentListTable from '../workV2/DocumentListTable'
-import { each } from 'jquery'
-import { useRouter } from 'next/navigation'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -119,7 +115,7 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
   paddingBlockStart: `${theme.spacing(6)} !important`
 }))
 
-const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: any }) => {
+const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionData?: any }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   console.log('workData ===')
@@ -128,8 +124,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
   let i: any
   const eform: any = eformData
 
-  console.log('condionData -----')
-  console.log(condionData)
+  console.log('conditionData -----')
+  console.log(conditionData)
 
   const router = useRouter()
 
@@ -228,19 +224,32 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
 
   const handleDecision = async () => {
     console.log('start handleDecision')
-    if (condionData.length > 1) {
-      console.log('cond_item----')
-      for (const cond_item of condionData) {
-        console.log(cond_item)
-        if (1 == 1) {
-          condionData = []
-          condionData.push(cond_item)
-          console.log('condionData after decistion----')
-          console.log(condionData)
-          return
-        }
-      }
+
+    console.log(conditionData)
+
+    for (const conItem of conditionData) {
+      console.log('conItem.conditions')
+      console.log(conItem.conditions)
     }
+
+    // if (conditionData.length > 1) {
+
+    //   console.log('cond_item----')
+
+    //   for (const cond_item of conditionData) {
+    //     console.log(cond_item)
+
+    //     if (1 == 1) {
+    //       conditionData = []
+    //       conditionData.push(cond_item)
+    //       console.log('conditionData after decistion----')
+    //       console.log(conditionData)
+
+    //       return
+    //     }
+    //   }
+
+    // }
   }
 
   const handleTask = async () => {
@@ -259,11 +268,11 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
     })
   }
 
-  console.log('---condionData')
-  console.log(condionData)
+  console.log('---conditionData')
+  console.log(conditionData)
 
   const handlesendwork = async () => {
-    if (condionData.length > 1) {
+    if (conditionData.length > 1) {
       setDialogTitle('RouteFlow')
       setDialogMsg('ไม่สามารถดำเนินการได้ พบเส้นทางมากกว่า 1 เส้นทาง กรุณาติดต่อผู้ดูแลระบบ')
 
@@ -272,7 +281,7 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
       return
     }
 
-    if (condionData.length == 0 || !condionData) {
+    if (conditionData.length == 0 || !conditionData) {
       setDialogTitle('RouteFlow')
       setDialogMsg('ไม่พบเส้นทางเดินเอกสาร กรุณาติดต่อผู้ดูแลระบบ')
       handleOpenDialog()
@@ -283,10 +292,10 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
     try {
       const reqBody = {
         wid: workData.wid,
-        uid: condionData[0].userid,
-        dep: condionData[0].basketId[0],
+        uid: conditionData[0].userid,
+        dep: conditionData[0].basketId[0],
         rid: workData.workflowid,
-        pid: condionData[0].blockId,
+        pid: conditionData[0].blockId,
         dateexp: workData.Expiredate,
         senderdep: workData.curdep,
         senderpid: workData.blockid,
@@ -665,15 +674,15 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
             }}
           >
             {workData.blockid !== 'startpoint' &&
-              condionData[0] !== 'end-process' &&
-              condionData[0] !== 'null' &&
+              conditionData[0] !== 'end-process' &&
+              conditionData[0] !== 'null' &&
               workData.action == '' && (
                 <Button variant='contained' onClick={() => handlesendbackwork()} className='mr-2' type='submit'>
                   Send Back
                 </Button>
               )}
 
-            {condionData[0] !== 'null' && condionData[0] !== 'end-process' && workData.action == '' && (
+            {conditionData[0] !== 'null' && conditionData[0] !== 'end-process' && workData.action == '' && (
               <>
                 <Button
                   variant='contained'
@@ -691,8 +700,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
               </>
             )}
 
-            {condionData[0] !== 'end-process' &&
-              condionData[0] !== 'null' &&
+            {conditionData[0] !== 'end-process' &&
+              conditionData[0] !== 'null' &&
               workData.action == '' &&
               workData.blockid !== 'startpoint' && (
                 <Button
@@ -706,8 +715,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
                 </Button>
               )}
 
-            {condionData[0] !== 'end-process' &&
-              condionData[0] !== 'null' &&
+            {conditionData[0] !== 'end-process' &&
+              conditionData[0] !== 'null' &&
               workData.action == '' &&
               workData.blockid !== 'startpoint' && (
                 <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
@@ -715,8 +724,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
                 </Button>
               )}
 
-            {condionData[0] !== 'end-process' &&
-              condionData[0] !== 'null' &&
+            {conditionData[0] !== 'end-process' &&
+              conditionData[0] !== 'null' &&
               workData.action == '' &&
               workData.blockid == 'startpoint' && (
                 <Button variant='contained' onClick={() => handleEditAndSendWork()} className='mr-2' type='submit'>
@@ -724,7 +733,7 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
                 </Button>
               )}
 
-            {condionData[0] === 'end-process' && workData.action == '' && (
+            {conditionData[0] === 'end-process' && workData.action == '' && (
               <>
                 <Button variant='contained' onClick={() => handlesendbackwork()} className='mr-2' type='submit'>
                   Send Back
@@ -746,7 +755,7 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
               </>
             )}
 
-            {/* {condionData === 'end-process' && workData.action == '' && (
+            {/* {conditionData === 'end-process' && workData.action == '' && (
 
             )} */}
 
