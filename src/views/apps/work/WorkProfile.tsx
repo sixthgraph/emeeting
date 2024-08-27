@@ -124,8 +124,18 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
   let i: any
   const eform: any = eformData
 
+  const workInprocess = workData?.workinprocess
+  const curBlockId = workData?.blockid
+
   console.log('conditionData -----')
   console.log(conditionData)
+
+  const curWorkinprocess = workInprocess.find((elem: any) => elem.pid == curBlockId)
+  const curNodeData = curWorkinprocess.nodeinfo[0]
+  const curTask = curWorkinprocess.nodeinfo[0].task
+
+  console.log('curNodeData -------')
+  console.log(curNodeData)
 
   const router = useRouter()
 
@@ -225,14 +235,14 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
   const handleDecision = async () => {
     console.log('start handleDecision')
 
-    let newcondition = []
-    //console.log(conditionData)
+    const newcondition = []
 
     if (conditionData.length > 1) {
       //console.log('cond_item----')
 
       let i = 0
       let curboolean = false
+
       for (const cond_item of conditionData) {
         console.log('--condition-' + i)
         console.log(cond_item.conditions)
@@ -243,7 +253,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
           conditionData.splice(i)
         } else {
           //check rules ohm
-          let conditions = JSON.parse(cond_item.conditions)
+          const conditions = JSON.parse(cond_item.conditions)
 
           const mainoper = conditions.condition
           const rules = conditions.rules
@@ -251,13 +261,14 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
           // console.log('rules of condition-' + i)
           // console.log(rules)
           let j = 0
+
           for (const rule_item of rules) {
-            let curelementid = rule_item.id
-            let oper = rule_item.operator
-            let inputField: any = document.getElementById(curelementid)
+            const curelementid = rule_item.id
+            const oper = rule_item.operator
+            const inputField: any = document.getElementById(curelementid)
 
             // Get the value of the input field
-            let value = inputField.value
+            const value = inputField.value
 
             console.log('--start ' + i + '.' + j)
 
@@ -284,6 +295,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean equal = ' + curboolean)
                 break
               case 'not_equal':
@@ -308,6 +320,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean not_equal = ' + curboolean)
                 break
               case 'greater':
@@ -332,6 +345,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean greater = ' + curboolean)
                 break
               case 'greater_or_equal':
@@ -356,6 +370,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean greater_or_equal = ' + curboolean)
                 break
               case 'less':
@@ -380,6 +395,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean less = ' + curboolean)
                 break
               case 'less_or_equal':
@@ -404,6 +420,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean less_or_equal = ' + curboolean)
                 break
               case 'is_not_empty':
@@ -428,6 +445,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean is_not_empty[' + value.length + '] = ' + curboolean)
                 break
               case 'is_empty':
@@ -452,6 +470,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean is_empty[' + value.length + '] = ' + curboolean)
                 break
               case 'in':
@@ -476,6 +495,7 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean is_empty[' + value.length + '] = ' + curboolean)
                 break
               case 'not_in':
@@ -500,9 +520,11 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
                     }
                   }
                 }
+
                 console.log('curboolean is_empty[' + value.length + '] = ' + curboolean)
                 break
             }
+
             j = j + 1
           }
         }
@@ -526,12 +548,14 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
     }
   }
 
-  const checkCondition = (condition: any) => {
-    return true
-  }
+  // const checkCondition = (condition: any) => {
+  //   return true
+  // }
 
   const handleTask = async () => {
     console.log('start handleTask')
+    console.log('curTask --- ')
+    console.log(curTask)
   }
 
   const handleEditAndSendWork = async () => {
