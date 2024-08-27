@@ -69,6 +69,7 @@ import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 import axios from '@/utils/axios'
 
 import DocumentListTable from '../workV2/DocumentListTable'
+import { each } from 'jquery'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -224,6 +225,19 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
 
   const handleDecision = async () => {
     console.log('start handleDecision')
+    if (condionData.length > 1) {
+      console.log('cond_item----')
+      for (const cond_item of condionData) {
+        console.log(cond_item)
+        if (1 == 1) {
+          condionData = []
+          condionData.push[cond_item]
+          console.log('condionData after decistion----')
+          console.log(condionData)
+          return
+        }
+      }
+    }
   }
 
   const handleTask = async () => {
@@ -247,8 +261,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
 
   const handlesendwork = async () => {
     if (condionData.length > 1) {
-      setDialogTitle('Sorry, Can not send work!')
-      setDialogMsg('Found next process more then one record.\n Please contact Admin')
+      setDialogTitle('RouteFlow')
+      setDialogMsg('ไม่สามารถดำเนินการได้ พบเส้นทางมากกว่า 1 เส้นทาง กรุณาติดต่อผู้ดูแลระบบ')
 
       handleOpenDialog()
 
@@ -256,8 +270,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
     }
 
     if (condionData.length == 0 || !condionData) {
-      setDialogTitle('Sorry, Can not send work!')
-      setDialogMsg('Next process not found. Please contact admin')
+      setDialogTitle('RouteFlow')
+      setDialogMsg('ไม่พบเส้นทางเดินเอกสาร กรุณาติดต่อผู้ดูแลระบบ')
       handleOpenDialog()
 
       return
