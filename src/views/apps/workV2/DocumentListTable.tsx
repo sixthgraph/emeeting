@@ -109,9 +109,7 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
       curr_month = d.getMonth(),
       curr_year: number = d.getFullYear() + 543
 
-    let formattedDate = d.toLocaleString()
-
-    formattedDate = formattedDate.replace(' ', ',')
+    const formattedDate = d.toLocaleString()
     const curr_time = formattedDate.split(',')[1]
 
     if (locale == 'th') {
