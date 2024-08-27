@@ -241,6 +241,8 @@ const WorkProfile = ({
 
   const handleNotificateion = async () => {
     console.log('start handleNotificateion')
+    console.log('notificationData ===')
+    console.log(notificationData)
   }
 
   const handleDecision = async () => {
