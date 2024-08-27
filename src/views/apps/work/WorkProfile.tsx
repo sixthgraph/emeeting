@@ -70,6 +70,7 @@ import axios from '@/utils/axios'
 
 import DocumentListTable from '../workV2/DocumentListTable'
 import { each } from 'jquery'
+import { useRouter } from 'next/navigation'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -129,6 +130,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
 
   console.log('condionData -----')
   console.log(condionData)
+
+  const router = useRouter()
 
   for (i in eform) {
     eformData[i]._id = eform[i].Id
@@ -231,7 +234,7 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
         console.log(cond_item)
         if (1 == 1) {
           condionData = []
-          condionData.push[cond_item]
+          condionData.push(cond_item)
           console.log('condionData after decistion----')
           console.log(condionData)
           return
@@ -747,11 +750,12 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
 
             )} */}
 
-            <Link href={'/en/todo'}>
-              <Button variant='contained' color='inherit'>
-                close
-              </Button>
-            </Link>
+            {/* <Link href={'/en/todo'}>
+
+            </Link> */}
+            <Button variant='contained' color='inherit' onClick={() => router.back()}>
+              close
+            </Button>
           </CardActions>
         </Card>
       </footer>
