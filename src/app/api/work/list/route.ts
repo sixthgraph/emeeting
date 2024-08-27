@@ -87,7 +87,8 @@ export async function POST(req: NextRequest) {
           success: true,
           data: workinfo,
           conditionData: condataObj,
-          commentData: commentdata
+          commentData: commentdata,
+          res_notification: null
         })
 
         console.log('---response2')
@@ -107,10 +108,23 @@ export async function POST(req: NextRequest) {
 
         console.log('uri getnextprocess')
         console.log(
-          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`
+          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}blockid=${curwip[0].pid}&wid=${wid}`
         )
 
         try {
+          console.log('uri notification')
+          console.log(`${process.env.ROUTE_FLOW_API_URL}/notification/${curwip[0].rid}/${curwip[0].pid}`)
+
+          const res_notification = await axios.get(
+            `${process.env.ROUTE_FLOW_API_URL}/notification/${curwip[0].rid}/${curwip[0].pid}`,
+            {
+              headers
+            }
+          )
+
+          console.log('res notification -----')
+          console.log(res_notification.data)
+
           const resnp2 = await axios.get(
             `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`,
             {
@@ -158,11 +172,12 @@ export async function POST(req: NextRequest) {
             success: true,
             data: workinfo,
             conditionData: condataObj,
-            commentData: commentdata
+            commentData: commentdata,
+            notificationData: res_notification.data
           })
 
           console.log('response222')
-          console.log(response2)
+          console.log(res_notification.data)
 
           return response2
         } catch (err: any) {
@@ -174,7 +189,8 @@ export async function POST(req: NextRequest) {
             message: res.data.message,
             success: true,
             data: workinfo,
-            conditionData: ['null']
+            conditionData: ['null'],
+            res_notification: null
           })
 
           return response2

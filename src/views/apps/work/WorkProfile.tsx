@@ -115,7 +115,15 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
   paddingBlockStart: `${theme.spacing(6)} !important`
 }))
 
-const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionData?: any }) => {
+const WorkProfile = ({
+  workData,
+  conditionData,
+  notificationData
+}: {
+  workData?: any
+  conditionData?: any
+  notificationData?: any
+}) => {
   const [open, setOpen] = useState<boolean>(false)
 
   console.log('workData ===')
@@ -129,6 +137,9 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
 
   console.log('conditionData -----')
   console.log(conditionData)
+
+  console.log('notificationData----')
+  console.log(notificationData)
 
   const curWorkinprocess = workInprocess.find((elem: any) => elem.pid == curBlockId)
   const curNodeData = curWorkinprocess.nodeinfo[0]
