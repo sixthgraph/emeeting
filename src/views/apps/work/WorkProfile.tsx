@@ -247,8 +247,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
 
   const handlesendwork = async () => {
     if (condionData.length > 1) {
-      setDialogTitle('Title 1')
-      setDialogMsg('Msg 1')
+      setDialogTitle('Sorry, Can not send work!')
+      setDialogMsg('Found next process more then one record.\n Please contact Admin')
 
       handleOpenDialog()
 
@@ -256,8 +256,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
     }
 
     if (condionData.length == 0 || !condionData) {
-      setDialogTitle('Title 2')
-      setDialogMsg('Msg 2')
+      setDialogTitle('Sorry, Can not send work!')
+      setDialogMsg('Next process not found. Please contact admin')
       handleOpenDialog()
 
       return
@@ -753,8 +753,8 @@ const WorkProfile = ({ workData, condionData }: { workData?: any; condionData?: 
           <DialogContentText id='alert-dialog-description'>{dialogMsg}</DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose}>Agree</Button>
+          {/* <Button onClick={handleClose}>Disagree</Button> */}
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
       {/* <WorkButton workData={workData} paramsData={paramsData} /> */}
