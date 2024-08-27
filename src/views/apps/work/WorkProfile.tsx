@@ -225,31 +225,309 @@ const WorkProfile = ({ workData, conditionData }: { workData?: any; conditionDat
   const handleDecision = async () => {
     console.log('start handleDecision')
 
-    console.log(conditionData)
+    let newcondition = []
+    //console.log(conditionData)
 
-    for (const conItem of conditionData) {
-      console.log('conItem.conditions')
-      console.log(conItem.conditions)
+    if (conditionData.length > 1) {
+      //console.log('cond_item----')
+
+      let i = 0
+      let curboolean = false
+      for (const cond_item of conditionData) {
+        console.log('--condition-' + i)
+        console.log(cond_item.conditions)
+
+        if (cond_item.condition == '') {
+          console.log('no cond')
+        } else if (cond_item.conditions.valid == false) {
+          conditionData.splice(i)
+        } else {
+          //check rules ohm
+          let conditions = JSON.parse(cond_item.conditions)
+
+          const mainoper = conditions.condition
+          const rules = conditions.rules
+
+          // console.log('rules of condition-' + i)
+          // console.log(rules)
+          let j = 0
+          for (const rule_item of rules) {
+            let curelementid = rule_item.id
+            let oper = rule_item.operator
+            let inputField: any = document.getElementById(curelementid)
+
+            // Get the value of the input field
+            let value = inputField.value
+
+            console.log('--start ' + i + '.' + j)
+
+            switch (oper) {
+              case 'equal':
+                if (value == rule_item.value) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean equal = ' + curboolean)
+                break
+              case 'not_equal':
+                if (value !== rule_item.value) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean not_equal = ' + curboolean)
+                break
+              case 'greater':
+                if (value > rule_item.value) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean greater = ' + curboolean)
+                break
+              case 'greater_or_equal':
+                if (value >= rule_item.value) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean greater_or_equal = ' + curboolean)
+                break
+              case 'less':
+                if (value < rule_item.value) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean less = ' + curboolean)
+                break
+              case 'less_or_equal':
+                if (value <= rule_item.value) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean less_or_equal = ' + curboolean)
+                break
+              case 'is_not_empty':
+                if (value.length > 0) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean is_not_empty[' + value.length + '] = ' + curboolean)
+                break
+              case 'is_empty':
+                if (value.length <= 0) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean is_empty[' + value.length + '] = ' + curboolean)
+                break
+              case 'in':
+                if (value.includes(rule_item.value)) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean is_empty[' + value.length + '] = ' + curboolean)
+                break
+              case 'not_in':
+                if (!value.includes(rule_item.value)) {
+                  if (j == 0) {
+                    curboolean = true
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && true
+                    } else {
+                      curboolean = curboolean || true
+                    }
+                  }
+                } else {
+                  if (j == 0) {
+                    curboolean = false
+                  } else {
+                    if (mainoper == 'AND') {
+                      curboolean = curboolean && false
+                    } else {
+                      curboolean = curboolean || false
+                    }
+                  }
+                }
+                console.log('curboolean is_empty[' + value.length + '] = ' + curboolean)
+                break
+            }
+            j = j + 1
+          }
+        }
+
+        console.log('curboolean----' + i)
+        console.log(curboolean)
+
+        if (curboolean == false) {
+          conditionData.splice(i, 1)
+        } else {
+          newcondition.push(conditionData[i])
+        }
+
+        i = i + 1
+      }
+
+      conditionData = []
+      conditionData = newcondition
+      console.log('conditiondata after slice[' + i + ']---')
+      console.log(conditionData)
     }
+  }
 
-    // if (conditionData.length > 1) {
-
-    //   console.log('cond_item----')
-
-    //   for (const cond_item of conditionData) {
-    //     console.log(cond_item)
-
-    //     if (1 == 1) {
-    //       conditionData = []
-    //       conditionData.push(cond_item)
-    //       console.log('conditionData after decistion----')
-    //       console.log(conditionData)
-
-    //       return
-    //     }
-    //   }
-
-    // }
+  const checkCondition = (condition: any) => {
+    return true
   }
 
   const handleTask = async () => {
