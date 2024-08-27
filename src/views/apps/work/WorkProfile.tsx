@@ -135,6 +135,8 @@ const WorkProfile = ({
   const workInprocess = workData?.workinprocess
   const curBlockId = workData?.blockid
 
+  const rolbackConditiondata = conditionData
+
   console.log('conditionData -----')
   console.log(conditionData)
 
@@ -249,7 +251,7 @@ const WorkProfile = ({
     console.log('start handleDecision')
 
     const newcondition = []
-
+    conditionData = rolbackConditiondata
     if (conditionData.length > 1) {
       //console.log('cond_item----')
 
@@ -546,7 +548,7 @@ const WorkProfile = ({
         console.log(curboolean)
 
         if (curboolean == false) {
-          conditionData.splice(i, 1)
+          //conditionData.splice(i, 1)
         } else {
           newcondition.push(conditionData[i])
         }
@@ -592,7 +594,7 @@ const WorkProfile = ({
       setDialogMsg('ไม่สามารถดำเนินการได้ พบเส้นทางมากกว่า 1 เส้นทาง กรุณาติดต่อผู้ดูแลระบบ')
 
       handleOpenDialog()
-
+      conditionData = rolbackConditiondata
       return
     }
 
@@ -600,7 +602,7 @@ const WorkProfile = ({
       setDialogTitle('RouteFlow')
       setDialogMsg('ไม่พบเส้นทางเดินเอกสาร กรุณาติดต่อผู้ดูแลระบบ')
       handleOpenDialog()
-
+      conditionData = rolbackConditiondata
       return
     }
 
@@ -625,7 +627,7 @@ const WorkProfile = ({
         console.log(response.data.message)
       }
 
-      const path = `/en/todo`
+      const path = `/${locale}/todo`
 
       navigate(path)
     } catch (error: any) {
