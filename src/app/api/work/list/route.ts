@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   // console.log('reqBody---')
   // console.log(reqBody)
-
+  let twid = '66ab566acaa7bbd88368defe'
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -38,21 +38,29 @@ export async function POST(req: NextRequest) {
     console.log('workinfo')
     console.log(workinfo)
 
-    console.log('--workinprocess---')
+    console.log('--workinprocess 1---')
     console.log(workinprocess)
 
-    const res_comment = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`, {
-      headers
-    })
+    console.log(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`)
+    let commentdata
+    try {
+      const res_comment = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`, {
+        headers
+      })
+      commentdata = res_comment.data.data.detail.comment
+    } catch (err: any) {
+      console.log('catch error')
+      console.log(err.message)
 
-    let commentdata = res_comment.data.data.detail
-
-    if (!commentdata) {
       commentdata = null
     }
 
     console.log('***commentdata')
     console.log(commentdata)
+
+    if (!commentdata) {
+      commentdata = null
+    }
 
     // const dataObj = workinprocess.filter((item: any) => {
     //   return item.id === wip //'6699081a5848117c8af11a20'
@@ -198,6 +206,9 @@ export async function POST(req: NextRequest) {
       }
     }
   } catch (error: any) {
+    console.log('catch error')
+    console.log(error.message)
+
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
