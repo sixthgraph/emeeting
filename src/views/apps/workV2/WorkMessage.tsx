@@ -39,7 +39,10 @@ const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
   }
 }
 
-const WorkMessage = ({ commentData, commentWorkData }: { commentData?: any; commentWorkData?: any }) => {
+const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData?: any; commentWorkData?: any }) => {
+  const commentData = commentdetailData.comment
+  const chatmember = commentdetailData.member
+
   const { data: session } = useSession()
   const [commentList, setCommentList] = useState<any>(commentData)
   const token = session?.user.token

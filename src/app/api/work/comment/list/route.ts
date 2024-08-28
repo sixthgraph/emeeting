@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    return NextResponse.json(response.data.data.detail.comment)
+    return NextResponse.json(response.data.data.detail)
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }

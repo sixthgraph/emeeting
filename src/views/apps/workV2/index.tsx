@@ -37,7 +37,7 @@ const WorkDetailV2 = ({
         </Grid>
       </Grid>
       <Grid item xs={4}>
-        <WorkMessage commentData={commentdata} commentWorkData={commentWorkData} />
+        <WorkMessage commentdetailData={commentdata} commentWorkData={commentWorkData} />
       </Grid>
     </Grid>
   )

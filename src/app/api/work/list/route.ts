@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       const res_comment = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`, {
         headers
       })
-      commentdata = res_comment.data.data.detail.comment
+      commentdata = res_comment.data.data.detail
     } catch (err: any) {
       console.log('catch error')
       console.log(err.message)
