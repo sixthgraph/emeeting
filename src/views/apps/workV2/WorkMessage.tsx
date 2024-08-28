@@ -43,11 +43,8 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   console.log('commentdetailData')
   console.log(commentdetailData)
 
-  let commentData: any
-  let chatmember: any
-
-  if (commentData) commentData = commentdetailData?.comment
-  if (chatmember) chatmember = commentdetailData?.member
+  const commentData = commentdetailData?.comment
+  const chatmember = commentdetailData?.member
 
   console.log('chatmember---')
   console.log(chatmember)
