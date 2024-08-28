@@ -144,8 +144,8 @@ const WorkProfile = ({
   console.log(notificationData)
 
   const curWorkinprocess = workInprocess.find((elem: any) => elem.pid == curBlockId)
-  const curNodeData = curWorkinprocess.nodeinfo[0]
-  const curTask = curWorkinprocess.nodeinfo[0].task
+  const curNodeData = curWorkinprocess?.nodeinfo[0]
+  const curTask = curWorkinprocess?.nodeinfo[0].task
 
   console.log('curNodeData -------')
   console.log(curNodeData)
