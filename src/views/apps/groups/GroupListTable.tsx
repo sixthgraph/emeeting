@@ -185,17 +185,39 @@ const GroupListTable = ({ tableData, userData }: Props) => {
 
   const handleSubmitMember = async () => {
     console.log('SubmitMember-statr')
-    console.log(personName)
     console.log(members)
-    console.log(dataGroup.groupname)
+    const str = String(personName).split(',')
+
+    const mem = members
+
+    for (let i = 0; i < str.length; i++) {
+      console.log(str[i])
+      const newmembers = str[i]
+
+      mem.push(newmembers)
+      setMembers(mem)
+    }
 
     const updateFormdata: any = {
       groupid: dataGroup.groupid,
+
       groupname: dataGroup.groupname,
-      createby: String(emailData)
+      createby: String(emailData),
+      member: members
     }
 
-    console.log(updateFormdata)
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, updateFormdata)
+
+      if (response.data.message === 'success') {
+        console.log('Update user success.')
+        handleReset()
+      }
+    } catch (error: any) {
+      console.log('Update Team member failed. ', error.message)
+    }
+
+    handleCloseMembers()
   }
 
   const handleClickOpenMember = async (groupid: object, member: any) => {
@@ -213,7 +235,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   // console.log(setmembers(members))
   // const handleDialogClose = () => setmemberOpen(false)
 
-  const handleCloseeee = () => {
+  const handleCloseMembers = () => {
     setmemberOpen(false)
 
     // setSelectedValue(value)
@@ -231,7 +253,8 @@ const GroupListTable = ({ tableData, userData }: Props) => {
 
   // Reset
   const handleReset = () => {
-    handleCloseeee()
+    handleCloseMembers()
+    setPersonName([])
   }
 
   // Delete
@@ -516,12 +539,12 @@ const GroupListTable = ({ tableData, userData }: Props) => {
       <Dialog
         fullWidth
         open={memberopen}
-        onClose={handleCloseeee}
+        onClose={handleCloseMembers}
         maxWidth='md'
         scroll='body'
         sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
       >
-        <DialogCloseButton onClick={() => handleCloseeee()} disableRipple>
+        <DialogCloseButton onClick={() => handleCloseMembers()} disableRipple>
           <i className='tabler-x' />
         </DialogCloseButton>
         <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16'>
@@ -563,7 +586,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
               {members.length} Members
               <List className='pt-0 px-0'>
                 {members?.map((email, index) => (
-                  <ListItem key={index} disablePadding onClick={() => handleCloseeee()}>
+                  <ListItem key={index} disablePadding onClick={() => handleCloseMembers()}>
                     <ListItemButton>
                       <ListItemAvatar>
                         <Avatar>
@@ -582,7 +605,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
               Submit
             </Button>
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
-              Cancel2
+              Cancel
             </Button>
           </DialogActions>
         </form>

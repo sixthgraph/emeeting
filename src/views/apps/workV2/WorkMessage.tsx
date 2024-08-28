@@ -16,7 +16,23 @@ import {
   Typography
 } from '@mui/material'
 
+//AKK IMPORT DIALOG
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import MenuItem from '@mui/material/MenuItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+
 import { useSession } from 'next-auth/react'
+
+import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
@@ -76,6 +92,10 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const [replyRef, setReplyRef] = useState<any>(initialReplyRef)
   const [openReply, setOpenReply] = useState<boolean>(false)
 
+  const [personName, setPersonName] = useState<string[]>([])
+  const [members, setMembers] = useState([])
+  const [memberopen, setmemberOpen] = useState(false)
+
   const itemsRef = useRef<HTMLInputElement>(null)
   const params = useParams()
   const { lang: locale } = params
@@ -83,6 +103,51 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const handleClick = () => {
     console.info('You clicked the Chip.')
   }
+
+  const handleClickOpenMember = () => {
+    console.log('Open Member')
+    setmemberOpen(true)
+  }
+
+  const handleCloseMembers = () => {
+    console.log('Close Member')
+    setmemberOpen(false)
+
+    // setmemberOpen(false)
+  }
+
+  const handleSubmitMember = async () => {
+    console.log('Submit Member')
+  }
+
+  const handleChange = (event: any) => {
+    setPersonName(event.target.value as string[])
+  }
+
+  const ITEM_HEIGHT = 48
+  const ITEM_PADDING_TOP = 8
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        width: 250,
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+      }
+    }
+  }
+
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder'
+  ]
 
   console.log('commentData')
   console.log(commentData)
@@ -217,7 +282,22 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   return (
     <>
       <Card variant='outlined'>
-        <CardHeader title='Messages' />
+        <CardHeader
+          title='Messages'
+          action={
+            <Chip
+              label='Invite'
+              size='small'
+              variant='outlined'
+              className='text-xs'
+              icon={<i className='tabler-plus' />}
+              onClick={() => {
+                handleClickOpenMember()
+              }}
+            />
+          }
+          className='pbe-4'
+        />
         <CardContent className='pb-0' style={{ maxHeight: '560px', overflow: 'auto' }}>
           {/* <CardContent className='pb-0' style={{ maxHeight: '100%', overflow: 'auto' }}> */}
           {commentList &&
@@ -401,6 +481,81 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
           )}
         </CardActions>
       </Card>
+
+      <Dialog
+        fullWidth
+        open={memberopen}
+        onClose={handleCloseMembers}
+        maxWidth='md'
+        scroll='body'
+        sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
+      >
+        <DialogCloseButton onClick={() => handleCloseMembers()} disableRipple>
+          <i className='tabler-x' />
+        </DialogCloseButton>
+        <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16'>
+          Team member
+          <Typography component='span' className='flex flex-col text-center'>
+            Share project with the team member
+          </Typography>
+        </DialogTitle>
+        <form onSubmit={e => e.preventDefault()}>
+          <DialogContent className='MuiDialogContent-root flex flex-col gap-6 pbs-0 sm:pli-16 sm:pbe-16 mui-18zuta7'>
+            <div>
+              <CustomTextField
+                select
+                fullWidth
+                label='Add Members'
+                value={personName}
+                id='demo-multiple-chip'
+                SelectProps={{
+                  multiple: true,
+                  MenuProps,
+                  onChange: e => handleChange(e),
+                  renderValue: selected => (
+                    <div className='flex flex-wrap gap-1'>
+                      {(selected as unknown as string[]).map(value => (
+                        <Chip key={value} label={value} size='small' />
+                      ))}
+                    </div>
+                  )
+                }}
+              >
+                {names?.map((name, index) => (
+                  <MenuItem key={index} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </div>
+            <div className='flex flex-col gap-4'>
+              {members.length} Members
+              <List className='pt-0 px-0'>
+                {members?.map((email, index) => (
+                  <ListItem key={index} disablePadding onClick={() => handleCloseMembers()}>
+                    <ListItemButton>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <i className='tabler-user' />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={email} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </div>
+          </DialogContent>
+          <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
+            <Button variant='contained' onClick={() => handleSubmitMember()} type='submit'>
+              Submit
+            </Button>
+            <Button variant='tonal' color='error' type='reset' onClick={() => handleCloseMembers()}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </>
   )
 }
