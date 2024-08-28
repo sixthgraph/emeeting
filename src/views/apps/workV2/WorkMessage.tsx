@@ -94,7 +94,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const [openReply, setOpenReply] = useState<boolean>(false)
 
   const [personName, setPersonName] = useState<string[]>([])
-  const [members, setMembers] = useState([])
+  const [members, setMembers] = useState<string[]>([])
   const [memberopen, setmemberOpen] = useState(false)
 
   const [userList, setUserList] = useState<any>()
