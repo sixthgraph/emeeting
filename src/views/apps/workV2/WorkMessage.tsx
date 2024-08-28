@@ -68,6 +68,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const { data: session } = useSession()
   const [commentList, setCommentList] = useState<any>(commentData)
   const token = session?.user.token
+  const email = session?.user.email
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialData = {
@@ -96,6 +97,8 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const [members, setMembers] = useState([])
   const [memberopen, setmemberOpen] = useState(false)
 
+  const [userList, setUserList] = useState<any>()
+
   const itemsRef = useRef<HTMLInputElement>(null)
   const params = useParams()
   const { lang: locale } = params
@@ -104,8 +107,46 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
     console.info('You clicked the Chip.')
   }
 
-  const handleClickOpenMember = () => {
+  const getUserList = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/get-user-list`, token, { headers })
+
+      console.log('response get user')
+      console.log(response.data)
+
+      setUserList(response.data)
+
+      //const userListObject = response.data
+
+      const userListObj = []
+
+      for (const item of response.data) {
+        userListObj.push(item)
+      }
+
+      console.log('userListObj')
+      console.log(userListObj)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleClickOpenMember = async () => {
     console.log('Open Member')
+    console.log(userList)
+
+    if (userList == undefined) {
+      console.log('start get user')
+      getUserList()
+    }
+
     setmemberOpen(true)
   }
 
@@ -116,8 +157,55 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
     // setmemberOpen(false)
   }
 
+  // Reset
+  const handleReset = () => {
+    handleCloseMembers()
+    setPersonName([])
+  }
+
   const handleSubmitMember = async () => {
     console.log('Submit Member')
+
+    //***body format****/
+    // {
+    //   "wid": "66ab566acaa7bbd88368defe",
+    //   "email": [
+    //     "chulapak@excelink.co.th",
+    //     "webmaster@excelink.co.th"
+    //     ],
+    //   "invite_by": "supakorn@excelink.co.th"
+    // }
+    //*************/
+
+    const newuserlist = personName
+
+    console.log(newuserlist)
+
+    for (const item of personName) {
+      members.push(item)
+    }
+
+    console.log(members)
+
+    const upudateNewUserList: any = {
+      wid: commentWorkData?.wid,
+      email: members,
+      invite_by: email
+    }
+
+    console.log(upudateNewUserList)
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/invite`, upudateNewUserList)
+
+      if (response.data.message === 'success') {
+        console.log('Update user success.')
+        setMembers(members)
+        handleReset()
+      }
+    } catch (error: any) {
+      console.log('Update Team member failed. ', error.message)
+    }
   }
 
   const handleChange = (event: any) => {
@@ -136,26 +224,13 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
     }
   }
 
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder'
-  ]
-
   console.log('commentData')
   console.log(commentData)
 
   useEffect(() => {
     if (!openReply) setNewMessage(initialData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openReply])
+  }, [openReply, memberopen])
 
   const handleReply = async () => {
     try {
@@ -481,7 +556,6 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
           )}
         </CardActions>
       </Card>
-
       <Dialog
         fullWidth
         open={memberopen}
@@ -521,25 +595,30 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
                   )
                 }}
               >
-                {names?.map((name, index) => (
-                  <MenuItem key={index} value={name}>
-                    {name}
+                {userList?.map((user: any, index: any) => (
+                  <MenuItem key={index} value={user.email}>
+                    {user.firstname} {user.lastname}
                   </MenuItem>
                 ))}
               </CustomTextField>
             </div>
             <div className='flex flex-col gap-4'>
-              {members.length} Members
+              {chatmember.length} Members
               <List className='pt-0 px-0'>
-                {members?.map((email, index) => (
+                {chatmember?.map((user: any, index: any) => (
                   <ListItem key={index} disablePadding onClick={() => handleCloseMembers()}>
                     <ListItemButton>
                       <ListItemAvatar>
-                        <Avatar>
+                        {getAvatar({
+                          avatar: `${user.avatar}`,
+                          fullName: `${user.username}`
+                        })}
+                        {/* <Avatar>
                           <i className='tabler-user' />
-                        </Avatar>
+                        </Avatar> */}
                       </ListItemAvatar>
-                      <ListItemText primary={email} />
+                      <ListItemText primary={user.username} secondary={user.email} />
+                      {/* <ListItemText primary={user.firstname} {user.lastname} /> */}
                     </ListItemButton>
                   </ListItem>
                 ))}
@@ -550,7 +629,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
             <Button variant='contained' onClick={() => handleSubmitMember()} type='submit'>
               Submit
             </Button>
-            <Button variant='tonal' color='error' type='reset' onClick={() => handleCloseMembers()}>
+            <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
               Cancel
             </Button>
           </DialogActions>

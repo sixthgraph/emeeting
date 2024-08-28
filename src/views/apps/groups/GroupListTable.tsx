@@ -186,25 +186,19 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const handleSubmitMember = async () => {
     console.log('SubmitMember-statr')
     console.log(members)
-    const str = String(personName).split(',')
 
-    const mem = members
-
-    for (let i = 0; i < str.length; i++) {
-      console.log(str[i])
-      const newmembers = str[i]
-
-      mem.push(newmembers)
-      setMembers(mem)
+    for (const item of personName) {
+      members.push(item)
     }
 
     const updateFormdata: any = {
       groupid: dataGroup.groupid,
-
       groupname: dataGroup.groupname,
       createby: String(emailData),
       member: members
     }
+
+    console.log(updateFormdata)
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, updateFormdata)
@@ -223,6 +217,8 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const handleClickOpenMember = async (groupid: object, member: any) => {
     let i: any
     const elem: any = member
+
+    console.log(member)
 
     for (i in elem) {
       setMembers(elem[i])
