@@ -659,7 +659,7 @@ const WorkProfile = ({
         console.log(response.data.message)
       }
 
-      const path = `/en/todo`
+      const path = `/${locale}/todo`
 
       navigate(path)
     } catch (error: any) {
@@ -683,7 +683,7 @@ const WorkProfile = ({
         console.log(response.data.message)
       }
 
-      const path = `/en/todo`
+      const path = `/${locale}/todo`
 
       navigate(path)
     } catch (error: any) {
@@ -707,7 +707,7 @@ const WorkProfile = ({
         console.log(response.data.message)
       }
 
-      const path = `/en/todo`
+      const path = `/${locale}/todo`
 
       navigate(path)
     } catch (error: any) {

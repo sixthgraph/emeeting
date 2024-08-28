@@ -10,6 +10,7 @@ import { getServerSession } from 'next-auth'
 import { options } from '../../auth/[...nextauth]/options'
 
 import { sendEmail } from '@/utils/mailer'
+import WorkMessage from '../../../../views/apps/workV2/WorkMessage'
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,6 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const reqBody = await request.json()
+    const { wid } = reqBody
 
     console.log(`${process.env.ROUTE_FLOW_API_URL}/sendwork`)
     console.log(reqBody)
@@ -30,6 +32,44 @@ export async function POST(request: NextRequest) {
 
     console.log('----res send-----')
     console.log(res)
+
+    //reqbody createnotification
+    //   {
+    //     "wid": "66c3011f239239c95df75917",
+    //     "email": [
+    //         "chulapak@excelink.co.th",
+    //         "supachai@excelink.co.th",
+    //         "akkarapah@gmail.com"
+    //     ],
+    //     "from": "supakorn@excelink.co.th",
+    //     "message": "invite comment"
+    //    }
+
+    const toemail = []
+    toemail.push(reqBody.uid)
+
+    const reqBodynotification = {
+      wid: reqBody.wid,
+      email: toemail,
+      from: reqBody.senderuid,
+      message: `New work incoming. ${reqBody.wid} `
+    }
+
+    console.log('--reqBodynotification--')
+    console.log(reqBodynotification)
+
+    try {
+      const res_notification = await axios.post(
+        `${process.env.ROUTE_FLOW_API_URL}/createnotification`,
+        reqBodynotification,
+        { headers }
+      )
+
+      console.log('--res notification--')
+      console.log(res_notification)
+    } catch (error: any) {
+      console.log('error' + error.message)
+    }
 
     const mailresponse = await sendEmail(reqBody.uid, reqBody.wid)
 
