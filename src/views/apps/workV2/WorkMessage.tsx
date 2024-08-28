@@ -159,7 +159,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
       const newCommentData = response.data
 
       if (newCommentData) {
-        setCommentList(newCommentData)
+        setCommentList(newCommentData.comment)
       }
     } catch (error: any) {
       console.log('Get work comment failed. ', error.message)
