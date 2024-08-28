@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
 
   // console.log('reqBody---')
   // console.log(reqBody)
-  let twid = '66ab566acaa7bbd88368defe'
+  //let twid = '66ab566acaa7bbd88368defe'
+
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -43,10 +44,12 @@ export async function POST(req: NextRequest) {
 
     console.log(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`)
     let commentdata
+
     try {
       const res_comment = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`, {
         headers
       })
+
       commentdata = res_comment.data.data.detail
     } catch (err: any) {
       console.log('catch error')
