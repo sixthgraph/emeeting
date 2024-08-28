@@ -251,7 +251,9 @@ const WorkProfile = ({
     console.log('start handleDecision')
 
     const newcondition = []
+
     conditionData = rolbackConditiondata
+
     if (conditionData.length > 1) {
       //console.log('cond_item----')
 
@@ -595,6 +597,7 @@ const WorkProfile = ({
 
       handleOpenDialog()
       conditionData = rolbackConditiondata
+
       return
     }
 
@@ -603,6 +606,7 @@ const WorkProfile = ({
       setDialogMsg('ไม่พบเส้นทางเดินเอกสาร กรุณาติดต่อผู้ดูแลระบบ')
       handleOpenDialog()
       conditionData = rolbackConditiondata
+
       return
     }
 
