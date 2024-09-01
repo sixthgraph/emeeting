@@ -1,6 +1,7 @@
 'use client'
 
 // React Imports
+import type { MouseEvent } from 'react'
 import { useEffect, useState, useMemo } from 'react'
 
 import Card from '@mui/material/Card'
@@ -16,6 +17,7 @@ import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
+import { ListItemIcon, ListItemText, Menu } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -190,12 +192,22 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [selectRowCount, setSelectRowCount] = useState<any>(0)
   const [updateDatas, setUpdateDatas] = useState<any[]>()
 
   //Alert
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deleteUser, setDeleteUser] = useState<any>({})
   const handleCloseConfirm = () => setConfirm(false)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
+  const handleOptMenuClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleOptMenuClose = () => {
+    setAnchorEl(null)
+  }
 
   useEffect(() => {
     const rowData: any[] = []
@@ -204,6 +216,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     for (const row of data) {
       rowData.push(row.original)
     }
+
+    setSelectRowCount(data.length)
 
     setUpdateDatas(rowData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -548,14 +562,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
               placeholder='Search User'
               className='is-full sm:is-auto'
             />
-            <Button
-              color='secondary'
-              variant='tonal'
-              startIcon={<i className='tabler-upload' />}
-              className='is-full sm:is-auto'
-            >
-              Export
-            </Button>
+
             <Button
               variant='contained'
               startIcon={<i className='tabler-user-plus' />}
@@ -564,22 +571,91 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
             >
               Add User
             </Button>
+
             <Button
               variant='outlined'
-              startIcon={<i className='tabler-users-plus' />}
-              onClick={() => usersDrawerOpenHandle()}
-              className='is-full sm:is-auto'
+              aria-haspopup='true'
+              onClick={handleOptMenuClick}
+              className='px-0 min-w-10'
+              aria-controls='customized-menu'
             >
-              Add Users
+              <i className='tabler-dots-vertical' />
             </Button>
-            <Button
-              variant='outlined'
-              startIcon={<i className='tabler-user-edit' />}
-              onClick={() => handleOpenEditUsers()}
-              className='is-full sm:is-auto'
-            >
-              Edit Users
-            </Button>
+            {selectRowCount > 0 ? (
+              <Menu
+                keepMounted
+                elevation={0}
+                anchorEl={anchorEl}
+                id='customized-menu'
+                onClose={handleOptMenuClose}
+                open={Boolean(anchorEl)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+              >
+                {/* <MenuItem onClick={() => DepartmentDrawerOpenHandle('insert-many')}> */}
+                <MenuItem onClick={() => usersDrawerOpenHandle()}>
+                  <ListItemIcon>
+                    <i className='tabler-users-plus text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Add Multiple' />
+                </MenuItem>
+                <MenuItem onClick={() => handleOpenEditUsers()}>
+                  <ListItemIcon>
+                    <i className='tabler-user-edit text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Edit Selected' />
+                </MenuItem>
+                <MenuItem>
+                  <ListItemIcon>
+                    <i className='tabler-trash text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Delete Selected' />
+                </MenuItem>
+              </Menu>
+            ) : (
+              <Menu
+                keepMounted
+                elevation={0}
+                anchorEl={anchorEl}
+                id='customized-menu'
+                onClose={handleOptMenuClose}
+                open={Boolean(anchorEl)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+              >
+                {/* <MenuItem onClick={() => DepartmentDrawerOpenHandle('insert-many')}> */}
+                <MenuItem onClick={() => usersDrawerOpenHandle()}>
+                  <ListItemIcon>
+                    <i className='tabler-users-plus text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Add Multiple' />
+                </MenuItem>
+                <MenuItem disabled>
+                  <ListItemIcon>
+                    <i className='tabler-user-edit text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Edit Selected' />
+                </MenuItem>
+                <MenuItem disabled>
+                  <ListItemIcon>
+                    <i className='tabler-trash text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Delete Selected' />
+                </MenuItem>
+              </Menu>
+            )}
           </div>
         </div>
         <div className='overflow-x-auto'>

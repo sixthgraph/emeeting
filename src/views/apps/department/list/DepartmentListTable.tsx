@@ -149,8 +149,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   // States
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
   const [openMode, setOpenMode] = useState<any>('') // insert-one || update-one || insert-many || update-many
-
-  //const [rowSelection, setRowSelection] = useState({})
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [selectRowCount, setSelectRowCount] = useState<any>(0)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
