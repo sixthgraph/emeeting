@@ -25,6 +25,7 @@ const RootLayout = ({ children }: ChildrenType) => {
     <html id='__next' lang='en' dir={direction}>
       <body className='flex is-full min-bs-full flex-auto flex-col'>
         <AuthProvider>{children}</AuthProvider>
+        {/* {children} */}
       </body>
     </html>
   )

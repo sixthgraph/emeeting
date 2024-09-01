@@ -36,7 +36,7 @@ const StateinfoListApp = async () => {
 
   console.log('====response.data=====')
   console.log(data.data.detail)
-  const stateinfoData = data.detail
+  const stateinfoData = data.data.detail
 
   return <StateinfoList stateinfoData={stateinfoData} />
 }

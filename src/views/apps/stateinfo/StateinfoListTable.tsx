@@ -54,7 +54,7 @@ import type { StateinfosType, StateinfosTypeWithAction } from '@/types/apps/stat
 
 // // Component Imports
 //import TableFilters from './TableFilters'
-import GroupDrawerForm from './StateinfoDrawerForm'
+import StateinfoDrawerForm from './StateinfoDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 
@@ -148,15 +148,12 @@ const StateinfoListTable = ({ tableData }: Props) => {
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
-
   const [globalFilter, setGlobalFilter] = useState('')
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
-  console.log('table data =', data)
-
-  // Hooks
-  //const { lang: locale } = useParams()
+  console.log('tabledata =', tableData)
+  console.log('data =', data)
 
   const stateinfoDrawerOpenHandle = () => {
     initialData = {
@@ -442,7 +439,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
         />
       </Card>
 
-      <GroupDrawerForm
+      <StateinfoDrawerForm
         open={addStateinfoOpen}
         setData={setData}
         tableData={tableData}

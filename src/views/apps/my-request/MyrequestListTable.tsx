@@ -485,10 +485,10 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
                 {table
                   .getRowModel()
                   .rows.slice(0, table.getState().pagination.pageSize)
-                  .map(row => {
+                  .map((row: any) => {
                     return (
                       <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
-                        {row.getVisibleCells().map(cell => (
+                        {row.getVisibleCells().map((cell: any) => (
                           <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                         ))}
                       </tr>

@@ -136,10 +136,10 @@ type Props = {
 }
 
 const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
-  console.log('departmentlist table start ---')
-
   // States
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
+  const [openMode, setOpenMode] = useState<any>('') // insert-one || update-one || insert-many || update-many
+
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
@@ -165,7 +165,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
     }, 100)
   }
 
-  const DepartmentDrawerOpenHandle = () => {
+  const DepartmentDrawerOpenHandle = (mode: any) => {
     initialData = {
       dep: '',
       depname: '',
@@ -176,6 +176,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       sort: 0,
       ref: ''
     }
+    setOpenMode(mode)
     setAddDepartmentOpen(true)
   }
 
@@ -250,7 +251,8 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
                 : '='.repeat(row.original.path.split(',').length - 1) + ' ' + row.original.depname}
             </Typography>
           </div>
-        )
+        ),
+        enableSorting: false
       }),
       columnHelper.accessor('statecode', {
         header: 'Statedesc',
@@ -260,33 +262,32 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
               {stateinfoObj[row.original.statecode] && stateinfoObj[row.original.statecode].desc}
             </Typography>
           </div>
-        )
+        ),
+        enableSorting: false
       }),
-      columnHelper.accessor('docuname', {
-        header: 'Docuname',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.docuname}
-            </Typography>
-            {/* {row.original.member.map(member => (
-              <Typography color='text.primary' className='font-medium'>
-                {member}
-              </Typography>
-            ))} */}
-          </div>
-        )
-      }),
-      columnHelper.accessor('sort', {
-        header: 'Sort',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.sort}
-            </Typography>
-          </div>
-        )
-      }),
+
+      // columnHelper.accessor('docuname', {
+      //   header: 'Docuname',
+      //   cell: ({ row }) => (
+      //     <div className='flex flex-col'>
+      //       <Typography color='text.primary' className='font-medium'>
+      //         {row.original.docuname}
+      //       </Typography>
+      //     </div>
+      //   ),
+      //   enableSorting: false
+      // }),
+      // columnHelper.accessor('sort', {
+      //   header: 'Sort',
+      //   cell: ({ row }) => (
+      //     <div className='flex flex-col'>
+      //       <Typography color='text.primary' className='font-medium'>
+      //         {row.original.sort}
+      //       </Typography>
+      //     </div>
+      //   ),
+      //   enableSorting: false
+      // }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
@@ -310,6 +311,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
                 initialData.path = row.original.path
                 initialData.sort = row.original.sort
                 setAddDepartmentOpen(!addDepartmentOpen)
+                setOpenMode('update-one')
               }}
             >
               <i className='tabler-edit text-[22px] text-textSecondary' />
@@ -383,24 +385,33 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search Group'
+              placeholder='Search Department Name'
               className='is-full sm:is-auto'
             />
-            <Button
+            {/* <Button
               color='secondary'
               variant='tonal'
               startIcon={<i className='tabler-upload' />}
               className='is-full sm:is-auto'
             >
               Export
-            </Button>
+            </Button> */}
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
-              onClick={() => DepartmentDrawerOpenHandle()}
+              onClick={() => DepartmentDrawerOpenHandle('insert-one')}
               className='is-full sm:is-auto'
             >
               Add New
+            </Button>
+
+            <Button
+              variant='contained'
+              startIcon={<i className='tabler-plus' />}
+              onClick={() => DepartmentDrawerOpenHandle('insert-many')}
+              className='is-full sm:is-auto'
+            >
+              Add Multiple
             </Button>
           </div>
         </div>
@@ -410,7 +421,21 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th
+                      key={header.id}
+                      style={{
+                        //width: header.getSize() !== 150 ? header.getSize() : undefined
+                        //width: header.index === 0 ? 60 : 'auto'
+                        width:
+                          header.index === 0
+                            ? 60
+                            : 'auto' && header.index === 2
+                              ? 180
+                              : 'auto' && header.index === 3
+                                ? 180
+                                : 'auto'
+                      }}
+                    >
                       {header.isPlaceholder ? null : (
                         <>
                           <div
@@ -503,6 +528,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
         updateData={initialData}
         stateinfoData={stateinfoData}
         handleClose={() => setAddDepartmentOpen(!addDepartmentOpen)}
+        mode={openMode}
       />
     </>
   )

@@ -28,7 +28,6 @@ type Props = {
   tableData?: DepartmentsType[]
   stateinfoData?: StateinfoType[]
   handleClose: () => void
-  mode?: any
 }
 
 // Vars
@@ -54,7 +53,7 @@ const initialInsertData = {
   depname: ''
 }
 
-const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoData, handleClose, mode }: Props) => {
+const DepartmentsDrawerForm = ({ open, setData, updateData, tableData, stateinfoData, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<DepartmentFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
@@ -229,38 +228,6 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
     }
   }
 
-  const handleUpdateManyData = async () => {
-    console.log('under construction...')
-
-    return
-
-    // try {
-    //   console.log('dep=>' + formData.dep)
-    //   formData.update_by = String(emailData)
-
-    //   const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/update`, formData)
-
-    //   if (response.data.message === 'success') {
-    //     console.log('Update department success.')
-    //     handleClose()
-
-    //     const index = tableData?.findIndex(x => x.dep == formData.dep)
-
-    //     if (tableData) {
-    //       tableData[Number(index)].depname = formData.depname
-    //       tableData[Number(index)].statecode = formData.statecode
-    //       tableData[Number(index)].docuname = formData.docuname
-    //       tableData[Number(index)].path = formData.path
-    //       tableData[Number(index)].sort = formData.sort
-    //     }
-
-    //     setData(tableData)
-    //   }
-    // } catch (error: any) {
-    //   console.log('Update department failed. ', error.message)
-    // }
-  }
-
   useEffect(() => {
     console.log('useEffect start')
     setFormData(updateData)
@@ -290,10 +257,11 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
-        {mode == 'insert-one' && <Typography variant='h5'>Add New Department</Typography>}
-        {mode == 'insert-many' && <Typography variant='h5'>Add New Departments</Typography>}
-        {mode == 'update-one' && <Typography variant='h5'>Edit Department</Typography>}
-        {mode == 'update-many' && <Typography variant='h5'>Edit Departments</Typography>}
+        {updateData.depname !== '' ? (
+          <Typography variant='h5'>Edit Department</Typography>
+        ) : (
+          <Typography variant='h5'>Add New Department</Typography>
+        )}
         <IconButton onClick={handleReset}>
           <i className='tabler-x text-textPrimary' />
         </IconButton>
@@ -301,7 +269,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          {(mode == 'insert-one' || mode == 'update-one') && (
+          {updateData.depname !== '' ? (
             <>
               {/* Edit Department */}
               <CustomTextField
@@ -386,9 +354,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
                 onChange={e => setFormData({ ...formData, sort: parseInt(e.target.value) })}
               />
             </>
-          )}
-
-          {mode == 'insert-many' && (
+          ) : (
             <>
               {/* Add New Department */}
               <CustomTextField
@@ -428,27 +394,22 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
             </>
           )}
 
+          {errors.find(error => error.for === 'ref')?.message}
           <div className='flex items-center gap-4'>
-            {mode == 'insert-one' && (
-              <Button variant='contained' type='submit'>
-                Insert One
-              </Button>
-            )}
-
-            {mode == 'insert-many' && (
-              <Button variant='contained' onClick={() => handleInsertMany()} type='button'>
-                Insert Many
-              </Button>
-            )}
-            {mode == 'update-one' && (
+            {updateData.dep !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
-                Edit One
+                Edit
               </Button>
-            )}
-            {mode == 'update-many' && (
-              <Button variant='tonal' onClick={() => handleUpdateManyData()}>
-                Edit Many
-              </Button>
+            ) : (
+              <>
+                {/* <Button variant='contained' type='submit'>
+                  Submit
+                </Button> */}
+
+                <Button variant='contained' onClick={() => handleInsertMany()} type='button'>
+                  Submit
+                </Button>
+              </>
             )}
 
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
@@ -461,4 +422,4 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
   )
 }
 
-export default DepartmentDrawerForm
+export default DepartmentsDrawerForm

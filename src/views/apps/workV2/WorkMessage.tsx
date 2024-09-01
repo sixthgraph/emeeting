@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 
 //AKK IMPORT DIALOG
-import Avatar from '@mui/material/Avatar'
+
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'

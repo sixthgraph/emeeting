@@ -57,22 +57,12 @@ const initialData = {
 }
 
 const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
-  //const router = useRouter()
-  //const params = useParams()
-  //const { lang: locale } = params
-  // const searchParams = useSearchParams()
-  // const { lang: locale } = useParams()
-
   // States
   const [formData, setFormData] = useState(initialData)
 
   // const [errors, setErrors] = useState<any[]>([])
 
   // setErrors([])
-
-  const [errors, setErrors] = useState<any[]>([])
-
-  setErrors([])
 
   //const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
@@ -359,7 +349,7 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
             value={formData.statecode}
             onChange={e => setFormData({ ...formData, statecode: e.target.value })}
           />
-          {errors.find(error => error.for === 'statecode')?.message}
+          {/* {errors.find(error => error.for === 'statecode')?.message} */}
           <CustomTextField
             label='Desc'
             fullWidth
