@@ -1,6 +1,7 @@
 'use client'
 
 // // React Imports
+import type { MouseEvent } from 'react'
 import { useEffect, useState, useMemo } from 'react'
 
 import Link from 'next/link'
@@ -37,13 +38,22 @@ import {
   getPaginationRowModel,
   getSortedRowModel
 } from '@tanstack/react-table'
-import type { ColumnDef, FilterFn } from '@tanstack/react-table'
+import type { ColumnDef, FilterFn, RowSelectionState } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // // Type Imports
 import axios from 'axios'
 
 // import type { Locale } from '@configs/i18n'
+
+import { ListItemIcon, ListItemText, Menu } from '@mui/material'
+
+// import { styled } from '@mui/material/styles'
+// import MuiMenu from '@mui/material/Menu'
+// // eslint-disable-next-line import/no-duplicates
+// import MuiMenuItem from '@mui/material/MenuItem'
+// import type { MenuProps } from '@mui/material/Menu'
+// import type { MenuItemProps } from '@mui/material/MenuItem'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
@@ -140,7 +150,9 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false)
   const [openMode, setOpenMode] = useState<any>('') // insert-one || update-one || insert-many || update-many
 
-  const [rowSelection, setRowSelection] = useState({})
+  //const [rowSelection, setRowSelection] = useState({})
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [selectRowCount, setSelectRowCount] = useState<any>(0)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -149,6 +161,46 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deleteDep, setDeleteDep] = useState<any>({})
   const handleCloseConfirm = () => setConfirm(false)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
+  const handleOptMenuClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleOptMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  useEffect(() => {
+    const rowData: any[] = []
+    const data = table.getSelectedRowModel().rows //sg here
+
+    for (const row of data) {
+      rowData.push(row.original)
+    }
+
+    setSelectRowCount(data.length)
+
+    //setUpdateDatas(rowData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowSelection])
+
+  // // Styled Menu component
+  // const Menu = styled(MuiMenu)<MenuProps>({
+  //   '& .MuiMenu-paper': {
+  //     border: '1px solid var(--mui-palette-divider)'
+  //   }
+  // })
+
+  // // Styled MenuItem component
+  // const MenuItem = styled(MuiMenuItem)<MenuItemProps>({
+  //   '&:focus': {
+  //     backgroundColor: 'var(--mui-palette-primary-main)',
+  //     '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+  //       color: 'var(--mui-palette-common-white)'
+  //     }
+  //   }
+  // })
 
   stateinfoData?.map(stateinfo => {
     const id = String(stateinfo.statecode)
@@ -178,6 +230,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
     }
     setOpenMode(mode)
     setAddDepartmentOpen(true)
+    setAnchorEl(null)
   }
 
   const handleDeleteDepartment = async () => {
@@ -255,7 +308,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
         enableSorting: false
       }),
       columnHelper.accessor('statecode', {
-        header: 'Statedesc',
+        header: 'State Code',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
@@ -406,13 +459,87 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
             </Button>
 
             <Button
-              variant='contained'
-              startIcon={<i className='tabler-plus' />}
-              onClick={() => DepartmentDrawerOpenHandle('insert-many')}
-              className='is-full sm:is-auto'
+              variant='outlined'
+              aria-haspopup='true'
+              onClick={handleOptMenuClick}
+              className='px-0 min-w-10'
+              aria-controls='customized-menu'
             >
-              Add Multiple
+              <i className='tabler-dots-vertical' />
             </Button>
+            {selectRowCount > 0 ? (
+              <Menu
+                keepMounted
+                elevation={0}
+                anchorEl={anchorEl}
+                id='customized-menu'
+                onClose={handleOptMenuClose}
+                open={Boolean(anchorEl)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+              >
+                <MenuItem onClick={() => DepartmentDrawerOpenHandle('insert-many')}>
+                  <ListItemIcon>
+                    <i className='tabler-plus text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Add Multiple' />
+                </MenuItem>
+                <MenuItem>
+                  <ListItemIcon>
+                    <i className='tabler-pencil text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Edit Selected' />
+                </MenuItem>
+                <MenuItem>
+                  <ListItemIcon>
+                    <i className='tabler-trash text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Delete Selected' />
+                </MenuItem>
+              </Menu>
+            ) : (
+              <Menu
+                keepMounted
+                elevation={0}
+                anchorEl={anchorEl}
+                id='customized-menu'
+                onClose={handleOptMenuClose}
+                open={Boolean(anchorEl)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+              >
+                <MenuItem onClick={() => DepartmentDrawerOpenHandle('insert-many')}>
+                  <ListItemIcon>
+                    <i className='tabler-plus text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Add Multiple' />
+                </MenuItem>
+                <MenuItem disabled>
+                  <ListItemIcon>
+                    <i className='tabler-pencil text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Edit Selected' />
+                </MenuItem>
+                <MenuItem disabled>
+                  <ListItemIcon>
+                    <i className='tabler-trash text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Delete Selected' />
+                </MenuItem>
+              </Menu>
+            )}
           </div>
         </div>
         <div className='overflow-x-auto'>

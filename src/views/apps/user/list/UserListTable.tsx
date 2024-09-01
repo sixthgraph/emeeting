@@ -199,13 +199,14 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
 
   useEffect(() => {
     const rowData: any[] = []
-    const data = table.getSelectedRowModel().rows
+    const data = table.getSelectedRowModel().rows //sg here
 
     for (const row of data) {
       rowData.push(row.original)
     }
 
     setUpdateDatas(rowData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelection])
 
   depData?.map(dep => {
