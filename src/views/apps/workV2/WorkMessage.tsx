@@ -603,7 +603,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
               </CustomTextField>
             </div>
             <div className='flex flex-col gap-4'>
-              {chatmember.length} Members
+              {chatmember?.length} Members
               <List className='pt-0 px-0'>
                 {chatmember?.map((user: any, index: any) => (
                   <ListItem key={index} disablePadding onClick={() => handleCloseMembers()}>

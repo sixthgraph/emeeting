@@ -18,6 +18,7 @@ import { useDropzone } from 'react-dropzone'
 //import { async } from '../../../../app/api/work/list/route'
 
 import { useSession } from 'next-auth/react'
+import { split } from 'postcss/lib/list'
 
 // import axios from '@/utils/axios'
 
@@ -38,6 +39,9 @@ const FileUploader = ({
 }) => {
   // States
   const [files, setFiles] = useState<File[]>([])
+
+  const [base64, setBase64] = useState<string | null>(null)
+
   const wid = attmData.wid
   const email = attmData.email
   const dep = attmData.dep
@@ -155,6 +159,63 @@ const FileUploader = ({
     setFiles([...filtered])
   }
 
+  const toBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader()
+
+      fileReader.readAsDataURL(file)
+
+      fileReader.onload = () => {
+        resolve(fileReader.result)
+      }
+
+      fileReader.onerror = error => {
+        reject(error)
+      }
+    })
+  }
+
+  const handleSignPdf = async () => {
+    const form = new FormData()
+
+    const base64 = await toBase64(files[0] as File)
+
+    setBase64(base64 as string)
+
+    const reqBody: any = {
+      unsignedPdf: base64, //base64,
+      uid: 'chulapak',
+      pwd: 'infoma',
+      x0: '100',
+      y0: '100',
+      imageWidth: '100',
+      imageHeight: '70',
+      pageNumber: '0'
+    }
+    const headers = {
+      Accept: '*/*',
+      Authorization: `Bearer ${token}`
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/attachment/sign`, {
+        method: 'post',
+        headers: headers,
+        body: JSON.stringify(reqBody)
+      })
+
+      console.log('response attachment/sign ------')
+
+      const data = response
+
+      console.log('----- DATA -----')
+      console.log(data)
+    } catch (err: any) {
+      console.log('----- error -----')
+      console.log(err.message)
+    }
+  }
+
   const handleEditFile = async () => {
     console.log('--attmData--')
 
@@ -266,6 +327,9 @@ const FileUploader = ({
             <Button onClick={() => handleUploadFile()} variant='contained'>
               Upload Files
             </Button>
+            {/* <Button onClick={() => handleSignPdf()} variant='contained'>
+              Digital Sign
+            </Button> */}
           </DialogActions>
         </>
       ) : null}
