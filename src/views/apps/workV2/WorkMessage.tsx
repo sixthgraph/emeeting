@@ -94,6 +94,9 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const [openReply, setOpenReply] = useState<boolean>(false)
 
   const [personName, setPersonName] = useState<string[]>([])
+
+  // const [members, setMembers] = useState<any>([])
+
   const [members, setMembers] = useState<string[]>([])
   const [memberopen, setmemberOpen] = useState(false)
 
@@ -145,6 +148,31 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
     if (userList == undefined) {
       console.log('start get user')
       getUserList()
+
+      console.log('userList if')
+      console.log(userList)
+    } else {
+      //const leftUsers = userList.filter(u => members.findIndex(lu => lu.email === u.email) === -1)
+
+      const result = userList.filter(
+        function ({ email }: any) {
+          console.log('email')
+          console.log(email)
+
+          console.log(!this.has(email))
+
+          return !this.has(email)
+        },
+        new Set(chatmember.map(({ email }: any) => email))
+      )
+
+      setUserList(result)
+
+      console.log('userList else')
+      console.log(userList)
+
+      // console.log('chatmember')
+      // console.log(chatmember)
     }
 
     setmemberOpen(true)
@@ -230,7 +258,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   useEffect(() => {
     if (!openReply) setNewMessage(initialData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openReply, memberopen])
+  }, [openReply])
 
   const handleReply = async () => {
     try {
