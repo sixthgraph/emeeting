@@ -331,10 +331,10 @@ const UserDrawerForm = ({
       } //if
     } //for
 
-    console.log('insertObj')
-    console.log(insertObj)
+    // console.log('insertObj')
+    // console.log(insertObj)
 
-    return
+    // return
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/addMany`, insertObj)
