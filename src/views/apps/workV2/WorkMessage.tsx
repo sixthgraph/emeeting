@@ -154,17 +154,31 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
     } else {
       //const leftUsers = userList.filter(u => members.findIndex(lu => lu.email === u.email) === -1)
 
-      const result = userList.filter(
-        function ({ email }: any) {
-          console.log('email')
-          console.log(email)
+      // const result = userList.filter(
+      //   function ({ email }: any) {
+      //     console.log('email')
+      //     console.log(email)
 
-          console.log(!this.has(email))
+      //     console.log(!this.has(email))
 
-          return !this.has(email)
-        },
-        new Set(chatmember.map(({ email }: any) => email))
-      )
+      //     return !this.has(email)
+      //   },
+      //   new Set(chatmember.map(({ email }: any) => email))
+      // )
+
+      interface User {
+        email: string
+      }
+
+      const chatMemberEmails = new Set(chatmember.map(({ email }: User) => email))
+
+      const result = userList.filter(function (this: Set<string>, { email }: User) {
+        console.log('email')
+        console.log(email)
+        console.log(!this.has(email))
+
+        return !this.has(email)
+      }, chatMemberEmails)
 
       setUserList(result)
 
