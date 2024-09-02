@@ -294,6 +294,7 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
         {mode == 'insert-many' && <Typography variant='h5'>Add New Departments</Typography>}
         {mode == 'update-one' && <Typography variant='h5'>Edit Department</Typography>}
         {mode == 'update-many' && <Typography variant='h5'>Edit Departments</Typography>}
+        {mode == 'delete-many' && <Typography variant='h5'>Delete Departments</Typography>}
         <IconButton onClick={handleReset}>
           <i className='tabler-x text-textPrimary' />
         </IconButton>
@@ -427,6 +428,9 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
               />
             </>
           )}
+
+          {mode == 'update-many' && <Typography>Update many under construction...</Typography>}
+          {mode == 'delete-many' && <Typography>Delete many under construction...</Typography>}
 
           <div className='flex items-center gap-4'>
             {mode == 'insert-one' && (

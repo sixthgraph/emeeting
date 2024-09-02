@@ -67,7 +67,8 @@ import type {
 // Component Imports
 import TableFilters from './TableFilters'
 import UserDrawerForm from './UserDrawerForm'
-import UsersDrawerForm from './UsersDrawerForm'
+
+// import UsersDrawerForm from './UsersDrawerForm'
 
 import CustomTextField from '@core/components/mui/TextField'
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -186,8 +187,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   //console.log('depData === ', depData)
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
-  const [openMode, setOpenMode] = useState('add')
-  const [addUsersOpen, setAddUsersOpen] = useState(false)
+  const [openMode, setOpenMode] = useState('add') // insert-one || update-one || insert-many || update-many
+  // const [addUsersOpen, setAddUsersOpen] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -276,7 +277,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   //   console.log('---------------')
   // }
 
-  const userDrawerOpenHandle = () => {
+  const userDrawerOpenHandle = (mode: any) => {
     // sg here
     initialData = {
       firstname: '',
@@ -291,37 +292,40 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       role: 0,
       status: ''
     }
+    setOpenMode(mode)
     setAddUserOpen(true)
   }
 
-  const usersDrawerOpenHandle = () => {
-    // sg here
-    initialData = {
-      firstname: '',
-      lastname: '',
-      fullName: '',
-      email: '',
-      avatar: '',
-      avatarcolor: '',
-      password: '',
-      dep: ['null'],
-      position: '',
-      role: 0,
-      status: ''
-    }
-    setOpenMode('add')
-    setAddUsersOpen(true)
-  }
+  // const usersDrawerOpenHandle = (mode: any) => {
+  //   // sg here
+  //   initialData = {
+  //     firstname: '',
+  //     lastname: '',
+  //     fullName: '',
+  //     email: '',
+  //     avatar: '',
+  //     avatarcolor: '',
+  //     password: '',
+  //     dep: ['null'],
+  //     position: '',
+  //     role: 0,
+  //     status: ''
+  //   }
+  //   setOpenMode(mode)
+  //   setAddUsersOpen(true)
+  //   setAnchorEl(null)
+  // }
 
-  const handleOpenEditUsers = () => {
-    setOpenMode('edit')
-    setAddUsersOpen(true)
-    console.log(updateDatas)
+  // const handleOpenEditUsers = (mode: any) => {
+  //   setOpenMode(mode)
+  //   setAddUsersOpen(true)
+  //   setAnchorEl(null)
+  //   console.log(updateDatas)
 
-    // getRowSelect()
+  //   // getRowSelect()
 
-    //console.log(rowSelection)
-  }
+  //   //console.log(rowSelection)
+  // }
 
   const handleDeleteUser = async () => {
     const reqBody: any = deleteUser
@@ -334,19 +338,21 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         console.log(response.data.data.detail)
         handleCloseConfirm()
 
-        //todo update tableData
-        const em: any = email
-        const newUpdate = tableData?.filter(el => el.email !== em.email)
+        window.location.reload()
 
-        console.log('newUpdate === ', newUpdate)
-        setData(newUpdate)
+        // //todo update tableData
+        // const em: any = email
+        // const newUpdate = tableData?.filter(el => el.email !== em.email)
 
-        tableData = data
+        // console.log('newUpdate === ', newUpdate)
+        // setData(newUpdate)
 
-        console.log(tableData)
+        // tableData = data
+
+        // console.log(tableData)
 
         //todo update refresh token
-        console.log('Update token ===', response.data.token)
+        //console.log('Update token ===', response.data.token)
       } else {
         console.error('User delete failed')
       }
@@ -484,6 +490,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
                 initialData.status = row.original.status
 
                 setAddUserOpen(!addUserOpen)
+                setOpenMode('update-one')
               }}
             >
               <i className='tabler-edit text-[22px] text-textSecondary' />
@@ -566,11 +573,28 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
             <Button
               variant='contained'
               startIcon={<i className='tabler-user-plus' />}
-              onClick={() => userDrawerOpenHandle()}
+              onClick={() => userDrawerOpenHandle('insert-one')}
               className='is-full sm:is-auto'
             >
               Add User
             </Button>
+            {/* <Button
+              variant='contained'
+              startIcon={<i className='tabler-user-plus' />}
+              onClick={() => usersDrawerOpenHandle('insert-many')}
+              className='is-full sm:is-auto'
+            >
+              Add Users
+            </Button>
+
+            <Button
+              variant='contained'
+              startIcon={<i className='tabler-user-plus' />}
+              onClick={() => usersDrawerOpenHandle('update-many')}
+              className='is-full sm:is-auto'
+            >
+              edit Users
+            </Button> */}
 
             <Button
               variant='outlined'
@@ -599,19 +623,32 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
                 }}
               >
                 {/* <MenuItem onClick={() => DepartmentDrawerOpenHandle('insert-many')}> */}
-                <MenuItem onClick={() => usersDrawerOpenHandle()}>
+                <MenuItem onClick={() => userDrawerOpenHandle('insert-many')}>
                   <ListItemIcon>
                     <i className='tabler-users-plus text-xl' />
                   </ListItemIcon>
                   <ListItemText primary='Add Multiple' />
                 </MenuItem>
-                <MenuItem onClick={() => handleOpenEditUsers()}>
+                <MenuItem
+                  onClick={() => {
+                    //handleOpenEditUsers('update-many')
+                    setOpenMode('update-many')
+                    setAddUserOpen(true)
+                    setAnchorEl(null)
+                  }}
+                >
                   <ListItemIcon>
                     <i className='tabler-user-edit text-xl' />
                   </ListItemIcon>
                   <ListItemText primary='Edit Selected' />
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setOpenMode('delete-many')
+                    setAddUserOpen(true)
+                    setAnchorEl(null)
+                  }}
+                >
                   <ListItemIcon>
                     <i className='tabler-trash text-xl' />
                   </ListItemIcon>
@@ -636,7 +673,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
                 }}
               >
                 {/* <MenuItem onClick={() => DepartmentDrawerOpenHandle('insert-many')}> */}
-                <MenuItem onClick={() => usersDrawerOpenHandle()}>
+                <MenuItem onClick={() => userDrawerOpenHandle('insert-many')}>
                   <ListItemIcon>
                     <i className='tabler-users-plus text-xl' />
                   </ListItemIcon>
@@ -748,7 +785,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <UsersDrawerForm
+      {/* <UsersDrawerForm
         open={addUsersOpen}
         setData={setData}
         tableData={tableData}
@@ -758,7 +795,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         rowData={updateDatas}
         mode={openMode}
         handleClose={() => setAddUsersOpen(!addUsersOpen)}
-      />
+      /> */}
+
       <UserDrawerForm
         open={addUserOpen}
         setData={setData}
@@ -766,6 +804,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         updateData={initialData}
         roleData={roleData}
         depData={depData}
+        rowData={updateDatas}
+        mode={openMode}
         handleClose={() => setAddUserOpen(!addUserOpen)}
       />
     </>

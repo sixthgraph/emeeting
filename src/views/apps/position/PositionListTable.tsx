@@ -1,6 +1,7 @@
 'use client'
 
-// // React Imports
+// React Imports
+import type { MouseEvent } from 'react'
 import { useEffect, useState, useMemo } from 'react'
 
 // // Next Imports
@@ -28,6 +29,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
+import { ListItemIcon, ListItemText, Menu } from '@mui/material'
 
 // // Third-party Imports
 import classnames from 'classnames'
@@ -44,7 +46,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel
 } from '@tanstack/react-table'
-import type { ColumnDef, FilterFn } from '@tanstack/react-table'
+import type { ColumnDef, FilterFn, RowSelectionState } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // // Type Imports
@@ -159,7 +161,9 @@ type Props = {
 const PositionListTable = ({ tableData }: Props) => {
   // States
   const [addPositionOpen, setAddPositionOpen] = useState(false)
-  const [rowSelection, setRowSelection] = useState({})
+  const [openMode, setOpenMode] = useState<any>('') // insert-one || update-one || insert-many || update-many
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [selectRowCount, setSelectRowCount] = useState<any>(0)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
 
@@ -169,6 +173,29 @@ const PositionListTable = ({ tableData }: Props) => {
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deletePos, setDeletePos] = useState<any>({})
   const handleCloseConfirm = () => setConfirm(false)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
+  const handleOptMenuClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleOptMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  useEffect(() => {
+    const rowData: any[] = []
+    const data = table.getSelectedRowModel().rows //sg here
+
+    for (const row of data) {
+      rowData.push(row.original)
+    }
+
+    setSelectRowCount(data.length)
+
+    //setUpdateDatas(rowData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowSelection])
 
   // const [updateData, setUpdateData] = useState(...[initialData])
 
@@ -177,7 +204,7 @@ const PositionListTable = ({ tableData }: Props) => {
   // Hooks
   //const { lang: locale } = useParams()
 
-  const PositionDrawerOpenHandle = () => {
+  const PositionDrawerOpenHandle = (mode: any) => {
     initialData = {
       positioncode: '',
       desc: '',
@@ -190,7 +217,10 @@ const PositionListTable = ({ tableData }: Props) => {
       update_date: '',
       update_by: ''
     }
+    setOpenMode(mode)
     setAddPositionOpen(true)
+
+    setAnchorEl(null)
   }
 
   const handleDeletePosition = async () => {
@@ -338,6 +368,7 @@ const PositionListTable = ({ tableData }: Props) => {
                 initialData.update_date = row.original.update_date
                 initialData.update_by = row.original.update_by
                 setAddPositionOpen(!addPositionOpen)
+                setOpenMode('update-one')
               }}
             >
               <i className='tabler-edit text-[22px] text-textSecondary' />
@@ -404,22 +435,104 @@ const PositionListTable = ({ tableData }: Props) => {
               placeholder='Search Group'
               className='is-full sm:is-auto'
             />
-            <Button
+            {/* <Button
               color='secondary'
               variant='tonal'
               startIcon={<i className='tabler-upload' />}
               className='is-full sm:is-auto'
             >
               Export
-            </Button>
+            </Button> */}
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
-              onClick={() => PositionDrawerOpenHandle()}
+              onClick={() => PositionDrawerOpenHandle('insert-one')}
               className='is-full sm:is-auto'
             >
               Add New
             </Button>
+            <Button
+              variant='outlined'
+              aria-haspopup='true'
+              onClick={handleOptMenuClick}
+              className='px-0 min-w-10'
+              aria-controls='customized-menu'
+            >
+              <i className='tabler-dots-vertical' />
+            </Button>
+            {selectRowCount > 0 ? (
+              <Menu
+                keepMounted
+                elevation={0}
+                anchorEl={anchorEl}
+                id='customized-menu'
+                onClose={handleOptMenuClose}
+                open={Boolean(anchorEl)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+              >
+                <MenuItem onClick={() => PositionDrawerOpenHandle('insert-many')}>
+                  <ListItemIcon>
+                    <i className='tabler-plus text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Add Multiple' />
+                </MenuItem>
+                <MenuItem onClick={() => PositionDrawerOpenHandle('update-many')}>
+                  <ListItemIcon>
+                    <i className='tabler-pencil text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Edit Selected' />
+                </MenuItem>
+                <MenuItem onClick={() => PositionDrawerOpenHandle('delete-many')}>
+                  <ListItemIcon>
+                    <i className='tabler-trash text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Delete Selected' />
+                </MenuItem>
+              </Menu>
+            ) : (
+              <Menu
+                keepMounted
+                elevation={0}
+                anchorEl={anchorEl}
+                id='customized-menu'
+                onClose={handleOptMenuClose}
+                open={Boolean(anchorEl)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+              >
+                <MenuItem onClick={() => PositionDrawerOpenHandle('insert-many')}>
+                  <ListItemIcon>
+                    <i className='tabler-plus text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Add Multiple' />
+                </MenuItem>
+                <MenuItem disabled>
+                  <ListItemIcon>
+                    <i className='tabler-pencil text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Edit Selected' />
+                </MenuItem>
+                <MenuItem disabled>
+                  <ListItemIcon>
+                    <i className='tabler-trash text-xl' />
+                  </ListItemIcon>
+                  <ListItemText primary='Delete Selected' />
+                </MenuItem>
+              </Menu>
+            )}
           </div>
         </div>
         <div className='overflow-x-auto'>
@@ -519,6 +632,7 @@ const PositionListTable = ({ tableData }: Props) => {
         setData={setData}
         tableData={tableData}
         updateData={initialData}
+        mode={openMode}
         handleClose={() => setAddPositionOpen(!addPositionOpen)}
       />
     </>

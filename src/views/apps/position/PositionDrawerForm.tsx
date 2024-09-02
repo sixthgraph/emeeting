@@ -31,6 +31,7 @@ type Props = {
   updateData: any
   setData: any
   tableData?: PositionsType[]
+  mode?: any
   handleClose: () => void
 }
 
@@ -53,7 +54,7 @@ const initialInsertData = {
   desc: '' // position name
 }
 
-const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
+const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState(initialData)
   const [insertData, setInsertData] = useState(initialInsertData)
@@ -245,6 +246,10 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
     setFormData(initialData)
   }
 
+  const handleUpdateManyData = async () => {
+    console.log('handleUpdateManyData under construction')
+  }
+
   //Update
   const handleUpdateData = async () => {
     try {
@@ -296,11 +301,16 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
-        {updateData.positioncode !== '' ? (
+        {mode == 'insert-one' && <Typography variant='h5'>Add New Position</Typography>}
+        {mode == 'insert-many' && <Typography variant='h5'>Add New Positions</Typography>}
+        {mode == 'update-one' && <Typography variant='h5'>Edit Position</Typography>}
+        {mode == 'update-many' && <Typography variant='h5'>Edit Positions</Typography>}
+        {mode == 'delete-many' && <Typography variant='h5'>Delete Positions</Typography>}
+        {/* {updateData.positioncode !== '' ? (
           <Typography variant='h5'>Edit Position</Typography>
         ) : (
           <Typography variant='h5'>Add New Position</Typography>
-        )}
+        )} */}
         <IconButton onClick={handleReset}>
           <i className='tabler-x text-textPrimary' />
         </IconButton>
@@ -308,7 +318,72 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          {updateData.positioncode !== '' ? ( // editPosition
+          {(mode == 'insert-one' || mode == 'update-one') && (
+            <>
+              <CustomTextField
+                label='Position Code'
+                fullWidth
+                placeholder=''
+                value={formData.positioncode}
+                onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
+              />
+              {errors.find(error => error.for === 'positioncode')?.message}
+              <CustomTextField
+                label='Position Name'
+                fullWidth
+                placeholder=''
+                value={formData.desc}
+                onChange={e => setFormData({ ...formData, desc: e.target.value })}
+              />
+              {errors.find(error => error.for === 'desc')?.message}
+              <CustomTextField
+                label='Level'
+                fullWidth
+                placeholder=''
+                value={formData.level}
+                onChange={e => setFormData({ ...formData, level: Number(e.target.value) })}
+              />
+              {errors.find(error => error.for === 'level')?.message}
+              <CustomTextField
+                label='Ref'
+                fullWidth
+                placeholder=''
+                value={formData.ref}
+                onChange={e => setFormData({ ...formData, ref: e.target.value })}
+              />
+              {errors.find(error => error.for === 'ref')?.message}
+              <CustomTextField
+                label='Status'
+                fullWidth
+                placeholder=''
+                value={formData.status}
+                onChange={e => setFormData({ ...formData, status: e.target.value })}
+              />
+              {errors.find(error => error.for === 'remark')?.message}
+              <CustomTextField
+                label='Remark'
+                fullWidth
+                placeholder=''
+                value={formData.remark}
+                onChange={e => setFormData({ ...formData, remark: e.target.value })}
+              />
+              {errors.find(error => error.for === 'remark')?.message}
+            </>
+          )}
+
+          {mode == 'insert-many' && (
+            <CustomTextField
+              rows={16}
+              multiline
+              label='Position Name'
+              onChange={e => setInsertData({ ...insertData, desc: e.target.value })}
+            />
+          )}
+
+          {mode == 'update-many' && <Typography>Update many under construction...</Typography>}
+          {mode == 'delete-many' && <Typography>Delete many under construction...</Typography>}
+
+          {/* {updateData.positioncode !== '' ? ( // editPosition
             <>
               <CustomTextField
                 label='Position Code'
@@ -361,13 +436,7 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
             </>
           ) : (
             <>
-              {/* <CustomTextField
-                label='Position Name'
-                fullWidth
-                placeholder=''
-                value={formData.desc}
-                onChange={e => setFormData({ ...formData, desc: e.target.value })}
-              /> */}
+
               <CustomTextField
                 rows={16}
                 multiline
@@ -375,10 +444,10 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
                 onChange={e => setInsertData({ ...insertData, desc: e.target.value })}
               />
             </>
-          )}
+          )} */}
 
           <div className='flex items-center gap-4'>
-            {updateData.positioncode !== '' ? (
+            {/* {updateData.positioncode !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
                 Edit
               </Button>
@@ -391,6 +460,28 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, handleClose 
                   Insert Many
                 </Button>
               </>
+            )} */}
+
+            {mode == 'insert-one' && (
+              <Button variant='contained' type='submit'>
+                Insert One
+              </Button>
+            )}
+
+            {mode == 'insert-many' && (
+              <Button variant='contained' onClick={() => handleInsertMany()} type='button'>
+                Insert Many
+              </Button>
+            )}
+            {mode == 'update-one' && (
+              <Button variant='tonal' onClick={() => handleUpdateData()}>
+                Edit One
+              </Button>
+            )}
+            {mode == 'update-many' && (
+              <Button variant='tonal' onClick={() => handleUpdateManyData()}>
+                Edit Many
+              </Button>
             )}
 
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>

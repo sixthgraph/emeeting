@@ -488,13 +488,13 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
                   </ListItemIcon>
                   <ListItemText primary='Add Multiple' />
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={() => DepartmentDrawerOpenHandle('update-many')}>
                   <ListItemIcon>
                     <i className='tabler-pencil text-xl' />
                   </ListItemIcon>
                   <ListItemText primary='Edit Selected' />
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={() => DepartmentDrawerOpenHandle('delete-many')}>
                   <ListItemIcon>
                     <i className='tabler-trash text-xl' />
                   </ListItemIcon>

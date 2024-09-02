@@ -441,7 +441,7 @@ const UsersDrawerForm = ({
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
-        {mode != 'add' ? (
+        {mode != 'insert-many' ? (
           <Typography variant='h5'>Edit Multiple User</Typography>
         ) : (
           <Typography variant='h5'>Add Multiple User</Typography>
@@ -453,7 +453,7 @@ const UsersDrawerForm = ({
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          {mode == 'add' ? (
+          {mode == 'insert-many' ? (
             <>
               <CustomTextField
                 rows={16}
@@ -694,13 +694,13 @@ const UsersDrawerForm = ({
           )}
 
           <div className='flex items-center gap-4'>
-            {mode !== 'add' ? (
+            {mode == 'update-many' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
-                Edit
+                Edit Many
               </Button>
             ) : (
               <Button variant='contained' type='button' onClick={() => handleInsertMany()}>
-                Submit
+                Insert many
               </Button>
 
               // <Button variant='contained' type='submit'>
