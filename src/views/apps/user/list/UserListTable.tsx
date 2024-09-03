@@ -52,6 +52,8 @@ import DialogContent from '@mui/material/DialogContent'
 
 import DialogContentText from '@mui/material/DialogContentText'
 
+import { useSession } from 'next-auth/react'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
@@ -188,7 +190,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [openMode, setOpenMode] = useState('add') // insert-one || update-one || insert-many || update-many
-  // const [addUsersOpen, setAddUsersOpen] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -201,6 +202,9 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   const [deleteUser, setDeleteUser] = useState<any>({})
   const handleCloseConfirm = () => setConfirm(false)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
+  const { data: session } = useSession()
+  const token = session?.user.token
 
   const handleOptMenuClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -245,38 +249,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     roleObj[Number(id)] = { icon: 'tabler-crown', color: 'error', name: String(name) }
   })
 
-  // const [updateData, setUpdateData] = useState(...[initialData])
-
-  // Hooks
-  //const { lang: locale } = useParams()
-
-  //console.log('data ===', data)
-  // const getRowSelect = () => {
-  //   //console.log(table.getState().rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
-  //   console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
-  //   // console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
-  //   // console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
-  //   // console.log(rowSelection)
-
-  //   const rowData: any[] = []
-  //   const data = table.getSelectedRowModel().rows
-
-  //   for (const row of data) {
-  //     rowData.push(row.original)
-  //   }
-
-  //   setTimeout(() => {
-  //     setUpdateDatas(rowData)
-  //     console.log('updateDatas')
-  //     console.log(updateDatas)
-  //   }, 100)
-
-  //   // console.log('rowData')
-  //   // console.log(rowData)
-
-  //   console.log('---------------')
-  // }
-
   const userDrawerOpenHandle = (mode: any) => {
     // sg here
     initialData = {
@@ -296,36 +268,31 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
     setAddUserOpen(true)
   }
 
-  // const usersDrawerOpenHandle = (mode: any) => {
-  //   // sg here
-  //   initialData = {
-  //     firstname: '',
-  //     lastname: '',
-  //     fullName: '',
-  //     email: '',
-  //     avatar: '',
-  //     avatarcolor: '',
-  //     password: '',
-  //     dep: ['null'],
-  //     position: '',
-  //     role: 0,
-  //     status: ''
-  //   }
-  //   setOpenMode(mode)
-  //   setAddUsersOpen(true)
-  //   setAnchorEl(null)
-  // }
+  const updateUserList = async () => {
+    console.log('updateUserList start')
+    setRowSelection({})
+    console.log('rowSelection')
+    console.log(rowSelection)
 
-  // const handleOpenEditUsers = (mode: any) => {
-  //   setOpenMode(mode)
-  //   setAddUsersOpen(true)
-  //   setAnchorEl(null)
-  //   console.log(updateDatas)
+    try {
+      const reqBody = { token: token }
 
-  //   // getRowSelect()
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
 
-  //   //console.log(rowSelection)
-  // }
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, reqBody, { headers })
+
+      setData(response.data.data.detail)
+    } catch (err) {
+      console.log(err)
+    }
+
+    //}
+  }
 
   const handleDeleteUser = async () => {
     const reqBody: any = deleteUser
@@ -338,21 +305,32 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         console.log(response.data.data.detail)
         handleCloseConfirm()
 
-        window.location.reload()
+        //window.location.reload()
+        updateUserList()
+      } else {
+        console.error('User delete failed')
+      }
+    } catch (error: any) {
+      console.log('Delete user failed. ', error.message)
+    }
+  }
 
-        // //todo update tableData
-        // const em: any = email
-        // const newUpdate = tableData?.filter(el => el.email !== em.email)
+  const handleDeleteUsers = async () => {
+    const reqBody: any = { email: [] }
 
-        // console.log('newUpdate === ', newUpdate)
-        // setData(newUpdate)
+    if (updateDatas) {
+      for (const elem of updateDatas) {
+        reqBody.email.push(elem.email) //reqBody.push({ email: elem.email })
+      }
+    }
 
-        // tableData = data
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/deleteMany`, reqBody)
 
-        // console.log(tableData)
-
-        //todo update refresh token
-        //console.log('Update token ===', response.data.token)
+      if (response.data.message === 'success') {
+        console.log(response.data.data.detail)
+        handleCloseConfirm()
+        updateUserList()
       } else {
         console.error('User delete failed')
       }
@@ -467,6 +445,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
             <IconButton
               onClick={() => {
                 setConfirm(true)
+                setOpenMode('delete-one')
                 setDeleteUser({
                   email: row.original.email,
                   fullname: row.original.firstname + ' ' + row.original.lastname
@@ -644,8 +623,8 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
-                    setOpenMode('delete-many')
-                    setAddUserOpen(true)
+                    setConfirm(true)
+                    setOpenMode('delete-many') //setAddUserOpen(true)
                     setAnchorEl(null)
                   }}
                 >
@@ -773,33 +752,39 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText className='text-center' id='alert-dialog-description'>
-            Do you want to delete {deleteUser.fullname} ?
+            {openMode == 'delete-one' && `Do you want to delete ${deleteUser.fullname} ?`}
+            {openMode == 'delete-many' && `Do you want to delete ?`}
+            {openMode == 'delete-many' &&
+              updateDatas?.map((elem: any, index: any) => {
+                return (
+                  <Typography key={index}>
+                    {elem.firstname} {elem.lastname}
+                  </Typography>
+                )
+              })}
           </DialogContentText>
         </DialogContent>
         <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
           <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
             Cancal
           </Button>
-          <Button variant='contained' onClick={handleDeleteUser}>
-            Yes, delete it?
-          </Button>
+          {openMode == 'delete-one' && (
+            <Button variant='contained' onClick={handleDeleteUser}>
+              Yes, delete it?
+            </Button>
+          )}
+          {openMode == 'delete-many' && (
+            <Button variant='contained' onClick={handleDeleteUsers}>
+              Yes, delete it?
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
-      {/* <UsersDrawerForm
-        open={addUsersOpen}
-        setData={setData}
-        tableData={tableData}
-        updateData={initialData}
-        roleData={roleData}
-        depData={depData}
-        rowData={updateDatas}
-        mode={openMode}
-        handleClose={() => setAddUsersOpen(!addUsersOpen)}
-      /> */}
 
       <UserDrawerForm
         open={addUserOpen}
         setData={setData}
+        setRowSelection={setRowSelection}
         tableData={tableData}
         updateData={initialData}
         roleData={roleData}

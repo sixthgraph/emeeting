@@ -37,6 +37,7 @@ type Props = {
   open: boolean
   updateData: UserFormDataType
   setData: any
+  setRowSelection: any
   tableData?: UsersType[]
   roleData?: RoleType[]
   depData?: DepType[]
@@ -71,6 +72,7 @@ const initialInsertData = {
 const UserDrawerForm = ({
   open,
   setData,
+  setRowSelection,
   updateData,
   tableData,
   roleData,
@@ -100,11 +102,6 @@ const UserDrawerForm = ({
   const [insertData, setInsertData] = useState(initialInsertData)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  // useEffect(() => {
-  //   setFormData(updateData)
-  //   setUserDepData(updateData.dep)
-  // }, [open, updateData])
-
   useEffect(() => {
     setFormData(updateData)
     setUserDepData(updateData.dep)
@@ -117,7 +114,7 @@ const UserDrawerForm = ({
   }, [count])
 
   const { data: session } = useSession()
-  const token = session?.user.token
+  const token: any = session?.user.token
 
   const getPositionDep = async (event: any) => {
     const dep = event.target.value
@@ -162,9 +159,6 @@ const UserDrawerForm = ({
 
   const getSelectPostion = (event: any) => {
     const position = event.target.value
-
-    // const positionname = event.explicitOriginalTarget.innerText
-
     const curPosition = selPosition.find(elem => elem.positioncode == position)
     const positionname = curPosition?.positiondesc
 
@@ -215,6 +209,30 @@ const UserDrawerForm = ({
     handleCloseAddDep()
   }
 
+  const updateUserList = async () => {
+    console.log('updateUserList start')
+
+    try {
+      const reqBody = { token: token }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, reqBody, { headers })
+
+      setData(response.data.data.detail)
+      setRowSelection({})
+    } catch (err) {
+      console.log(err)
+    }
+
+    //}
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -260,7 +278,11 @@ const UserDrawerForm = ({
           tableData.push(updateData)
         }
 
-        setData(tableData)
+        //sg call updateUserList and update tableData
+        updateUserList()
+
+        // setData(tableData)
+
         handleClose()
       } else {
         console.log('register failed.')
@@ -287,12 +309,6 @@ const UserDrawerForm = ({
     })
   }
 
-  const handleRefresh = () => {
-    setTimeout(() => {
-      window.location.reload()
-    }, 100)
-  }
-
   const handleInsertMany = async () => {
     const insertObj = []
     const userDataStr = insertData.userData
@@ -309,9 +325,6 @@ const UserDrawerForm = ({
         const userInfo = n[i]
 
         const userObj = userInfo.split('\t')
-
-        console.log('userObj ---')
-        console.log(userObj)
 
         const newData = {
           firstname: userObj[0],
@@ -331,36 +344,12 @@ const UserDrawerForm = ({
       } //if
     } //for
 
-    // console.log('insertObj')
-    // console.log(insertObj)
-
-    // return
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/addMany`, insertObj)
 
-      console.log('add users response===', response.data)
-
       if (response.data.success) {
-        console.log('add users success')
-
-        // if (tableData) {
-        //   const addData: any = {
-        //     depname: formData.depname,
-        //     statecode: formData.statecode,
-        //     docuname: formData.docuname,
-        //     path: formData.path,
-        //     sort: formData.sort
-        //   }
-
-        //   console.log(addData)
-
-        //   tableData.push(addData)
-        // }
-
-        // setData(tableData)
+        updateUserList()
         handleClose()
-        handleRefresh()
       } else {
         console.log('add users failed.')
       }
@@ -370,8 +359,6 @@ const UserDrawerForm = ({
   }
 
   const handleUpdateManyData = async () => {
-    console.log('handleUpdateData start')
-
     const reqUpdateData: any = {
       email: [],
       dep: [
@@ -396,11 +383,6 @@ const UserDrawerForm = ({
     reqUpdateData.status = insertData.status
     reqUpdateData.dep = userDepData
 
-    console.log('reqUpdateData')
-    console.log(reqUpdateData)
-
-    //return
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/updateMany`, reqUpdateData)
 
@@ -409,7 +391,7 @@ const UserDrawerForm = ({
       if (response.data.success) {
         console.log('add users success')
         handleClose()
-        handleRefresh()
+        updateUserList()
       } else {
         console.log('update users failed.')
       }
@@ -425,20 +407,7 @@ const UserDrawerForm = ({
       if (response.data.message === 'success') {
         console.log('Update user success.')
         handleClose()
-        window.location.reload()
-
-        // const index = tableData?.findIndex(x => x.email == formData.email)
-
-        // if (tableData) {
-        //   tableData[Number(index)].firstname = formData.firstname
-        //   tableData[Number(index)].lastname = formData.lastname
-        //   tableData[Number(index)].dep = formData.dep
-        //   tableData[Number(index)].position = formData.position
-        //   tableData[Number(index)].role = String(formData.role)
-        //   tableData[Number(index)].status = formData.status
-        // }
-
-        // setData(tableData)
+        updateUserList()
       }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
