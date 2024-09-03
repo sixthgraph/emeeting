@@ -70,6 +70,7 @@ import CustomTextField from '@core/components/mui/TextField'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -151,6 +152,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   const [openMode, setOpenMode] = useState<any>('') // insert-one || update-one || insert-many || update-many
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [selectRowCount, setSelectRowCount] = useState<any>(0)
+  const [updateDatas, setUpdateDatas] = useState<any[]>()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -179,7 +181,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
 
     setSelectRowCount(data.length)
 
-    //setUpdateDatas(rowData)
+    setUpdateDatas(rowData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelection])
 
@@ -199,6 +201,9 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   //     }
   //   }
   // })
+
+  const { data: session } = useSession()
+  const token = session?.user.token
 
   stateinfoData?.map(stateinfo => {
     const id = String(stateinfo.statecode)
@@ -231,6 +236,58 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
     setAnchorEl(null)
   }
 
+  const updateDepartmentList = async () => {
+    console.log('updateDepartmentList start')
+    setRowSelection({})
+    console.log('rowSelection')
+    console.log(rowSelection)
+
+    try {
+      const reqBody = { token: session?.user.token }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/list`, reqBody, { headers })
+      console.log('response.data')
+      console.log(response.data)
+      setData(response.data.data.detail)
+
+      // if (response.data.message === 'success') {
+      //   return response.data
+      // } else {
+      //   return 'Department not found'
+      // }
+    } catch (err) {
+      console.log(err)
+    }
+
+    return
+
+    try {
+      const reqBody = { token: token }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, reqBody, { headers })
+
+      setData(response.data.data.detail)
+    } catch (err) {
+      console.log(err)
+    }
+
+    //}
+  }
+
   const handleDeleteDepartment = async () => {
     const reqBody: any = deleteDep
     const dep: object = { Dep: reqBody.Dep }
@@ -242,20 +299,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
         if (response.data.message === 'success') {
           console.log(response.data.data.detail)
           handleCloseConfirm()
-
-          //todo update tableData
-          const em: any = dep
-          const newUpdate = tableData?.filter(el => el.dep !== em.dep)
-
-          console.log('newUpdate === ', newUpdate)
-          setData(newUpdate)
-          tableData = data
-          console.log(tableData)
-
-          //todo update refresh token
-          console.log('Update token ===', response.data.token)
-
-          handleRefresh()
+          updateDepartmentList()
         } else {
           console.error('Department delete failed')
         }
@@ -264,6 +308,24 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       }
     } catch (error: any) {
       console.log('Delete Department failed. ', error.message)
+    }
+  }
+
+  const handleDeleteDepartments = async () => {
+    const reqBody: any = updateDatas
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/deleteMany`, reqBody)
+
+      if (response.data.message === 'success') {
+        //console.log(response.data.data.detail)
+        updateDepartmentList()
+        handleCloseConfirm()
+      } else {
+        console.error('Delete department failed.')
+      }
+    } catch (error: any) {
+      console.log('Delete department failed. ', error.message)
     }
   }
 
@@ -346,6 +408,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
             <IconButton
               onClick={() => {
                 setConfirm(true)
+                setOpenMode('delete-one')
                 setDeleteDep({ Dep: row.original.dep, path: row.original.path, depname: row.original.depname })
               }}
             >
@@ -494,7 +557,12 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
                   </ListItemIcon>
                   <ListItemText primary='Edit Selected' />
                 </MenuItem>
-                <MenuItem onClick={() => DepartmentDrawerOpenHandle('delete-many')}>
+                <MenuItem
+                  onClick={() => {
+                    setOpenMode('delete-many')
+                    setConfirm(true)
+                  }}
+                >
                   <ListItemIcon>
                     <i className='tabler-trash text-xl' />
                   </ListItemIcon>
@@ -632,17 +700,35 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
           Are you sure?
         </DialogTitle>
         <DialogContent>
-          <DialogContentText className='text-center' id='alert-dialog-description'>
-            Do you want to delete {deleteDep.depname} ?
-          </DialogContentText>
+          {openMode == 'delete-one' && (
+            <DialogContentText className='text-center' id='alert-dialog-description'>
+              Do you want to delete {deleteDep.depname} ?
+            </DialogContentText>
+          )}
+          {openMode == 'delete-many' && (
+            <DialogContentText className='text-center' id='alert-dialog-description'>
+              Do you want to delete many ?
+              {openMode == 'delete-many' &&
+                updateDatas?.map((elem: any, index: any) => {
+                  return <Typography key={index}>{elem.depname}</Typography>
+                })}
+            </DialogContentText>
+          )}
         </DialogContent>
         <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
           <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
             Cancal
           </Button>
-          <Button variant='contained' onClick={handleDeleteDepartment}>
-            Yes, delete it?
-          </Button>
+          {openMode == 'delete-one' && (
+            <Button variant='contained' onClick={handleDeleteDepartment}>
+              Yes, delete it?
+            </Button>
+          )}
+          {openMode == 'delete-many' && (
+            <Button variant='contained' onClick={handleDeleteDepartments}>
+              Yes, delete it?
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
 
