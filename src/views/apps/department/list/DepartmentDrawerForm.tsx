@@ -20,6 +20,7 @@ import CustomTextField from '@core/components/mui/TextField'
 import type { DepartmentFormDataType, DepartmentsType, StateinfoType } from '@/types/apps/departmentTypes'
 
 import { addDepartmentFormSchema } from '@/schemas/departmentSchema' //NP????
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 
 type Props = {
   open: boolean
@@ -27,8 +28,10 @@ type Props = {
   setData: any
   tableData?: DepartmentsType[]
   stateinfoData?: StateinfoType[]
+  rowData?: any
   handleClose: () => void
   mode?: any
+  updateDepartmentList: any
 }
 
 // Vars
@@ -54,7 +57,17 @@ const initialInsertData = {
   depname: ''
 }
 
-const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoData, handleClose, mode }: Props) => {
+const DepartmentDrawerForm = ({
+  open,
+  setData,
+  updateData,
+  tableData,
+  stateinfoData,
+  rowData,
+  handleClose,
+  mode,
+  updateDepartmentList
+}: Props) => {
   // States
   const [formData, setFormData] = useState<DepartmentFormDataType>(initialData)
   const [errors, setErrors] = useState<any[]>([])
@@ -232,33 +245,29 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
   const handleUpdateManyData = async () => {
     console.log('under construction...')
 
-    return
+    const reqBody: any = {
+      dep: [],
+      path: formData.path
+    }
 
-    // try {
-    //   console.log('dep=>' + formData.dep)
-    //   formData.update_by = String(emailData)
+    for (let elem of rowData) {
+      reqBody.dep.push(elem.dep)
+    }
 
-    //   const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/update`, formData)
+    console.log('reqBody')
+    console.log(reqBody)
 
-    //   if (response.data.message === 'success') {
-    //     console.log('Update department success.')
-    //     handleClose()
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/updateMany`, reqBody)
 
-    //     const index = tableData?.findIndex(x => x.dep == formData.dep)
-
-    //     if (tableData) {
-    //       tableData[Number(index)].depname = formData.depname
-    //       tableData[Number(index)].statecode = formData.statecode
-    //       tableData[Number(index)].docuname = formData.docuname
-    //       tableData[Number(index)].path = formData.path
-    //       tableData[Number(index)].sort = formData.sort
-    //     }
-
-    //     setData(tableData)
-    //   }
-    // } catch (error: any) {
-    //   console.log('Update department failed. ', error.message)
-    // }
+      if (response.data.message === 'success') {
+        console.log('Update department success.')
+        handleClose()
+        updateDepartmentList()
+      }
+    } catch (error: any) {
+      console.log('Update department failed. ', error.message)
+    }
   }
 
   useEffect(() => {
@@ -429,7 +438,64 @@ const DepartmentDrawerForm = ({ open, setData, updateData, tableData, stateinfoD
             </>
           )}
 
-          {mode == 'update-many' && <Typography>Update many under construction...</Typography>}
+          {mode == 'update-many' && (
+            <>
+              <div className='flex flex-col'>
+                <label className=' text-xs flex-1 '>Department list</label>
+                <List>
+                  {rowData?.map((row: any, index: any) => {
+                    return (
+                      <div key={index}>
+                        <ListItem disablePadding>
+                          <ListItemButton>
+                            <ListItemText primary={`${row.depname}`} />
+                            {/* <ListItemText primary={`${row.depname}`} secondary={row.email} /> */}
+                          </ListItemButton>
+                        </ListItem>
+                        <Divider className='m-0' />
+                      </div>
+                    )
+                  })}
+                </List>
+              </div>
+
+              {/* Edit Department */}
+              <CustomTextField
+                select
+                fullWidth
+                id='select-department'
+                value={formData.parent}
+                onChange={e =>
+                  setFormData({
+                    ...formData,
+                    parent: e.target.value,
+                    path: getParentPath(e.target.value).path + e.target.value + ','
+                  })
+                }
+                label='Select Parent'
+              >
+                <MenuItem value=''>Select Parent</MenuItem>
+                {tableData?.map((parentData: any) => {
+                  return (
+                    <MenuItem key={parentData.dep} value={parentData.dep}>
+                      {parentData.depname}
+                    </MenuItem>
+                  )
+                })}
+              </CustomTextField>
+              {errors.find(error => error.for === 'parent')?.message}
+
+              <CustomTextField
+                label='Path'
+                fullWidth
+                disabled
+                placeholder=''
+                value={formData.path}
+                onChange={e => setFormData({ ...formData, path: e.target.value })}
+              />
+              {errors.find(error => error.for === 'path')?.message}
+            </>
+          )}
           {mode == 'delete-many' && <Typography>Delete many under construction...</Typography>}
 
           <div className='flex items-center gap-4'>

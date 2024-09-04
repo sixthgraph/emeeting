@@ -74,6 +74,7 @@ import CustomTextField from '@core/components/mui/TextField'
 
 // // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -164,9 +165,9 @@ const PositionListTable = ({ tableData }: Props) => {
   const [openMode, setOpenMode] = useState<any>('') // insert-one || update-one || insert-many || update-many
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [selectRowCount, setSelectRowCount] = useState<any>(0)
+  const [updateDatas, setUpdateDatas] = useState<any[]>()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
-
   const [globalFilter, setGlobalFilter] = useState('')
 
   //Alert
@@ -178,6 +179,9 @@ const PositionListTable = ({ tableData }: Props) => {
   const handleOptMenuClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
+
+  const { data: session } = useSession()
+  const token = session?.user.token
 
   const handleOptMenuClose = () => {
     setAnchorEl(null)
@@ -193,16 +197,9 @@ const PositionListTable = ({ tableData }: Props) => {
 
     setSelectRowCount(data.length)
 
-    //setUpdateDatas(rowData)
+    setUpdateDatas(rowData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelection])
-
-  // const [updateData, setUpdateData] = useState(...[initialData])
-
-  console.log('table data =', data)
-
-  // Hooks
-  //const { lang: locale } = useParams()
 
   const PositionDrawerOpenHandle = (mode: any) => {
     initialData = {
@@ -223,6 +220,26 @@ const PositionListTable = ({ tableData }: Props) => {
     setAnchorEl(null)
   }
 
+  const updatePositionList = async () => {
+    try {
+      const reqBody = { token: session?.user.token }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/list`, reqBody, { headers })
+      setData(response.data.data.detail)
+    } catch (err) {
+      console.log(err)
+    }
+
+    //}
+  }
+
   const handleDeletePosition = async () => {
     const reqBody: any = deletePos
     const positioncode: object = { positioncode: reqBody.positioncode }
@@ -234,24 +251,27 @@ const PositionListTable = ({ tableData }: Props) => {
         console.log('=====positioninfo')
         console.log(response.data)
         handleCloseConfirm()
-
-        // //todo update tableData
-        const em: any = positioncode
-
-        const newUpdate = tableData?.filter(el => el.positioncode !== em.positioncode)
-
-        console.log('newUpdate === ', newUpdate)
-        setData(newUpdate)
-
-        tableData = data
-
-        console.log(tableData)
-
-        //todo update refresh token
-        console.log('Update token ===', response.data.token)
-        handleRefresh()
+        updatePositionList()
       } else {
         console.error('Position delete failed')
+      }
+    } catch (error: any) {
+      console.log('Delete Position failed. ', error.message)
+    }
+  }
+
+  const handleDeletePositions = async () => {
+    const reqBody: any = updateDatas
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/deleteMany`, reqBody)
+
+      if (response.data.message === 'success') {
+        handleCloseConfirm()
+        updatePositionList()
+        setRowSelection({})
+      } else {
+        console.error('Delete Position failed.')
       }
     } catch (error: any) {
       console.log('Delete Position failed. ', error.message)
@@ -351,6 +371,7 @@ const PositionListTable = ({ tableData }: Props) => {
             <IconButton
               onClick={() => {
                 setConfirm(true)
+                setOpenMode('delete-one')
                 setDeletePos({ positioncode: row.original.positioncode, desc: row.original.desc })
               }}
             >
@@ -483,13 +504,19 @@ const PositionListTable = ({ tableData }: Props) => {
                   </ListItemIcon>
                   <ListItemText primary='Add Multiple' />
                 </MenuItem>
-                <MenuItem onClick={() => PositionDrawerOpenHandle('update-many')}>
+                {/* <MenuItem onClick={() => PositionDrawerOpenHandle('update-many')}>
                   <ListItemIcon>
                     <i className='tabler-pencil text-xl' />
                   </ListItemIcon>
                   <ListItemText primary='Edit Selected' />
-                </MenuItem>
-                <MenuItem onClick={() => PositionDrawerOpenHandle('delete-many')}>
+                </MenuItem> */}
+                <MenuItem
+                  onClick={() => {
+                    setConfirm(true)
+                    setOpenMode('delete-many') //setAddUserOpen(true)
+                    setAnchorEl(null)
+                  }}
+                >
                   <ListItemIcon>
                     <i className='tabler-trash text-xl' />
                   </ListItemIcon>
@@ -519,12 +546,12 @@ const PositionListTable = ({ tableData }: Props) => {
                   </ListItemIcon>
                   <ListItemText primary='Add Multiple' />
                 </MenuItem>
-                <MenuItem disabled>
+                {/* <MenuItem disabled>
                   <ListItemIcon>
                     <i className='tabler-pencil text-xl' />
                   </ListItemIcon>
                   <ListItemText primary='Edit Selected' />
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem disabled>
                   <ListItemIcon>
                     <i className='tabler-trash text-xl' />
@@ -614,16 +641,28 @@ const PositionListTable = ({ tableData }: Props) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText className='text-center' id='alert-dialog-description'>
-            Do you want to delete {deletePos.desc} ?
+            Do you want to delete
+            {openMode == 'delete-one' && ` ${deletePos.desc} `}
+            {openMode == 'delete-many' &&
+              updateDatas?.map((elem: any, index: any) => {
+                return <div key={index}>{elem.desc}</div>
+              })}
           </DialogContentText>
         </DialogContent>
         <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
           <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
             Cancal
           </Button>
-          <Button variant='contained' onClick={handleDeletePosition}>
-            Yes, delete it?
-          </Button>
+          {openMode == 'delete-one' && (
+            <Button variant='contained' onClick={handleDeletePosition}>
+              Yes, delete it?
+            </Button>
+          )}
+          {openMode == 'delete-many' && (
+            <Button variant='contained' onClick={handleDeletePositions}>
+              Yes, delete it?
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
 
@@ -634,6 +673,7 @@ const PositionListTable = ({ tableData }: Props) => {
         updateData={initialData}
         mode={openMode}
         handleClose={() => setAddPositionOpen(!addPositionOpen)}
+        updatePositionList={updatePositionList}
       />
     </>
   )

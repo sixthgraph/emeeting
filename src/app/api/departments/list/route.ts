@@ -12,8 +12,7 @@ export async function POST(req: NextRequest) {
     const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getdepartmentlist`, { headers })
     const stateinfores = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getstateinfo`, { headers })
 
-    console.log('response.data.data')
-    console.log(response.data.data)
+    response.data.data.detail.shift() // remove first object ('Excelink App)
 
     if (stateinfores.data.message === 'success') {
       response.data.data.stateinfos = stateinfores.data.data.detail

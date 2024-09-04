@@ -33,6 +33,7 @@ type Props = {
   tableData?: PositionsType[]
   mode?: any
   handleClose: () => void
+  updatePositionList: any
 }
 
 // Vars
@@ -54,7 +55,7 @@ const initialInsertData = {
   desc: '' // position name
 }
 
-const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handleClose }: Props) => {
+const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handleClose, updatePositionList }: Props) => {
   // States
   const [formData, setFormData] = useState(initialData)
   const [insertData, setInsertData] = useState(initialInsertData)
@@ -77,15 +78,6 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
     })
 
     return maxValue
-  }
-
-  const handleRefresh = () => {
-    setTimeout(() => {
-      window.location.reload()
-      console.log('handle refresh')
-
-      // router.reload()
-    }, 100)
   }
 
   const handleInsertMany = async () => {
@@ -139,32 +131,8 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
 
       if (response.data.success) {
         console.log('Add success')
-
-        // if (tableData) {
-        //   const addData: any = {
-        //     positioncode: formData.positioncode,
-        //     desc: formData.desc,
-        //     level: formData.level,
-        //     ref: formData.ref,
-        //     status: formData.status,
-        //     remark: formData.remark,
-        //     create_date: '',
-        //     create_by: emailData,
-        //     update_date: '',
-        //     update_by: emailData
-        //   }
-
-        //   console.log(addData)
-
-        //   //tableData.push(addData)
-        //   tableData.push(addData)
-        // }
-
-        // console.log(tableData)
-
-        // setData(tableData)
+        updatePositionList()
         handleClose()
-        handleRefresh()
       } else {
         console.log('add failed.')
       }
@@ -206,32 +174,8 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
 
       if (response.data.success) {
         console.log('Add success')
-
-        if (tableData) {
-          const addData: any = {
-            positioncode: formData.positioncode,
-            desc: formData.desc,
-            level: formData.level,
-            ref: formData.ref,
-            status: formData.status,
-            remark: formData.remark,
-            create_date: '',
-            create_by: emailData,
-            update_date: '',
-            update_by: emailData
-          }
-
-          console.log(addData)
-
-          //tableData.push(addData)
-          tableData.push(addData)
-        }
-
-        console.log(tableData)
-
-        setData(tableData)
+        updatePositionList()
         handleClose()
-        handleRefresh()
       } else {
         console.log('add failed.')
       }

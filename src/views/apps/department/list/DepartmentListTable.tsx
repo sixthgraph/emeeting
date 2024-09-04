@@ -424,7 +424,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
                 initialData.parent = row.original.parent
                 initialData.path = row.original.path
                 initialData.sort = row.original.sort
-                setAddDepartmentOpen(!addDepartmentOpen)
+                setAddDepartmentOpen(true)
                 setOpenMode('update-one')
               }}
             >
@@ -560,7 +560,8 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
                 <MenuItem
                   onClick={() => {
                     setOpenMode('delete-many')
-                    setConfirm(true)
+                    setConfirm(true) // sg here
+                    setAnchorEl(null)
                   }}
                 >
                   <ListItemIcon>
@@ -738,8 +739,10 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
         tableData={tableData}
         updateData={initialData}
         stateinfoData={stateinfoData}
+        rowData={updateDatas}
         handleClose={() => setAddDepartmentOpen(!addDepartmentOpen)}
         mode={openMode}
+        updateDepartmentList={updateDepartmentList}
       />
     </>
   )
