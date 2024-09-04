@@ -37,6 +37,7 @@ type Props = {
   tableData?: StateinfosType[]
   handleClose: () => void
   updateStateInfoList: any
+  curMaxState: any
 }
 
 //type FormData = Input<typeof StateinfoFormSchema>
@@ -57,7 +58,15 @@ const initialData = {
   update_by: ''
 }
 
-const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose, updateStateInfoList }: Props) => {
+const StateinfoDrawerForm = ({
+  open,
+  setData,
+  updateData,
+  tableData,
+  handleClose,
+  updateStateInfoList,
+  curMaxState
+}: Props) => {
   // States
   const [formData, setFormData] = useState(initialData)
   const { data: session } = useSession()
@@ -177,23 +186,6 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
       formData.create_by = String(emailData)
       formData.update_by = String(emailData)
 
-      //====const parsedData = StateinfoFormSchema.safeParse(formData)
-
-      // if (!parsedData.success) {
-      //   const errArr: any[] = []
-      //   const { errors: err } = parsedData.error
-
-      //   //sg here
-      //   for (let i = 0; i < err.length; i++) {
-      //     errArr.push({ for: err[i].path[0], message: err[i].message })
-      //     setErrors(errArr)
-      //   }
-
-      //   setErrors(errArr)
-
-      //   throw err
-      // }
-
       // console.log('Form submitted successfully', parsedData.data)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, formData)
 
@@ -230,24 +222,8 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
 
       if (response.data.message === 'success') {
         console.log('Update stateinfo success.')
+        updateStateInfoList()
         handleClose()
-
-        const index = tableData?.findIndex(x => x.statecode == formData.statecode)
-
-        console.log('index=>' + index)
-
-        if (tableData) {
-          //const newUpdate = { ...tableData[Number(foundIndex)], formData }
-          // tableData[Number(index)].password = formData.password
-          //tableData[Number(index)]
-
-          tableData[Number(index)].statecode = formData.statecode
-          tableData[Number(index)].desc = formData.desc
-          tableData[Number(index)].ref = formData.ref
-          tableData[Number(index)].remark = formData.remark
-        }
-
-        setData(tableData)
       }
     } catch (error: any) {
       console.log('Update stateinfo failed. ', error.message)
@@ -307,20 +283,31 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
           <CustomTextField
             label='Statecode'
+            disabled
             fullWidth
             placeholder=''
             value={formData.statecode}
             onChange={e => setFormData({ ...formData, statecode: e.target.value })}
           />
-          {/* {errors.find(error => error.for === 'statecode')?.message} */}
-          <CustomTextField
-            label='Desc'
-            fullWidth
-            placeholder=''
-            value={formData.desc}
-            onChange={e => setFormData({ ...formData, desc: e.target.value })}
-          />
-          {/* {errors.find(error => error.for === 'desc')?.message} */}
+          {updateData.statecode !== '' ? (
+            <CustomTextField
+              label='Desc'
+              disabled
+              fullWidth
+              placeholder=''
+              value={formData.desc}
+              onChange={e => setFormData({ ...formData, desc: e.target.value })}
+            />
+          ) : (
+            <CustomTextField
+              label='Desc'
+              fullWidth
+              placeholder=''
+              value={formData.desc}
+              onChange={e => setFormData({ ...formData, desc: e.target.value, statecode: curMaxState })}
+            />
+          )}
+
           <CustomTextField
             label='Ref'
             fullWidth

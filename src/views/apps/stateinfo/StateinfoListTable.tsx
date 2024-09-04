@@ -129,11 +129,14 @@ const StateinfoListTable = ({ tableData }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [curMaxState, setCurMaxState] = useState()
 
   const { data: session } = useSession()
   const token = session?.user.token
 
-  // const [updateData, setUpdateData] = useState(...[initialData])
+  useEffect(() => {
+    getMaxStateCode()
+  }, [data])
 
   console.log('tabledata =', tableData)
   //console.log('data =', data)
@@ -177,6 +180,32 @@ const StateinfoListTable = ({ tableData }: Props) => {
     }
   }
 
+  const getMaxStateCode = async () => {
+    let newTableData: any = []
+
+    newTableData = data
+
+    let maxValue = 0
+    const values = Object.values(newTableData)
+
+    values.map((el: any) => {
+      const valueFromObject = Number(el.statecode)
+
+      maxValue = Math.max(maxValue, valueFromObject)
+    })
+
+    let maxState: any = maxValue
+    let maxStateStr: any = ''
+    maxState++
+    if (maxState < 99) maxStateStr = '0' + String(maxState)
+    setCurMaxState(maxStateStr)
+
+    console.log('maxStateStr')
+    console.log(curMaxState)
+
+    return maxState
+  }
+
   const handleDeleteStateinfo = async (statecode: object) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/delete`, statecode)
@@ -184,25 +213,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
       if (response.data.message === 'success') {
         console.log('=====stateinfo')
         console.log(response.data)
-
-        //todo update tableData
-        const em: any = statecode
-
-        console.log('==== look statecode')
-        console.log(statecode)
-
-        const newUpdate = tableData?.filter(el => el.statecode !== em.statecode)
-
-        console.log('newUpdate === ', newUpdate)
-        setData(newUpdate)
-
-        tableData = data
-
-        console.log(tableData)
-
-        //todo update refresh token
-        console.log('Update token ===', response.data.token)
-        handleRefresh()
+        updateStateInfoList()
       } else {
         console.error('Stateinfo delete failed')
       }
@@ -454,6 +465,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
         updateData={initialData}
         handleClose={() => setAddStateinfoOpen(!addStateinfoOpen)}
         updateStateInfoList={updateStateInfoList}
+        curMaxState={curMaxState}
       />
     </>
   )
