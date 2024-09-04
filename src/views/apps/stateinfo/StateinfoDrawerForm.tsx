@@ -36,6 +36,7 @@ type Props = {
   setData: any
   tableData?: StateinfosType[]
   handleClose: () => void
+  updateStateInfoList: any
 }
 
 //type FormData = Input<typeof StateinfoFormSchema>
@@ -56,25 +57,11 @@ const initialData = {
   update_by: ''
 }
 
-const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose }: Props) => {
+const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose, updateStateInfoList }: Props) => {
   // States
   const [formData, setFormData] = useState(initialData)
-
-  // const [errors, setErrors] = useState<any[]>([])
-
-  // setErrors([])
-
-  //const [errorState, setErrorState] = useState<ErrorType | null>(null)
-
   const { data: session } = useSession()
   const emailData = session?.user.email
-
-  const handleRefresh = () => {
-    //router.reload()
-    setTimeout(() => {
-      window.location.reload()
-    }, 100)
-  }
 
   // const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
   //   try {
@@ -214,32 +201,8 @@ const StateinfoDrawerForm = ({ open, setData, updateData, tableData, handleClose
 
       if (response.data.success) {
         console.log('Add success')
-
-        if (tableData) {
-          const addData: any = {
-            statecode: formData.statecode,
-            desc: formData.desc,
-            ref: formData.ref,
-            remark: formData.remark,
-            create_date: '',
-            create_by: emailData,
-            update_date: '',
-            update_by: emailData
-          }
-
-          console.log('add ====' + emailData)
-
-          console.log(addData)
-
-          //tableData.push(addData)
-          tableData.push(addData)
-        }
-
-        console.log(tableData)
-
-        setData(tableData)
+        updateStateInfoList()
         handleClose()
-        handleRefresh()
       } else {
         console.log('add failed.')
       }

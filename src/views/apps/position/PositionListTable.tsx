@@ -169,6 +169,7 @@ const PositionListTable = ({ tableData }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [curMaxPos, setCurMaxPos] = useState()
 
   //Alert
   const [confirm, setConfirm] = useState<boolean>(false)
@@ -188,6 +189,10 @@ const PositionListTable = ({ tableData }: Props) => {
   }
 
   useEffect(() => {
+    getMaxPosCode()
+  }, [data])
+
+  useEffect(() => {
     const rowData: any[] = []
     const data = table.getSelectedRowModel().rows //sg here
 
@@ -200,6 +205,32 @@ const PositionListTable = ({ tableData }: Props) => {
     setUpdateDatas(rowData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelection])
+
+  const getMaxPosCode = async () => {
+    let newTableData: any = []
+
+    newTableData = data
+    console.log('getMaxPositionCode start')
+
+    let maxValue = 0
+    const values = Object.values(newTableData)
+
+    values.map((el: any) => {
+      const valueFromObject = Number(el.positioncode)
+
+      maxValue = Math.max(maxValue, valueFromObject)
+    })
+    console.log('maxValue')
+    console.log(maxValue)
+
+    let maxPosition: any = maxValue
+    let maxPositionStr: any = ''
+    maxPosition++
+    if (maxPosition < 99) maxPositionStr = '0' + String(maxPosition)
+    setCurMaxPos(maxPositionStr)
+
+    return maxPosition
+  }
 
   const PositionDrawerOpenHandle = (mode: any) => {
     initialData = {
@@ -233,6 +264,7 @@ const PositionListTable = ({ tableData }: Props) => {
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/list`, reqBody, { headers })
       setData(response.data.data.detail)
+      return response.data.data.detail
     } catch (err) {
       console.log(err)
     }
@@ -453,7 +485,7 @@ const PositionListTable = ({ tableData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search Group'
+              placeholder='Search Position Name'
               className='is-full sm:is-auto'
             />
             {/* <Button
@@ -674,6 +706,7 @@ const PositionListTable = ({ tableData }: Props) => {
         mode={openMode}
         handleClose={() => setAddPositionOpen(!addPositionOpen)}
         updatePositionList={updatePositionList}
+        curMaxPos={curMaxPos}
       />
     </>
   )

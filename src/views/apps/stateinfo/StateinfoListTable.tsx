@@ -1,14 +1,7 @@
 'use client'
 
-// // React Imports
+// React Imports
 import { useEffect, useState, useMemo } from 'react'
-
-// // Next Imports
-// // import Link from 'next/link'
-// // import { useParams } from 'next/navigation'
-
-// // MUI Imports
-// // import { NextResponse } from 'next/server'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -42,27 +35,17 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// // Type Imports
 import axios from 'axios'
-
-// import type { Locale } from '@configs/i18n'
-
-//import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
 import type { StateinfosType, StateinfosTypeWithAction } from '@/types/apps/stateinfoTypes'
 
-// // Component Imports
 //import TableFilters from './TableFilters'
 import StateinfoDrawerForm from './StateinfoDrawerForm'
-
 import CustomTextField from '@core/components/mui/TextField'
-
-// import { getLocalizedUrl } from '@/utils/i18n'
-
-// // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
+import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -85,12 +68,10 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
 
-  //   // Store the itemRank info
   addMeta({
     itemRank
   })
 
-  //   // Return if the item should be filtered in/out
   return itemRank.passed
 }
 
@@ -123,7 +104,6 @@ const DebouncedInput = ({
   return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
 }
 
-// // Vars
 let initialData = {
   statecode: '',
   desc: '',
@@ -150,10 +130,13 @@ const StateinfoListTable = ({ tableData }: Props) => {
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
 
+  const { data: session } = useSession()
+  const token = session?.user.token
+
   // const [updateData, setUpdateData] = useState(...[initialData])
 
   console.log('tabledata =', tableData)
-  console.log('data =', data)
+  //console.log('data =', data)
 
   const stateinfoDrawerOpenHandle = () => {
     initialData = {
@@ -167,6 +150,31 @@ const StateinfoListTable = ({ tableData }: Props) => {
       update_by: ''
     }
     setAddStateinfoOpen(true)
+  }
+
+  const updateStateInfoList = async () => {
+    try {
+      const reqBody = { token: session?.user.token }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/list`, reqBody, { headers })
+
+      setData(response.data.data.detail)
+
+      // if (response.data.message === 'success') {
+      //   return response.data
+      // } else {
+      //   return 'Stateinfo not found'
+      // }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleDeleteStateinfo = async (statecode: object) => {
@@ -206,28 +214,28 @@ const StateinfoListTable = ({ tableData }: Props) => {
   // Table Columns config
   const columns = useMemo<ColumnDef<StateinfosTypeWithAction, any>[]>(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
+      //   )
+      // },
       columnHelper.accessor('statecode', {
         header: 'Statecode',
         cell: ({ row }) => (
@@ -335,7 +343,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Filters' className='pbe-4' />
+        <CardHeader title='State Info' className='pbe-4' />
         {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
@@ -352,17 +360,17 @@ const StateinfoListTable = ({ tableData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search Group'
+              placeholder='Search StateInfo'
               className='is-full sm:is-auto'
             />
-            <Button
+            {/* <Button
               color='secondary'
               variant='tonal'
               startIcon={<i className='tabler-upload' />}
               className='is-full sm:is-auto'
             >
               Export
-            </Button>
+            </Button> */}
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
@@ -445,6 +453,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
         tableData={tableData}
         updateData={initialData}
         handleClose={() => setAddStateinfoOpen(!addStateinfoOpen)}
+        updateStateInfoList={updateStateInfoList}
       />
     </>
   )

@@ -3,17 +3,10 @@
 // React Imports
 import { useEffect, useState } from 'react'
 
-// MUI Imports
-//import { NextResponse } from 'next/server'
-//import { useRouter, useParams } from 'next/navigation'
-
-// import router from 'next/router'
-
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 
-//import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
@@ -34,6 +27,7 @@ type Props = {
   mode?: any
   handleClose: () => void
   updatePositionList: any
+  curMaxPos: any
 }
 
 // Vars
@@ -55,36 +49,28 @@ const initialInsertData = {
   desc: '' // position name
 }
 
-const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handleClose, updatePositionList }: Props) => {
+const PositionDrawerForm = ({
+  open,
+  setData,
+  updateData,
+  tableData,
+  mode,
+  handleClose,
+  updatePositionList,
+  curMaxPos
+}: Props) => {
   // States
   const [formData, setFormData] = useState(initialData)
   const [insertData, setInsertData] = useState(initialInsertData)
   const [errors, setErrors] = useState<any[]>([])
+  const [curPositionCode, setCurPositionCode] = useState<any>()
   const { data: session } = useSession()
   const emailData = session?.user.email
-
-  let newTableData: any = []
-
-  newTableData = tableData
-
-  const getMaxPositionCode = async () => {
-    let maxValue = 0
-    const values = Object.values(newTableData)
-
-    values.map((el: any) => {
-      const valueFromObject = Number(el.positioncode)
-
-      maxValue = Math.max(maxValue, valueFromObject)
-    })
-
-    return maxValue
-  }
 
   const handleInsertMany = async () => {
     console.log('insertData == ')
     console.log(insertData)
 
-    let maxPosition: any = await getMaxPositionCode()
     const insertObj = []
     const depnameStr = insertData.desc
     const re = /\n/gi
@@ -96,10 +82,11 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
 
     for (i in n) {
       let maxPositionStr = ''
-
-      maxPosition++
-
-      if (maxPosition < 99) maxPositionStr = '0' + String(maxPosition)
+      if (String(curMaxPos).length == 2) {
+        maxPositionStr = '0' + String(curMaxPos)
+      } else {
+        maxPositionStr = curMaxPos
+      }
 
       if (n[i] !== '') {
         const newData = {
@@ -115,9 +102,8 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
           update_by: String(emailData)
         }
 
-        //maxPosition++
-
         insertObj.push(newData)
+        curMaxPos++
       } //if
     } //for
 
@@ -143,13 +129,18 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    setFormData(initialData)
+    //setFormData(initialData)
 
     //Add
     try {
-      formData.create_by = String(emailData)
-      formData.update_by = String(emailData)
+      let newFormData: any = formData
+      newFormData.create_by = String(emailData)
+      newFormData.update_by = String(emailData)
+
+      if (newFormData.level == '') newFormData.level = 0
+
+      setFormData(newFormData)
+
       const parsedData = addPositionFormSchema.safeParse(formData)
 
       if (!parsedData.success) {
@@ -174,6 +165,7 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
 
       if (response.data.success) {
         console.log('Add success')
+        setFormData(initialData)
         updatePositionList()
         handleClose()
       } else {
@@ -203,28 +195,13 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
 
       console.log('position formdate=====')
       console.log(formData)
+      console.log('response.data update one')
       console.log(response.data)
 
       if (response.data.message === 'success') {
         console.log('Update position success.')
+        updatePositionList()
         handleClose()
-
-        const index = tableData?.findIndex(x => x.positioncode == formData.positioncode)
-
-        if (tableData) {
-          //const newUpdate = { ...tableData[Number(foundIndex)], formData }
-          // tableData[Number(index)].password = formData.password
-          //tableData[Number(index)]
-
-          tableData[Number(index)].positioncode = formData.positioncode
-          tableData[Number(index)].desc = formData.desc
-          tableData[Number(index)].level = String(formData.level)
-          tableData[Number(index)].ref = formData.ref
-          tableData[Number(index)].status = formData.status
-          tableData[Number(index)].remark = formData.remark
-        }
-
-        setData(tableData)
       }
     } catch (error: any) {
       console.log('Update Position failed. ', error.message)
@@ -233,7 +210,7 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
 
   useEffect(() => {
     setFormData(updateData)
-  }, [open, updateData])
+  }, [open])
 
   return (
     <Drawer
@@ -262,16 +239,40 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
       <Divider />
       <div>
         <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          {(mode == 'insert-one' || mode == 'update-one') && (
+          {mode == 'insert-one' && (
             <>
               <CustomTextField
                 label='Position Code'
                 fullWidth
+                disabled
                 placeholder=''
                 value={formData.positioncode}
                 onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
               />
               {errors.find(error => error.for === 'positioncode')?.message}
+
+              <CustomTextField
+                label='Position Name'
+                fullWidth
+                placeholder=''
+                value={formData.desc}
+                onChange={e => setFormData({ ...formData, desc: e.target.value, positioncode: curMaxPos })}
+              />
+              {errors.find(error => error.for === 'desc')?.message}
+            </>
+          )}
+          {mode == 'update-one' && (
+            <>
+              <CustomTextField
+                label='Position Code'
+                fullWidth
+                disabled
+                placeholder=''
+                value={formData.positioncode}
+                onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
+              />
+              {errors.find(error => error.for === 'positioncode')?.message}
+
               <CustomTextField
                 label='Position Name'
                 fullWidth
@@ -280,6 +281,10 @@ const PositionDrawerForm = ({ open, setData, updateData, tableData, mode, handle
                 onChange={e => setFormData({ ...formData, desc: e.target.value })}
               />
               {errors.find(error => error.for === 'desc')?.message}
+            </>
+          )}
+          {(mode == 'insert-one' || mode == 'update-one') && (
+            <>
               <CustomTextField
                 label='Level'
                 fullWidth

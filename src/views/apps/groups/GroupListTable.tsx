@@ -172,7 +172,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const [data, setData] = useState(...[tableData])
 
   const [globalFilter, setGlobalFilter] = useState('')
-  const [members, setMembers] = useState([])
+  const [members, setMembers] = useState<any>([])
   const [memberopen, setmemberOpen] = useState(false)
   const { data: session } = useSession()
 
@@ -184,12 +184,15 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const handleCloseConfirm = () => setConfirm(false)
 
   const handleSubmitMember = async () => {
-    console.log('SubmitMember-statr')
-    console.log(members)
-
+    console.log('SubmitMember-start')
+    const newMember: any = members
     for (const item of personName) {
-      members.push(item)
+      //members.push(item)
+      newMember.push(item)
+      console.log(newMember)
     }
+
+    setMembers(newMember)
 
     const updateFormdata: any = {
       groupid: dataGroup.groupid,
@@ -197,8 +200,6 @@ const GroupListTable = ({ tableData, userData }: Props) => {
       createby: String(emailData),
       member: members
     }
-
-    console.log(updateFormdata)
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, updateFormdata)
@@ -445,24 +446,24 @@ const GroupListTable = ({ tableData, userData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search Group'
+              placeholder='Search Group Name'
               className='is-full sm:is-auto'
             />
-            <Button
+            {/* <Button
               color='secondary'
               variant='tonal'
               startIcon={<i className='tabler-upload' />}
               className='is-full sm:is-auto'
             >
               Export
-            </Button>
+            </Button> */}
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
               onClick={() => GroupDrawerOpenHandle()}
               className='is-full sm:is-auto'
             >
-              Add New Group
+              Add New
             </Button>
           </div>
         </div>
@@ -581,7 +582,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
             <div className='flex flex-col gap-4'>
               {members.length} Members
               <List className='pt-0 px-0'>
-                {members?.map((email, index) => (
+                {members?.map((email: any, index: any) => (
                   <ListItem key={index} disablePadding onClick={() => handleCloseMembers()}>
                     <ListItemButton>
                       <ListItemAvatar>
