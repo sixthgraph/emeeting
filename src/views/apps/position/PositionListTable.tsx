@@ -600,7 +600,23 @@ const PositionListTable = ({ tableData }: Props) => {
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th
+                      key={header.id}
+                      style={{
+                        width:
+                          header.index === 0
+                            ? 60
+                            : 'auto' && header.index === 1
+                              ? 100
+                              : 'auto' && header.index == 3
+                                ? 80
+                                : 'auto' && header.index == 4
+                                  ? 80
+                                  : 'auto' && header.index == 5
+                                    ? 160
+                                    : 'auto'
+                      }}
+                    >
                       {header.isPlaceholder ? null : (
                         <>
                           <div
@@ -666,18 +682,22 @@ const PositionListTable = ({ tableData }: Props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
-          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
-          <br></br>
+        <DialogTitle className='text-center pb-0' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-error' />
+          <br />
           Are you sure?
         </DialogTitle>
         <DialogContent>
           <DialogContentText className='text-center' id='alert-dialog-description'>
-            Do you want to delete
-            {openMode == 'delete-one' && ` ${deletePos.desc} `}
+            Do you want to delete ?
+            {openMode == 'delete-one' && <Typography color='primary'>{deletePos.desc}</Typography>}
             {openMode == 'delete-many' &&
               updateDatas?.map((elem: any, index: any) => {
-                return <div key={index}>{elem.desc}</div>
+                return (
+                  <div key={index} className='text-primary'>
+                    {elem.desc}
+                  </div>
+                )
               })}
           </DialogContentText>
         </DialogContent>
@@ -686,12 +706,12 @@ const PositionListTable = ({ tableData }: Props) => {
             Cancal
           </Button>
           {openMode == 'delete-one' && (
-            <Button variant='contained' onClick={handleDeletePosition}>
-              Yes, delete it?
+            <Button color='error' variant='contained' onClick={handleDeletePosition}>
+              Yes, delete it ?
             </Button>
           )}
           {openMode == 'delete-many' && (
-            <Button variant='contained' onClick={handleDeletePositions}>
+            <Button color='error' variant='contained' onClick={handleDeletePositions}>
               Yes, delete it?
             </Button>
           )}

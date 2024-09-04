@@ -695,23 +695,27 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
-          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
-          <br></br>
+        <DialogTitle className='text-center pb-0' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-error' />
+          <br />
           Are you sure?
         </DialogTitle>
         <DialogContent>
           {openMode == 'delete-one' && (
             <DialogContentText className='text-center' id='alert-dialog-description'>
-              Do you want to delete {deleteDep.depname} ?
+              Do you want to delete <span className='text-primary'>{deleteDep.depname}</span> ?
             </DialogContentText>
           )}
           {openMode == 'delete-many' && (
             <DialogContentText className='text-center' id='alert-dialog-description'>
-              Do you want to delete many ?
+              Do you want to delete ?
               {openMode == 'delete-many' &&
                 updateDatas?.map((elem: any, index: any) => {
-                  return <Typography key={index}>{elem.depname}</Typography>
+                  return (
+                    <Typography color='primary' key={index}>
+                      {elem.depname}
+                    </Typography>
+                  )
                 })}
             </DialogContentText>
           )}
@@ -721,12 +725,12 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
             Cancal
           </Button>
           {openMode == 'delete-one' && (
-            <Button variant='contained' onClick={handleDeleteDepartment}>
+            <Button color='error' variant='contained' onClick={handleDeleteDepartment}>
               Yes, delete it?
             </Button>
           )}
           {openMode == 'delete-many' && (
-            <Button variant='contained' onClick={handleDeleteDepartments}>
+            <Button color='error' variant='contained' onClick={handleDeleteDepartments}>
               Yes, delete it?
             </Button>
           )}

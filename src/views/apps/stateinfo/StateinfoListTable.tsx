@@ -248,7 +248,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
       //   )
       // },
       columnHelper.accessor('statecode', {
-        header: 'Statecode',
+        header: 'State Code',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
@@ -258,7 +258,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
         )
       }),
       columnHelper.accessor('desc', {
-        header: 'Desc',
+        header: 'Description',
         cell: ({ row }) => (
           <div className='flex flex-col'>
             <Typography color='text.primary' className='font-medium'>
@@ -398,7 +398,12 @@ const StateinfoListTable = ({ tableData }: Props) => {
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th
+                      key={header.id}
+                      style={{
+                        width: header.index === 0 ? 100 : 'auto' && header.index === 4 ? 180 : 'auto'
+                      }}
+                    >
                       {header.isPlaceholder ? null : (
                         <>
                           <div

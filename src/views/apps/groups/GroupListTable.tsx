@@ -292,28 +292,28 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   // Table Columns config
   const columns = useMemo<ColumnDef<GroupTypeWithAction, any>[]>(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
+      //   )
+      // },
       columnHelper.accessor('groupname', {
         header: 'Group Name',
         cell: ({ row }) => (
@@ -474,7 +474,12 @@ const GroupListTable = ({ tableData, userData }: Props) => {
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th
+                      key={header.id}
+                      style={{
+                        width: header.index === 1 ? 60 : 'auto' && header.index === 2 ? 180 : 'auto'
+                      }}
+                    >
                       {header.isPlaceholder ? null : (
                         <>
                           <div
@@ -613,21 +618,21 @@ const GroupListTable = ({ tableData, userData }: Props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
-          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
-          <br></br>
+        <DialogTitle className='text-center pb-0' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-error' />
+          <br />
           Are you sure?
         </DialogTitle>
         <DialogContent>
           <DialogContentText className='text-center' id='alert-dialog-description'>
-            Do you want to delete {deleteGroup.groupname} ?
+            Do you want to delete ? <Typography color='primary'>{deleteGroup.groupname}</Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
           <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
             Cancal
           </Button>
-          <Button variant='contained' onClick={handleDeleteGroup}>
+          <Button color='error' variant='contained' onClick={handleDeleteGroup}>
             Yes, delete it?
           </Button>
         </DialogActions>

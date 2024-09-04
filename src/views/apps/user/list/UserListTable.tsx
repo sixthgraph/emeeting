@@ -70,8 +70,6 @@ import type {
 import TableFilters from './TableFilters'
 import UserDrawerForm from './UserDrawerForm'
 
-// import UsersDrawerForm from './UsersDrawerForm'
-
 import CustomTextField from '@core/components/mui/TextField'
 import CustomAvatar from '@core/components/mui/Avatar'
 
@@ -528,7 +526,14 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   return (
     <>
       <Card>
-        <CardHeader title='Users' className='pbe-4' />
+        <CardHeader
+          title={
+            <>
+              {/* <i className='tabler-user mr-1' /> */}
+              Users
+            </>
+          }
+        />
         <TableFilters setData={setData} tableData={tableData} depData={depData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
@@ -745,19 +750,25 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <DialogTitle className='text-center font-size:38px' id='alert-dialog-title'>
-          <i className='tabler-alert-circle mbe-2 text-[96px] text-warning' />
-          <br></br>
+        <DialogTitle className='text-center font-size:38px mb-0 pb-0' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-error' />
+          <br />
           Are you sure?
         </DialogTitle>
         <DialogContent>
           <DialogContentText className='text-center' id='alert-dialog-description'>
-            {openMode == 'delete-one' && `Do you want to delete ${deleteUser.fullname} ?`}
+            {openMode == 'delete-one' && `Do you want to delete ?`}
+            {/* {openMode == 'delete-one' && `Do you want to delete ${deleteUser.fullname} ?`} */}
+            {openMode == 'delete-one' && (
+              <Typography color='primary' className='mt-1'>
+                {deleteUser.fullname}
+              </Typography>
+            )}
             {openMode == 'delete-many' && `Do you want to delete ?`}
             {openMode == 'delete-many' &&
               updateDatas?.map((elem: any, index: any) => {
                 return (
-                  <Typography key={index}>
+                  <Typography color='primary' key={index}>
                     {elem.firstname} {elem.lastname}
                   </Typography>
                 )
@@ -769,12 +780,12 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
             Cancal
           </Button>
           {openMode == 'delete-one' && (
-            <Button variant='contained' onClick={handleDeleteUser}>
+            <Button color='error' variant='contained' onClick={handleDeleteUser}>
               Yes, delete it?
             </Button>
           )}
           {openMode == 'delete-many' && (
-            <Button variant='contained' onClick={handleDeleteUsers}>
+            <Button color='error' variant='contained' onClick={handleDeleteUsers}>
               Yes, delete it?
             </Button>
           )}

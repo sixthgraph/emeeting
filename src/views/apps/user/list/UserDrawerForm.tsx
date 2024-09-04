@@ -510,9 +510,8 @@ const UserDrawerForm = ({
                     {userDepData.length > 0 ? (
                       userDepData?.map((dep: any, index: any) => {
                         return (
-                          <>
+                          <div key={index}>
                             <ListItem
-                              key={index}
                               disablePadding
                               secondaryAction={
                                 <IconButton
@@ -529,7 +528,7 @@ const UserDrawerForm = ({
                               </ListItemButton>
                             </ListItem>
                             <Divider className='m-0' />
-                          </>
+                          </div>
                         )
                       })
                     ) : (
@@ -825,7 +824,7 @@ const UserDrawerForm = ({
           <div className='flex items-center gap-4'>
             {mode == 'insert-one' && (
               <Button variant='contained' type='submit'>
-                Insert One
+                Submit
               </Button>
             )}
 
@@ -836,12 +835,12 @@ const UserDrawerForm = ({
             )}
             {mode == 'update-one' && (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
-                Edit One
+                Update
               </Button>
             )}
             {mode == 'update-many' && ( // <Button variant='tonal' onClick={() => handleUpdateManyData()}>
               <Button variant='tonal' onClick={() => handleUpdateManyData()}>
-                Edit Many
+                Update
               </Button>
             )}
 

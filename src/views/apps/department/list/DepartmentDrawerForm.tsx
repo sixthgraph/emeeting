@@ -501,23 +501,23 @@ const DepartmentDrawerForm = ({
           <div className='flex items-center gap-4'>
             {mode == 'insert-one' && (
               <Button variant='contained' type='submit'>
-                Insert One
+                Submit
               </Button>
             )}
 
             {mode == 'insert-many' && (
               <Button variant='contained' onClick={() => handleInsertMany()} type='button'>
-                Insert Many
+                Submit
               </Button>
             )}
             {mode == 'update-one' && (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
-                Edit One
+                Update
               </Button>
             )}
             {mode == 'update-many' && (
               <Button variant='tonal' onClick={() => handleUpdateManyData()}>
-                Edit Many
+                Update
               </Button>
             )}
 

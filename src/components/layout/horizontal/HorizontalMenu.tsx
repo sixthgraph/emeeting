@@ -123,7 +123,9 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
         </MenuItem>
         <SubMenu label={dictionary['navigation'].create} icon={<i className='tabler-circle-plus' />}>
           <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
-          <MenuItem href={`/${locale}/new-route`}>{dictionary['navigation'].newRoute}</MenuItem>
+          <MenuItem disabled href={`/${locale}/new-route`}>
+            {dictionary['navigation'].newRoute}
+          </MenuItem>
         </SubMenu>
         {userRole == 1 && (
           <SubMenu label={dictionary['navigation'].admin} icon={<i className='tabler-settings' />}>
