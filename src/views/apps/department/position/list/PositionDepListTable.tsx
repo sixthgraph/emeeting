@@ -231,50 +231,29 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   // Table Columns config
   const columns = useMemo<ColumnDef<PositionsDepTypeWithAction, any>[]>(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
-
-      // columnHelper.accessor('depname', {
-      //   header: 'Depname',
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
       //   cell: ({ row }) => (
-      //     <div className='flex flex-col'>
-      //       <Typography color='text.primary' className='font-medium'>
-      //         {row.original.depname}
-      //       </Typography>
-      //     </div>
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
       //   )
-      // }),
+      // },
 
-      // columnHelper.accessor('path', {
-      //   header: 'Path',
-      //   cell: ({ row }) => (
-      //     <div className='flex flex-col'>
-      //       <Typography color='text.primary' className='font-medium'>
-      //         {row.original.path}
-      //       </Typography>
-      //     </div>
-      //   )
-      // }),
       columnHelper.accessor('positioncode', {
         header: 'Positioncode',
         cell: ({ row }) => (
@@ -298,16 +277,16 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
           </div>
         )
       }),
-      columnHelper.accessor('positionpath', {
-        header: 'Positionpath',
-        cell: ({ row }) => (
-          <div className='flex flex-col'>
-            <Typography color='text.primary' className='font-medium'>
-              {row.original.positionpath}
-            </Typography>
-          </div>
-        )
-      }),
+      // columnHelper.accessor('positionpath', {
+      //   header: 'Positionpath',
+      //   cell: ({ row }) => (
+      //     <div className='flex flex-col'>
+      //       <Typography color='text.primary' className='font-medium'>
+      //         {row.original.positionpath}
+      //       </Typography>
+      //     </div>
+      //   )
+      // }),
       columnHelper.accessor('positionlevel', {
         header: 'Positionlevel',
         cell: ({ row }) => (
@@ -442,7 +421,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search Group'
+              placeholder='Search Position'
               className='is-full sm:is-auto'
             />
             {/* <Button
@@ -469,7 +448,12 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th
+                      key={header.id}
+                      style={{
+                        width: header.index === 3 ? 180 : 'auto'
+                      }}
+                    >
                       {header.isPlaceholder ? null : (
                         <>
                           <div

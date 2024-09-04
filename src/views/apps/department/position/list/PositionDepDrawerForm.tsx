@@ -308,6 +308,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
               <CustomTextField
                 label='level'
                 fullWidth
+                disabled
                 placeholder=''
                 value={formData.positionlevel}
                 onChange={e => setFormData({ ...formData, positionlevel: e.target.value })}
