@@ -46,7 +46,7 @@ const positionDepPage = async ({ searchParams }: any) => {
   const positionData = data.data.positions
   const depData = data.data.departments
 
-  return <PositionDepList positionDepData={positionDepData} positionData={positionData} depData={depData} />
+  return <PositionDepList positionDepData={positionDepData} positionData={positionData} depData={depData} depId={dep} />
 }
 
 export default positionDepPage

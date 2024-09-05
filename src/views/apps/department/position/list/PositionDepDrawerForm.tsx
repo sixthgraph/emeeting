@@ -28,6 +28,7 @@ type Props = {
   depData?: DepType[]
   positionData?: PositionFilterType[]
   handleClose: () => void
+  updateDepPositionList: any
 }
 
 // Vars
@@ -46,7 +47,15 @@ const initialData = {
   depparent: ''
 }
 
-const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionData, handleClose }: Props) => {
+const PositionDepDrawerForm = ({
+  open,
+  setData,
+  updateData,
+  tableData,
+  positionData,
+  handleClose,
+  updateDepPositionList
+}: Props) => {
   // States
   const [formData, setFormData] = useState<PositionDepFormDataType>(initialData)
   const [positonName, setPositonName] = useState<string[]>([])
@@ -98,16 +107,11 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
 
   useEffect(() => {
     setFormData(updateData)
-  }, [open, updateData])
+    setPositonName([])
+  }, [open])
 
   console.log('updateData ===')
   console.log(updateData)
-
-  const handleRefresh = () => {
-    setTimeout(() => {
-      window.location.reload()
-    }, 100)
-  }
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
     console.log('event.target')
@@ -146,7 +150,8 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
         console.log('Add success')
 
         handleClose()
-        handleRefresh()
+        console.log('Call updateDepPositionList')
+        updateDepPositionList()
       } else {
         console.log('add failed.')
       }
@@ -182,23 +187,7 @@ const PositionDepDrawerForm = ({ open, setData, updateData, tableData, positionD
       if (response.data.message === 'success') {
         console.log('Update position success.')
         handleClose()
-
-        const index = tableData?.findIndex((x: any) => x.positioncode == formData.positioncode)
-
-        if (tableData) {
-          //const newUpdate = { ...tableData[Number(foundIndex)], formData }
-          // tableData[Number(index)].password = formData.password
-          //tableData[Number(index)]
-          tableData[Number(index)].dep = formData.dep
-          tableData[Number(index)].depname = formData.depname
-          tableData[Number(index)].positioncode = formData.positioncode
-          tableData[Number(index)].positiondesc = formData.positiondesc
-          tableData[Number(index)].positionpath = formData.positionpath
-          tableData[Number(index)].positionlevel = formData.positionlevel
-          tableData[Number(index)].positionref = formData.positionref
-        }
-
-        setData(tableData)
+        updateDepPositionList()
       }
     } catch (error: any) {
       console.log('Update Position failed. ', error.message)

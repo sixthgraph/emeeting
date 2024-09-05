@@ -156,8 +156,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
-
-  //Alert
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deleteDep, setDeleteDep] = useState<any>({})
   const handleCloseConfirm = () => setConfirm(false)
@@ -255,31 +253,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/list`, reqBody, { headers })
       console.log('response.data')
       console.log(response.data)
-      setData(response.data.data.detail)
-
-      // if (response.data.message === 'success') {
-      //   return response.data
-      // } else {
-      //   return 'Department not found'
-      // }
-    } catch (err) {
-      console.log(err)
-    }
-
-    return
-
-    try {
-      const reqBody = { token: token }
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
-        Expires: '0'
-      }
-
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/list`, reqBody, { headers })
-
       setData(response.data.data.detail)
     } catch (err) {
       console.log(err)

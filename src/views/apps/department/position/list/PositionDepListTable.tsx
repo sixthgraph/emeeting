@@ -32,7 +32,7 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import axios from 'axios'
 
-import { Chip } from '@mui/material'
+import { Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import type {
@@ -45,6 +45,7 @@ import type {
 import PositionDepDrawerForm from './PositionDepDrawerForm'
 import CustomTextField from '@core/components/mui/TextField'
 import tableStyles from '@core/styles/table.module.css'
+import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -131,11 +132,17 @@ type Props = {
   tableData?: PositionsDepType[]
   positionData?: PositionFilterType[]
   depData?: DepType[]
+  depId?: any[]
 }
 
-const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
+const PositionDepListTable = ({ tableData, positionData, depData, depId }: Props) => {
   console.log('tableData')
   console.log(tableData)
+  console.log('depData')
+  console.log(depData)
+  console.log('dep')
+  console.log(depId)
+
   const router = useRouter()
   let depName = ''
 
@@ -146,9 +153,15 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
   // States
   const [addPositionDepOpen, setAddPositionDepOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
+  const [openMode, setOpenMode] = useState<any>('') // insert-one || update-one || insert-many || update-many
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [confirm, setConfirm] = useState<boolean>(false)
+  const [deletePos, setDeletePos] = useState<any>({})
+
+  const { data: session } = useSession()
+  const token = session?.user.token
 
   const searchParams = useSearchParams()
   let depID = searchParams.get('dep')
@@ -211,7 +224,42 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
     setAddPositionDepOpen(true)
   }
 
-  const handleDeletePositionDep = async (positionDepData: object) => {
+  const handleCloseConfirm = () => setConfirm(false)
+
+  const updateDepPositionList = async () => {
+    console.log('updateDepPositionList start')
+
+    try {
+      const reqBody = {
+        dep: depId,
+        token: token
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/positions/list`, reqBody, {
+        headers
+      })
+
+      setData(response.data.data.detail)
+    } catch (err) {
+      console.log('error')
+    }
+  }
+
+  const handleDeletePositionDep = async () => {
+    setConfirm(false)
+
+    const positionDepData = {
+      dep: deletePos.dep,
+      positioncode: deletePos.positioncode
+    }
+
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/departments/positions/delete`,
@@ -219,7 +267,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
       )
 
       if (response.data.message === 'success') {
-        handleRefresh()
+        updateDepPositionList()
       } else {
         console.error('Position delete failed')
       }
@@ -314,7 +362,14 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                handleDeletePositionDep({ dep: row.original.dep, positioncode: row.original.positioncode })
+                setConfirm(true)
+                setOpenMode('delete-one')
+                setDeletePos({
+                  dep: row.original.dep,
+                  positioncode: row.original.positioncode,
+                  positiondesc: row.original.positiondesc
+                })
+                //handleDeletePositionDep({ dep: row.original.dep, positioncode: row.original.positioncode })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />
@@ -515,6 +570,54 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
         />
       </Card>
 
+      <Dialog
+        open={confirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle className='text-center pb-0' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-error' />
+          <br />
+          Are you sure?
+        </DialogTitle>
+        <DialogContent>
+          {openMode == 'delete-one' && (
+            <DialogContentText className='text-center' id='alert-dialog-description'>
+              Do you want to delete <span className='text-primary'>{deletePos.positiondesc}</span> ?
+            </DialogContentText>
+          )}
+          {/* {openMode == 'delete-many' && (
+            <DialogContentText className='text-center' id='alert-dialog-description'>
+              Do you want to delete ?
+              {openMode == 'delete-many' &&
+                updateDatas?.map((elem: any, index: any) => {
+                  return (
+                    <Typography color='primary' key={index}>
+                      {elem.depname}
+                    </Typography>
+                  )
+                })}
+            </DialogContentText>
+          )} */}
+        </DialogContent>
+        <DialogActions className='justify-center pbs-5 sm:pbe-10 sm:pli-16'>
+          <Button variant='tonal' color='error' onClick={handleCloseConfirm}>
+            Cancal
+          </Button>
+          {openMode == 'delete-one' && (
+            <Button color='error' variant='contained' onClick={handleDeletePositionDep}>
+              Yes, delete it?
+            </Button>
+          )}
+          {openMode == 'delete-many' && (
+            <Button color='error' variant='contained' onClick={handleDeletePositionDep}>
+              Yes, delete it?
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+
       <PositionDepDrawerForm
         open={addPositionDepOpen}
         setData={setData}
@@ -522,6 +625,7 @@ const PositionDepListTable = ({ tableData, positionData, depData }: Props) => {
         updateData={initialData}
         positionData={positionData}
         handleClose={() => setAddPositionDepOpen(!addPositionDepOpen)}
+        updateDepPositionList={updateDepPositionList}
       />
     </>
   )

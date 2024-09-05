@@ -8,16 +8,18 @@ import PositionDepListTable from './PositionDepListTable'
 const PositionDepList = ({
   positionDepData,
   positionData,
-  depData
+  depData,
+  depId
 }: {
   positionDepData?: PositionsDepType[]
   positionData?: PositionFilterType[]
   depData?: DepType[]
+  depId?: any
 }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <PositionDepListTable tableData={positionDepData} positionData={positionData} depData={depData} />
+        <PositionDepListTable tableData={positionDepData} positionData={positionData} depData={depData} depId={depId} />
       </Grid>
     </Grid>
   )
