@@ -12,7 +12,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
-import Checkbox from '@mui/material/Checkbox'
+// import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
@@ -30,10 +30,14 @@ import Chip from '@mui/material/Chip'
 // import type { SelectChangeEvent } from '@mui/material/Select'
 
 import ListItemText from '@mui/material/ListItemText'
-import ListItemButton from '@mui/material/ListItemButton'
+
+// import ListItemButton from '@mui/material/ListItemButton'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
+import Tooltip from '@mui/material/Tooltip'
+import AvatarGroup from '@mui/material/AvatarGroup'
 
 import { useSession } from 'next-auth/react'
 
@@ -144,7 +148,7 @@ let initialData = {
   groupid: '',
   groupname: '',
   createby: '',
-  member: ['']
+  member: ['null']
 }
 
 // Column Definitions
@@ -186,6 +190,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const handleSubmitMember = async () => {
     console.log('SubmitMember-start')
     const newMember: any = members
+
     for (const item of personName) {
       //members.push(item)
       newMember.push(item)
@@ -206,7 +211,8 @@ const GroupListTable = ({ tableData, userData }: Props) => {
 
       if (response.data.message === 'success') {
         console.log('Update user success.')
-        handleReset()
+        setMembers(members)
+        handleCloseMembers()
       }
     } catch (error: any) {
       console.log('Update Team member failed. ', error.message)
@@ -214,6 +220,45 @@ const GroupListTable = ({ tableData, userData }: Props) => {
 
     handleCloseMembers()
   }
+
+  const handleDeleteMember = async (email: any) => {
+    console.log(email)
+
+    const updatedMembers = members.filter((newMember: any) => newMember !== email)
+
+    if (updatedMembers.length !== members.length) {
+      const members = updatedMembers
+
+      console.log('Updated Members ----- ', members)
+
+      setMembers(members)
+
+      const updateFormdata: any = {
+        groupid: dataGroup.groupid,
+        groupname: dataGroup.groupname,
+        createby: String(emailData),
+        member: members
+      }
+
+      console.log(updateFormdata)
+
+      try {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, updateFormdata)
+
+        if (response.data.message === 'success') {
+          console.log('Update user success.')
+
+          // handleReset()
+        }
+      } catch (error: any) {
+        console.log('Update Team member failed. ', error.message)
+      }
+    } else {
+      console.log('ไม่เจอ')
+    }
+  }
+
+  useEffect(() => {}, [members])
 
   const handleClickOpenMember = async (groupid: object, member: any) => {
     let i: any
@@ -235,24 +280,28 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const handleCloseMembers = () => {
     setmemberOpen(false)
 
+    // handleReset()
+    setPersonName([])
+
     // setSelectedValue(value)
   }
 
   const GroupDrawerOpenHandle = () => {
+    console.log(members)
     initialData = {
       groupid: '',
       groupname: '',
       createby: '',
-      member: ['']
+      member: ['null']
     }
     setAddGroupOpen(true)
   }
 
   // Reset
-  const handleReset = () => {
-    handleCloseMembers()
-    setPersonName([])
-  }
+  // const handleReset = () => {
+  //   handleCloseMembers()
+  //   setPersonName([])
+  // }
 
   // Delete
   const handleDeleteGroup = async () => {
@@ -292,28 +341,6 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   // Table Columns config
   const columns = useMemo<ColumnDef<GroupTypeWithAction, any>[]>(
     () => [
-      // {
-      //   id: 'select',
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler()
-      //       }}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: row.getIsSelected(),
-      //         disabled: !row.getCanSelect(),
-      //         indeterminate: row.getIsSomeSelected(),
-      //         onChange: row.getToggleSelectedHandler()
-      //       }}
-      //     />
-      //   )
-      // },
       columnHelper.accessor('groupname', {
         header: 'Group Name',
         cell: ({ row }) => (
@@ -331,7 +358,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
             {/* <Typography color='text.primary' className='font-medium'>
               Selected: {selectedValue}
             </Typography> */}
-            <Button
+            {/* <Button
               variant='tonal'
               onClick={() => {
                 handleClickOpenMember(
@@ -340,9 +367,25 @@ const GroupListTable = ({ tableData, userData }: Props) => {
                 )
               }}
             >
-              {String(row.original.member) == '' ? 0 : null}
-              {String(row.original.member) != '' ? row.original.member.length : null}
-            </Button>
+              {String(row.original.member) == 'null' ? 0 : null}
+              {String(row.original.member) != 'null' ? row.original.member.length : null}
+            </Button> */}
+
+            <AvatarGroup max={4}>
+              {row.original.member.map((person, index) => (
+                <Tooltip title={person} key={index}>
+                  <Avatar
+                    src={person}
+                    onClick={() => {
+                      handleClickOpenMember(
+                        { groupid: row.original.groupid, groupname: row.original.groupname },
+                        { member: row.original.member }
+                      )
+                    }}
+                  ></Avatar>
+                </Tooltip>
+              ))}
+            </AvatarGroup>
           </div>
         )
       }),
@@ -360,8 +403,6 @@ const GroupListTable = ({ tableData, userData }: Props) => {
             </IconButton>
             <IconButton
               onClick={() => {
-                // initialData.password = ''
-                // initialData.groupid = row.original.groupid
                 initialData.groupid = row.original.groupid
                 initialData.groupname = row.original.groupname
                 initialData.member = row.original.member
@@ -589,29 +630,34 @@ const GroupListTable = ({ tableData, userData }: Props) => {
               <List className='pt-0 px-0'>
                 {members?.map((email: any, index: any) => (
                   <ListItem key={index} disablePadding onClick={() => handleCloseMembers()}>
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <i className='tabler-user' />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={email} />
-                    </ListItemButton>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <i className='tabler-user' />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={email} />
+                    <ListItemSecondaryAction>
+                      <IconButton edge='end' size='small' onClick={() => handleDeleteMember(email)}>
+                        <i className='tabler-trash-x' />
+                      </IconButton>
+                    </ListItemSecondaryAction>
                   </ListItem>
                 ))}
               </List>
             </div>
           </DialogContent>
+
           <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
             <Button variant='contained' onClick={() => handleSubmitMember()} type='submit'>
               Submit
             </Button>
-            <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
+            <Button variant='tonal' color='error' type='reset' onClick={() => handleCloseMembers()}>
               Cancel
             </Button>
           </DialogActions>
         </form>
       </Dialog>
+
       <Dialog
         open={confirm}
         onClose={handleCloseConfirm}

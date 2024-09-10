@@ -102,6 +102,9 @@ const UserDrawerForm = ({
   const [insertData, setInsertData] = useState(initialInsertData)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
+  console.log('userlist lenght ----- ', userDepData.length)
+  console.log('userlist  ----- ', userDepData)
+
   useEffect(() => {
     setFormData(updateData)
     setUserDepData(updateData.dep)
