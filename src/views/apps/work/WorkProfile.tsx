@@ -55,7 +55,7 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent'
 
 import { useSession } from 'next-auth/react'
 
-import { navigate } from './redirect'
+//import { navigate } from './redirect'
 
 // Type Imports
 
@@ -633,7 +633,7 @@ const WorkProfile = ({
 
       const path = `/${locale}/todo`
 
-      navigate(path)
+      window.location.href = path //navigate(path)
     } catch (error: any) {
       console.log('sendwork failed. ', error.message)
     }
@@ -661,7 +661,7 @@ const WorkProfile = ({
 
       const path = `/${locale}/todo`
 
-      navigate(path)
+      window.location.href = path //navigate(path)
     } catch (error: any) {
       console.log('sendbackwork failed. ', error.message)
     }
@@ -685,7 +685,7 @@ const WorkProfile = ({
 
       const path = `/${locale}/todo`
 
-      navigate(path)
+      window.location.href = path //navigate(path)
     } catch (error: any) {
       console.log('reject failed. ', error.message)
     }
@@ -709,7 +709,7 @@ const WorkProfile = ({
 
       const path = `/${locale}/todo`
 
-      navigate(path)
+      window.location.href = path //navigate(path)
     } catch (error: any) {
       console.log('reject failed. ', error.message)
     }

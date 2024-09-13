@@ -26,24 +26,30 @@ const TableFilters = ({ setData, tableData, depData }: { setData: any; tableData
   const positionData: any = []
 
   if (selectData) {
-    for (let elem of selectData) {
+    for (const elem of selectData) {
       const posObj: any = elem.dep
 
-      for (let elm of posObj) {
+      for (const elm of posObj) {
         const postObj: any = elm
+
         if (postObj.positionid) {
           const check = positionData.find((item: any) => item.positionid == postObj.positionid)
+
           if (check == undefined) {
             const newData = {
               positionid: postObj.positionid,
               positionname: postObj.positionname
             }
+
             positionData.push(newData)
           }
         }
       }
     }
   }
+
+  console.log('positionData')
+  console.log(positionData)
 
   useEffect(() => {
     const filteredData = tableData?.filter((user: any) => {

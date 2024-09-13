@@ -23,7 +23,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 
-// // Third-party Imports
 import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -41,19 +40,11 @@ import {
 import type { ColumnDef, FilterFn, RowSelectionState } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// // Type Imports
 import axios from 'axios'
-
-// import type { Locale } from '@configs/i18n'
 
 import { ListItemIcon, ListItemText, Menu } from '@mui/material'
 
-// import { styled } from '@mui/material/styles'
-// import MuiMenu from '@mui/material/Menu'
-// // eslint-disable-next-line import/no-duplicates
-// import MuiMenuItem from '@mui/material/MenuItem'
-// import type { MenuProps } from '@mui/material/Menu'
-// import type { MenuItemProps } from '@mui/material/MenuItem'
+import { useSession } from 'next-auth/react'
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
@@ -63,14 +54,10 @@ import type { DepartmentsType, DepartmentsTypeWithAction, StateinfoType } from '
 // // Component Imports
 import TableFilters from './TableFilters'
 import DepartmentDrawerForm from './DepartmentDrawerForm'
-
 import CustomTextField from '@core/components/mui/TextField'
-
-// import CustomAvatar from '@core/components/mui/Avatar'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -81,18 +68,17 @@ declare module '@tanstack/table-core' {
   }
 }
 
-// // Styled Components
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
 
-  //   // Store the itemRank info
+  // Store the itemRank info
   addMeta({
     itemRank
   })
 
-  //   // Return if the item should be filtered in/out
+  // Return if the item should be filtered in/out
   return itemRank.passed
 }
 
@@ -183,23 +169,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelection])
 
-  // // Styled Menu component
-  // const Menu = styled(MuiMenu)<MenuProps>({
-  //   '& .MuiMenu-paper': {
-  //     border: '1px solid var(--mui-palette-divider)'
-  //   }
-  // })
-
-  // // Styled MenuItem component
-  // const MenuItem = styled(MuiMenuItem)<MenuItemProps>({
-  //   '&:focus': {
-  //     backgroundColor: 'var(--mui-palette-primary-main)',
-  //     '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-  //       color: 'var(--mui-palette-common-white)'
-  //     }
-  //   }
-  // })
-
   const { data: session } = useSession()
   const token = session?.user.token
 
@@ -211,12 +180,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       desc: String(stateinfo.desc)
     }
   })
-
-  const handleRefresh = () => {
-    setTimeout(() => {
-      window.location.reload()
-    }, 100)
-  }
 
   const DepartmentDrawerOpenHandle = (mode: any) => {
     initialData = {
@@ -251,8 +214,10 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       }
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/list`, reqBody, { headers })
+
       console.log('response.data')
       console.log(response.data)
+
       setData(response.data.data.detail)
     } catch (err) {
       console.log(err)
@@ -291,7 +256,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/deleteMany`, reqBody)
 
       if (response.data.message === 'success') {
-        //console.log(response.data.data.detail)
         updateDepartmentList()
         handleCloseConfirm()
       } else {
@@ -475,14 +439,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
               placeholder='Search Department Name'
               className='is-full sm:is-auto'
             />
-            {/* <Button
-              color='secondary'
-              variant='tonal'
-              startIcon={<i className='tabler-upload' />}
-              className='is-full sm:is-auto'
-            >
-              Export
-            </Button> */}
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}

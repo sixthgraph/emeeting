@@ -1,6 +1,6 @@
 'use client'
 
-import { useDeferredValue, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { SyntheticEvent } from 'react'
 
 // MUI Imports
@@ -29,8 +29,6 @@ import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 // Type Imports
 import { Box, Button, CardActions, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { useSession } from 'next-auth/react'
-
-import { navigate } from './redirect'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
@@ -109,9 +107,9 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
   const userData: any = session?.user
   const eformData = []
 
-  let userDefaultDep: string = ''
-
-  userData?.dep && (userDefaultDep = userData?.dep[0].depid)
+  useEffect(() => {
+    userData?.dep && (formData.Registerdep = userData?.dep[0].depid)
+  })
 
   for (let i = 0; i < workData.length; i++) {
     const newData = {

@@ -15,12 +15,13 @@ import axios from 'axios'
 
 import { useSession } from 'next-auth/react'
 
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
+
 import CustomTextField from '@core/components/mui/TextField'
 
 import type { DepartmentFormDataType, DepartmentsType, StateinfoType } from '@/types/apps/departmentTypes'
 
 import { addDepartmentFormSchema } from '@/schemas/departmentSchema' //NP????
-import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 
 type Props = {
   open: boolean
@@ -250,7 +251,7 @@ const DepartmentDrawerForm = ({
       path: formData.path
     }
 
-    for (let elem of rowData) {
+    for (const elem of rowData) {
       reqBody.dep.push(elem.dep)
     }
 
