@@ -56,19 +56,37 @@ const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
 }
 
 const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData?: any; commentWorkData?: any }) => {
-  console.log('commentdetailData')
-  console.log(commentdetailData)
-
   const commentData = commentdetailData?.comment
   const chatmember = commentdetailData?.member
 
-  console.log('chatmember---')
-  console.log(chatmember)
+  // console.log('commentdetailData')
+  // console.log(commentdetailData)
+  // console.log('commentWorkData')
+  // console.log(commentWorkData)
+  // console.log('chatmember---')
+  // console.log(chatmember)
+  // const [commentList, setCommentList] = useState<any>(commentData)
+
+  // const body = document.body,
+  //   html = document.documentElement
+  // const docHeight = Math.max(
+  //   body.scrollHeight,
+  //   body.offsetHeight,
+  //   html.clientHeight,
+  //   html.scrollHeight,
+  //   html.offsetHeight
+  // )
+
+  const screenHeight = screen.height
 
   const { data: session } = useSession()
-  const [commentList, setCommentList] = useState<any>(commentData)
+  const [commentList, setCommentList] = useState<any>()
+  const [messageHeight, setMessageHeight] = useState<number>(screenHeight - 270)
   const token = session?.user.token
   const email = session?.user.email
+
+  // console.log('commentList === ')
+  // console.log(commentList)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialData = {
@@ -105,6 +123,15 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const itemsRef = useRef<HTMLInputElement>(null)
   const params = useParams()
   const { lang: locale } = params
+
+  useEffect(() => {
+    setCommentList(commentdetailData?.comment)
+    setOpenReply(false)
+  }, [commentdetailData?.comment])
+
+  useEffect(() => {
+    openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
+  }, [openReply, screenHeight])
 
   const handleClick = () => {
     console.info('You clicked the Chip.')
@@ -203,6 +230,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const handleReset = () => {
     handleCloseMembers()
     setPersonName([])
+    setOpenReply(false)
   }
 
   const handleSubmitMember = async () => {
@@ -398,206 +426,397 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
 
   return (
     <>
-      <Card variant='outlined'>
-        <CardHeader
-          title='Messages'
-          action={
-            <Chip
-              label='Invite'
-              size='small'
-              variant='outlined'
-              className='text-xs'
-              icon={<i className='tabler-plus' />}
-              onClick={() => {
-                handleClickOpenMember()
-              }}
-            />
-          }
-          className='pbe-4'
-        />
-        <CardContent className='pb-0' style={{ maxHeight: '560px', overflow: 'auto' }}>
-          {/* <CardContent className='pb-0' style={{ maxHeight: '100%', overflow: 'auto' }}> */}
-          {commentList &&
-            commentList.map((item: any, index: any) => {
-              return (
-                <div key={index}>
-                  {/* // start user profile */}
-                  <div className='flex flex-col mb-3'>
-                    <div className='flex flex-row '>
-                      <div className='flex  me-5'>
-                        {getAvatar({
-                          avatar: `${item.avatar}`,
-                          fullName: `${item.username}`
-                        })}
-                      </div>
-                      <div className='flex flex-col flex-1 '>
-                        <a href='#' className='font-semibold text-slate-900'>
-                          {item.username}
-                          {/* {item.registeruid} */}
-                        </a>
-                        <span className='text-sm'>{formatshortdate(item.registerdate)}</span>
+      {commentWorkData?.subject ? ( // have subject
+        <Card variant='elevation' className='shadow-none'>
+          <CardContent className='pb-0' style={{ height: messageHeight + 'px', overflow: 'auto' }}>
+            {commentList &&
+              commentList.map((item: any, index: any) => {
+                return (
+                  <div key={index}>
+                    {/* // start user profile */}
+                    <div className='flex flex-col mb-3'>
+                      <div className='flex flex-row '>
+                        <div className='flex  me-5'>
+                          {getAvatar({
+                            avatar: `${item.avatar}`,
+                            fullName: `${item.username}`
+                          })}
+                        </div>
+                        <div className='flex flex-col flex-1 '>
+                          <a href='#' className='font-semibold text-slate-900'>
+                            {item.username}
+                            {/* {item.registeruid} */}
+                          </a>
+                          <span className='text-sm'>{formatshortdate(item.registerdate)}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {/* //end user profile */}
-                  {/* //start message */}
-                  <div className='text-slate-600 text-sm mb-4'>{item.message}</div>
-                  {/* //end message */}
-                  {/* start reply tool */}
-                  <div className='mb-4'>
-                    <Chip
-                      label='reply'
-                      size='small'
-                      className='mr-2'
-                      icon={<i className='tabler-message' />}
-                      onClick={() => handleOpenReply(item.message, item.registeruid, item.itemno, item.level, 0)}
-                    />
-                    <Chip label='150' size='small' icon={<i className='tabler-heart' />} onClick={handleClick} />
-                  </div>
-                  {/* start reply content */}
+                    {/* //end user profile */}
+                    {/* //start message */}
+                    <div className='text-slate-600 text-sm mb-4'>{item.message}</div>
+                    {/* //end message */}
+                    {/* start reply tool */}
+                    <div className='mb-4'>
+                      <Chip
+                        label='reply'
+                        size='small'
+                        className='mr-2'
+                        icon={<i className='tabler-message' />}
+                        onClick={() => handleOpenReply(item.message, item.registeruid, item.itemno, item.level, 0)}
+                      />
+                      <Chip label='150' size='small' icon={<i className='tabler-heart' />} onClick={handleClick} />
+                    </div>
+                    {/* start reply content */}
 
-                  {item.reply &&
-                    item.reply.map((itemReply: any, idx: any) => {
-                      return (
-                        <div key={idx} className='flex flex-row mb-7 ps-10'>
-                          <div className=' me-5'>
-                            {getAvatar({
-                              avatar: `${itemReply.avatar}`,
-                              fullName: `${itemReply.username}`
-                            })}
-                          </div>
-                          <div className='flex flex-col '>
-                            <div className='flex flex-row align-items-center flex-wrap mb-1'>
-                              <div className='flex flex-col flex-1'>
-                                <a href='#' className='font-semibold text-slate-900 me-2'>
-                                  {itemReply.username}
-                                  {/* {itemReply.registeruid} */}
-                                </a>
-                                <span className='text-gray-400 text-sm'>{formatshortdate(itemReply.registerdate)}</span>
-                              </div>
+                    {item.reply &&
+                      item.reply.map((itemReply: any, idx: any) => {
+                        return (
+                          <div key={idx} className='flex flex-row mb-7 ps-10'>
+                            <div className=' me-5'>
+                              {getAvatar({
+                                avatar: `${itemReply.avatar}`,
+                                fullName: `${itemReply.username}`
+                              })}
+                            </div>
+                            <div className='flex flex-col '>
+                              <div className='flex flex-row align-items-center flex-wrap mb-1'>
+                                <div className='flex flex-col flex-1'>
+                                  <a href='#' className='font-semibold text-slate-900 me-2'>
+                                    {itemReply.username}
+                                    {/* {itemReply.registeruid} */}
+                                  </a>
+                                  <span className='text-gray-400 text-sm'>
+                                    {formatshortdate(itemReply.registerdate)}
+                                  </span>
+                                </div>
 
-                              <div className='flex flex-none text-gray-400 text-sm'>
-                                {/* <a href='#' className='ms-auto text-gray-400  fs-7 me-2'>
+                                <div className='flex flex-none text-gray-400 text-sm'>
+                                  {/* <a href='#' className='ms-auto text-gray-400  fs-7 me-2'>
                                   Reply 33
                                 </a> */}
-                                <Chip
-                                  label='reply'
-                                  size='small'
-                                  className='mr-2'
-                                  onClick={() =>
-                                    handleOpenReply(
-                                      itemReply.message,
-                                      itemReply.registeruid,
-                                      itemReply.itemno,
-                                      itemReply.level,
-                                      item.itemno // parent itemno
-                                    )
-                                  }
-                                />
-                                <a
-                                  href='#'
-                                  className='btn btn-sm btn-icon btn-clear btn-active-light-danger'
-                                  title='Love'
-                                >
-                                  <span className='m-0'>
-                                    <i className='tabler-heart-filled text-lg' />
-                                  </span>
-                                </a>
+                                  <Chip
+                                    label='reply'
+                                    size='small'
+                                    className='mr-2'
+                                    onClick={() =>
+                                      handleOpenReply(
+                                        itemReply.message,
+                                        itemReply.registeruid,
+                                        itemReply.itemno,
+                                        itemReply.level,
+                                        item.itemno // parent itemno
+                                      )
+                                    }
+                                  />
+                                  <a
+                                    href='#'
+                                    className='btn btn-sm btn-icon btn-clear btn-active-light-danger'
+                                    title='Love'
+                                  >
+                                    <span className='m-0'>
+                                      <i className='tabler-heart-filled text-lg' />
+                                    </span>
+                                  </a>
+                                </div>
                               </div>
+
+                              <span className='text-slate-600 text-sm pt-1'>{itemReply.message}</span>
                             </div>
-
-                            <span className='text-slate-600 text-sm pt-1'>{itemReply.message}</span>
                           </div>
-                        </div>
-                      )
-                    })}
-
-                  {/* end reply content */}
-                  <Divider className='mb-3' />
-                  {/* end reply tool */}
-                </div>
-              ) // return
-            })}
-        </CardContent>
-        <CardActions>
-          {openReply ? (
-            <>
-              <Card sx={{ width: 1 }} variant='outlined' className='bg-blue-50 p-2'>
-                <CardContent className='flex flex-col p-0'>
-                  <div className='flex p-2'>
-                    <div className='flex-1'>
-                      <Link className='text-sm text-primary' href='#'>
-                        @{replyRef.registeruid}
-                      </Link>
-                      <Typography className='text-xs'>{replyRef.message}</Typography>
-                    </div>
-                    <IconButton
-                      onClick={() => setOpenReply(false)}
-                      style={{ width: 20, height: 20, padding: '0px' }}
-                      aria-label='close'
-                    >
-                      <i className='tabler-square-rounded-plus text-lg font-extrabold' />
-                    </IconButton>
-                  </div>
-                  <div>
-                    <CustomTextField
-                      id='reply-input'
-                      name='reply-input'
-                      variant='outlined'
-                      fullWidth
-                      ref={itemsRef}
-                      placeholder='Type a reply message..'
-                      value={newMessage.message}
-                      className='bg-white border-white'
-                      onChange={e => {
-                        setNewMessage({ ...newMessage, message: e.target.value })
-                      }}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position='end'>
-                            <IconButton
-                              edge='end'
-                              onClick={handleReply}
-                              onMouseDown={e => e.preventDefault()}
-                              aria-label='send reply message'
-                            >
-                              <i className={'tabler-send'} />
-                            </IconButton>
-                          </InputAdornment>
                         )
-                      }}
-                    />
+                      })}
+
+                    {/* end reply content */}
+                    <Divider className='mb-3' />
+                    {/* end reply tool */}
                   </div>
-                </CardContent>
-              </Card>
-            </>
-          ) : (
-            <CustomTextField
-              id='message-input'
-              fullWidth
-              placeholder='Type a message..'
-              value={newMessage.message}
-              onChange={e => {
-                setNewMessage({ ...newMessage, message: e.target.value })
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton
-                      edge='end'
-                      onClick={handleSendMessage}
-                      onMouseDown={e => e.preventDefault()}
-                      aria-label='send message'
-                    >
-                      <i className={'tabler-send'} />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-          )}
-        </CardActions>
-      </Card>
+                ) // return
+              })}
+          </CardContent>
+          <CardActions>
+            {openReply ? (
+              <>
+                <Card sx={{ width: 1 }} variant='outlined' className='bg-blue-50 p-2'>
+                  <CardContent className='flex flex-col p-0'>
+                    <div className='flex p-2'>
+                      <div className='flex-1'>
+                        <Link className='text-sm text-primary' href='#'>
+                          @{replyRef.registeruid}
+                        </Link>
+                        <Typography className='text-xs'>{replyRef.message}</Typography>
+                      </div>
+                      <IconButton
+                        onClick={() => setOpenReply(false)}
+                        style={{ width: 20, height: 20, padding: '0px' }}
+                        aria-label='close'
+                      >
+                        <i className='tabler-square-rounded-plus text-lg font-extrabold' />
+                      </IconButton>
+                    </div>
+                    <div>
+                      <CustomTextField
+                        id='reply-input'
+                        name='reply-input'
+                        variant='outlined'
+                        fullWidth
+                        ref={itemsRef}
+                        placeholder='Type a reply message..'
+                        value={newMessage.message}
+                        className='bg-white border-white'
+                        onChange={e => {
+                          setNewMessage({ ...newMessage, message: e.target.value })
+                        }}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                onClick={handleReply}
+                                onMouseDown={e => e.preventDefault()}
+                                aria-label='send reply message'
+                              >
+                                <i className={'tabler-send'} />
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <CustomTextField
+                id='message-input'
+                fullWidth
+                placeholder='Type a message..'
+                value={newMessage.message}
+                onChange={e => {
+                  setNewMessage({ ...newMessage, message: e.target.value })
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        onClick={handleSendMessage}
+                        onMouseDown={e => e.preventDefault()}
+                        aria-label='send message'
+                      >
+                        <i className={'tabler-send'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
+            )}
+          </CardActions>
+        </Card>
+      ) : (
+        <Card variant='outlined'>
+          <CardHeader
+            title='Messages'
+            action={
+              <Chip
+                label='Invite'
+                size='small'
+                variant='outlined'
+                className='text-xs'
+                icon={<i className='tabler-plus' />}
+                onClick={() => {
+                  handleClickOpenMember()
+                }}
+              />
+            }
+            className='pbe-4'
+          />
+
+          <CardContent className='pb-0' style={{ maxHeight: '560px', overflow: 'auto' }}>
+            {commentList &&
+              commentList.map((item: any, index: any) => {
+                return (
+                  <div key={index}>
+                    {/* // start user profile */}
+                    <div className='flex flex-col mb-3'>
+                      <div className='flex flex-row '>
+                        <div className='flex  me-5'>
+                          {getAvatar({
+                            avatar: `${item.avatar}`,
+                            fullName: `${item.username}`
+                          })}
+                        </div>
+                        <div className='flex flex-col flex-1 '>
+                          <a href='#' className='font-semibold text-slate-900'>
+                            {item.username}
+                            {/* {item.registeruid} */}
+                          </a>
+                          <span className='text-sm'>{formatshortdate(item.registerdate)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* //end user profile */}
+                    {/* //start message */}
+                    <div className='text-slate-600 text-sm mb-4'>{item.message}</div>
+                    {/* //end message */}
+                    {/* start reply tool */}
+                    <div className='mb-4'>
+                      <Chip
+                        label='reply'
+                        size='small'
+                        className='mr-2'
+                        icon={<i className='tabler-message' />}
+                        onClick={() => handleOpenReply(item.message, item.registeruid, item.itemno, item.level, 0)}
+                      />
+                      <Chip label='150' size='small' icon={<i className='tabler-heart' />} onClick={handleClick} />
+                    </div>
+                    {/* start reply content */}
+
+                    {item.reply &&
+                      item.reply.map((itemReply: any, idx: any) => {
+                        return (
+                          <div key={idx} className='flex flex-row mb-7 ps-10'>
+                            <div className=' me-5'>
+                              {getAvatar({
+                                avatar: `${itemReply.avatar}`,
+                                fullName: `${itemReply.username}`
+                              })}
+                            </div>
+                            <div className='flex flex-col '>
+                              <div className='flex flex-row align-items-center flex-wrap mb-1'>
+                                <div className='flex flex-col flex-1'>
+                                  <a href='#' className='font-semibold text-slate-900 me-2'>
+                                    {itemReply.username}
+                                    {/* {itemReply.registeruid} */}
+                                  </a>
+                                  <span className='text-gray-400 text-sm'>
+                                    {formatshortdate(itemReply.registerdate)}
+                                  </span>
+                                </div>
+
+                                <div className='flex flex-none text-gray-400 text-sm'>
+                                  {/* <a href='#' className='ms-auto text-gray-400  fs-7 me-2'>
+                                  Reply 33
+                                </a> */}
+                                  <Chip
+                                    label='reply'
+                                    size='small'
+                                    className='mr-2'
+                                    onClick={() =>
+                                      handleOpenReply(
+                                        itemReply.message,
+                                        itemReply.registeruid,
+                                        itemReply.itemno,
+                                        itemReply.level,
+                                        item.itemno // parent itemno
+                                      )
+                                    }
+                                  />
+                                  <a
+                                    href='#'
+                                    className='btn btn-sm btn-icon btn-clear btn-active-light-danger'
+                                    title='Love'
+                                  >
+                                    <span className='m-0'>
+                                      <i className='tabler-heart-filled text-lg' />
+                                    </span>
+                                  </a>
+                                </div>
+                              </div>
+
+                              <span className='text-slate-600 text-sm pt-1'>{itemReply.message}</span>
+                            </div>
+                          </div>
+                        )
+                      })}
+
+                    {/* end reply content */}
+                    <Divider className='mb-3' />
+                    {/* end reply tool */}
+                  </div>
+                ) // return
+              })}
+          </CardContent>
+          <CardActions>
+            {openReply ? (
+              <>
+                <Card sx={{ width: 1 }} variant='outlined' className='bg-blue-50 p-2'>
+                  <CardContent className='flex flex-col p-0'>
+                    <div className='flex p-2'>
+                      <div className='flex-1'>
+                        <Link className='text-sm text-primary' href='#'>
+                          @{replyRef.registeruid}
+                        </Link>
+                        <Typography className='text-xs'>{replyRef.message}</Typography>
+                      </div>
+                      <IconButton
+                        onClick={() => setOpenReply(false)}
+                        style={{ width: 20, height: 20, padding: '0px' }}
+                        aria-label='close'
+                      >
+                        <i className='tabler-square-rounded-plus text-lg font-extrabold' />
+                      </IconButton>
+                    </div>
+                    <div>
+                      <CustomTextField
+                        id='reply-input'
+                        name='reply-input'
+                        variant='outlined'
+                        fullWidth
+                        ref={itemsRef}
+                        placeholder='Type a reply message..'
+                        value={newMessage.message}
+                        className='bg-white border-white'
+                        onChange={e => {
+                          setNewMessage({ ...newMessage, message: e.target.value })
+                        }}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                onClick={handleReply}
+                                onMouseDown={e => e.preventDefault()}
+                                aria-label='send reply message'
+                              >
+                                <i className={'tabler-send'} />
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <CustomTextField
+                id='message-input'
+                fullWidth
+                placeholder='Type a message..'
+                value={newMessage.message}
+                onChange={e => {
+                  setNewMessage({ ...newMessage, message: e.target.value })
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        onClick={handleSendMessage}
+                        onMouseDown={e => e.preventDefault()}
+                        aria-label='send message'
+                      >
+                        <i className={'tabler-send'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
+            )}
+          </CardActions>
+        </Card>
+      )}
+
       <Dialog
         fullWidth
         open={memberopen}

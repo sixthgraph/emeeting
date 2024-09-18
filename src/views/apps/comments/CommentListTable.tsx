@@ -46,7 +46,8 @@ import type { CommentType, CommentTypeWithAction } from '@/types/apps/commentTyp
 // import Link from '@components/Link'
 import CustomTextField from '@/@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
-import CommentDrawer from './CommentDrawer'
+
+import CommentDrawer_v2 from './CommentDrawer_v2'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -106,13 +107,22 @@ const DebouncedInput = ({
 const columnHelper = createColumnHelper<CommentTypeWithAction>()
 
 const CommentListTable = ({ commentData }: { commentData?: any }) => {
-  const [data, setData] = useState(...[commentData])
+  // const [data, setData] = useState(...[commentData])
+  const [widData, setWidData] = useState('')
   const [globalFilter, setGlobalFilter] = useState('')
   const [rowSelection, setRowSelection] = useState({})
   const [commentOpen, setCommentOpen] = useState(false)
 
+  console.log('commentData ---------------- ')
+  console.log(commentData)
+
   // Hooks
   const { lang: locale } = useParams()
+
+  const getWorkData = async (wid: any) => {
+    setWidData(wid)
+    setCommentOpen(true)
+  }
 
   // Table Columns config
   const columns = useMemo<ColumnDef<CommentTypeWithAction, any>[]>(
@@ -161,8 +171,7 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
           <div className='flex items-center'>
             <IconButton
               onClick={() => {
-                setData(row.original.wid)
-                setCommentOpen(true)
+                getWorkData(row.original.wid)
               }}
             >
               <i className='tabler-message text-[32px] text-textSecondary' />
@@ -303,7 +312,7 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
         />
       </Card>
 
-      <CommentDrawer wid={data} open={commentOpen} handleClose={() => setCommentOpen(!commentOpen)} />
+      <CommentDrawer_v2 wid={widData} open={commentOpen} handleClose={() => setCommentOpen(!commentOpen)} />
     </>
   )
 }
