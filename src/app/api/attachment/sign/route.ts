@@ -3,15 +3,7 @@ import { NextResponse } from 'next/server'
 
 // import jwt from 'jsonwebtoken'
 
-import axios from 'axios'
-import { getServerSession } from 'next-auth'
-
-import { options } from '../../auth/[...nextauth]/options'
-
 export async function POST(request: NextRequest) {
-  const serverSession = await getServerSession(options)
-  const token = serverSession?.user.token
-
   //const email = serverSession?.user.email
 
   try {
@@ -48,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     const urlencoded = new URLSearchParams()
 
-    const form = new FormData()
+    //const form = new FormData()
 
     let base64: string
 
@@ -70,12 +62,12 @@ export async function POST(request: NextRequest) {
     //   redirect: 'follow'
     // })
 
-    const requestOptions = {
-      method: 'POST',
-      headers: headers,
-      body: urlencoded,
-      redirect: 'follow'
-    }
+    // const requestOptions = {
+    //   method: 'POST',
+    //   headers: headers,
+    //   body: urlencoded,
+    //   redirect: 'follow'
+    // }
 
     const res = await fetch(signuri, {
       method: 'POST',
@@ -91,6 +83,7 @@ export async function POST(request: NextRequest) {
         console.log(data) // this will be a string
         // const parser = new DOMParser()
         // const xmlDoc = parser.parseFromString(data, 'application/xml')
+
         return data
       })
       .catch(error => console.error(error))

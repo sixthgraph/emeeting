@@ -54,6 +54,8 @@ import axios from 'axios'
 
 // import type { Locale } from '@configs/i18n'
 
+import { useSession } from 'next-auth/react'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // import type { ThemeColor } from '@core/types'
@@ -74,7 +76,6 @@ import CustomTextField from '@core/components/mui/TextField'
 
 // // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -83,13 +84,6 @@ declare module '@tanstack/table-core' {
   interface FilterMeta {
     itemRank: RankingInfo
   }
-}
-
-const handleRefresh = () => {
-  //router.reload()
-  setTimeout(() => {
-    window.location.reload()
-  }, 100)
 }
 
 // // Styled Components
@@ -190,6 +184,7 @@ const PositionListTable = ({ tableData }: Props) => {
 
   useEffect(() => {
     getMaxPosCode()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   useEffect(() => {
@@ -225,6 +220,7 @@ const PositionListTable = ({ tableData }: Props) => {
 
     let maxPosition: any = maxValue
     let maxPositionStr: any = ''
+
     maxPosition++
     if (maxPosition < 99) maxPositionStr = '0' + String(maxPosition)
     setCurMaxPos(maxPositionStr)
@@ -263,7 +259,9 @@ const PositionListTable = ({ tableData }: Props) => {
       }
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/list`, reqBody, { headers })
+
       setData(response.data.data.detail)
+
       return response.data.data.detail
     } catch (err) {
       console.log(err)

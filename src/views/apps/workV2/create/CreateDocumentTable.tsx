@@ -12,7 +12,8 @@ import { Button, Dialog, DialogContent, DialogTitle, Icon } from '@mui/material'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import FileUploader from './FileUploader'
+
+// import FileUploader from './FileUploader'
 import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 
 type DataType = {
@@ -153,9 +154,7 @@ const CreateDocumentTable = () => {
         </DialogTitle>
         <DialogContent>
           <div className='align-middle border-dashed border-2 border-gray-300 min-h-[20rem] min-w-[30rem]'>
-            <div className='mt-10 align-middle'>
-              <FileUploader />
-            </div>
+            <div className='mt-10 align-middle'>{/* <FileUploader /> */}</div>
           </div>
         </DialogContent>
       </Dialog>

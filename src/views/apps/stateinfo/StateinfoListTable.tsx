@@ -9,7 +9,6 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
 //import Chip from '@mui/material/Chip'
-import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 
 //import { styled } from '@mui/material/styles'
@@ -38,6 +37,8 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import axios from 'axios'
 
 // import type { ThemeColor } from '@core/types'
+import { useSession } from 'next-auth/react'
+
 import type { StateinfosType, StateinfosTypeWithAction } from '@/types/apps/stateinfoTypes'
 
 //import TableFilters from './TableFilters'
@@ -45,7 +46,6 @@ import StateinfoDrawerForm from './StateinfoDrawerForm'
 import CustomTextField from '@core/components/mui/TextField'
 import tableStyles from '@core/styles/table.module.css'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
-import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -54,13 +54,6 @@ declare module '@tanstack/table-core' {
   interface FilterMeta {
     itemRank: RankingInfo
   }
-}
-
-const handleRefresh = () => {
-  //router.reload()
-  setTimeout(() => {
-    window.location.reload()
-  }, 100)
 }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -136,9 +129,11 @@ const StateinfoListTable = ({ tableData }: Props) => {
 
   useEffect(() => {
     getMaxStateCode()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   console.log('tabledata =', tableData)
+
   //console.log('data =', data)
 
   const stateinfoDrawerOpenHandle = () => {
@@ -196,6 +191,7 @@ const StateinfoListTable = ({ tableData }: Props) => {
 
     let maxState: any = maxValue
     let maxStateStr: any = ''
+
     maxState++
     if (maxState < 99) maxStateStr = '0' + String(maxState)
     setCurMaxState(maxStateStr)

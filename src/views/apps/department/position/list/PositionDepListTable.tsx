@@ -8,7 +8,6 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
@@ -34,6 +33,8 @@ import axios from 'axios'
 
 import { Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 
+import { useSession } from 'next-auth/react'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import type {
   PositionsDepType,
@@ -44,8 +45,8 @@ import type {
 
 import PositionDepDrawerForm from './PositionDepDrawerForm'
 import CustomTextField from '@core/components/mui/TextField'
+
 import tableStyles from '@core/styles/table.module.css'
-import { useSession } from 'next-auth/react'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -54,13 +55,6 @@ declare module '@tanstack/table-core' {
   interface FilterMeta {
     itemRank: RankingInfo
   }
-}
-
-const handleRefresh = () => {
-  //router.reload()
-  setTimeout(() => {
-    window.location.reload()
-  }, 100)
 }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -325,16 +319,6 @@ const PositionDepListTable = ({ tableData, positionData, depData, depId }: Props
           </div>
         )
       }),
-      // columnHelper.accessor('positionpath', {
-      //   header: 'Positionpath',
-      //   cell: ({ row }) => (
-      //     <div className='flex flex-col'>
-      //       <Typography color='text.primary' className='font-medium'>
-      //         {row.original.positionpath}
-      //       </Typography>
-      //     </div>
-      //   )
-      // }),
       columnHelper.accessor('positionlevel', {
         header: 'Positionlevel',
         cell: ({ row }) => (
@@ -369,7 +353,6 @@ const PositionDepListTable = ({ tableData, positionData, depData, depId }: Props
                   positioncode: row.original.positioncode,
                   positiondesc: row.original.positiondesc
                 })
-                //handleDeletePositionDep({ dep: row.original.dep, positioncode: row.original.positioncode })
               }}
             >
               <i className='tabler-trash text-[22px] text-textSecondary' />

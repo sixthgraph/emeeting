@@ -10,7 +10,6 @@ import { getServerSession } from 'next-auth'
 import { options } from '../../auth/[...nextauth]/options'
 
 import { sendEmail } from '@/utils/mailer'
-import WorkMessage from '../../../../views/apps/workV2/WorkMessage'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,7 +22,6 @@ export async function POST(request: NextRequest) {
     }
 
     const reqBody = await request.json()
-    const { wid } = reqBody
 
     console.log(`${process.env.ROUTE_FLOW_API_URL}/sendwork`)
     console.log(reqBody)
@@ -46,6 +44,7 @@ export async function POST(request: NextRequest) {
     //    }
 
     const toemail = []
+
     toemail.push(reqBody.uid)
 
     const reqBodynotification = {

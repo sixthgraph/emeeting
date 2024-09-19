@@ -63,9 +63,13 @@ const PositionDrawerForm = ({
   const [formData, setFormData] = useState(initialData)
   const [insertData, setInsertData] = useState(initialInsertData)
   const [errors, setErrors] = useState<any[]>([])
-  const [curPositionCode, setCurPositionCode] = useState<any>()
   const { data: session } = useSession()
   const emailData = session?.user.email
+
+  console.log('setData')
+  console.log(setData)
+  console.log('tableData')
+  console.log(tableData)
 
   const handleInsertMany = async () => {
     console.log('insertData == ')
@@ -82,6 +86,7 @@ const PositionDrawerForm = ({
 
     for (i in n) {
       let maxPositionStr = ''
+
       if (String(curMaxPos).length == 2) {
         maxPositionStr = '0' + String(curMaxPos)
       } else {
@@ -129,11 +134,13 @@ const PositionDrawerForm = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     //setFormData(initialData)
 
     //Add
     try {
-      let newFormData: any = formData
+      const newFormData: any = formData
+
       newFormData.create_by = String(emailData)
       newFormData.update_by = String(emailData)
 
@@ -210,6 +217,7 @@ const PositionDrawerForm = ({
 
   useEffect(() => {
     setFormData(updateData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   return (

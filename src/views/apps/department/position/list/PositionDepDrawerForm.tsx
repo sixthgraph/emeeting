@@ -62,6 +62,8 @@ const PositionDepDrawerForm = ({
 
   console.log('tableData === ')
   console.log(tableData)
+  console.log('setData')
+  console.log(setData)
 
   const posObjData: any[] = []
 
@@ -108,6 +110,7 @@ const PositionDepDrawerForm = ({
   useEffect(() => {
     setFormData(updateData)
     setPositonName([])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   console.log('updateData ===')

@@ -72,6 +72,11 @@ const StateinfoDrawerForm = ({
   const { data: session } = useSession()
   const emailData = session?.user.email
 
+  console.log('setData')
+  console.log(setData)
+  console.log('tableData')
+  console.log(tableData)
+
   // const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
   //   try {
   //     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, {
