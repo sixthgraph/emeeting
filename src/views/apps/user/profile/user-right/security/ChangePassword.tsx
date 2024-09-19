@@ -73,6 +73,12 @@ const ChangePassword = () => {
     setOpenAlert(false)
   }
 
+  setTimeout(() => {
+    const pw = document.getElementById('Password') as HTMLInputElement
+
+    pw.value = ''
+  }, 100)
+
   const handleUpdateData = async () => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, userData)
@@ -109,14 +115,16 @@ const ChangePassword = () => {
             <AlertTitle>Ensure that these requirements are met</AlertTitle>
             Minimum 8 characters long, uppercase & symbol
           </Alert>
-          <form>
+          <form autoComplete='off'>
             <Grid container spacing={4}>
               <Grid item xs={12} sm={6}>
                 <CustomTextField
                   fullWidth
                   label='Password'
+                  id='Password'
                   type={isPasswordShown ? 'text' : 'password'}
                   value={userData?.password}
+                  autoComplete='off'
                   onChange={e => setUserData({ ...userData, password: e.target.value as string })}
                   InputProps={{
                     endAdornment: (
@@ -139,6 +147,7 @@ const ChangePassword = () => {
                   label='Confirm Password'
                   type={isConfirmPasswordShown ? 'text' : 'password'}
                   value={confirmPassword}
+                  autoComplete='off'
                   onChange={e => checkPasswordMatch(e.target.value)}
                   InputProps={{
                     endAdornment: (
