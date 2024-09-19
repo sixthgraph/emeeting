@@ -110,7 +110,6 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const [newMessage, setNewMessage] = useState<any>(initialData)
   const [replyRef, setReplyRef] = useState<any>(initialReplyRef)
   const [openReply, setOpenReply] = useState<boolean>(false)
-
   const [personName, setPersonName] = useState<string[]>([])
 
   // const [members, setMembers] = useState<any>([])
@@ -128,6 +127,10 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
     setCommentList(commentdetailData?.comment)
     setOpenReply(false)
   }, [commentdetailData?.comment])
+
+  // useEffect(() => {
+  //   setNewMessage(initialData)
+  // }, [initialData])
 
   useEffect(() => {
     openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
@@ -303,8 +306,12 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   }, [openReply])
 
   const handleReply = async () => {
+    const data: any = newMessage
+
+    data.wid = initialData.wid
+
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, newMessage)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, data)
 
       if (response.data.message === 'success') {
         console.log('---Call reply comment success.------------------')
@@ -348,7 +355,8 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
       message: '',
       itemno: parent_itemno,
       level: 1,
-      registeruid: ''
+      registeruid: '',
+      wid: initialData.wid
     }) //sg bug here
 
     console.log('handleOpenReply set newMessage to')
@@ -374,8 +382,12 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   }
 
   const handleSendMessage = async () => {
+    const data: any = newMessage
+
+    data.wid = initialData.wid
+
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, newMessage)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, data)
 
       if (response.data.message === 'success') {
         console.log('---Call add comment success.------------------')
