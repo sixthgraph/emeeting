@@ -33,7 +33,7 @@ const getData = async ({ dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/eforms`, reqBody, { headers })
 
     if (response.data.message === 'success') {
-      return response.data.data
+      return response.data
     } else {
       throw new Error('Failed to fetch workdata')
     }
@@ -46,8 +46,11 @@ const workPage = async ({ searchParams }: any) => {
   const { wid, dep, rid, pid } = searchParams
   const data = await getData({ wid, dep, rid, pid })
 
+  console.log('work/eform data')
+  console.log(data)
+
   return (
-    <WorkCreate data={data} />
+    <WorkCreate data={data.data} nodeData={data.nodeData} />
 
     //  <>
     //     <h1>For SG - create new request</h1>

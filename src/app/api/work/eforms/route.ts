@@ -21,10 +21,20 @@ export async function POST(req: NextRequest) {
       headers
     })
 
+    const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${rid}/startpoint`, {
+      headers
+    })
+
+    console.log('res_node')
+    console.log(res_node.data)
+
+    //https://rd.excelink.co.th/routeflow-api/block/66826eb05aab127bc19d62ae/startpoint
+
     const response = NextResponse.json({
       message: 'success',
       success: true,
-      data: res.data
+      data: res.data,
+      nodeData: res_node.data
     })
 
     return response

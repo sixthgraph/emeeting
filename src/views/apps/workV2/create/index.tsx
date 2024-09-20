@@ -6,7 +6,10 @@ import { Grid } from '@mui/material'
 
 import CreateWorkProfile from './CreateWorkProfile'
 
-const WorkCreate = ({ data }: { data: any }) => {
+const WorkCreate = ({ data, nodeData }: { data: any; nodeData: any }) => {
+  console.log('nodeData')
+  console.log(nodeData)
+
   useEffect(() => {
     if (window) {
       //window.sessionStorage.setItem('eformData', JSON.stringify(data))
