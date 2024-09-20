@@ -77,11 +77,14 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   //   html.offsetHeight
   // )
 
-  const screenHeight = screen.height
+  //const screenHeight = screen.height
 
   const { data: session } = useSession()
   const [commentList, setCommentList] = useState<any>()
-  const [messageHeight, setMessageHeight] = useState<number>(screenHeight - 270)
+
+  // const [messageHeight, setMessageHeight] = useState<number>(screenHeight - 270)
+  const [screenHeight, setScreenHeight] = useState<number>()
+  const [messageHeight, setMessageHeight] = useState<number>()
   const token = session?.user.token
   const email = session?.user.email
 
@@ -125,6 +128,8 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
 
   useEffect(() => {
     setCommentList(commentdetailData?.comment)
+    setScreenHeight(screen.height)
+    setMessageHeight(screen.height - 270)
     setOpenReply(false)
   }, [commentdetailData?.comment])
 
@@ -133,7 +138,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   // }, [initialData])
 
   useEffect(() => {
-    openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
+    if (screenHeight) openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
   }, [openReply, screenHeight])
 
   const handleClick = () => {
