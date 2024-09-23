@@ -25,8 +25,12 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    console.log('res_node')
-    console.log(res_node.data)
+    const res_doc = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/workflow/documents/${rid}`, {
+      headers
+    })
+
+    console.log('res_doc')
+    console.log(res_doc.data)
 
     //https://rd.excelink.co.th/routeflow-api/block/66826eb05aab127bc19d62ae/startpoint
 
@@ -34,7 +38,8 @@ export async function POST(req: NextRequest) {
       message: 'success',
       success: true,
       data: res.data,
-      nodeData: res_node.data
+      nodeData: res_node.data,
+      docData: res_doc.data
     })
 
     return response

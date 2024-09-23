@@ -50,7 +50,7 @@ const workPage = async ({ searchParams }: any) => {
   console.log(data)
 
   return (
-    <WorkCreate data={data.data} nodeData={data.nodeData} />
+    <WorkCreate data={data.data} nodeData={data.nodeData} docData={data.docData} />
 
     //  <>
     //     <h1>For SG - create new request</h1>

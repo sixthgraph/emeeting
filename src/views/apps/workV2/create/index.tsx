@@ -6,9 +6,11 @@ import { Grid } from '@mui/material'
 
 import CreateWorkProfile from './CreateWorkProfile'
 
-const WorkCreate = ({ data, nodeData }: { data: any; nodeData: any }) => {
+const WorkCreate = ({ data, nodeData, docData }: { data: any; nodeData: any; docData: any }) => {
   console.log('nodeData')
   console.log(nodeData)
+  console.log('docData')
+  console.log(docData)
 
   useEffect(() => {
     if (window) {
