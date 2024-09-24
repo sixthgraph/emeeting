@@ -117,8 +117,9 @@ export async function POST(req: NextRequest) {
           headers
         })
 
-        console.log('res_doc')
-        console.log(res_doc.data)
+        const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/startpoint`, {
+          headers
+        })
 
         console.log('uri getnextprocess')
         console.log(
@@ -188,6 +189,7 @@ export async function POST(req: NextRequest) {
             conditionData: condataObj,
             commentData: commentdata,
             documentData: res_doc.data,
+            nodeData: res_node.data,
             notificationData: res_notification.data
           })
 

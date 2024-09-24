@@ -14,12 +14,14 @@ const WorkDetailV2 = ({
   conditiondata,
   commentdata,
   documentdata,
+  nodedata,
   notificationdata
 }: {
   data: Data
   conditiondata?: any
   commentdata?: any
   documentdata?: any
+  nodedata?: any
   notificationdata?: any
 }) => {
   const workData = data?.data
@@ -39,6 +41,7 @@ const WorkDetailV2 = ({
               conditionData={conditiondata}
               notificationData={notificationdata}
               documentList={documentdata}
+              nodeData={nodedata}
             />
           </Grid>
         </Grid>

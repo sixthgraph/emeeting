@@ -120,12 +120,14 @@ const WorkProfile = ({
   workData,
   conditionData,
   notificationData,
-  documentList
+  documentList,
+  nodeData
 }: {
   workData?: any
   conditionData?: any
   notificationData?: any
   documentList?: any
+  nodeData?: any
 }) => {
   const [open, setOpen] = useState<boolean>(false)
 
@@ -148,7 +150,9 @@ const WorkProfile = ({
   console.log(notificationData)
 
   const curWorkinprocess = workInprocess.find((elem: any) => elem.pid == curBlockId)
-  const curNodeData = curWorkinprocess?.nodeinfo[0]
+
+  //const curNodeData = curWorkinprocess?.nodeinfo[0]
+  const curNodeData = nodeData
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
 
@@ -196,8 +200,8 @@ const WorkProfile = ({
   const activity = workData.activity
 
   useEffect(() => {
-    if (curNodeData.eformlist) {
-      const eformData = curNodeData.eformlist
+    if (curNodeData[0].eformlist) {
+      const eformData = curNodeData[0].eformlist
 
       for (const item of eformData) {
         const reqField = item.require_field
@@ -207,7 +211,7 @@ const WorkProfile = ({
         }
       }
     }
-  }, [curNodeData.eformlist])
+  }, [curNodeData, curNodeData.eformlist])
 
   // const attactmentData = workData.attachment
   // console.log(attactmentData)
@@ -301,7 +305,7 @@ const WorkProfile = ({
           for (const rule_item of rules) {
             const curelementid = rule_item.id
             const oper = rule_item.operator
-            const inputField: any = document.getElementById(curelementid)
+            const inputField: any = document.getElementById(curelementid) as HTMLInputElement
 
             // Get the value of the input field
             const value = inputField.value
@@ -589,19 +593,57 @@ const WorkProfile = ({
   // }
 
   const handleTask = async () => {
-    console.log('start handleTask')
+    console.log('-----start handleTask-------')
     console.log('curTask --- ')
     console.log(curTask)
+
+    if (curTask.includes('input')) {
+      const eformlist = curNodeData[0].eformlist
+
+      console.log('check require field')
+
+      const requireForm = eformlist.filter((elem: any) => {
+        return elem.privilege == 'modify'
+      })
+
+      for (const item of requireForm) {
+        console.log('--------------')
+        console.log(`formid : ${item.formid}`)
+        console.log(item.require_field)
+        console.log('--------------')
+
+        const require_field: any = item.require_field
+
+        for (const elem of require_field) {
+          const field = document.getElementById(elem.id) as HTMLInputElement
+
+          field?.classList.add('border-red-500')
+        }
+      }
+    }
+
+    if (documentList) {
+      // console.log('documentList')
+      // console.log(documentList)
+
+      for (const item of documentList) {
+        console.log('Check ' + item.action + ' สำหรับ ' + item.document_name + `(${item._id})`)
+      }
+    }
+
+    console.log('-----end handleTask-------')
   }
 
   const handleEditAndSendWork = async () => {
     handleEditwork().then(() => {
       handleTask().then(() => {
-        handleDecision().then(() => {
-          handlesendwork().then(() => {
-            handleNotificateion()
-          })
-        })
+        console.log('sg here')
+
+        // handleDecision().then(() => {
+        //   handlesendwork().then(() => {
+        //     handleNotificateion()
+        //   })
+        // })
       })
     })
   }
