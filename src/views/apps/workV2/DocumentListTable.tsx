@@ -44,23 +44,13 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
   console.log('NOON TEST === docData === ')
   console.log('docData')
   console.log(docData)
-  console.log(docData.attachment)
+
+  // console.log(docData.attachment)
+  console.log('attachmentList')
   console.log(attachmentList)
 
   console.log('documentList')
   console.log(documentList)
-
-  for (const item of documentList) {
-    console.log('item ------+++------')
-    console.log(item)
-
-    const findRefId = attachmentList.find((elem: any) => elem.refid === item._id)
-
-    //const findRefId = attachmentList.find((elem: any) => elem.dep === '66542134cf450c9ba79c2e23')
-
-    console.log('findRefId')
-    console.log(findRefId)
-  }
 
   useEffect(() => {
     if (!open) {
@@ -86,7 +76,40 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/list`, reqBody)
 
-      const resData = response.data.data
+      let resData = response.data.data
+
+      if (!resData) {
+        resData = []
+      }
+
+      for (const item of documentList) {
+        // console.log('item ------+++------')
+        // console.log(item)
+
+        const findRefId = attachmentList.find((elem: any) => elem.refid === item._id)
+
+        if (!findRefId) {
+          // console.log('draw attachment to table')
+
+          const newData = {
+            allowupdate: 'Y',
+            attachdate: '',
+            attachname: '',
+            dep: '',
+            filename: item.document_name,
+            linkwid: '-',
+            uid: '',
+            wid: '',
+            refid: '',
+            action: item.action
+          }
+
+          resData.push(newData)
+        }
+      }
+
+      console.log('handleGetDocument return')
+      console.log(resData)
 
       setAttachmentList(resData)
 
@@ -137,7 +160,9 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
   }
 
   const formatdocType = (data: any) => {
-    const type = data.split('.')[1]
+    const typeObj = data.split('.')
+    const l = typeObj.length
+    const type = typeObj[l - 1]
 
     return type
   }
@@ -201,65 +226,74 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
                   <td className='pis-6 pli-2 plb-3'>
                     <div className='flex items-center gap-4'>
                       <Icon className={`text-[40px] text-slate-400 tabler-file-type-${formatdocType(row.filename)}`} />
-                      {/* <Avatar
-                      variant='rounded'
-                      className={classnames('is-[50px] bs-[30px]', {
-                        // 'bg-white': _mode === 'dark',
-                        // 'bg-actionHover': _mode === 'light'
-                      })}
-                    >
-                      <img width={30} alt={row.imgName} src={`/images/logos/${row.imgName}.png`} />
-                    </Avatar> */}
                     </div>
                   </td>
                   <td className='pli-2 plb-3'>
                     <div className='flex flex-col'>
-                      {/* {row.attachname}
-                      <br></br>
-                      {row.attachname.replace('D:\\routeflow', 'routefile')} */}
-                      <Link
-                        target='_blank'
-                        href={'https://rd.infoma.net' + row.attachname.replace('D:\\routeflow', '\\routefile')}
-                      >
-                        <Typography color='text.primary'>{row.filename}</Typography>
-                      </Link>
+                      {row.wid !== '' ? (
+                        <Link
+                          target='_blank'
+                          href={'https://rd.infoma.net' + row.attachname.replace('D:\\routeflow', '\\routefile')}
+                        >
+                          <Typography color='text.primary'>{row.filename}</Typography>
+                        </Link>
+                      ) : (
+                        <>
+                          <Typography color='text.primary'>{row.filename}</Typography>
+                          <Typography variant='body2'>* กรุณาแนบ{row.filename}</Typography>
+                        </>
+                      )}
                     </div>
                   </td>
                   <td className='pli-2 plb-3'>
-                    <Typography variant='body2' color='text.disabled'>
-                      {formatshortdate(row.attachdate)}
-                    </Typography>
+                    {row.wid !== '' ? (
+                      <Typography variant='body2' color='text.disabled'>
+                        {formatshortdate(row.attachdate)}
+                      </Typography>
+                    ) : (
+                      <Typography variant='body2' color='text.disabled'>
+                        -
+                      </Typography>
+                    )}
                   </td>
                   <td className='pli-2 plb-3 pie-6 text-right'>
                     <Typography color='text.primary'>{row.uid}</Typography>
                   </td>
                   <td className='pli-2 plb-3 pie-6 text-right'>
-                    <IconButton
-                      className='deleteFile'
-                      onClick={() => {
-                        // handleDeleteFile({ wid: row.wid }, { itemno: row.itemno })
-                        setConfirm(true)
-                        setDeleteFile({
-                          wid: row.wid,
-                          uid: row.uid,
-                          dep: row.dep,
-                          itemno: row.itemno,
-                          rid: docData.rid,
-                          pid: docData.pid
-                        })
-                      }}
-                    >
-                      <i className='tabler-trash text-[22px] text-textSecondary' />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => {
-                        // handleEditFile()
-                        handleClickOpen()
-                        setEditFile({ filename: row.filename, dep: row.dep, itemno: row.itemno, btype: 'edit' })
-                      }}
-                    >
-                      <i className='tabler-paperclip text-[22px] text-textSecondary' />
-                    </IconButton>
+                    {row.wid !== '' ? (
+                      <>
+                        <IconButton
+                          className='deleteFile'
+                          onClick={() => {
+                            // handleDeleteFile({ wid: row.wid }, { itemno: row.itemno })
+                            setConfirm(true)
+                            setDeleteFile({
+                              wid: row.wid,
+                              uid: row.uid,
+                              dep: row.dep,
+                              itemno: row.itemno,
+                              rid: docData.rid,
+                              pid: docData.pid
+                            })
+                          }}
+                        >
+                          <i className='tabler-trash text-[22px] text-textSecondary' />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            // handleEditFile()
+                            handleClickOpen()
+                            setEditFile({ filename: row.filename, dep: row.dep, itemno: row.itemno, btype: 'edit' })
+                          }}
+                        >
+                          <i className='tabler-paperclip text-[22px] text-textSecondary' />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <Button onClick={handleClickOpen} variant='outlined' size='small'>
+                        {row.action}
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}

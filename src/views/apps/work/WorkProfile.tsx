@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { SyntheticEvent } from 'react'
 
 // MUI Imports
@@ -25,6 +25,7 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
 import {
+  Badge,
   Box,
   Button,
   CardActions,
@@ -151,19 +152,15 @@ const WorkProfile = ({
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
 
-  for (const item of documentList) {
-    const docId = documentProperties.find((elem: any) => elem.document_id === item._id)
+  if (documentList && documentProperties) {
+    for (const item of documentList) {
+      const docId = documentProperties.find((elem: any) => elem.document_id === item._id)
 
-    if (docId) {
-      item.action = docId.action
+      if (docId) {
+        item.action = docId.action
+      }
     }
   }
-
-  // console.log('documentList ------')
-  // console.log(documentList)
-
-  // console.log('documentProperty ------')
-  // console.log(documentProperties)
 
   console.log('curNodeData -------')
   console.log(curNodeData)
@@ -187,13 +184,27 @@ const WorkProfile = ({
 
   const [value, setValue] = useState('1')
   const [dialogTitle, setDialogTitle] = useState('Title')
+  const [reqStatus, setReqStatus] = useState<boolean>(false)
   const [dialogMsg, setDialogMsg] = useState('Msg')
   const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
   const params = useParams()
   const { lang: locale } = params
   const basepath = process.env.NEXT_PUBLIC_BASEPATH
-
   const activity = workData.activity
+
+  useEffect(() => {
+    if (curNodeData.eformlist) {
+      const eformData = curNodeData.eformlist
+
+      for (const item of eformData) {
+        const reqField = item.require_field
+
+        if (reqField.length > 0 && item.privilege === 'modify') {
+          setReqStatus(true)
+        }
+      }
+    }
+  }, [curNodeData.eformlist])
 
   // const attactmentData = workData.attachment
   // console.log(attactmentData)
@@ -860,8 +871,30 @@ const WorkProfile = ({
                     <Tab
                       label={
                         <div id='eform-tab' className='flex items-center gap-1.5 font-semibold '>
-                          <i className='tabler-article text-lg' />
-                          Forms
+                          {reqStatus ? (
+                            <Badge
+                              color='error'
+                              className='cursor-pointer'
+                              variant='dot'
+                              overlap='circular'
+                              sx={{
+                                '& .MuiBadge-dot': {
+                                  top: 6,
+                                  right: -3,
+                                  boxShadow: 'var(--mui-palette-background-paper) 0px 0px 0px 2px'
+                                }
+                              }}
+                              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            >
+                              <i className='tabler-article text-lg mr-1' />
+                              Forms
+                            </Badge>
+                          ) : (
+                            <>
+                              <i className='tabler-article text-lg mr-1' />
+                              Forms
+                            </>
+                          )}
                         </div>
                       }
                       value='1'
@@ -869,8 +902,30 @@ const WorkProfile = ({
                     <Tab
                       label={
                         <div className='flex items-center gap-1.5 font-semibold'>
-                          <i className='tabler-paperclip text-lg' />
-                          Documents
+                          {documentProperties?.length > 0 ? (
+                            <Badge
+                              color='error'
+                              className='cursor-pointer'
+                              variant='dot'
+                              overlap='circular'
+                              sx={{
+                                '& .MuiBadge-dot': {
+                                  top: 6,
+                                  right: -3,
+                                  boxShadow: 'var(--mui-palette-background-paper) 0px 0px 0px 2px'
+                                }
+                              }}
+                              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            >
+                              <i className='tabler-paperclip text-lg mr-1' />
+                              Documents
+                            </Badge>
+                          ) : (
+                            <>
+                              <i className='tabler-paperclip text-lg mr-1' />
+                              Documents
+                            </>
+                          )}
                         </div>
                       }
                       value='2'
