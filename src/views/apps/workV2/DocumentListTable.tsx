@@ -36,9 +36,7 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
   const [deletefile, setDeleteFile] = useState({})
   const [editfile, setEditFile] = useState({})
   const [attachmentList, setAttachmentList] = useState<any>(docData?.attachment)
-
   const { data: session } = useSession()
-
   const token = session?.user.token
 
   console.log('NOON TEST === docData === ')
@@ -49,7 +47,7 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
   console.log('attachmentList')
   console.log(attachmentList)
 
-  console.log('documentList')
+  console.log('documentList in table')
   console.log(documentList)
 
   useEffect(() => {
@@ -65,8 +63,6 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
   const handleCloseConfirm = () => setConfirm(false)
 
   const handleGetDocument = async () => {
-    console.log('start handleGetDocument')
-
     const reqBody = {
       wid: docData.wid,
       itemno: '',
@@ -83,14 +79,9 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
       }
 
       for (const item of documentList) {
-        // console.log('item ------+++------')
-        // console.log(item)
-
         const findRefId = attachmentList.find((elem: any) => elem.refid === item._id)
 
         if (!findRefId) {
-          // console.log('draw attachment to table')
-
           const newData = {
             allowupdate: 'Y',
             attachdate: '',
@@ -101,23 +92,16 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
             uid: '',
             wid: '',
             refid: '',
-            action: item.action
+            action: item.action,
+            format: item.format,
+            size: item.size
           }
 
           resData.push(newData)
         }
       }
 
-      console.log('handleGetDocument return')
-      console.log(resData)
-
       setAttachmentList(resData)
-
-      // if (response.data.message === 'success') {
-      //   console.log('---Call Editwork success.------------------')
-      // } else {
-      //   console.log(response.data.message)
-      // }
     } catch (error: any) {
       console.log('Editwork failed. ', error.message)
     }
@@ -225,7 +209,13 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
                 <tr key={index} className='border-0'>
                   <td className='pis-6 pli-2 plb-3'>
                     <div className='flex items-center gap-4'>
-                      <Icon className={`text-[40px] text-slate-400 tabler-file-type-${formatdocType(row.filename)}`} />
+                      {row.wid !== '' ? (
+                        <Icon
+                          className={`text-[40px] text-slate-400 tabler-file-type-${formatdocType(row.filename)}`}
+                        />
+                      ) : (
+                        <Icon className={`text-[40px] text-slate-400 tabler-file-alert`} />
+                      )}
                     </div>
                   </td>
                   <td className='pli-2 plb-3'>
@@ -241,6 +231,9 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
                         <>
                           <Typography color='text.primary'>{row.filename}</Typography>
                           <Typography variant='body2'>* กรุณาแนบ{row.filename}</Typography>
+                          <Typography variant='body2'>
+                            รองรับไฟล์ {row.format} ขนาดไม่เกิน {row.size}MB
+                          </Typography>
                         </>
                       )}
                     </div>

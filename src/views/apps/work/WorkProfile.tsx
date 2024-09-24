@@ -152,6 +152,9 @@ const WorkProfile = ({
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
 
+  console.log('documentList')
+  console.log(documentList)
+
   if (documentList && documentProperties) {
     for (const item of documentList) {
       const docId = documentProperties.find((elem: any) => elem.document_id === item._id)
@@ -242,20 +245,7 @@ const WorkProfile = ({
 
     workData.eformdata = eformData
 
-    //workData.workflowid = workflowid
-
-    // workData.blockId = blockid
-
     const reqBody = workData
-
-    // delete reqBody.usercreateinfo
-    // delete reqBody.workinprocess
-
-    // delete reqBody.curdep
-    // delete reqBody.curuid
-
-    console.log('(edit worj reqBody) reqbody ===')
-    console.log(reqBody)
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, reqBody)
