@@ -5,10 +5,6 @@ import { NextResponse } from 'next/server'
 
 import axios from 'axios'
 
-//import RoleDialog from '../../../../components/dialogs/role-dialog/index'
-//import PricingDialog from '../../../../components/dialogs/pricing/index'
-//import { null_ } from 'valibot'
-
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
   const { wid, dep, token, email, wip } = reqBody
@@ -33,16 +29,15 @@ export async function POST(req: NextRequest) {
     })
 
     const workinfo = res.data.data.detail
-
     const workinprocess = res.data.data.detail.workinprocess
 
     console.log('workinfo')
     console.log(workinfo)
 
-    console.log('--workinprocess 1---')
-    console.log(workinprocess)
+    // console.log('--workinprocess 1---')
+    // console.log(workinprocess)
 
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`)
+    // console.log(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`)
     let commentdata
 
     try {
@@ -99,6 +94,7 @@ export async function POST(req: NextRequest) {
           data: workinfo,
           conditionData: condataObj,
           commentData: commentdata,
+          documentData: 'aaa',
           res_notification: null
         })
 
@@ -116,6 +112,13 @@ export async function POST(req: NextRequest) {
         workinfo.senderuid = curwip[0].senderuid
         workinfo.senderpid = curwip[0].senderpid
         workinfo.action = curwip[0].action
+
+        const res_doc = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/workflow/documents/${curwip[0].rid}`, {
+          headers
+        })
+
+        console.log('res_doc')
+        console.log(res_doc.data)
 
         console.log('uri getnextprocess')
         console.log(
@@ -184,6 +187,7 @@ export async function POST(req: NextRequest) {
             data: workinfo,
             conditionData: condataObj,
             commentData: commentdata,
+            documentData: res_doc.data,
             notificationData: res_notification.data
           })
 

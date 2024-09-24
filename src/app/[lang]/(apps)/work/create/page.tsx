@@ -30,7 +30,7 @@ const getData = async ({ dep, rid, pid }: { wid?: any; dep?: any; rid?: any; pid
       Expires: '0'
     }
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/eforms`, reqBody, { headers })
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/get`, reqBody, { headers })
 
     if (response.data.message === 'success') {
       return response.data

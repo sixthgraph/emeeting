@@ -13,12 +13,14 @@ const WorkDetailV2 = ({
   data,
   conditiondata,
   commentdata,
+  documentdata,
   notificationdata
 }: {
   data: Data
-  conditiondata: any
-  commentdata: any
-  notificationdata: any
+  conditiondata?: any
+  commentdata?: any
+  documentdata?: any
+  notificationdata?: any
 }) => {
   const workData = data?.data
 
@@ -32,7 +34,12 @@ const WorkDetailV2 = ({
       <Grid item xs={8}>
         <Grid container spacing={6}>
           <Grid item xs={12} className='flex flex-col gap-6'>
-            <WorkProfile workData={workData} conditionData={conditiondata} notificationData={notificationdata} />
+            <WorkProfile
+              workData={workData}
+              conditionData={conditiondata}
+              notificationData={notificationdata}
+              documentList={documentdata}
+            />
           </Grid>
         </Grid>
       </Grid>

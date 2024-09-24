@@ -30,7 +30,7 @@ import FileUploader from './create/FileUploader'
 
 // import FileUploaderCloudinary from './create/FileUploaderCloudinary'
 
-const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => {
+const DocumentListTable = ({ documentList, docData }: { documentList?: any; docData?: any }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deletefile, setDeleteFile] = useState({})
@@ -42,8 +42,25 @@ const DocumentListTable = ({ docData }: { docData?: any; deletefile?: any }) => 
   const token = session?.user.token
 
   console.log('NOON TEST === docData === ')
+  console.log('docData')
+  console.log(docData)
   console.log(docData.attachment)
   console.log(attachmentList)
+
+  console.log('documentList')
+  console.log(documentList)
+
+  for (const item of documentList) {
+    console.log('item ------+++------')
+    console.log(item)
+
+    const findRefId = attachmentList.find((elem: any) => elem.refid === item._id)
+
+    //const findRefId = attachmentList.find((elem: any) => elem.dep === '66542134cf450c9ba79c2e23')
+
+    console.log('findRefId')
+    console.log(findRefId)
+  }
 
   useEffect(() => {
     if (!open) {

@@ -48,6 +48,7 @@ const workPage = async ({ searchParams }: any) => {
   const data = res?.data
   const conditionData = res?.data.conditionData
   const commentData = res?.data.commentData
+  const documentData = res?.data.documentData
   const notificationData = res?.data.notificationData
 
   console.log('---page res worklist')
@@ -59,6 +60,7 @@ const workPage = async ({ searchParams }: any) => {
         data={data}
         conditiondata={conditionData}
         commentdata={commentData}
+        documentdata={documentData}
         notificationdata={notificationData}
       />
     )

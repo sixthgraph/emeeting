@@ -118,16 +118,19 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 const WorkProfile = ({
   workData,
   conditionData,
-  notificationData
+  notificationData,
+  documentList
 }: {
   workData?: any
   conditionData?: any
   notificationData?: any
+  documentList?: any
 }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   console.log('workData ===')
   console.log(workData)
+
   const eformData = workData?.eformdata
   let i: any
   const eform: any = eformData
@@ -146,6 +149,21 @@ const WorkProfile = ({
   const curWorkinprocess = workInprocess.find((elem: any) => elem.pid == curBlockId)
   const curNodeData = curWorkinprocess?.nodeinfo[0]
   const curTask = curWorkinprocess?.nodeinfo[0].task
+  const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
+
+  for (const item of documentList) {
+    const docId = documentProperties.find((elem: any) => elem.document_id === item._id)
+
+    if (docId) {
+      item.action = docId.action
+    }
+  }
+
+  // console.log('documentList ------')
+  // console.log(documentList)
+
+  // console.log('documentProperty ------')
+  // console.log(documentProperties)
 
   console.log('curNodeData -------')
   console.log(curNodeData)
@@ -905,7 +923,7 @@ const WorkProfile = ({
               />
             </TabPanel>
             <TabPanel value='2'>
-              <DocumentListTable docData={documentData} />
+              <DocumentListTable documentList={documentList} docData={documentData} />
             </TabPanel>
             <TabPanel value='3'>
               <Card>
