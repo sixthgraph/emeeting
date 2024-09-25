@@ -597,6 +597,9 @@ const WorkProfile = ({
     console.log('curTask --- ')
     console.log(curTask)
 
+    let inputPass = true
+    const documentPass = true
+
     if (curTask.includes('input')) {
       const eformlist = curNodeData[0].eformlist
 
@@ -617,7 +620,13 @@ const WorkProfile = ({
         for (const elem of require_field) {
           const field = document.getElementById(elem.id) as HTMLInputElement
 
-          field?.classList.add('border-red-500')
+          if (field.value === '') {
+            inputPass = false
+
+            field?.classList.add('border-red-500')
+          } else {
+            field?.classList.remove('border-red-500')
+          }
         }
       }
     }
@@ -626,24 +635,35 @@ const WorkProfile = ({
       // console.log('documentList')
       // console.log(documentList)
 
+      console.log('documentPass')
+      console.log(documentPass)
+
       for (const item of documentList) {
         console.log('Check ' + item.action + ' สำหรับ ' + item.document_name + `(${item._id})`)
       }
     }
 
     console.log('-----end handleTask-------')
+
+    if (inputPass && documentPass) {
+      return true
+    } else {
+      return false
+    }
   }
 
   const handleEditAndSendWork = async () => {
     handleEditwork().then(() => {
-      handleTask().then(() => {
+      handleTask().then(r => {
         console.log('sg here')
 
-        // handleDecision().then(() => {
-        //   handlesendwork().then(() => {
-        //     handleNotificateion()
-        //   })
-        // })
+        if (r) {
+          handleDecision().then(() => {
+            handlesendwork().then(() => {
+              handleNotificateion()
+            })
+          })
+        }
       })
     })
   }
