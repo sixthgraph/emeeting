@@ -205,91 +205,99 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
               </tr>
             </thead>
             <tbody>
-              {attachmentList?.map((row: any, index: any) => (
-                <tr key={index} className='border-0'>
-                  <td className='pis-6 pli-2 plb-3'>
-                    <div className='flex items-center gap-4'>
+              {attachmentList.length > 0 ? (
+                attachmentList?.map((row: any, index: any) => (
+                  <tr key={index} className='border-0'>
+                    <td className='pis-6 pli-2 plb-3'>
+                      <div className='flex items-center gap-4'>
+                        {row.wid !== '' ? (
+                          <Icon
+                            className={`text-[40px] text-slate-400 tabler-file-type-${formatdocType(row.filename)}`}
+                          />
+                        ) : (
+                          <Icon className={`text-[40px] text-slate-400 tabler-file-alert`} />
+                        )}
+                      </div>
+                    </td>
+                    <td className='pli-2 plb-3'>
+                      <div className='flex flex-col'>
+                        {row.wid !== '' ? (
+                          <Link
+                            target='_blank'
+                            href={'https://rd.infoma.net' + row.attachname.replace('D:\\routeflow', '\\routefile')}
+                          >
+                            <Typography color='text.primary'>{row.filename}</Typography>
+                          </Link>
+                        ) : (
+                          <>
+                            <Typography color='text.primary'>{row.filename}</Typography>
+                            <Typography variant='body2'>* กรุณาแนบ{row.filename}</Typography>
+                            <Typography variant='body2'>
+                              รองรับไฟล์ {row.format} ขนาดไม่เกิน {row.size}MB
+                            </Typography>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                    <td className='pli-2 plb-3'>
                       {row.wid !== '' ? (
-                        <Icon
-                          className={`text-[40px] text-slate-400 tabler-file-type-${formatdocType(row.filename)}`}
-                        />
+                        <Typography variant='body2' color='text.disabled'>
+                          {formatshortdate(row.attachdate)}
+                        </Typography>
                       ) : (
-                        <Icon className={`text-[40px] text-slate-400 tabler-file-alert`} />
+                        <Typography variant='body2' color='text.disabled'>
+                          -
+                        </Typography>
                       )}
-                    </div>
-                  </td>
-                  <td className='pli-2 plb-3'>
-                    <div className='flex flex-col'>
+                    </td>
+                    <td className='pli-2 plb-3 pie-6 text-right'>
+                      <Typography color='text.primary'>{row.uid}</Typography>
+                    </td>
+                    <td className='pli-2 plb-3 pie-6 text-right'>
                       {row.wid !== '' ? (
-                        <Link
-                          target='_blank'
-                          href={'https://rd.infoma.net' + row.attachname.replace('D:\\routeflow', '\\routefile')}
-                        >
-                          <Typography color='text.primary'>{row.filename}</Typography>
-                        </Link>
-                      ) : (
                         <>
-                          <Typography color='text.primary'>{row.filename}</Typography>
-                          <Typography variant='body2'>* กรุณาแนบ{row.filename}</Typography>
-                          <Typography variant='body2'>
-                            รองรับไฟล์ {row.format} ขนาดไม่เกิน {row.size}MB
-                          </Typography>
+                          <IconButton
+                            className='deleteFile'
+                            onClick={() => {
+                              // handleDeleteFile({ wid: row.wid }, { itemno: row.itemno })
+                              setConfirm(true)
+                              setDeleteFile({
+                                wid: row.wid,
+                                uid: row.uid,
+                                dep: row.dep,
+                                itemno: row.itemno,
+                                rid: docData.rid,
+                                pid: docData.pid
+                              })
+                            }}
+                          >
+                            <i className='tabler-trash text-[22px] text-textSecondary' />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => {
+                              // handleEditFile()
+                              handleClickOpen()
+                              setEditFile({ filename: row.filename, dep: row.dep, itemno: row.itemno, btype: 'edit' })
+                            }}
+                          >
+                            <i className='tabler-paperclip text-[22px] text-textSecondary' />
+                          </IconButton>
                         </>
+                      ) : (
+                        <Button onClick={handleClickOpen} variant='outlined' size='small'>
+                          {row.action}
+                        </Button>
                       )}
-                    </div>
-                  </td>
-                  <td className='pli-2 plb-3'>
-                    {row.wid !== '' ? (
-                      <Typography variant='body2' color='text.disabled'>
-                        {formatshortdate(row.attachdate)}
-                      </Typography>
-                    ) : (
-                      <Typography variant='body2' color='text.disabled'>
-                        -
-                      </Typography>
-                    )}
-                  </td>
-                  <td className='pli-2 plb-3 pie-6 text-right'>
-                    <Typography color='text.primary'>{row.uid}</Typography>
-                  </td>
-                  <td className='pli-2 plb-3 pie-6 text-right'>
-                    {row.wid !== '' ? (
-                      <>
-                        <IconButton
-                          className='deleteFile'
-                          onClick={() => {
-                            // handleDeleteFile({ wid: row.wid }, { itemno: row.itemno })
-                            setConfirm(true)
-                            setDeleteFile({
-                              wid: row.wid,
-                              uid: row.uid,
-                              dep: row.dep,
-                              itemno: row.itemno,
-                              rid: docData.rid,
-                              pid: docData.pid
-                            })
-                          }}
-                        >
-                          <i className='tabler-trash text-[22px] text-textSecondary' />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => {
-                            // handleEditFile()
-                            handleClickOpen()
-                            setEditFile({ filename: row.filename, dep: row.dep, itemno: row.itemno, btype: 'edit' })
-                          }}
-                        >
-                          <i className='tabler-paperclip text-[22px] text-textSecondary' />
-                        </IconButton>
-                      </>
-                    ) : (
-                      <Button onClick={handleClickOpen} variant='outlined' size='small'>
-                        {row.action}
-                      </Button>
-                    )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className='text-center'>
+                    Document not found.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

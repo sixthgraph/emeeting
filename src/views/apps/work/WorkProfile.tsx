@@ -25,6 +25,8 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
 import {
+  Alert,
+  AlertTitle,
   Badge,
   Box,
   Button,
@@ -130,25 +132,12 @@ const WorkProfile = ({
   nodeData?: any
 }) => {
   const [open, setOpen] = useState<boolean>(false)
-
-  console.log('workData ===')
-  console.log(workData)
-
+  const [reqFieldData, setReqFieldData] = useState([])
+  const [firstReqField, setFirstReqField] = useState<any>('')
   const eformData = workData?.eformdata
-  let i: any
-  const eform: any = eformData
-
   const workInprocess = workData?.workinprocess
   const curBlockId = workData?.blockid
-
   const rolbackConditiondata = conditionData
-
-  console.log('conditionData -----')
-  console.log(conditionData)
-
-  console.log('notificationData----')
-  console.log(notificationData)
-
   const curWorkinprocess = workInprocess.find((elem: any) => elem.pid == curBlockId)
 
   //const curNodeData = curWorkinprocess?.nodeinfo[0]
@@ -156,8 +145,16 @@ const WorkProfile = ({
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
 
+  console.log('workData ===')
+  console.log(workData)
+  console.log('conditionData -----')
+  console.log(conditionData)
+  console.log('notificationData----')
+  console.log(notificationData)
   console.log('documentList')
   console.log(documentList)
+  console.log('curNodeData -------')
+  console.log(curNodeData)
 
   if (documentList && documentProperties) {
     for (const item of documentList) {
@@ -169,10 +166,10 @@ const WorkProfile = ({
     }
   }
 
-  console.log('curNodeData -------')
-  console.log(curNodeData)
-
   const router = useRouter()
+
+  let i: any
+  const eform: any = eformData
 
   for (i in eform) {
     eformData[i]._id = eform[i].Id
@@ -193,7 +190,8 @@ const WorkProfile = ({
   const [dialogTitle, setDialogTitle] = useState('Title')
   const [reqStatus, setReqStatus] = useState<boolean>(false)
   const [dialogMsg, setDialogMsg] = useState('Msg')
-  const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
+  // const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
+  const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].form_id)
   const params = useParams()
   const { lang: locale } = params
   const basepath = process.env.NEXT_PUBLIC_BASEPATH
@@ -213,21 +211,6 @@ const WorkProfile = ({
     }
   }, [curNodeData, curNodeData.eformlist])
 
-  // const attactmentData = workData.attachment
-  // console.log(attactmentData)
-
-  // const searchParams = useSearchParams()
-
-  // const workflowid = searchParams.get('workflowid')
-  // const blockid = searchParams.get('blockid')
-  // const dep = searchParams.get('dep')
-
-  // const paramsData = {
-  //   workflowid: workflowid,
-  //   blockid: blockid,
-  //   dep: dep
-  // }
-
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
@@ -236,7 +219,17 @@ const WorkProfile = ({
     setOpen(true)
   }
 
-  const handleClose = () => setOpen(false)
+  const handleClose = () => {
+    setOpen(false)
+    setReqFieldData([])
+    const reqField = document.getElementById(firstReqField) as HTMLInputElement
+    setTimeout(() => {
+      reqField.focus()
+    }, 300)
+    setTimeout(() => {
+      setFirstReqField('')
+    }, 500)
+  }
 
   // States
 
@@ -598,10 +591,10 @@ const WorkProfile = ({
     console.log(curTask)
 
     let inputPass = true
-    const documentPass = true
 
     if (curTask.includes('input')) {
       const eformlist = curNodeData[0].eformlist
+      const newObjData: any = reqFieldData
 
       console.log('check require field')
 
@@ -610,6 +603,19 @@ const WorkProfile = ({
       })
 
       for (const item of requireForm) {
+        const eformName = eformData.find((ef: any) => {
+          return ef.form_id == item.formid
+        }).form_name
+
+        const newData: any = {
+          formId: item.formid,
+          formName: eformName,
+          requireField: []
+        }
+
+        console.log('newData')
+        console.log(newData)
+
         console.log('--------------')
         console.log(`formid : ${item.formid}`)
         console.log(item.require_field)
@@ -622,14 +628,73 @@ const WorkProfile = ({
 
           if (field.value === '') {
             inputPass = false
+            const fieldLabel = document.querySelector("[for='" + elem.id + "']") as HTMLLabelElement
+
+            // sg here
+
+            console.log('----- start field not value ----')
+            console.log(`formId : ${item.formid}`)
+            console.log(`formName : ${eformName}`)
+            console.log(`fieldName : ${fieldLabel.textContent}`)
+            console.log(`fieldId : ${elem.id}`)
+            console.log('----- end field not value ----')
+
+            newData.requireField.push({
+              fieldId: elem.id,
+              fieldName: fieldLabel.textContent
+            })
+
+            // const newData = {
+            //   formId: item.formid,
+            //   formName: eformName,
+            //   fieldId: elem.id,
+            //   fieldName: fieldLabel.textContent
+            // }
 
             field?.classList.add('border-red-500')
+            field?.classList.add('error')
           } else {
             field?.classList.remove('border-red-500')
+            field?.classList.remove('error')
           }
         }
+
+        newObjData.push(newData)
       }
+
+      setReqFieldData(newObjData)
     }
+
+    if (!inputPass) {
+      //setOpen(true) // sg here
+      setDialogTitle('กรุณากรอกข้อมูลให้ครบถ้วน')
+      setDialogMsg('ไม่สามารถดำเนินการได้ กรุณากรอกข้อมูลให้ครบถ้วน')
+      setDialogMsg('requireField')
+      console.log('reqFieldData')
+      console.log(reqFieldData)
+
+      //const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
+      if (reqFieldData.length > 0) {
+        const firstReqForm: any = reqFieldData[0]
+        const formId: any = firstReqForm.formId
+        const firstReqFieldId = document.body.getElementsByClassName('error')[0].id
+
+        setFirstReqField(firstReqFieldId)
+        setExpanded('panel-' + formId)
+      }
+
+      handleOpenDialog()
+    }
+
+    console.log('-----end handleTask-------')
+
+    return inputPass
+  }
+
+  const handleDocument = async () => {
+    console.log('-----start handleDocument-------')
+
+    const documentPass = true
 
     if (documentList) {
       // console.log('documentList')
@@ -643,25 +708,23 @@ const WorkProfile = ({
       }
     }
 
-    console.log('-----end handleTask-------')
+    console.log('-----end handleDocument-------')
 
-    if (inputPass && documentPass) {
-      return true
-    } else {
-      return false
-    }
+    return documentPass
   }
 
   const handleEditAndSendWork = async () => {
     handleEditwork().then(() => {
-      handleTask().then(r => {
-        console.log('sg here')
-
-        if (r) {
-          handleDecision().then(() => {
-            handlesendwork().then(() => {
-              handleNotificateion()
-            })
+      handleTask().then(inputRes => {
+        if (inputRes) {
+          handleDocument().then(docRes => {
+            if (docRes) {
+              handleDecision().then(() => {
+                handlesendwork().then(() => {
+                  handleNotificateion()
+                })
+              })
+            }
           })
         }
       })
@@ -1000,15 +1063,15 @@ const WorkProfile = ({
         <Card variant='outlined'>
           <CardContent className='gap-6 p-0'>
             <TabPanel value='1'>
-              {eformData.map((form: any) => {
+              {eformData.map((form: any, index: any) => {
                 return (
                   <Accordion
-                    key={form._id}
-                    expanded={expanded === `panel-${form.Id}`}
-                    onChange={handleAccordionChange(`panel-${form.Id}`)}
+                    key={index}
+                    expanded={expanded === `panel-${form.form_id}`}
+                    onChange={handleAccordionChange(`panel-${form.form_id}`)}
                   >
                     <AccordionSummary
-                      id={`customized-panel-header-${form.Id}`}
+                      id={`customized-panel-header-${form.form_id}`}
                       expandIcon={expandIcon('panel1')}
                       aria-controls='customized-panel-content-1'
                     >
@@ -1016,6 +1079,7 @@ const WorkProfile = ({
                     </AccordionSummary>
                     <AccordionDetails>
                       <div id={`fb-render-${form.Id}`}>Loading...</div>
+                      {/* <div id={`fb-render-${form.form_id}`}>Loading...</div> */}
                     </AccordionDetails>
                   </Accordion>
                 )
@@ -1221,13 +1285,29 @@ const WorkProfile = ({
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <DialogTitle id='alert-dialog-title'>{dialogTitle}</DialogTitle>
+        <DialogTitle className='text-center pb-0' id='alert-dialog-title'>
+          <i className='tabler-alert-circle mbe-2 text-[96px] text-error' />
+          <br />
+          {dialogTitle}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText id='alert-dialog-description'>{dialogMsg}</DialogContentText>
+          <DialogContentText id='alert-dialog-description'>
+            {dialogMsg == 'requireField'
+              ? reqFieldData?.map((item: any, index: any) => (
+                  <Alert key={index} severity='error'>
+                    <AlertTitle>แบบฟอร์ม : {item.formName}</AlertTitle>
+                    {item.requireField?.map((reqItem: any, reqIndex: any) => (
+                      <span key={reqIndex}>{reqItem.fieldName}, </span>
+                    ))}
+                  </Alert>
+                ))
+              : dialogMsg}
+          </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          {/* <Button onClick={handleClose}>Disagree</Button> */}
-          <Button onClick={handleClose}>Close</Button>
+          <Button color='error' onClick={handleClose}>
+            Close
+          </Button>
         </DialogActions>
       </Dialog>
       {/* <WorkButton workData={workData} paramsData={paramsData} /> */}
