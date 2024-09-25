@@ -43,32 +43,20 @@ import {
 } from '@mui/material'
 
 import Timeline from '@mui/lab/Timeline'
-
 import TimelineItem from '@mui/lab/TimelineItem'
-
 import TimelineSeparator from '@mui/lab/TimelineSeparator'
-
 import TimelineDot from '@mui/lab/TimelineDot'
-
 import TimelineConnector from '@mui/lab/TimelineConnector'
-
 import TimelineContent from '@mui/lab/TimelineContent'
-
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent'
 
 import { useSession } from 'next-auth/react'
-
-//import { navigate } from './redirect'
-
-// Type Imports
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
 import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
 
-// import { Formatshortdate } from '@/utils/hooks/datetime'
 import axios from '@/utils/axios'
-
 import DocumentListTable from '../workV2/DocumentListTable'
 
 // Styled component for Accordion component
@@ -139,22 +127,20 @@ const WorkProfile = ({
   const curBlockId = workData?.blockid
   const rolbackConditiondata = conditionData
   const curWorkinprocess = workInprocess.find((elem: any) => elem.pid == curBlockId)
-
-  //const curNodeData = curWorkinprocess?.nodeinfo[0]
-  const curNodeData = nodeData
+  const curNodeData = nodeData //const curNodeData = curWorkinprocess?.nodeinfo[0]
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
 
-  console.log('workData ===')
-  console.log(workData)
-  console.log('conditionData -----')
-  console.log(conditionData)
-  console.log('notificationData----')
-  console.log(notificationData)
-  console.log('documentList')
-  console.log(documentList)
-  console.log('curNodeData -------')
-  console.log(curNodeData)
+  // console.log('workData ===')
+  // console.log(workData)
+  // console.log('conditionData -----')
+  // console.log(conditionData)
+  // console.log('notificationData----')
+  // console.log(notificationData)
+  // console.log('documentList')
+  // console.log(documentList)
+  // console.log('curNodeData -------')
+  // console.log(curNodeData)
 
   if (documentList && documentProperties) {
     for (const item of documentList) {
@@ -189,8 +175,8 @@ const WorkProfile = ({
   const [value, setValue] = useState('1')
   const [dialogTitle, setDialogTitle] = useState('Title')
   const [reqStatus, setReqStatus] = useState<boolean>(false)
+  const [curTab, setCurTab] = useState('forms')
   const [dialogMsg, setDialogMsg] = useState('Msg')
-  // const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
   const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].form_id)
   const params = useParams()
   const { lang: locale } = params
@@ -211,6 +197,13 @@ const WorkProfile = ({
     }
   }, [curNodeData, curNodeData.eformlist])
 
+  useEffect(() => {
+    setTimeout(() => {
+      checkRequireField()
+    }, 300)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curTab])
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
@@ -223,9 +216,11 @@ const WorkProfile = ({
     setOpen(false)
     setReqFieldData([])
     const reqField = document.getElementById(firstReqField) as HTMLInputElement
+
     setTimeout(() => {
       reqField.focus()
     }, 300)
+
     setTimeout(() => {
       setFirstReqField('')
     }, 500)
@@ -590,6 +585,10 @@ const WorkProfile = ({
     console.log('curTask --- ')
     console.log(curTask)
 
+    if (reqFieldData.length > 0) {
+      setReqFieldData([])
+    }
+
     let inputPass = true
 
     if (curTask.includes('input')) {
@@ -644,13 +643,6 @@ const WorkProfile = ({
               fieldName: fieldLabel.textContent
             })
 
-            // const newData = {
-            //   formId: item.formid,
-            //   formName: eformName,
-            //   fieldId: elem.id,
-            //   fieldName: fieldLabel.textContent
-            // }
-
             field?.classList.add('border-red-500')
             field?.classList.add('error')
           } else {
@@ -673,7 +665,6 @@ const WorkProfile = ({
       console.log('reqFieldData')
       console.log(reqFieldData)
 
-      //const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].Id)
       if (reqFieldData.length > 0) {
         const firstReqForm: any = reqFieldData[0]
         const formId: any = firstReqForm.formId
@@ -910,6 +901,36 @@ const WorkProfile = ({
     return curr_date + ' ' + m_en_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
 
+  const checkRequireField = async () => {
+    const eformlist = curNodeData[0].eformlist
+
+    const requireForm = eformlist.filter((elem: any) => {
+      return elem.privilege == 'modify'
+    })
+
+    if (requireForm[0].formid) {
+      setExpanded('panel-' + requireForm[0].formid)
+    }
+
+    for (const item of requireForm) {
+      const require_field: any = item.require_field
+
+      for (const elem of require_field) {
+        const field = document.getElementById(elem.id) as HTMLInputElement
+
+        if (field) {
+          if (field.value === '') {
+            field?.classList.add('border-red-500')
+            field?.classList.add('error')
+          } else {
+            field?.classList.remove('border-red-500')
+            field?.classList.remove('error')
+          }
+        }
+      }
+    }
+  }
+
   return (
     <>
       <TabContext value={value}>
@@ -1012,6 +1033,7 @@ const WorkProfile = ({
                           )}
                         </div>
                       }
+                      onClick={() => setCurTab('forms')}
                       value='1'
                     />
                     <Tab
@@ -1043,6 +1065,7 @@ const WorkProfile = ({
                           )}
                         </div>
                       }
+                      onClick={() => setCurTab('documents')}
                       value='2'
                     />
                     <Tab
@@ -1052,6 +1075,7 @@ const WorkProfile = ({
                           Activity
                         </div>
                       }
+                      onClick={() => setCurTab('activity')}
                       value='3'
                     />
                   </TabList>

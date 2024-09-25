@@ -4,8 +4,7 @@ import mongoose from 'mongoose'
 
 export async function dbConnect() {
   try {
-    // mongoose.connect(process.env.DATABASE_URL!)
-    mongoose.connect('mongodb+srv://sixthgraph:cRIXU5TuO266NPZz@cluster0.dzcgwns.mongodb.net/routeflow')
+    mongoose.connect('mongodb+srv://sixthgraph:SawidjPtr23LGTha@cluster0.dzcgwns.mongodb.net/routeflow')
     const connection = mongoose.connection
 
     connection.on('connected', () => {
