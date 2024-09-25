@@ -198,9 +198,15 @@ const WorkProfile = ({
   }, [curNodeData, curNodeData.eformlist])
 
   useEffect(() => {
-    setTimeout(() => {
-      checkRequireField()
-    }, 300)
+    console.log('curTab')
+    console.log(curTab)
+
+    if (curTab == 'forms') {
+      setTimeout(() => {
+        checkRequireField()
+      }, 300)
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curTab])
 
@@ -217,9 +223,11 @@ const WorkProfile = ({
     setReqFieldData([])
     const reqField = document.getElementById(firstReqField) as HTMLInputElement
 
-    setTimeout(() => {
-      reqField.focus()
-    }, 300)
+    if (reqField) {
+      setTimeout(() => {
+        reqField.focus()
+      }, 300)
+    }
 
     setTimeout(() => {
       setFirstReqField('')
@@ -612,42 +620,48 @@ const WorkProfile = ({
           requireField: []
         }
 
-        console.log('newData')
-        console.log(newData)
+        // console.log('newData')
+        // console.log(newData)
 
-        console.log('--------------')
-        console.log(`formid : ${item.formid}`)
-        console.log(item.require_field)
-        console.log('--------------')
+        // console.log('--------------')
+        // console.log(`formid : ${item.formid}`)
+        // console.log(item.require_field)
+        // console.log('--------------')
 
         const require_field: any = item.require_field
 
         for (const elem of require_field) {
           const field = document.getElementById(elem.id) as HTMLInputElement
 
-          if (field.value === '') {
-            inputPass = false
-            const fieldLabel = document.querySelector("[for='" + elem.id + "']") as HTMLLabelElement
+          if (field) {
+            if (field.value === '') {
+              inputPass = false
+              const fieldLabel = document.querySelector("[for='" + elem.id + "']") as HTMLLabelElement
 
-            // sg here
+              // sg here
 
-            console.log('----- start field not value ----')
-            console.log(`formId : ${item.formid}`)
-            console.log(`formName : ${eformName}`)
-            console.log(`fieldName : ${fieldLabel.textContent}`)
-            console.log(`fieldId : ${elem.id}`)
-            console.log('----- end field not value ----')
+              // console.log('----- start field not value ----')
+              // console.log(`formId : ${item.formid}`)
+              // console.log(`formName : ${eformName}`)
+              // console.log(`fieldName : ${fieldLabel.textContent}`)
+              // console.log(`fieldId : ${elem.id}`)
+              // console.log('----- end field not value ----')
 
-            newData.requireField.push({
-              fieldId: elem.id,
-              fieldName: fieldLabel.textContent
-            })
+              newData.requireField.push({
+                fieldId: elem.id,
+                fieldName: fieldLabel.textContent
+              })
 
-            field?.classList.add('border-red-500')
-            field?.classList.add('error')
+              field?.classList.add('border-red-500')
+              field?.classList.add('error')
+            } else {
+              field?.classList.remove('border-red-500')
+              field?.classList.remove('error')
+            }
           } else {
-            field?.classList.remove('border-red-500')
-            field?.classList.remove('error')
+            inputPass = false
+
+            return inputPass
           }
         }
 
@@ -658,9 +672,7 @@ const WorkProfile = ({
     }
 
     if (!inputPass) {
-      //setOpen(true) // sg here
       setDialogTitle('กรุณากรอกข้อมูลให้ครบถ้วน')
-      setDialogMsg('ไม่สามารถดำเนินการได้ กรุณากรอกข้อมูลให้ครบถ้วน')
       setDialogMsg('requireField')
       console.log('reqFieldData')
       console.log(reqFieldData)
@@ -668,13 +680,20 @@ const WorkProfile = ({
       if (reqFieldData.length > 0) {
         const firstReqForm: any = reqFieldData[0]
         const formId: any = firstReqForm.formId
-        const firstReqFieldId = document.body.getElementsByClassName('error')[0].id
 
-        setFirstReqField(firstReqFieldId)
+        if (curTab == 'forms') {
+          const firstReqFieldId = document.body.getElementsByClassName('error')[0].id
+
+          setFirstReqField(firstReqFieldId)
+        }
+
         setExpanded('panel-' + formId)
       }
 
       handleOpenDialog()
+    } else {
+      setReqFieldData([])
+      setValue('2')
     }
 
     console.log('-----end handleTask-------')
@@ -685,7 +704,7 @@ const WorkProfile = ({
   const handleDocument = async () => {
     console.log('-----start handleDocument-------')
 
-    const documentPass = true
+    const documentPass = false
 
     if (documentList) {
       // console.log('documentList')
@@ -699,12 +718,20 @@ const WorkProfile = ({
       }
     }
 
+    if (!documentPass) {
+      //sg doc here
+      setDialogTitle('กรุณาทำรายการเอกสาร (Documents) ให้ครบถ้วน')
+      setDialogMsg('ไม่สามารถดำเนินการได้ กรุณาทำรายการเอกสารให้ครบถ้วน')
+      handleOpenDialog()
+    }
+
     console.log('-----end handleDocument-------')
 
     return documentPass
   }
 
   const handleEditAndSendWork = async () => {
+    setValue('1') // !IMPORTANT not edit this line
     handleEditwork().then(() => {
       handleTask().then(inputRes => {
         if (inputRes) {
@@ -1003,7 +1030,7 @@ const WorkProfile = ({
             <Grid className='flex flex-1'>
               <Box sx={{ width: '100%', typography: 'body1' }}>
                 <Box>
-                  <TabList onChange={handleChange} aria-label='lab API tabs example'>
+                  <TabList onChange={handleChange} aria-label='Work tab list'>
                     <Tab
                       label={
                         <div id='eform-tab' className='flex items-center gap-1.5 font-semibold '>
@@ -1113,7 +1140,7 @@ const WorkProfile = ({
                 strategy='lazyOnload'
                 onReady={() => {
                   console.log('form render has loaded')
-                  formRenderV1(eformData)
+                  formRenderV1(eformData, handleEditwork)
                 }}
               />
             </TabPanel>

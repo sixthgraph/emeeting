@@ -63,7 +63,7 @@ declare global {
   }
 }
 
-export const formRenderV1 = (dataObj: string) => {
+export const formRenderV1 = (dataObj: string, handleEditWork: () => void) => {
   let i: any
   const elem: any = dataObj
 
@@ -107,6 +107,10 @@ export const formRenderV1 = (dataObj: string) => {
             }
           })
         }
+      })
+      .on('blur', function () {
+        console.log('blur ----')
+        handleEditWork()
       })
   }
 }

@@ -284,7 +284,7 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
                           </IconButton>
                         </>
                       ) : (
-                        <Button onClick={handleClickOpen} variant='outlined' size='small'>
+                        <Button onClick={handleClickOpen} color='error' variant='outlined' size='small'>
                           {row.action}
                         </Button>
                       )}
