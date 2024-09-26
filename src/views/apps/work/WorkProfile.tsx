@@ -54,7 +54,7 @@ import { useSession } from 'next-auth/react'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
-import { formRenderV1, getEdata } from '@/utils/hooks/formRender'
+import { formRenderV2, getEdata } from '@/utils/hooks/formRender'
 
 import axios from '@/utils/axios'
 import DocumentListTable from '../workV2/DocumentListTable'
@@ -134,8 +134,12 @@ const WorkProfile = ({
 
   // console.log('workData ===')
   // console.log(workData)
-  console.log('attachment ===')
-  console.log(attachment)
+  // console.log('attachment ===')
+  // console.log(attachment)
+
+  console.log('eformData ===')
+  console.log(eformData)
+
   // console.log('conditionData -----')
   // console.log(conditionData)
   // console.log('notificationData----')
@@ -714,12 +718,14 @@ const WorkProfile = ({
       for (const item of documentList) {
         console.log('Check ' + item.action + ' สำหรับ ' + item.document_name + `(${item._id})`)
         const docElem = attachment.find((elem: any) => elem.refid == item._id)
+
         if (docElem) {
           elemCheck.push('true')
         } else {
           elemCheck.push('false')
         }
       }
+
       console.log('elemCheck ===')
       console.log(elemCheck)
 
@@ -994,7 +1000,9 @@ const WorkProfile = ({
                     <Chip
                       color='primary'
                       variant='tonal'
-                      label={`${activity[0].actions[0].depname} / ${activity[0].actions[0].positionname}`}
+                      label={
+                        activity[0] && `${activity[0].actions[0].depname} / ${activity[0].actions[0].positionname}`
+                      }
                       size='small'
                     />
                     <Typography className='text-xs mt-2'>Work ID:</Typography>
@@ -1152,7 +1160,7 @@ const WorkProfile = ({
                 strategy='lazyOnload'
                 onReady={() => {
                   console.log('form render has loaded')
-                  formRenderV1(eformData, handleEditwork)
+                  formRenderV2(eformData, handleEditwork)
                 }}
               />
             </TabPanel>

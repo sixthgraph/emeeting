@@ -21,25 +21,32 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${rid}/startpoint`, {
-      headers
-    })
+    console.log('rid ===')
+    console.log(rid)
 
-    const res_doc = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/workflow/documents/${rid}`, {
-      headers
-    })
+    console.log('res === ')
+    console.log(res)
 
-    console.log('res_doc')
-    console.log(res_doc.data)
+    // const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${rid}/startpoint`, {
+    //   headers
+    // })
+
+    // const res_doc = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/workflow/documents/${rid}`, {
+    //   headers
+    // })
+
+    // console.log('res_doc')
+    // console.log(res_doc.data)
 
     //https://rd.excelink.co.th/routeflow-api/block/66826eb05aab127bc19d62ae/startpoint
 
     const response = NextResponse.json({
       message: 'success',
       success: true,
-      data: res.data,
-      nodeData: res_node.data,
-      docData: res_doc.data
+      data: res.data
+
+      // nodeData: res_node.data,
+      // docData: res_doc.data
     })
 
     return response

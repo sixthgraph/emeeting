@@ -63,7 +63,55 @@ declare global {
   }
 }
 
-export const formRenderV1 = (dataObj: string, handleEditWork: () => void) => {
+export const formRenderV1 = (dataObj: string) => {
+  let i: any
+  const elem: any = dataObj
+
+  for (i in elem) {
+    $('#fb-render-' + elem[i]._id).formRender({
+      dataType: 'json',
+      formData: elem[i].form_template
+    })
+
+    $('#fb-render-' + elem[i]._id)
+      .find(
+        $(
+          'input[type="text"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+        )
+      )
+      .on('change', function () {
+        //$('input', '#fb-render-' + elem[i]._id).on('change', function () {
+        const v = $(this).val()
+        const id = $(this).attr('id')
+        const parentId = $(this).parents('div.rendered-form').parent().attr('id')
+        const parentIdArr: any = parentId?.split('-')
+
+        const check: any = eddata.filter((obj: { eid: any; name: string | undefined }) => {
+          if (obj.name == id && obj.eid == parentIdArr[2]) {
+            return true
+          }
+        })
+
+        if (check.length == 0) {
+          const newData = {
+            name: id,
+            value: v,
+            eid: parentIdArr[2]
+          }
+
+          eddata.push(newData)
+        } else {
+          eddata.filter((obj: { value: any; eid: any; name: string | undefined }) => {
+            if (obj.name == id && obj.eid == parentIdArr[2]) {
+              obj.value = v
+            }
+          })
+        }
+      })
+  }
+}
+
+export const formRenderV2 = (dataObj: string, handleEditWork: () => void) => {
   let i: any
   const elem: any = dataObj
 
