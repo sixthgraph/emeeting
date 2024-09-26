@@ -27,42 +27,79 @@ import tableStyles from '@core/styles/table.module.css'
 import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 
 import FileUploader from './create/FileUploader'
+import ReqFileUploader from './create/ReqFileUploader'
 
 // import FileUploaderCloudinary from './create/FileUploaderCloudinary'
 
 const DocumentListTable = ({ documentList, docData }: { documentList?: any; docData?: any }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [confirm, setConfirm] = useState<boolean>(false)
+  const [reqUploadOpen, setReqUploadOpen] = useState<boolean>(false)
+  const [reqUploadData, setReqUploadData] = useState<any>()
   const [deletefile, setDeleteFile] = useState({})
   const [editfile, setEditFile] = useState({})
-  const [attachmentList, setAttachmentList] = useState<any>(docData?.attachment)
+  let attData = docData?.attachment
+  const [attachmentList, setAttachmentList] = useState<any>(attData)
   const { data: session } = useSession()
   const token = session?.user.token
 
-  console.log('NOON TEST === docData === ')
-  console.log('docData')
-  console.log(docData)
-
-  // console.log(docData.attachment)
-  console.log('attachmentList')
-  console.log(attachmentList)
-
-  console.log('documentList in table')
-  console.log(documentList)
-
   useEffect(() => {
     if (!open) {
-      handleGetDocument()
+      handleGetDocument().then(resData => {
+        mapDocument(resData)
+      })
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   const handleClickOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+
+  const handleReqUploadOpen = (data: any) => {
+    setReqUploadData(data)
+    setReqUploadOpen(true)
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    console.log('handleClose start')
+    setOpen(false)
+    setReqUploadOpen(false)
+  }
+
   const handleCloseConfirm = () => setConfirm(false)
 
+  const mapDocument = async (resData: any) => {
+    for (const item of documentList) {
+      const findRefId = attData.find((elem: any) => elem.refid === item._id)
+
+      if (!findRefId) {
+        const newData = {
+          allowupdate: 'Y',
+          attachdate: '',
+          attachname: '',
+          dep: '',
+          filename: item.document_name,
+          linkwid: '-',
+          uid: '',
+          wid: '',
+          refid: item._id,
+          action: item.action,
+          format: item.format,
+          size: item.size
+        }
+
+        resData.push(newData)
+      }
+    }
+
+    setAttachmentList(resData)
+    attData = resData
+  }
+
   const handleGetDocument = async () => {
+    console.log('handleGetDocument --- start')
+
+    // sg here
     const reqBody = {
       wid: docData.wid,
       itemno: '',
@@ -78,30 +115,7 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
         resData = []
       }
 
-      for (const item of documentList) {
-        const findRefId = attachmentList.find((elem: any) => elem.refid === item._id)
-
-        if (!findRefId) {
-          const newData = {
-            allowupdate: 'Y',
-            attachdate: '',
-            attachname: '',
-            dep: '',
-            filename: item.document_name,
-            linkwid: '-',
-            uid: '',
-            wid: '',
-            refid: '',
-            action: item.action,
-            format: item.format,
-            size: item.size
-          }
-
-          resData.push(newData)
-        }
-      }
-
-      setAttachmentList(resData)
+      return resData
     } catch (error: any) {
       console.log('Editwork failed. ', error.message)
     }
@@ -155,9 +169,6 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
   const handleDeleteFile = async () => {
     const reqBody = deletefile
 
-    console.log(' delete attm reqbody')
-    console.log(reqBody)
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/delete`, reqBody)
 
@@ -170,11 +181,10 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
       console.error('File delete failed', error.message)
     }
 
-    console.log(reqBody)
-    console.log(deletefile)
-
     handleCloseConfirm() // sg here
-    handleGetDocument()
+    handleGetDocument().then(resData => {
+      mapDocument(resData)
+    })
   }
 
   const handleReset = () => {
@@ -212,7 +222,7 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
                       <div className='flex items-center gap-4'>
                         {row.wid !== '' ? (
                           <Icon
-                            className={`text-[40px] text-slate-400 tabler-file-type-${formatdocType(row.filename)}`}
+                            className={`text-[40px] text-slate-400 tabler-file-type-${formatdocType(row.attachname)}`}
                           />
                         ) : (
                           <Icon className={`text-[40px] text-slate-400 tabler-file-alert`} />
@@ -284,7 +294,7 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
                           </IconButton>
                         </>
                       ) : (
-                        <Button onClick={handleClickOpen} color='error' variant='outlined' size='small'>
+                        <Button onClick={() => handleReqUploadOpen(row)} color='error' variant='outlined' size='small'>
                           {row.action}
                         </Button>
                       )}
@@ -325,8 +335,11 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
         <DialogContent>
           <div className='align-middle border-dashed border-2 border-gray-300 min-h-[20rem] min-w-[30rem]'>
             <div className='mt-10 align-middle'>
-              <FileUploader handleClose={() => setOpen(!open)} attmData={docData} fileData={editfile} />
-              {/* <FileUploaderCloudinary attmData={docData} /> */}
+              {reqUploadOpen ? (
+                <ReqFileUploader reqDocData={reqUploadData} handleClose={() => setOpen(!open)} attmData={docData} />
+              ) : (
+                <FileUploader handleClose={() => setOpen(!open)} attmData={docData} fileData={editfile} />
+              )}
             </div>
           </div>
         </DialogContent>

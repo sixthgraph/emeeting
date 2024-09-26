@@ -118,6 +118,9 @@ const FileUploader = ({
     form.append('dep', dep)
     form.append('rid', rid)
     form.append('pid', pid)
+    form.append('refid', '')
+    form.append('action', '')
+    form.append('filename', '')
 
     //form.append('my_buffer', new Blob([1, 2, 3]))
     form.append('file', files[0])
@@ -232,6 +235,8 @@ const FileUploader = ({
     form.append('rid', rid)
     form.append('pid', pid)
     form.append('id', fileData.itemno)
+    form.append('refid', '')
+    form.append('action', '')
     form.append('file', files[0])
 
     // const updateData: any = {

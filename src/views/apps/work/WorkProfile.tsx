@@ -130,9 +130,12 @@ const WorkProfile = ({
   const curNodeData = nodeData //const curNodeData = curWorkinprocess?.nodeinfo[0]
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
+  const attachment = workData?.attachment
 
   // console.log('workData ===')
   // console.log(workData)
+  console.log('attachment ===')
+  console.log(attachment)
   // console.log('conditionData -----')
   // console.log(conditionData)
   // console.log('notificationData----')
@@ -153,15 +156,14 @@ const WorkProfile = ({
   }
 
   const router = useRouter()
+  const { data: session } = useSession()
 
-  let i: any
+  //et i: any
   const eform: any = eformData
 
-  for (i in eform) {
+  for (const i in eform) {
     eformData[i]._id = eform[i].Id
   }
-
-  const { data: session } = useSession()
 
   const documentData = {
     wid: workData?.wid,
@@ -704,17 +706,27 @@ const WorkProfile = ({
   const handleDocument = async () => {
     console.log('-----start handleDocument-------')
 
-    const documentPass = false
+    let documentPass = true
 
     if (documentList) {
-      // console.log('documentList')
-      // console.log(documentList)
-
-      console.log('documentPass')
-      console.log(documentPass)
+      const elemCheck = []
 
       for (const item of documentList) {
         console.log('Check ' + item.action + ' สำหรับ ' + item.document_name + `(${item._id})`)
+        const docElem = attachment.find((elem: any) => elem.refid == item._id)
+        if (docElem) {
+          elemCheck.push('true')
+        } else {
+          elemCheck.push('false')
+        }
+      }
+      console.log('elemCheck ===')
+      console.log(elemCheck)
+
+      if (elemCheck.includes('false')) {
+        documentPass = false
+      } else {
+        documentPass = true
       }
     }
 
@@ -1348,7 +1360,7 @@ const WorkProfile = ({
                   <Alert key={index} severity='error'>
                     <AlertTitle>แบบฟอร์ม : {item.formName}</AlertTitle>
                     {item.requireField?.map((reqItem: any, reqIndex: any) => (
-                      <span key={reqIndex}>{reqItem.fieldName}, </span>
+                      <span key={reqIndex}> [{reqItem.fieldName}] </span>
                     ))}
                   </Alert>
                 ))
@@ -1356,7 +1368,7 @@ const WorkProfile = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          <Button color='error' onClick={handleClose}>
+          <Button color='error' variant='contained' onClick={handleClose}>
             Close
           </Button>
         </DialogActions>
