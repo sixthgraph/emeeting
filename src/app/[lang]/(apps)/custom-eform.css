@@ -740,7 +740,7 @@
     padding-block: 0.5rem !important;
     padding-inline: 0.75rem !important;
     line-height: 1.25rem;
-    background-color: #f5f8fa;
+    /*background-color: #f5f8fa;*/
 
     color: #5e6278;
   }
@@ -751,7 +751,7 @@
     padding-block: 0.5rem !important;
     padding-inline: 0.75rem !important;
     line-height: 1.25rem;
-    background-color: #f5f8fa;
+    /*background-color: #f5f8fa;*/
 
     color: #5e6278;
   }
@@ -2021,7 +2021,7 @@
 
   .form-group input[type='text'],
   .form-group input[type='date'] {
-    background-color: #f5f8fa;
+    /*background-color: #f5f8fa;*/
     border: 1px solid #e4e6ef;
     border-radius: 4px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
@@ -2154,7 +2154,7 @@
     padding-block: 0.5rem !important;
     padding-inline: 0.75rem !important;
     line-height: 1.25rem;
-    background-color: #f5f8fa;
+    /*background-color: #f5f8fa;*/
 
     color: #5e6278;
   }
@@ -2163,8 +2163,21 @@
     padding-block: 0.5rem !important;
     padding-inline: 0.75rem !important;
     line-height: 1.25rem;
-    background-color: #f5f8fa !important;
+    /* background-color: #f5f8fa !important; */
 
     color: #5e6278;
+  }
+
+  input[disabled],
+  textarea[disabled] {
+    background-color: #f5f8fa !important;
+  }
+
+  h3 {
+    margin-block-start: 6px;
+  }
+
+  .bg-info {
+    background-color: #26acf8;
   }
 }

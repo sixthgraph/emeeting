@@ -122,7 +122,7 @@ const WorkProfile = ({
   const [open, setOpen] = useState<boolean>(false)
   const [reqFieldData, setReqFieldData] = useState([])
   const [firstReqField, setFirstReqField] = useState<any>('')
-  const eformData = workData?.eformdata
+  let eformData = workData?.eformdata
   const workInprocess = workData?.workinprocess
   const curBlockId = workData?.blockid
   const rolbackConditiondata = conditionData
@@ -131,15 +131,14 @@ const WorkProfile = ({
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
   const attachment = workData?.attachment
+  const eformList = curNodeData[0].eformlist
 
   // console.log('workData ===')
   // console.log(workData)
   // console.log('attachment ===')
   // console.log(attachment)
-
-  console.log('eformData ===')
-  console.log(eformData)
-
+  // console.log('eformData from === workData?.eformdata')
+  // console.log(eformData)
   // console.log('conditionData -----')
   // console.log(conditionData)
   // console.log('notificationData----')
@@ -148,6 +147,22 @@ const WorkProfile = ({
   // console.log(documentList)
   // console.log('curNodeData -------')
   // console.log(curNodeData)
+
+  if (eformList) {
+    for (const item of eformList) {
+      eformData.find((elem: any) => {
+        if (elem.form_id === item.formid) {
+          elem.require_field = item.require_field
+          elem.editable_field = item.editable_field
+          elem.privilege = item.privilege
+        }
+      })
+    }
+
+    eformData = eformData.filter((elem: any) => {
+      return elem.privilege !== 'disable'
+    })
+  }
 
   if (documentList && documentProperties) {
     for (const item of documentList) {
@@ -161,8 +176,6 @@ const WorkProfile = ({
 
   const router = useRouter()
   const { data: session } = useSession()
-
-  //et i: any
   const eform: any = eformData
 
   for (const i in eform) {
@@ -204,9 +217,6 @@ const WorkProfile = ({
   }, [curNodeData, curNodeData.eformlist])
 
   useEffect(() => {
-    console.log('curTab')
-    console.log(curTab)
-
     if (curTab == 'forms') {
       setTimeout(() => {
         checkRequireField()
