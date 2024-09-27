@@ -61,18 +61,27 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
   }
 
   const handleClose = () => {
+    //sg here
     console.log('handleClose start')
     setOpen(false)
     setReqUploadOpen(false)
+    handleGetDocument().then(resData => {
+      mapDocument(resData)
+    })
   }
 
   const handleCloseConfirm = () => setConfirm(false)
 
   const mapDocument = async (resData: any) => {
+    console.log('mapDocument --- start')
+    attData = resData
+
     for (const item of documentList) {
       const findRefId = attData.find((elem: any) => elem.refid === item._id)
 
       if (!findRefId) {
+        console.log('not found --- ')
+
         const newData = {
           allowupdate: 'Y',
           attachdate: '',
@@ -89,11 +98,13 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
         }
 
         resData.push(newData)
+
+        console.log('newData ---')
+        console.log(newData)
       }
     }
 
     setAttachmentList(resData)
-    attData = resData
   }
 
   const handleGetDocument = async () => {

@@ -141,8 +141,9 @@ const WorkProfile = ({
   // console.log(eformData)
   // console.log('conditionData -----')
   // console.log(conditionData)
-  // console.log('notificationData----')
-  // console.log(notificationData)
+  console.log('notificationData----')
+  console.log(notificationData)
+
   // console.log('documentList')
   // console.log(documentList)
   // console.log('curNodeData -------')
