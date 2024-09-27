@@ -348,6 +348,7 @@ const TodoListTable = ({ tableData }: Props) => {
       // }),
       columnHelper.accessor('datein', {
         header: 'Received Date',
+        sortingFn: 'datetime',
         cell: ({ row }) => (
           <Link
             href={{

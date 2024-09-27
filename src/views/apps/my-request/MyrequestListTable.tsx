@@ -285,6 +285,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
       }),
       columnHelper.accessor('createdate', {
         header: 'Request Date',
+        sortingFn: 'datetime',
         cell: ({ row }) => (
           <Link
             href={{
