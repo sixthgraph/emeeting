@@ -91,6 +91,8 @@ import CustomTextField from '@core/components/mui/TextField'
 //Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
+import getGroupList from '@components/groups/getGroupList'
+
 declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>
@@ -181,7 +183,6 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const { data: session } = useSession()
 
   const emailData = session?.user.email
-  const token = session?.user.token
 
   //Alert
   const [confirm, setConfirm] = useState<boolean>(false)
@@ -189,25 +190,9 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const handleCloseConfirm = () => setConfirm(false)
 
   const getGroupData = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
-        Expires: '0'
-      }
+    const newData = await getGroupList()
 
-      const reqBody = { token: token }
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/list`, reqBody, { headers })
-
-      if (response.data.message === 'success') {
-        return response.data.data.detail
-      } else {
-        return 'Group not found'
-      }
-    } catch (err) {
-      console.log(err)
-    }
+    return newData
   }
 
   const handleSubmitMember = async () => {
@@ -284,6 +269,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   useEffect(() => {}, [members])
 
   const handleClickOpenMember = async (groupid: object, member: any) => {
+    console.log('handleClickOpenMember')
     let i: any
     const elem: any = member
 

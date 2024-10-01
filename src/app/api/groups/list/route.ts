@@ -28,3 +28,32 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.massage })
   }
 }
+
+export async function GET() {
+  const serverSession = await getServerSession(options)
+  const token = serverSession?.user.token
+
+  try {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      cache: 'no-store'
+    }
+
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getusergroup`, {
+      headers
+    })
+
+    const groupListData = await response.json()
+
+    console.log('groupListData ===')
+    console.log(groupListData)
+
+    // const data = {
+    //   commentdata: commentData.data.detail
+    // }
+
+    return NextResponse.json(groupListData.data.detail)
+  } catch (error: any) {
+    return NextResponse.json({ error: error.massage })
+  }
+}
