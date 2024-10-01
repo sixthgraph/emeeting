@@ -10,6 +10,9 @@ export async function POST(request: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 
+  console.log('server token')
+  console.log(token)
+
   try {
     const reqBody = await request.json()
 
