@@ -1,9 +1,8 @@
 //import { z } from 'zod'
-import { object, minLength, string, email } from 'valibot'
+import { object, minLength, string } from 'valibot'
 
-console.log(email)
+export const stateinfoFormSchema = object({
+  desc: string([minLength(1, 'This field is required')])
 
-export const StateinfoFormSchema = object({
-  statecode: string([minLength(1, 'This field is required')]),
-  desc: string([minLength(2, 'This field is required')])
+  // statecode: string([minLength(1, 'This field is required')]),
 })

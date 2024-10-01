@@ -1,7 +1,8 @@
-import { z } from 'zod'
+// import { z } from 'zod'
+import { object, minLength, string } from 'valibot'
 
-//import { object, minLength, string, email } from 'valibot'
+export const addDepartmentFormSchema = object({
+  depname: string([minLength(1, 'This field is required')])
 
-export const addDepartmentFormSchema = z.object({
-  depname: z.string().min(1, 'Depname is required').trim()
+  // insertmany: array(string([minLength(1, 'This field is required')]), [minLength(1, 'At least one item is required')])
 })

@@ -170,7 +170,7 @@ let initialData = {
   password: '',
   dep: ['null'],
   position: '',
-  role: 0,
+  role: 2,
   status: ''
 }
 
@@ -259,7 +259,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       password: '',
       dep: ['null'],
       position: '',
-      role: 0,
+      role: 2,
       status: ''
     }
     setOpenMode(mode)

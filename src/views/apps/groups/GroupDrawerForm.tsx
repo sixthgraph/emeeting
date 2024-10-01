@@ -31,13 +31,15 @@ import {
 } from '@mui/material'
 
 import { useSession } from 'next-auth/react'
-
-// import ListItemAvatar from '@mui/material/ListItemAvatar'
-// import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import MenuItem from '@mui/material/MenuItem'
 
-// import CustomAvatar from '@/@core/components/mui/Avatar'
-// import { getInitials } from '@/utils/getInitials'
+// Third-party Imports
+import { Controller, useForm } from 'react-hook-form'
+
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import type { Input } from 'valibot'
+
+// import { set } from 'mongoose'
 
 import CustomTextField from '@core/components/mui/TextField'
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
@@ -45,6 +47,12 @@ import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 import type { GroupFormDataType, GroupType } from '@/types/apps/groupTypes'
 import type { UsersType } from '@/types/apps/userTypes'
 import { addGroupFormSchema } from '@/schemas/formSchema'
+
+type FormData = Input<typeof addGroupFormSchema>
+
+type ErrorType = {
+  message: string[]
+}
 
 type Props = {
   open: boolean
@@ -65,37 +73,36 @@ const initialData = {
   member: []
 }
 
-// const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
-//   const { avatar, fullName } = params
-
-//   if (avatar) {
-//     return <CustomAvatar src={avatar} size={45} variant='rounded' />
-//   } else {
-//     return (
-//       <CustomAvatar size={45} variant='rounded'>
-//         {getInitials(fullName as string)}
-//       </CustomAvatar>
-//     )
-//   }
-// }
-
 const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<GroupFormDataType>(initialData)
   const [userList, setUserList] = useState<any[]>(updateData.member)
-  const [errors, setErrors] = useState<any[]>([])
+
+  // const [errors, setErrors] = useState<any[]>([])
   const [personName, setPersonName] = useState<string[]>([])
   const [members, setMembers] = useState<string[]>([])
   const [memberopen, setmemberOpen] = useState(false)
-
-  // const [updateMember, serUpdateMember] = useState<any[]>([])
-
-  // const [count, setCount] = useState(0)
+  const [errorState, setErrorState] = useState<ErrorType | null>(null)
+  const [errorMember, setErrorMember] = useState<boolean>(false)
 
   const { data: session } = useSession()
-
   const emailData = session?.user.email
   const token = session?.user.token
+
+  //HOOK
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: valibotResolver(addGroupFormSchema),
+    defaultValues: {
+      groupname: ''
+    }
+  })
+
+  // const searchParams = useSearchParams()
 
   const ITEM_HEIGHT = 48
   const ITEM_PADDING_TOP = 8
@@ -119,39 +126,28 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async () => {
+    /*===== remove this for enable require members ======*/
+    // if (formData.member.length == 0) {
+    //   console.log(formData)
+    //   setErrorMember(true)
 
-    setFormData(initialData)
+    //   return
+    // }
+
+    //   console.log(formData)
+    // }
+    /*===== remove this for enable require members ======*/
 
     // ADD
     try {
-      const parsedData = addGroupFormSchema.safeParse(formData)
-
-      if (!parsedData.success) {
-        const errArr: any[] = []
-        const { errors: err } = parsedData.error
-
-        //sg here
-        for (let i = 0; i < err.length; i++) {
-          errArr.push({ for: err[i].path[0], message: err[i].message })
-          setErrors(errArr)
-        }
-
-        setErrors(errArr)
-
-        throw err
-      }
-
-      console.log('Form submitted successfully', parsedData.data)
-
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/add`, formData)
+
+      console.log(formData)
 
       console.log('Create response===', response.data)
 
       if (response.data.success) {
-        console.log('Create success')
-
         if (tableData) {
           const updateData: any = {
             groupid: formData.groupid,
@@ -168,6 +164,8 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
       } else {
         console.log('Create failed.')
       }
+
+      setFormData(initialData)
     } catch (error: any) {
       console.log('Add group failed. ', error.message)
     }
@@ -262,16 +260,16 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
     console.log('Add member edit')
     const newMember: any = userList
 
+    console.log('newMember')
+    console.log(newMember)
+
     for (const item of personName) {
       newMember.push(item)
     }
 
     if (updateData.member !== null) {
-      console.log('update == ')
-      console.log(updateData.member)
-
-      // setUserList(newMember)
-      // serUpdateMember(updateData.member)
+      setMembers(newMember)
+      setFormData({ ...formData, member: newMember })
     } else {
       console.log('null')
     }
@@ -280,9 +278,6 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
   }
 
   const handleDeleteMember = async (email: any) => {
-    console.log('noon test-----')
-    console.log('members strat -- ', members)
-
     const updatedMembers = userList.filter((newMember: any) => newMember !== email)
 
     if (updatedMembers.length !== members.length) {
@@ -290,16 +285,18 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
 
       setUserList(members)
       setMembers(members)
-
-      console.log('Updated Members ----- ', members)
     } else {
-      console.log('ไม่เจอ')
+      console.log('Member not found')
     }
   }
 
   useEffect(() => {
     setFormData(updateData)
     setUserList(updateData.member)
+
+    if (open) {
+      clearErrors()
+    }
   }, [open, updateData])
 
   return (
@@ -323,32 +320,37 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
       </div>
       <Divider />
       <div>
-        <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          {/* <CustomTextField
-            label='member'
-            fullWidth
-            placeholder=''
-            inputProps={{ minlength: 3, maxLength: 150 }}
-            value={formData.member}
-
-            //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
-            // onChange={e => setFormData({ groupname: e.target.value, createby: String(emailData), member: [] })}
-          /> */}
-          <CustomTextField
-            label='Groupname'
-            fullWidth
-            placeholder=''
-            value={formData.groupname} //onChange={e => setFormData({ ...formData, groupname: e.target.value })}
-            onChange={e =>
-              setFormData({
-                groupid: formData.groupid,
-                groupname: e.target.value,
-                createby: String(emailData),
-                member: formData.member
-              })
-            }
+        <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
+          <Controller
+            name='groupname'
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <CustomTextField
+                {...field}
+                autoFocus
+                fullWidth
+                required
+                label='Group Name'
+                placeholder='Enter group name...'
+                value={formData.groupname}
+                onChange={e => {
+                  setFormData({
+                    groupid: formData.groupid,
+                    groupname: e.target.value,
+                    createby: String(emailData),
+                    member: members
+                  })
+                  field.onChange(e.target.value)
+                  errorState !== null && setErrorState(null)
+                }}
+                {...((errors.groupname || errorState !== null) && {
+                  error: true,
+                  helperText: errors?.groupname?.message || errorState?.message[0]
+                })}
+              />
+            )}
           />
-          {errors.find(error => error.for === 'Groupname')?.message}
 
           <div className='flex flex-row'>
             <label className=' text-xs flex-1 '>Members</label>
@@ -391,7 +393,13 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
                       <ListItemText primary={`Members not found`} />
                     </ListItemButton>
                   </ListItem>
+
                   <Divider className='m-0' />
+                  {errorMember && (
+                    <Typography color='error' className='pt-1'>
+                      This field is require member.
+                    </Typography>
+                  )}
                 </>
               )}
             </List>
@@ -403,10 +411,15 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
                 Edit
               </Button>
             ) : (
-              <Button variant='contained' type='submit'>
+              <Button variant='contained' onClick={handleSubmit(onSubmit)} type='button'>
                 Submit
               </Button>
             )}
+
+            {/* <Button variant='contained' type='submit' onClick={() => setSubmitMode('register')}> */}
+            {/* <Button variant='contained' type='submit' onClick={handleSubmit(handleUpdateData)}>
+              CustomSubmit
+            </Button> */}
 
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
               Cancel

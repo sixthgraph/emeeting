@@ -13,6 +13,11 @@ import Divider from '@mui/material/Divider'
 
 import axios from 'axios'
 
+// Third-party Imports
+import { Controller, useForm } from 'react-hook-form'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import type { Input } from 'valibot'
+
 import { useSession } from 'next-auth/react'
 
 import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
@@ -22,6 +27,12 @@ import CustomTextField from '@core/components/mui/TextField'
 import type { DepartmentFormDataType, DepartmentsType, StateinfoType } from '@/types/apps/departmentTypes'
 
 import { addDepartmentFormSchema } from '@/schemas/departmentSchema' //NP????
+
+type FormData = Input<typeof addDepartmentFormSchema>
+
+type ErrorType = {
+  message: string[]
+}
 
 type Props = {
   open: boolean
@@ -71,10 +82,12 @@ const DepartmentDrawerForm = ({
 }: Props) => {
   // States
   const [formData, setFormData] = useState<DepartmentFormDataType>(initialData)
-  const [errors, setErrors] = useState<any[]>([])
+
+  // const [errors, setErrors] = useState<any[]>([])
   const [insertData, setInsertData] = useState(initialInsertData)
   const { data: session } = useSession()
   const emailData = session?.user.email
+  const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
   const handleRefresh = () => {
     setTimeout(() => {
@@ -82,9 +95,20 @@ const DepartmentDrawerForm = ({
     }, 100)
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  //HOOK
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: valibotResolver(addDepartmentFormSchema),
+    defaultValues: {
+      depname: ''
+    }
+  })
 
+  const onSubmit = async () => {
     setFormData(initialData)
 
     try {
@@ -92,24 +116,24 @@ const DepartmentDrawerForm = ({
       formData.create_by = String(emailData)
       formData.update_by = String(emailData)
 
-      const parsedData = addDepartmentFormSchema.safeParse(formData)
+      // const parsedData = addDepartmentFormSchema.safeParse(formData)
 
-      if (!parsedData.success) {
-        const errArr: any[] = []
-        const { errors: err } = parsedData.error
+      // if (!parsedData.success) {
+      //   const errArr: any[] = []
+      //   const { errors: err } = parsedData.error
 
-        //sg here
-        for (let i = 0; i < err.length; i++) {
-          errArr.push({ for: err[i].path[0], message: err[i].message })
-          setErrors(errArr)
-        }
+      //   //sg here
+      //   for (let i = 0; i < err.length; i++) {
+      //     errArr.push({ for: err[i].path[0], message: err[i].message })
+      //     setErrors(errArr)
+      //   }
 
-        setErrors(errArr)
+      //   setErrors(errArr)
 
-        throw err
-      }
+      //   throw err
+      // }
 
-      console.log('Form submitted successfully', parsedData.data)
+      // console.log('Form submitted successfully', parsedData.data)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/add`, formData)
 
       console.log('add department response===', response.data)
@@ -148,6 +172,7 @@ const DepartmentDrawerForm = ({
   }
 
   const handleInsertMany = async () => {
+    console.log('eiei')
     const insertObj = []
     const depnameStr = insertData.depname
     const re = /\n/gi
@@ -181,6 +206,8 @@ const DepartmentDrawerForm = ({
 
     console.log('insertObj === ')
     console.log(insertObj)
+
+    // return
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/addMany`, insertObj)
@@ -274,6 +301,10 @@ const DepartmentDrawerForm = ({
   useEffect(() => {
     console.log('useEffect start')
     setFormData(updateData)
+
+    if (open) {
+      clearErrors()
+    }
   }, [open, updateData])
 
   const getParentPath = (parentData: any) => {
@@ -311,12 +342,12 @@ const DepartmentDrawerForm = ({
       </div>
       <Divider />
       <div>
-        <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
+        <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
           {(mode == 'insert-one' || mode == 'update-one') && (
             <>
-              {/* Edit Department */}
               <CustomTextField
                 select
+                autoFocus
                 fullWidth
                 id='select-department'
                 value={formData.parent}
@@ -338,15 +369,30 @@ const DepartmentDrawerForm = ({
                   )
                 })}
               </CustomTextField>
-              {errors.find(error => error.for === 'parent')?.message}
-              <CustomTextField
-                label='Department Name'
-                fullWidth
-                placeholder=''
-                value={formData.depname}
-                onChange={e => setFormData({ ...formData, depname: e.target.value })}
+
+              <Controller
+                name='depname'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    required
+                    label='Department Name'
+                    placeholder='Enter Department Name'
+                    value={formData.depname}
+                    onChange={e => {
+                      setFormData({ ...formData, depname: e.target.value })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    {...((errors.depname || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.depname?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
               />
-              {errors.find(error => error.for === 'depname')?.message}
 
               <CustomTextField
                 label='Path'
@@ -355,7 +401,7 @@ const DepartmentDrawerForm = ({
                 value={formData.path}
                 onChange={e => setFormData({ ...formData, path: e.target.value })}
               />
-              {errors.find(error => error.for === 'path')?.message}
+
               <CustomTextField
                 select
                 fullWidth
@@ -372,7 +418,7 @@ const DepartmentDrawerForm = ({
                   )
                 })}
               </CustomTextField>
-              {errors.find(error => error.for === 'statecode')?.message}
+
               <CustomTextField
                 label='Docuname'
                 fullWidth
@@ -380,7 +426,7 @@ const DepartmentDrawerForm = ({
                 value={formData.docuname}
                 onChange={e => setFormData({ ...formData, docuname: parseInt(e.target.value) })}
               />
-              {errors.find(error => error.for === 'docuname')?.message}
+
               <CustomTextField
                 label='Sort'
                 fullWidth
@@ -388,7 +434,7 @@ const DepartmentDrawerForm = ({
                 value={formData.sort}
                 onChange={e => setFormData({ ...formData, sort: parseInt(e.target.value) })}
               />
-              {errors.find(error => error.for === 'sort')?.message}
+
               <CustomTextField
                 label='Ref'
                 fullWidth
@@ -425,7 +471,7 @@ const DepartmentDrawerForm = ({
                   )
                 })}
               </CustomTextField>
-              {errors.find(error => error.for === 'parent')?.message}
+
               <CustomTextField
                 rows={16}
                 multiline
@@ -436,6 +482,26 @@ const DepartmentDrawerForm = ({
                 placeholder='Enter your department name'
                 onChange={e => setInsertData({ ...insertData, depname: e.target.value })}
               />
+
+              {/* <Controller
+                name='insertmany'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    rows={16}
+                    multiline
+                    value={insertData.depname} // sg today
+                    label='Department Name'
+                    onChange={e => setInsertData({ ...insertData, depname: e.target.value })}
+                    {...((errors.insertmany || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.insertmany?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
+              /> */}
             </>
           )}
 
@@ -484,7 +550,7 @@ const DepartmentDrawerForm = ({
                   )
                 })}
               </CustomTextField>
-              {errors.find(error => error.for === 'parent')?.message}
+              {/* {errors.find(error => error.for === 'parent')?.message} */}
 
               <CustomTextField
                 label='Path'
@@ -494,7 +560,7 @@ const DepartmentDrawerForm = ({
                 value={formData.path}
                 onChange={e => setFormData({ ...formData, path: e.target.value })}
               />
-              {errors.find(error => error.for === 'path')?.message}
+              {/* {errors.find(error => error.for === 'path')?.message} */}
             </>
           )}
           {mode == 'delete-many' && <Typography>Delete many under construction...</Typography>}
@@ -506,8 +572,8 @@ const DepartmentDrawerForm = ({
               </Button>
             )}
 
-            {mode == 'insert-many' && (
-              <Button variant='contained' onClick={() => handleInsertMany()} type='button'>
+            {mode == 'insert-many' && ( //<Button variant='contained' onClick={handleSubmit(handleInsertMany)} type='button'>
+              <Button variant='contained' type='button' onClick={() => handleInsertMany()}>
                 Submit
               </Button>
             )}

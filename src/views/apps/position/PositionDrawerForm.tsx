@@ -10,6 +10,11 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 
+// Third-party Imports
+import { Controller, useForm } from 'react-hook-form'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import type { Input } from 'valibot'
+
 import axios from 'axios'
 
 import { useSession } from 'next-auth/react'
@@ -18,6 +23,12 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import type { PositionsType } from '@/types/apps/positionTypes'
 import { addPositionFormSchema } from '@/schemas/positionSchema'
+
+type FormData = Input<typeof addPositionFormSchema>
+
+type ErrorType = {
+  message: string[]
+}
 
 type Props = {
   open: boolean
@@ -62,9 +73,25 @@ const PositionDrawerForm = ({
   // States
   const [formData, setFormData] = useState(initialData)
   const [insertData, setInsertData] = useState(initialInsertData)
-  const [errors, setErrors] = useState<any[]>([])
+
+  // const [errors, setErrors] = useState<any[]>([])
+  const [errorState, setErrorState] = useState<ErrorType | null>(null)
   const { data: session } = useSession()
   const emailData = session?.user.email
+
+  //HOOK
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: valibotResolver(addPositionFormSchema),
+    defaultValues: {
+      // positioncode: '',
+      desc: ''
+    }
+  })
 
   console.log('setData')
   console.log(setData)
@@ -132,11 +159,7 @@ const PositionDrawerForm = ({
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    //setFormData(initialData)
-
+  const onSubmit = async () => {
     //Add
     try {
       const newFormData: any = formData
@@ -148,24 +171,6 @@ const PositionDrawerForm = ({
 
       setFormData(newFormData)
 
-      const parsedData = addPositionFormSchema.safeParse(formData)
-
-      if (!parsedData.success) {
-        const errArr: any[] = []
-        const { errors: err } = parsedData.error
-
-        //sg here
-        for (let i = 0; i < err.length; i++) {
-          errArr.push({ for: err[i].path[0], message: err[i].message })
-          setErrors(errArr)
-        }
-
-        setErrors(errArr)
-
-        throw err
-      }
-
-      console.log('Form submitted successfully', parsedData.data)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/add`, formData)
 
       console.log('Add response===', response.data)
@@ -217,6 +222,10 @@ const PositionDrawerForm = ({
 
   useEffect(() => {
     setFormData(updateData)
+
+    if (open) {
+      clearErrors()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
@@ -246,7 +255,7 @@ const PositionDrawerForm = ({
       </div>
       <Divider />
       <div>
-        <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
+        <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
           {mode == 'insert-one' && (
             <>
               <CustomTextField
@@ -257,16 +266,32 @@ const PositionDrawerForm = ({
                 value={formData.positioncode}
                 onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
               />
-              {errors.find(error => error.for === 'positioncode')?.message}
 
-              <CustomTextField
-                label='Position Name'
-                fullWidth
-                placeholder=''
-                value={formData.desc}
-                onChange={e => setFormData({ ...formData, desc: e.target.value, positioncode: curMaxPos })}
+              <Controller
+                name='desc'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    autoFocus
+                    fullWidth
+                    required
+                    label='Position Name'
+                    placeholder='Enter Position Name'
+                    value={formData.desc}
+                    onChange={e => {
+                      setFormData({ ...formData, desc: e.target.value, positioncode: curMaxPos })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    {...((errors.desc || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.desc?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
               />
-              {errors.find(error => error.for === 'desc')?.message}
             </>
           )}
           {mode == 'update-one' && (
@@ -279,7 +304,7 @@ const PositionDrawerForm = ({
                 value={formData.positioncode}
                 onChange={e => setFormData({ ...formData, positioncode: e.target.value })}
               />
-              {errors.find(error => error.for === 'positioncode')?.message}
+              {/* {errors.find(error => error.for === 'positioncode')?.message} */}
 
               <CustomTextField
                 label='Position Name'
@@ -288,7 +313,8 @@ const PositionDrawerForm = ({
                 value={formData.desc}
                 onChange={e => setFormData({ ...formData, desc: e.target.value })}
               />
-              {errors.find(error => error.for === 'desc')?.message}
+
+              {/* {errors.find(error => error.for === 'desc')?.message} */}
             </>
           )}
           {(mode == 'insert-one' || mode == 'update-one') && (
@@ -300,7 +326,7 @@ const PositionDrawerForm = ({
                 value={formData.level}
                 onChange={e => setFormData({ ...formData, level: Number(e.target.value) })}
               />
-              {errors.find(error => error.for === 'level')?.message}
+              {/* {errors.find(error => error.for === 'level')?.message} */}
               <CustomTextField
                 label='Ref'
                 fullWidth
@@ -308,7 +334,7 @@ const PositionDrawerForm = ({
                 value={formData.ref}
                 onChange={e => setFormData({ ...formData, ref: e.target.value })}
               />
-              {errors.find(error => error.for === 'ref')?.message}
+              {/* {errors.find(error => error.for === 'ref')?.message} */}
               <CustomTextField
                 label='Status'
                 fullWidth
@@ -316,7 +342,7 @@ const PositionDrawerForm = ({
                 value={formData.status}
                 onChange={e => setFormData({ ...formData, status: e.target.value })}
               />
-              {errors.find(error => error.for === 'remark')?.message}
+              {/* {errors.find(error => error.for === 'remark')?.message} */}
               <CustomTextField
                 label='Remark'
                 fullWidth
@@ -324,7 +350,7 @@ const PositionDrawerForm = ({
                 value={formData.remark}
                 onChange={e => setFormData({ ...formData, remark: e.target.value })}
               />
-              {errors.find(error => error.for === 'remark')?.message}
+              {/* {errors.find(error => error.for === 'remark')?.message} */}
             </>
           )}
 

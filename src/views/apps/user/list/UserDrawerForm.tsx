@@ -25,6 +25,11 @@ import {
 
 import axios from 'axios'
 
+// Third-party Imports
+import { Controller, useForm } from 'react-hook-form'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import type { Input } from 'valibot'
+
 import { useSession } from 'next-auth/react'
 
 import CustomTextField from '@core/components/mui/TextField'
@@ -32,6 +37,12 @@ import CustomTextField from '@core/components/mui/TextField'
 import type { DepType, RoleType, UserFormDataType, UsersType } from '@/types/apps/userTypes'
 import { addUserFormSchema } from '@/schemas/formSchema'
 import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
+
+type FormData = Input<typeof addUserFormSchema>
+
+type ErrorType = {
+  message: string[]
+}
 
 type Props = {
   open: boolean
@@ -57,14 +68,14 @@ const initialData = {
   avatarcolor: '',
   dep: [],
   position: '',
-  role: 0,
+  role: 2,
   status: ''
 }
 
 const initialInsertData = {
   userData: '',
   password: '',
-  role: 0,
+  role: 2,
   status: '',
   dep: []
 }
@@ -91,7 +102,8 @@ const UserDrawerForm = ({
   const [formData, setFormData] = useState<UserFormDataType>(initialData)
   const [count, setCount] = useState(0)
   const [userDepData, setUserDepData] = useState<any[]>(updateData.dep)
-  const [errors, setErrors] = useState<any[]>([])
+
+  // const [errors, setErrors] = useState<any[]>([])
   const [selDep, setSelectDep] = useState<any>('')
   const [selDepName, setSelectDepName] = useState<any>('')
   const [selPosition, setSelectPosition] = useState<any[]>([])
@@ -100,14 +112,44 @@ const UserDrawerForm = ({
   const [openAddDep, setOpenAddDep] = useState<boolean>(false)
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const [insertData, setInsertData] = useState(initialInsertData)
+  const [errorState, setErrorState] = useState<ErrorType | null>(null)
+  const [errorDepartment, setErrorDepartment] = useState<boolean>(false)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   console.log('userlist lenght ----- ', userDepData.length)
   console.log('userlist  ----- ', userDepData)
 
+  console.log('updateData ---')
+  console.log(updateData)
+
+  //HOOK
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: valibotResolver(addUserFormSchema),
+    defaultValues: {
+      firstname: '',
+      lastname: '',
+      password: '',
+      email: '',
+      status: ''
+
+      // insertmany: ''
+    }
+  })
+
   useEffect(() => {
     setFormData(updateData)
     setUserDepData(updateData.dep)
+
+    if (open) {
+      clearErrors()
+    }
+
+    // setErrorState(null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
@@ -236,30 +278,15 @@ const UserDrawerForm = ({
     //}
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async () => {
+    if (formData.dep.length == 0) {
+      console.log(formData)
+      setErrorDepartment(true)
 
-    setFormData(initialData)
+      return
+    }
 
     try {
-      const parsedData = addUserFormSchema.safeParse(formData)
-
-      if (!parsedData.success) {
-        const errArr: any[] = []
-        const { errors: err } = parsedData.error
-
-        //sg here
-        for (let i = 0; i < err.length; i++) {
-          errArr.push({ for: err[i].path[0], message: err[i].message })
-          setErrors(errArr)
-        }
-
-        setErrors(errArr)
-
-        throw err
-      }
-
-      console.log('Form submitted successfully', parsedData.data)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
 
       console.log('signup response===', response.data)
@@ -307,7 +334,7 @@ const UserDrawerForm = ({
       avatarcolor: '',
       dep: [],
       position: '',
-      role: 0,
+      role: 2,
       status: ''
     })
   }
@@ -346,6 +373,8 @@ const UserDrawerForm = ({
         insertObj.push(newData)
       } //if
     } //for
+
+    // return
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/addMany`, insertObj)
@@ -438,63 +467,148 @@ const UserDrawerForm = ({
       </div>
       <Divider />
       <div>
-        <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
+        <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
           {(mode == 'insert-one' || mode == 'update-one') && (
             <>
-              <CustomTextField
-                label='Firstname'
-                fullWidth
-                placeholder=''
-                value={formData.firstname}
-                onChange={e => setFormData({ ...formData, firstname: e.target.value })}
+              <Controller
+                name='firstname'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    autoFocus
+                    fullWidth
+                    required
+                    label='Firstname'
+                    placeholder='Enter your firstname'
+                    value={formData.firstname}
+                    onChange={e => {
+                      setFormData({ ...formData, firstname: e.target.value })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    {...((errors.firstname || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.firstname?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
               />
-              {errors.find(error => error.for === 'firstname')?.message}
-              <CustomTextField
-                label='Lastname'
-                fullWidth
-                placeholder='johndoe'
-                value={formData.lastname}
-                onChange={e => setFormData({ ...formData, lastname: e.target.value })}
+
+              <Controller
+                name='lastname'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    required
+                    label='Lastname'
+                    placeholder='Enter your lastname'
+                    value={formData.lastname}
+                    onChange={e => {
+                      setFormData({ ...formData, lastname: e.target.value })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    {...((errors.lastname || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.lastname?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
               />
-              {errors.find(error => error.for === 'lastname')?.message}
-              <CustomTextField
-                fullWidth
-                label='Password'
-                placeholder='············'
-                autoComplete='off'
-                type={isPasswordShown ? 'text' : 'password'}
-                value={formData.password}
-                onChange={e => setFormData({ ...formData, password: e.target.value })}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                        <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
+
+              <Controller
+                name='password'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    required
+                    label='Password'
+                    placeholder='············'
+                    type={isPasswordShown ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={e => {
+                      setFormData({ ...formData, password: e.target.value })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onClick={handleClickShowPassword}
+                            onMouseDown={e => e.preventDefault()}
+                          >
+                            <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                    {...((errors.password || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.password?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
               />
-              {errors.find(error => error.for === 'password')?.message}
+
               {updateData.email !== '' ? (
-                <CustomTextField
-                  label='Email'
-                  disabled
-                  fullWidth
-                  placeholder='your_email@gmail.com'
-                  value={formData.email}
-                  onChange={e => setFormData({ ...formData, email: e.target.value })}
+                <Controller
+                  name='email'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      required
+                      label='Email'
+                      placeholder='your_email@gmail.com'
+                      value={formData.email}
+                      onChange={e => {
+                        setFormData({ ...formData, email: e.target.value })
+                        field.onChange(e.target.value)
+                        errorState !== null && setErrorState(null)
+                      }}
+                      {...((errors.email || errorState !== null) && {
+                        error: true,
+                        helperText: errors?.email?.message || errorState?.message[0]
+                      })}
+                    />
+                  )}
                 />
               ) : (
-                <CustomTextField
-                  label='Email'
-                  fullWidth
-                  placeholder='your_email@gmail.com'
-                  value={formData.email}
-                  onChange={e => setFormData({ ...formData, email: e.target.value })}
+                <Controller
+                  name='email'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      required
+                      label='Email'
+                      placeholder='your_email@gmail.com'
+                      value={formData.email}
+                      onChange={e => {
+                        setFormData({ ...formData, email: e.target.value })
+                        field.onChange(e.target.value)
+                        errorState !== null && setErrorState(null)
+                      }}
+                      {...((errors.email || errorState !== null) && {
+                        error: true,
+                        helperText: errors?.email?.message || errorState?.message[0]
+                      })}
+                    />
+                  )}
                 />
               )}
-              {errors.find(error => error.for === 'email')?.message}
 
               <div className='flex flex-col'>
                 <div className='flex flex-row'>
@@ -542,6 +656,11 @@ const UserDrawerForm = ({
                           </ListItemButton>
                         </ListItem>
                         <Divider className='m-0' />
+                        {errorDepartment && (
+                          <Typography color='error' className='pt-1'>
+                            This field is require department.
+                          </Typography>
+                        )}
                       </>
                     )}
                   </List>
@@ -551,12 +670,12 @@ const UserDrawerForm = ({
               <CustomTextField
                 select
                 fullWidth
+                required
                 id='Role'
                 value={formData.role}
                 onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
                 label='Role'
               >
-                {/* todo */}
                 {roleData?.map((role: any, index: any) => {
                   return (
                     <MenuItem key={index} value={role.roleid}>
@@ -565,20 +684,35 @@ const UserDrawerForm = ({
                   )
                 })}
               </CustomTextField>
-              {errors.find(error => error.for === 'role')?.message}
-              <CustomTextField
-                select
-                fullWidth
-                id='select-status'
-                value={formData.status}
-                onChange={e => setFormData({ ...formData, status: e.target.value })}
-                label='Status'
-              >
-                <MenuItem value='pending'>Pending</MenuItem>
-                <MenuItem value='active'>Active</MenuItem>
-                <MenuItem value='inactive'>Inactive</MenuItem>
-              </CustomTextField>
-              {errors.find(error => error.for === 'status')?.message}
+
+              <Controller
+                name='status'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    select
+                    fullWidth
+                    required
+                    id='select-status'
+                    label='Status'
+                    value={formData.status}
+                    onChange={e => {
+                      setFormData({ ...formData, status: e.target.value })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    {...((errors.status || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.status?.message || errorState?.message[0]
+                    })}
+                  >
+                    <MenuItem value='pending'>Pending</MenuItem>
+                    <MenuItem value='active'>Active</MenuItem>
+                    <MenuItem value='inactive'>Inactive</MenuItem>
+                  </CustomTextField>
+                )}
+              />
             </>
           )}
           {mode == 'insert-many' && (
@@ -586,19 +720,41 @@ const UserDrawerForm = ({
               <CustomTextField
                 rows={16}
                 multiline
-                value={insertData.userData} // sg today
-                label='Firstname, Lastname, Email'
+                label='Department Name'
+                value={insertData.userData}
+                placeholder='Enter your department name'
                 onChange={e => setInsertData({ ...insertData, userData: e.target.value })}
               />
+
+              {/* <Controller
+                name='insertmany'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    rows={16}
+                    multiline
+                    value={insertData.userData} // sg today
+                    label='Firstname, Lastname, Email'
+                    onChange={e => setInsertData({ ...insertData, userData: e.target.value })}
+                    {...((errors.insertmany || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.insertmany?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
+              /> */}
 
               <CustomTextField
                 fullWidth
                 label='Password'
                 placeholder='············'
-                autoComplete='off'
                 type={isPasswordShown ? 'text' : 'password'}
-                value={insertData.password}
-                onChange={e => setInsertData({ ...insertData, password: e.target.value })}
+                value={formData.password}
+                onChange={e => {
+                  setFormData({ ...formData, password: e.target.value })
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -609,26 +765,44 @@ const UserDrawerForm = ({
                   )
                 }}
               />
-              {errors.find(error => error.for === 'password')?.message}
-              {/* {updateData.email !== '' ? (
-          <CustomTextField
-            label='Email'
-            disabled
-            fullWidth
-            placeholder='your_email@gmail.com'
-            value={formData.email}
-            onChange={e => setFormData({ ...formData, email: e.target.value })}
-          />
-        ) : (
-          <CustomTextField
-            label='Email'
-            fullWidth
-            placeholder='your_email@gmail.com'
-            value={formData.email}
-            onChange={e => setFormData({ ...formData, email: e.target.value })}
-          />
-        )}
-        {errors.find(error => error.for === 'email')?.message} */}
+
+              {/* <Controller
+                name='password'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    label='Password'
+                    placeholder='············'
+                    type={isPasswordShown ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={e => {
+                      setFormData({ ...formData, password: e.target.value })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onClick={handleClickShowPassword}
+                            onMouseDown={e => e.preventDefault()}
+                          >
+                            <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                    {...((errors.password || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.password?.message || errorState?.message[0]
+                    })}
+                  />
+                )}
+              /> */}
 
               <div className='flex flex-col'>
                 <div className='flex flex-row'>
@@ -687,11 +861,10 @@ const UserDrawerForm = ({
                 select
                 fullWidth
                 id='Role'
-                value={insertData.role}
-                onChange={e => setInsertData({ ...insertData, role: Number(e.target.value) })}
+                value={formData.role}
+                onChange={e => setFormData({ ...formData, role: Number(e.target.value) })}
                 label='Role'
               >
-                {/* todo */}
                 {roleData?.map((role: any, index: any) => {
                   return (
                     <MenuItem key={index} value={role.roleid}>
@@ -700,22 +873,53 @@ const UserDrawerForm = ({
                   )
                 })}
               </CustomTextField>
-              {errors.find(error => error.for === 'role')?.message}
+
               <CustomTextField
                 select
                 fullWidth
                 id='select-status'
-                value={insertData.status}
-                onChange={e => setInsertData({ ...insertData, status: e.target.value })}
                 label='Status'
+                value={formData.status}
+                onChange={e => {
+                  setFormData({ ...formData, status: e.target.value })
+                }}
               >
                 <MenuItem value='pending'>Pending</MenuItem>
                 <MenuItem value='active'>Active</MenuItem>
                 <MenuItem value='inactive'>Inactive</MenuItem>
               </CustomTextField>
-              {errors.find(error => error.for === 'status')?.message}
+
+              {/* <Controller
+                name='status'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    select
+                    fullWidth
+                    id='select-status'
+                    label='Status'
+                    value={formData.status}
+                    onChange={e => {
+                      setFormData({ ...formData, status: e.target.value })
+                      field.onChange(e.target.value)
+                      errorState !== null && setErrorState(null)
+                    }}
+                    {...((errors.status || errorState !== null) && {
+                      error: true,
+                      helperText: errors?.status?.message || errorState?.message[0]
+                    })}
+                  >
+                    <MenuItem value='pending'>Pending</MenuItem>
+                    <MenuItem value='active'>Active</MenuItem>
+                    <MenuItem value='inactive'>Inactive</MenuItem>
+                  </CustomTextField>
+                )}
+              /> */}
             </>
           )}
+
           {mode == 'update-many' && (
             <>
               <div className='flex flex-col'>
@@ -796,7 +1000,6 @@ const UserDrawerForm = ({
                 onChange={e => setInsertData({ ...insertData, role: Number(e.target.value) })}
                 label='Role'
               >
-                {/* todo */}
                 {roleData?.map((role: any, index: any) => {
                   return (
                     <MenuItem key={index} value={role.roleid}>
@@ -805,7 +1008,7 @@ const UserDrawerForm = ({
                   )
                 })}
               </CustomTextField>
-              {errors.find(error => error.for === 'role')?.message}
+
               <CustomTextField
                 select
                 fullWidth
@@ -818,7 +1021,6 @@ const UserDrawerForm = ({
                 <MenuItem value='active'>Active</MenuItem>
                 <MenuItem value='inactive'>Inactive</MenuItem>
               </CustomTextField>
-              {errors.find(error => error.for === 'status')?.message}
             </>
           )}
 
@@ -826,12 +1028,16 @@ const UserDrawerForm = ({
 
           <div className='flex items-center gap-4'>
             {mode == 'insert-one' && (
-              <Button variant='contained' type='submit'>
-                Submit
-              </Button>
+              <>
+                <Button variant='contained' type='submit'>
+                  Submit
+                </Button>
+              </>
             )}
 
             {mode == 'insert-many' && ( // <Button variant='contained' onClick={() => handleInsertMany()} type='button'>
+              // <Button variant='contained' type='button' onClick={() => handleInsertMany()}>÷
+              // <Button variant='contained' type='button' onClick={handleSubmit(handleInsertMany)}>
               <Button variant='contained' type='button' onClick={() => handleInsertMany()}>
                 Insert many
               </Button>

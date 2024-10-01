@@ -14,6 +14,11 @@ import Divider from '@mui/material/Divider'
 
 //import type { SubmitHandler } from 'react-hook-form'
 
+// Third-party Imports
+import { Controller, useForm } from 'react-hook-form'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import type { Input } from 'valibot'
+
 import axios from 'axios'
 
 // import { any } from 'zod'
@@ -24,7 +29,13 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import type { StateinfosType } from '@/types/apps/stateinfoTypes'
 
-//import type { StateinfoFormSchema } from '@/schemas/stateinfoSchema'
+import { stateinfoFormSchema } from '@/schemas/stateinfoSchema'
+
+type FormData = Input<typeof stateinfoFormSchema>
+
+type ErrorType = {
+  message: string[]
+}
 
 // Util Imports
 //import { getLocalizedUrl } from '@/utils/i18n'
@@ -69,8 +80,22 @@ const StateinfoDrawerForm = ({
 }: Props) => {
   // States
   const [formData, setFormData] = useState(initialData)
+  const [errorState, setErrorState] = useState<ErrorType | null>(null)
   const { data: session } = useSession()
   const emailData = session?.user.email
+
+  //HOOK
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: valibotResolver(stateinfoFormSchema),
+    defaultValues: {
+      desc: ''
+    }
+  })
 
   console.log('setData')
   console.log(setData)
@@ -181,9 +206,7 @@ const StateinfoDrawerForm = ({
   //   }
   // })
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const onSubmit = async () => {
     setFormData(initialData)
 
     //Add
@@ -237,6 +260,10 @@ const StateinfoDrawerForm = ({
 
   useEffect(() => {
     setFormData(updateData)
+
+    if (open) {
+      clearErrors()
+    }
   }, [open, updateData])
 
   return (
@@ -260,32 +287,7 @@ const StateinfoDrawerForm = ({
       </div>
       <Divider />
       <div>
-        {/* <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'> */}
-        {/* <Controller
-            name='statecode'
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                {...field}
-                autoFocus
-                label='Statecode'
-                fullWidth
-                placeholder=''
-                value={formData.statecode}
-                onChange={e => {
-                  field.onChange(e.target.value)
-                  errorState !== null && setErrorState(null)
-                }}
-                {...((errors.statecode || errorState !== null) && {
-                  error: true,
-                  helperText: errors?.statecode?.message || errorState?.message[0]
-                })}
-              />
-            )}
-          /> */}
-        {/* {errors.find(error => error.for === 'statecode')?.message} */}
-        <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
+        <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
           <CustomTextField
             label='Statecode'
             disabled
@@ -295,21 +297,54 @@ const StateinfoDrawerForm = ({
             onChange={e => setFormData({ ...formData, statecode: e.target.value })}
           />
           {updateData.statecode !== '' ? (
-            <CustomTextField
-              label='Desc'
-              disabled
-              fullWidth
-              placeholder=''
-              value={formData.desc}
-              onChange={e => setFormData({ ...formData, desc: e.target.value })}
+            <Controller
+              name='desc'
+              control={control}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  autoFocus
+                  fullWidth
+                  required
+                  label='Desc'
+                  placeholder='Enter Desc Name'
+                  value={formData.desc}
+                  onChange={e => {
+                    setFormData({ ...formData, desc: e.target.value })
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  {...((errors.desc || errorState !== null) && {
+                    error: true,
+                    helperText: errors?.desc?.message || errorState?.message[0]
+                  })}
+                />
+              )}
             />
           ) : (
-            <CustomTextField
-              label='Desc'
-              fullWidth
-              placeholder=''
-              value={formData.desc}
-              onChange={e => setFormData({ ...formData, desc: e.target.value, statecode: curMaxState })}
+            <Controller
+              name='desc'
+              control={control}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  autoFocus
+                  fullWidth
+                  required
+                  label='Desc'
+                  placeholder='Enter Desc Name'
+                  value={formData.desc}
+                  onChange={e => {
+                    setFormData({ ...formData, desc: e.target.value, statecode: curMaxState })
+                    field.onChange(e.target.value)
+                    errorState !== null && setErrorState(null)
+                  }}
+                  {...((errors.desc || errorState !== null) && {
+                    error: true,
+                    helperText: errors?.desc?.message || errorState?.message[0]
+                  })}
+                />
+              )}
             />
           )}
 
@@ -320,7 +355,7 @@ const StateinfoDrawerForm = ({
             value={formData.ref}
             onChange={e => setFormData({ ...formData, ref: e.target.value })}
           />
-          {/* {errors.find(error => error.for === 'ref')?.message} */}
+
           <CustomTextField
             label='Remark'
             fullWidth
@@ -328,7 +363,7 @@ const StateinfoDrawerForm = ({
             value={formData.remark}
             onChange={e => setFormData({ ...formData, remark: e.target.value })}
           />
-          {/* {errors.find(error => error.for === 'remark')?.message} */}
+
           <div className='flex items-center gap-4'>
             {updateData.statecode !== '' ? (
               <Button variant='tonal' onClick={() => handleUpdateData()}>
