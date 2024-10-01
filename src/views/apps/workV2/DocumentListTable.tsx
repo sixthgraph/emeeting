@@ -84,31 +84,33 @@ const DocumentListTable = ({
     console.log('mapDocument --- start')
     attData = resData
 
-    for (const item of documentList) {
-      const findRefId = attData.find((elem: any) => elem.refid === item._id)
+    if (documentList) {
+      for (const item of documentList) {
+        const findRefId = attData.find((elem: any) => elem.refid === item._id)
 
-      if (!findRefId) {
-        console.log('not found --- ')
+        if (!findRefId) {
+          console.log('not found --- ')
 
-        const newData = {
-          allowupdate: 'Y',
-          attachdate: '',
-          attachname: '',
-          dep: '',
-          filename: item.document_name,
-          linkwid: '-',
-          uid: '',
-          wid: '',
-          refid: item._id,
-          action: item.action,
-          format: item.format,
-          size: item.size
+          const newData = {
+            allowupdate: 'Y',
+            attachdate: '',
+            attachname: '',
+            dep: '',
+            filename: item.document_name,
+            linkwid: '-',
+            uid: '',
+            wid: '',
+            refid: item._id,
+            action: item.action,
+            format: item.format,
+            size: item.size
+          }
+
+          resData.push(newData)
+
+          console.log('newData ---')
+          console.log(newData)
         }
-
-        resData.push(newData)
-
-        console.log('newData ---')
-        console.log(newData)
       }
     }
 
