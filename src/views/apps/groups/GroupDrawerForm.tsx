@@ -60,7 +60,7 @@ type Props = {
   setData: any
   userData?: UsersType[]
   email?: string
-
+  getGroupData: any
   handleClose: () => void
 }
 
@@ -72,7 +72,7 @@ const initialData = {
   member: []
 }
 
-const GroupDrawerForm = ({ open, setData, updateData, userData, handleClose }: Props) => {
+const GroupDrawerForm = ({ open, setData, updateData, userData, getGroupData, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<GroupFormDataType>(initialData)
   const [userList, setUserList] = useState<any[]>(updateData.member)
@@ -173,27 +173,27 @@ const GroupDrawerForm = ({ open, setData, updateData, userData, handleClose }: P
     })
   }
 
-  const getGroupData = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
-        Expires: '0'
-      }
+  // const getGroupData = async () => {
+  //   try {
+  //     const headers = {
+  //       Authorization: `Bearer ${token}`,
+  //       'Cache-Control': 'no-cache',
+  //       Pragma: 'no-cache',
+  //       Expires: '0'
+  //     }
 
-      const reqBody = { token: token }
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/list`, reqBody, { headers })
+  //     const reqBody = { token: token }
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/list`, reqBody, { headers })
 
-      if (response.data.message === 'success') {
-        return response.data.data.detail
-      } else {
-        return 'Group not found'
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  //     if (response.data.message === 'success') {
+  //       return response.data.data.detail
+  //     } else {
+  //       return 'Group not found'
+  //     }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
   const handleUpdateData = async () => {
     const newFormData: any = {

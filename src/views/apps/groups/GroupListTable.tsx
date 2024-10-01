@@ -181,11 +181,34 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const { data: session } = useSession()
 
   const emailData = session?.user.email
+  const token = session?.user.token
 
   //Alert
   const [confirm, setConfirm] = useState<boolean>(false)
   const [deleteGroup, setDeleteGroup] = useState<any>({})
   const handleCloseConfirm = () => setConfirm(false)
+
+  const getGroupData = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const reqBody = { token: token }
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/list`, reqBody, { headers })
+
+      if (response.data.message === 'success') {
+        return response.data.data.detail
+      } else {
+        return 'Group not found'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleSubmitMember = async () => {
     console.log('SubmitMember-start')
@@ -690,6 +713,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
         userData={userData}
         updateData={initialData}
         handleClose={() => setAddGroupOpen(!addGroupOpen)}
+        getGroupData={getGroupData}
       />
     </>
   )
