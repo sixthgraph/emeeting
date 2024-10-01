@@ -305,6 +305,7 @@ const DepartmentDrawerForm = ({
     if (open) {
       clearErrors()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, updateData])
 
   const getParentPath = (parentData: any) => {
@@ -342,7 +343,7 @@ const DepartmentDrawerForm = ({
       </div>
       <Divider />
       <div>
-        <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
+        <form autoComplete='off' noValidate onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6 p-6'>
           {(mode == 'insert-one' || mode == 'update-one') && (
             <>
               <CustomTextField

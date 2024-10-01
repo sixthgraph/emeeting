@@ -264,7 +264,7 @@ const StateinfoDrawerForm = ({
     if (open) {
       clearErrors()
     }
-  }, [open, updateData])
+  }, [open, updateData, clearErrors])
 
   return (
     <Drawer

@@ -83,7 +83,6 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
   const [members, setMembers] = useState<string[]>([])
   const [memberopen, setmemberOpen] = useState(false)
   const [errorState, setErrorState] = useState<ErrorType | null>(null)
-  const [errorMember, setErrorMember] = useState<boolean>(false)
 
   const { data: session } = useSession()
   const emailData = session?.user.email
@@ -297,7 +296,7 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
     if (open) {
       clearErrors()
     }
-  }, [open, updateData])
+  }, [open, updateData, clearErrors])
 
   return (
     <Drawer
@@ -395,11 +394,6 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
                   </ListItem>
 
                   <Divider className='m-0' />
-                  {errorMember && (
-                    <Typography color='error' className='pt-1'>
-                      This field is require member.
-                    </Typography>
-                  )}
                 </>
               )}
             </List>
