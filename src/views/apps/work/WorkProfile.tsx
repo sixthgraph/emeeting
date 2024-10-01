@@ -130,7 +130,7 @@ const WorkProfile = ({
   const curNodeData = nodeData //const curNodeData = curWorkinprocess?.nodeinfo[0]
   const curTask = curWorkinprocess?.nodeinfo[0].task
   const documentProperties = curWorkinprocess?.nodeinfo[0].document_list
-  const attachment = workData?.attachment
+  const [attachment, setAttachment] = useState(...[workData?.attachment])
   const eformList = curNodeData[0].eformlist
 
   // console.log('workData ===')
@@ -189,7 +189,7 @@ const WorkProfile = ({
     dep: workData?.curdep,
     rid: workData?.workflowid,
     pid: workData?.blockid,
-    attachment: workData?.attachment
+    attachment: attachment //attachment: workData?.attachment
   }
 
   const [value, setValue] = useState('1')
@@ -1176,7 +1176,7 @@ const WorkProfile = ({
               />
             </TabPanel>
             <TabPanel value='2'>
-              <DocumentListTable documentList={documentList} docData={documentData} />
+              <DocumentListTable documentList={documentList} docData={documentData} setAttachment={setAttachment} />
             </TabPanel>
             <TabPanel value='3'>
               <Card>

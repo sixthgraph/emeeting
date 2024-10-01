@@ -31,7 +31,15 @@ import ReqFileUploader from './create/ReqFileUploader'
 
 // import FileUploaderCloudinary from './create/FileUploaderCloudinary'
 
-const DocumentListTable = ({ documentList, docData }: { documentList?: any; docData?: any }) => {
+const DocumentListTable = ({
+  documentList,
+  docData,
+  setAttachment
+}: {
+  documentList?: any
+  docData?: any
+  setAttachment?: any
+}) => {
   const [open, setOpen] = useState<boolean>(false)
   const [confirm, setConfirm] = useState<boolean>(false)
   const [reqUploadOpen, setReqUploadOpen] = useState<boolean>(false)
@@ -125,6 +133,8 @@ const DocumentListTable = ({ documentList, docData }: { documentList?: any; docD
       if (!resData) {
         resData = []
       }
+
+      setAttachment(resData)
 
       return resData
     } catch (error: any) {
