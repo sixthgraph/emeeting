@@ -9,7 +9,8 @@ const getData = async () => {
   const session = await getServerSession(options)
 
   try {
-    const token = { token: session?.user.token }
+    const reqBody = { token: session?.user.token }
+    const token = session?.user.token
 
     //const email = { email: session?.user.email }
 
@@ -20,7 +21,7 @@ const getData = async () => {
       Expires: '0'
     }
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/list`, token, { headers })
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/list`, reqBody, { headers })
 
     if (response.data.message === 'success') {
       return response.data
@@ -64,10 +65,9 @@ const GroupListApp = async () => {
   const data = await getData()
   const usersData = await getDataUser()
   const groupData = data.data.detail
-  const updateToken = data.token
   const userData = usersData.data.detail
 
-  return <GroupList groupData={groupData} updateToken={updateToken} userData={userData} />
+  return <GroupList groupData={groupData} userData={userData} />
 }
 
 export default GroupListApp

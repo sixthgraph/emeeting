@@ -1,8 +1,3 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-
-import { useSession } from 'next-auth/react'
 import Grid from '@mui/material/Grid'
 
 // Type Imports
@@ -12,38 +7,7 @@ import type { UsersType } from '@/types/apps/userTypes'
 // Component Imports
 import GroupListTable from './GroupListTable'
 
-const GroupList = ({
-  groupData,
-  updateToken,
-  userData
-}: {
-  groupData?: GroupType[]
-  updateToken?: string
-  userData?: UsersType[]
-}) => {
-  const { data: session, update } = useSession()
-  const [tokenData, setTokenData] = useState(session?.user.token)
-
-  async function updateSession() {
-    await update({
-      ...session,
-      user: {
-        ...session?.user,
-        token: updateToken
-      }
-    })
-  }
-
-  useEffect(() => {
-    updateSession()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenData])
-
-  if (tokenData !== updateToken) {
-    console.log('update token')
-    setTokenData(updateToken)
-  }
-
+const GroupList = ({ groupData, userData }: { groupData?: GroupType[]; userData?: UsersType[] }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

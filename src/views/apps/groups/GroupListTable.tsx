@@ -687,7 +687,6 @@ const GroupListTable = ({ tableData, userData }: Props) => {
       <GroupDrawerForm
         open={addGroupOpen}
         setData={setData}
-        tableData={tableData}
         userData={userData}
         updateData={initialData}
         handleClose={() => setAddGroupOpen(!addGroupOpen)}

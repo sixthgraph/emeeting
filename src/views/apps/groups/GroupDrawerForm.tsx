@@ -44,7 +44,7 @@ import type { Input } from 'valibot'
 import CustomTextField from '@core/components/mui/TextField'
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 
-import type { GroupFormDataType, GroupType } from '@/types/apps/groupTypes'
+import type { GroupFormDataType } from '@/types/apps/groupTypes'
 import type { UsersType } from '@/types/apps/userTypes'
 import { addGroupFormSchema } from '@/schemas/formSchema'
 
@@ -58,7 +58,6 @@ type Props = {
   open: boolean
   updateData: GroupFormDataType
   setData: any
-  tableData?: GroupType[]
   userData?: UsersType[]
   email?: string
 
@@ -73,7 +72,7 @@ const initialData = {
   member: []
 }
 
-const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handleClose }: Props) => {
+const GroupDrawerForm = ({ open, setData, updateData, userData, handleClose }: Props) => {
   // States
   const [formData, setFormData] = useState<GroupFormDataType>(initialData)
   const [userList, setUserList] = useState<any[]>(updateData.member)
@@ -147,19 +146,12 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
       console.log('Create response===', response.data)
 
       if (response.data.success) {
-        if (tableData) {
-          const updateData: any = {
-            groupid: formData.groupid,
-            groupname: formData.groupname,
-            createby: String(emailData),
-            member: formData.member
-          }
+        // noon here
 
-          tableData.push(updateData)
-        }
-
-        setData(tableData)
         handleClose()
+        const newData = await getGroupData()
+
+        setData(newData)
       } else {
         console.log('Create failed.')
       }
@@ -181,6 +173,28 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
     })
   }
 
+  const getGroupData = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: '0'
+      }
+
+      const reqBody = { token: token }
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/list`, reqBody, { headers })
+
+      if (response.data.message === 'success') {
+        return response.data.data.detail
+      } else {
+        return 'Group not found'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const handleUpdateData = async () => {
     const newFormData: any = {
       groupid: formData.groupid,
@@ -196,17 +210,9 @@ const GroupDrawerForm = ({ open, setData, updateData, tableData, userData, handl
         console.log('Update user success.')
         handleClose()
 
-        const index = tableData?.findIndex(x => x.groupid !== formData.groupid)
+        const newData = await getGroupData()
 
-        console.log('newUpdate === ', index)
-        setData(index)
-
-        if (tableData) {
-          tableData[Number(index)].groupname = formData.groupname
-          tableData[Number(index)].member = formData.member
-        }
-
-        setData(tableData)
+        setData(newData)
       }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
