@@ -1,7 +1,7 @@
 'use client'
 
 // MUI Imports
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // import { redirect } from 'next/navigation'
 import { useParams } from 'next/navigation'
@@ -16,7 +16,6 @@ import { Button, Dialog, DialogContent, DialogTitle, Icon, IconButton } from '@m
 
 // Type Imports
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
 
 // Style Imports
 import DialogActions from '@mui/material/DialogActions'
@@ -29,16 +28,14 @@ import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 import FileUploader from './create/FileUploader'
 import ReqFileUploader from './create/ReqFileUploader'
 
-// import FileUploaderCloudinary from './create/FileUploaderCloudinary'
-
 const DocumentListTable = ({
-  documentList,
   docData,
-  setAttachment
+  attachment,
+  handleCheckDocument
 }: {
-  documentList?: any
   docData?: any
-  setAttachment?: any
+  attachment?: any
+  handleCheckDocument: any
 }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [confirm, setConfirm] = useState<boolean>(false)
@@ -46,20 +43,6 @@ const DocumentListTable = ({
   const [reqUploadData, setReqUploadData] = useState<any>()
   const [deletefile, setDeleteFile] = useState({})
   const [editfile, setEditFile] = useState({})
-  let attData = docData?.attachment
-  const [attachmentList, setAttachmentList] = useState<any>(attData)
-  const { data: session } = useSession()
-  const token = session?.user.token
-
-  useEffect(() => {
-    if (!open) {
-      handleGetDocument().then(resData => {
-        mapDocument(resData)
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
   const handleClickOpen = () => setOpen(true)
 
   const handleReqUploadOpen = (data: any) => {
@@ -69,79 +52,15 @@ const DocumentListTable = ({
   }
 
   const handleClose = () => {
-    //sg here
     console.log('handleClose start')
+    handleCheckDocument()
     setOpen(false)
     setReqUploadOpen(false)
-    handleGetDocument().then(resData => {
-      mapDocument(resData)
-    })
   }
 
-  const handleCloseConfirm = () => setConfirm(false)
-
-  const mapDocument = async (resData: any) => {
-    console.log('mapDocument --- start')
-    attData = resData
-
-    if (documentList) {
-      for (const item of documentList) {
-        const findRefId = attData.find((elem: any) => elem.refid === item._id)
-
-        if (!findRefId) {
-          console.log('not found --- ')
-
-          const newData = {
-            allowupdate: 'Y',
-            attachdate: '',
-            attachname: '',
-            dep: '',
-            filename: item.document_name,
-            linkwid: '-',
-            uid: '',
-            wid: '',
-            refid: item._id,
-            action: item.action,
-            format: item.format,
-            size: item.size
-          }
-
-          resData.push(newData)
-
-          console.log('newData ---')
-          console.log(newData)
-        }
-      }
-    }
-
-    setAttachmentList(resData)
-  }
-
-  const handleGetDocument = async () => {
-    console.log('handleGetDocument --- start')
-
-    // sg here
-    const reqBody = {
-      wid: docData.wid,
-      itemno: '',
-      token: token
-    }
-
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/list`, reqBody)
-
-      let resData = response.data.data
-
-      if (!resData) {
-        resData = []
-      }
-
-      setAttachment(resData)
-
-      return resData
-    } catch (error: any) {
-      console.log('Editwork failed. ', error.message)
-    }
+  const handleCloseConfirm = () => {
+    handleCheckDocument()
+    setConfirm(false)
   }
 
   // Hooks
@@ -205,9 +124,6 @@ const DocumentListTable = ({
     }
 
     handleCloseConfirm() // sg here
-    handleGetDocument().then(resData => {
-      mapDocument(resData)
-    })
   }
 
   const handleReset = () => {
@@ -238,8 +154,8 @@ const DocumentListTable = ({
               </tr>
             </thead>
             <tbody>
-              {attachmentList.length > 0 ? (
-                attachmentList?.map((row: any, index: any) => (
+              {attachment.length > 0 ? (
+                attachment?.map((row: any, index: any) => (
                   <tr key={index} className='border-0'>
                     <td className='pis-6 pli-2 plb-3'>
                       <div className='flex items-center gap-4'>
@@ -359,9 +275,23 @@ const DocumentListTable = ({
           <div className='align-middle border-dashed border-2 border-gray-300 min-h-[20rem] min-w-[30rem]'>
             <div className='mt-10 align-middle'>
               {reqUploadOpen ? (
-                <ReqFileUploader reqDocData={reqUploadData} handleClose={() => setOpen(!open)} attmData={docData} />
+                <ReqFileUploader
+                  reqDocData={reqUploadData}
+                  handleClose={() => {
+                    setOpen(!open)
+                    handleCheckDocument()
+                  }}
+                  attmData={docData}
+                />
               ) : (
-                <FileUploader handleClose={() => setOpen(!open)} attmData={docData} fileData={editfile} />
+                <FileUploader
+                  handleClose={() => {
+                    setOpen(!open)
+                    handleCheckDocument()
+                  }}
+                  attmData={docData}
+                  fileData={editfile}
+                />
               )}
             </div>
           </div>

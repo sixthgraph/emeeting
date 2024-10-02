@@ -58,6 +58,7 @@ import { formRenderV2, getEdata } from '@/utils/hooks/formRender'
 
 import axios from '@/utils/axios'
 import DocumentListTable from '../workV2/DocumentListTable'
+import { getDocument } from '@/components/attachment'
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -141,9 +142,8 @@ const WorkProfile = ({
   // console.log(eformData)
   // console.log('conditionData -----')
   // console.log(conditionData)
-  console.log('notificationData----')
-  console.log(notificationData)
-
+  // console.log('notificationData----')
+  // console.log(notificationData)
   // console.log('documentList')
   // console.log(documentList)
   // console.log('curNodeData -------')
@@ -188,8 +188,7 @@ const WorkProfile = ({
     email: session?.user.email,
     dep: workData?.curdep,
     rid: workData?.workflowid,
-    pid: workData?.blockid,
-    attachment: attachment //attachment: workData?.attachment
+    pid: workData?.blockid //attachment: attachment //attachment: workData?.attachment
   }
 
   const [value, setValue] = useState('1')
@@ -215,6 +214,10 @@ const WorkProfile = ({
         }
       }
     }
+
+    handleCheckDocument()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curNodeData, curNodeData.eformlist])
 
   useEffect(() => {
@@ -233,6 +236,56 @@ const WorkProfile = ({
 
   const handleOpenDialog = () => {
     setOpen(true)
+  }
+
+  const handleCheckDocument = async () => {
+    const wid = workData?.wid
+
+    getDocument(wid).then(resData => {
+      console.log('handleCheckDocument return')
+      console.log(resData)
+      mapDocument(resData)
+    })
+  }
+
+  const mapDocument = async (resData: any) => {
+    console.log('mapDocument --- start')
+    const attData = resData
+
+    console.log('documentList')
+    console.log(documentList)
+
+    if (documentList) {
+      for (const item of documentList) {
+        const findRefId = attData.find((elem: any) => elem.refid === item._id)
+
+        if (!findRefId) {
+          console.log('not found --- ')
+
+          const newData = {
+            allowupdate: 'Y',
+            attachdate: '',
+            attachname: '',
+            dep: '',
+            filename: item.document_name,
+            linkwid: '-',
+            uid: '',
+            wid: '',
+            refid: item._id,
+            action: item.action,
+            format: item.format,
+            size: item.size
+          }
+
+          resData.push(newData)
+
+          console.log('newData ---')
+          console.log(newData)
+        }
+      }
+    }
+
+    setAttachment(resData)
   }
 
   const handleClose = () => {
@@ -723,12 +776,15 @@ const WorkProfile = ({
 
     let documentPass = true
 
+    // console.log('attachment ---')
+    // console.log(attachment)
+
     if (documentList) {
       const elemCheck = []
 
       for (const item of documentList) {
-        console.log('Check ' + item.action + ' สำหรับ ' + item.document_name + `(${item._id})`)
-        const docElem = attachment.find((elem: any) => elem.refid == item._id)
+        //console.log('Check ' + item.action + ' สำหรับ ' + item.document_name + `(${item._id})`)
+        const docElem = attachment.find((elem: any) => elem.refid == item._id && elem.attachname !== '')
 
         if (docElem) {
           elemCheck.push('true')
@@ -737,8 +793,8 @@ const WorkProfile = ({
         }
       }
 
-      console.log('elemCheck ===')
-      console.log(elemCheck)
+      // console.log('elemCheck ===')
+      // console.log(elemCheck)
 
       if (elemCheck.includes('false')) {
         documentPass = false
@@ -748,7 +804,6 @@ const WorkProfile = ({
     }
 
     if (!documentPass) {
-      //sg doc here
       setDialogTitle('กรุณาทำรายการเอกสาร (Documents) ให้ครบถ้วน')
       setDialogMsg('ไม่สามารถดำเนินการได้ กรุณาทำรายการเอกสารให้ครบถ้วน')
       handleOpenDialog()
@@ -1176,7 +1231,11 @@ const WorkProfile = ({
               />
             </TabPanel>
             <TabPanel value='2'>
-              <DocumentListTable documentList={documentList} docData={documentData} setAttachment={setAttachment} />
+              <DocumentListTable
+                docData={documentData} //documentList={documentList}
+                handleCheckDocument={handleCheckDocument}
+                attachment={attachment} //setAttachment={setAttachment}
+              />
             </TabPanel>
             <TabPanel value='3'>
               <Card>
