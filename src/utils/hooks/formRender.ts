@@ -111,7 +111,7 @@ export const formRenderV1 = (dataObj: string) => {
   }
 }
 
-export const formRenderV2 = (dataObj: string, handleEditWork: () => void) => {
+export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) => {
   let i: any
   const elem: any = dataObj
 
@@ -202,7 +202,7 @@ export const formRenderV2 = (dataObj: string, handleEditWork: () => void) => {
           }
         })
         .on('blur', function () {
-          console.log('blur ----')
+          console.log('blur ----') //
           handleEditWork()
         })
 
