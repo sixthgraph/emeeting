@@ -207,7 +207,10 @@ export async function POST(req: NextRequest) {
             success: true,
             data: workinfo,
             conditionData: ['null'],
-            res_notification: null
+            commentData: commentdata,
+            documentData: res_doc.data,
+            nodeData: res_node.data,
+            notificationData: null
           })
 
           return response2
