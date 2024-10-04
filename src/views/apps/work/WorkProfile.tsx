@@ -58,7 +58,33 @@ import { formRenderV2, getEdata } from '@/utils/hooks/formRender'
 
 import axios from '@/utils/axios'
 import DocumentListTable from '../workV2/DocumentListTable'
-import { getDocument } from '@/components/attachment'
+
+// import { getDocument } from '@/components/attachment'
+
+const getDocuments = async (wid: any, token: any) => {
+  const reqBody = {
+    wid: wid,
+    itemno: '',
+    token: token
+  }
+
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/list`, reqBody)
+
+    let resData = response.data.data
+
+    console.log('getDocument return')
+    console.log(response)
+
+    if (!resData) {
+      resData = []
+    }
+
+    return resData
+  } catch (error: any) {
+    console.log('Editwork failed. ', error.message)
+  }
+}
 
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)<AccordionProps>({
@@ -177,6 +203,7 @@ const WorkProfile = ({
 
   const router = useRouter()
   const { data: session } = useSession()
+  const token = session?.user.token
   const eform: any = eformData
 
   for (const i in eform) {
@@ -241,11 +268,17 @@ const WorkProfile = ({
   const handleCheckDocument = async () => {
     const wid = workData?.wid
 
-    getDocument(wid).then(resData => {
+    getDocuments(wid, token).then(resData => {
       console.log('handleCheckDocument return')
       console.log(resData)
       mapDocument(resData)
     })
+
+    // getDocument(wid).then(resData => {
+    //   console.log('handleCheckDocument return')
+    //   console.log(resData)
+    //   mapDocument(resData)
+    // })
   }
 
   const mapDocument = async (resData: any) => {
