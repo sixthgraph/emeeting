@@ -91,8 +91,6 @@ import CustomTextField from '@core/components/mui/TextField'
 //Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import getGroupList from '@components/groups/getGroupList'
-
 declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>
@@ -190,9 +188,22 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   const handleCloseConfirm = () => setConfirm(false)
 
   const getGroupData = async () => {
-    const newData = await getGroupList()
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/client-list`)
 
-    return newData
+      let resData = response.data.data.detail
+
+      console.log('getDocument return')
+      console.log(resData)
+
+      if (!resData) {
+        resData = []
+      }
+
+      return resData
+    } catch (error: any) {
+      console.log('Editwork failed. ', error.message)
+    }
   }
 
   const handleSubmitMember = async () => {
@@ -314,6 +325,7 @@ const GroupListTable = ({ tableData, userData }: Props) => {
 
   // Delete
   const handleDeleteGroup = async () => {
+    // sg here
     const reqBody: any = deleteGroup
     const groupid: object = { groupid: reqBody.groupid }
 
@@ -326,19 +338,10 @@ const GroupListTable = ({ tableData, userData }: Props) => {
         console.log(response.data.data.detail)
         handleCloseConfirm()
 
-        //todo update tableData
-        const em: any = groupid
-        const newUpdate = tableData?.filter(el => el.groupid !== em.groupid)
+        const newUpdate: any = await getGroupData()
 
         console.log('newUpdate === ', newUpdate)
         setData(newUpdate)
-
-        tableData = data
-
-        console.log(tableData)
-
-        //todo update refresh token
-        console.log('Update token ===', response.data.token)
       } else {
         console.error('Group delete failed')
       }

@@ -1,5 +1,5 @@
 // React Imports
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // MUI Imports
 import List from '@mui/material/List'
@@ -38,42 +38,13 @@ const FileUploader = ({
 }) => {
   // States
   const [files, setFiles] = useState<File[]>([])
-
-  //const [base64, setBase64] = useState<string | null>(null)
-
   const wid = attmData.wid
   const email = attmData.email
   const dep = attmData.dep
   const rid = attmData.rid
   const pid = attmData.pid
-
   const { data: session } = useSession()
-
   const token = session?.user.token
-
-  //const [open, setOpen] = useState<boolean>(false)
-  // const handleClose = () => setOpen(false)
-
-  // console.log(open)
-
-  // console.log(token)
-
-  useEffect(() => {
-    console.log('files ----')
-    console.log(files)
-  }, [files])
-
-  // Hooks
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   onDrop: (acceptedFiles: File[]) => {
-  //     setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
-  //   }
-  // })
-  // if (fileData.filename == undefined) {
-  //   console.log('ว่าง')
-  // } else {
-  //   console.log('ไม่ว่าง')
-  // }
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[]) => {
@@ -96,6 +67,19 @@ const FileUploader = ({
     }
   }
 
+  // const handleUploadFile_sg = async () => {
+  //   console.log('start handleUPloadFile')
+  //   console.log('files')
+  //   console.log(files)
+
+  //   // const res = await uploadAttachment(wid, email, dep, rid, pid, files)
+  //   const res = await uploadAttachment('wid', 'email', 'dep', 'rid', 'pid', files)
+
+  //   console.log('handleUploadFile return')
+
+  //   console.log(res)
+  // }
+
   const handleUploadFile = async () => {
     console.log('--attmData--')
     console.log(wid)
@@ -104,11 +88,6 @@ const FileUploader = ({
     const headers = {
       Accept: '*/*',
       Authorization: `Bearer ${token}`
-
-      // 'Access-Control-Allow-Origin': '*',
-      // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-
-      // 'Content-Type': 'multipart/form-data'
     }
 
     const form = new FormData()
@@ -121,17 +100,12 @@ const FileUploader = ({
     form.append('refid', '')
     form.append('action', '')
     form.append('filename', '')
-
-    //form.append('my_buffer', new Blob([1, 2, 3]))
     form.append('file', files[0])
 
     console.log('----form body createattachment from client call------')
     console.log(form)
 
     try {
-      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
-      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/add`, form)
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
         method: 'POST',
         body: form,
@@ -143,11 +117,6 @@ const FileUploader = ({
       console.log('response createattachment from client call------')
       console.log(response)
 
-      // if (response.data.message === 'success') {
-      //   console.log('---createattachment from client call success.------------------')
-      // } else {
-      //   console.log(response.data.message)
-      // }
       handleClose()
     } catch (error: any) {
       console.log('createattachment from client call failed. ', error.message)

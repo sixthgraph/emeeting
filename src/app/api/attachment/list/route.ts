@@ -3,12 +3,22 @@ import { NextResponse } from 'next/server'
 
 import axios from 'axios'
 
+import { getServerSession } from 'next-auth'
+
+import { options } from '../../auth/[...nextauth]/options'
+
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
 
-  const { token, wid, itemno } = reqBody
+  const { wid, itemno } = reqBody
 
   try {
+    const serverSession = await getServerSession(options)
+    const token = serverSession?.user.token
+
+    console.log('server token2 ====')
+    console.log(token)
+
     const headers = { Authorization: `Bearer ${token}`, 'Cache-Control': 'no-cache', Pragma: 'no-cache', Expires: '0' }
 
     const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getattachment?wid=${wid}&id=${itemno}`, {

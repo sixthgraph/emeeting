@@ -61,11 +61,10 @@ import DocumentListTable from '../workV2/DocumentListTable'
 
 // import { getDocument } from '@/components/attachment'
 
-const getDocuments = async (wid: any, token: any) => {
+const getDocuments = async (wid: any) => {
   const reqBody = {
     wid: wid,
-    itemno: '',
-    token: token
+    itemno: ''
   }
 
   try {
@@ -203,7 +202,8 @@ const WorkProfile = ({
 
   const router = useRouter()
   const { data: session } = useSession()
-  const token = session?.user.token
+
+  // const token = session?.user.token
   const eform: any = eformData
 
   for (const i in eform) {
@@ -268,7 +268,7 @@ const WorkProfile = ({
   const handleCheckDocument = async () => {
     const wid = workData?.wid
 
-    getDocuments(wid, token).then(resData => {
+    getDocuments(wid).then(resData => {
       console.log('handleCheckDocument return')
       console.log(resData)
       mapDocument(resData)
