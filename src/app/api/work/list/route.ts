@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
 
         console.log('uri getnextprocess')
         console.log(
-          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}blockid=${curwip[0].pid}&wid=${wid}`
+          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`
         )
 
         try {

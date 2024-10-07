@@ -19,6 +19,8 @@ import type { TimelineProps } from '@mui/lab/Timeline'
 // Component Imports
 import CustomAvatar from '@core/components/mui/Avatar'
 
+//import data from '@/data/searchData'
+
 // Styled Timeline component
 const Timeline = styled(MuiTimeline)<TimelineProps>({
   paddingLeft: 0,
@@ -31,7 +33,10 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
   }
 })
 
-const UserActivityTimeLine = () => {
+const UserActivityTimeLine = ({ data }: { data: any }) => {
+  console.log('---activity data')
+  console.log(data)
+
   return (
     <Card>
       <CardHeader title='User Activity Timeline' />

@@ -17,7 +17,7 @@ import UserActivityTimeLine from './UserActivityTimeline'
 //   return res.json()
 // }
 
-const OverViewTab = async () => {
+const OverViewTab = async ({ data }: { data: any }) => {
   // Vars
   // const invoiceData = await getData()
 
@@ -27,7 +27,7 @@ const OverViewTab = async () => {
         <ProjectListTable />
       </Grid>
       <Grid item xs={12}>
-        <UserActivityTimeLine />
+        <UserActivityTimeLine data={data} />
       </Grid>
       {/* <Grid item xs={12}>
         <InvoiceListTable invoiceData={invoiceData} />
