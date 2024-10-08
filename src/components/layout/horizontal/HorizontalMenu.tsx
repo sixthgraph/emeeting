@@ -103,15 +103,6 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
         <MenuItem href={`/${locale}/todo`} icon={<i className='tabler-inbox' />}>
           {dictionary['navigation'].todo}
         </MenuItem>
-        {/* <MenuItem href={`/${locale}/my-items`} icon={<i className='tabler-box' />}>
-          {dictionary['navigation'].myItems}
-        </MenuItem>
-        <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler-window-maximize' />}>
-          {dictionary['navigation'].assignment}
-        </MenuItem>
-        <MenuItem href={`/${locale}/collabs`} icon={<i className='tabler-brand-asana' />}>
-          {dictionary['navigation'].collabs}
-        </MenuItem> */}
         <MenuItem href={`/${locale}/my-request`} icon={<i className='tabler-article' />}>
           {dictionary['navigation'].myRequest}
         </MenuItem>
@@ -121,10 +112,13 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
         <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-message' />}>
           {dictionary['navigation'].comments}
         </MenuItem>
+        <MenuItem href={`/${locale}/my-app`} icon={<i className='tabler-app-window' />}>
+          {dictionary['navigation'].myApp}
+        </MenuItem>
         <SubMenu label={dictionary['navigation'].create} icon={<i className='tabler-circle-plus' />}>
           <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
           <MenuItem disabled href={`/${locale}/new-route`}>
-            {dictionary['navigation'].newRoute}
+            {dictionary['navigation'].newApp}
           </MenuItem>
         </SubMenu>
         {userRole == 1 && (

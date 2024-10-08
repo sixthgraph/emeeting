@@ -19,6 +19,8 @@
     "dashboards": "Dashboards",
     "create": "Create",
     "newRequest": "New Request",
-    "newRoute": "New Route"
+    "newRoute": "New Route",
+    "newApp": "New App",
+    "myApp": "My App"
   }
 }
