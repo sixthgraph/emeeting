@@ -28,8 +28,12 @@ const NotificationsTab = dynamic(() => import('@views/apps/user/profile/user-rig
 const ConnectionsTab = dynamic(() => import('@views/apps/user/profile/user-right/connections'))
 
 // Vars
-const tabContentList = (data: PricingPlanType[], myactivitydata: any): { [key: string]: ReactElement } => ({
-  overview: <OverViewTab data={myactivitydata} />,
+const tabContentList = (
+  data: PricingPlanType[],
+  myactivitydata: any,
+  myRouteListData: any
+): { [key: string]: ReactElement } => ({
+  overview: <OverViewTab data={myactivitydata} routeData={myRouteListData} />,
   security: <SecurityTab />,
   'billing-plans': <BillingPlans data={data} />,
   notifications: <NotificationsTab />,
@@ -77,13 +81,47 @@ const getMyActivityList = async () => {
   }
 }
 
+const getMyRouteList = async () => {
+  const session = await getServerSession(options)
+
+  try {
+    const reqBody = {
+      token: session?.user.token,
+      email: session?.user.email
+    }
+
+    const token = { token: session?.user.token }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0'
+    }
+
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/my-route-list`, reqBody, { headers })
+
+    if (response.data.message === 'success') {
+      return response.data
+    } else {
+      return 'Data not found'
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const UserViewTab = async () => {
   // Vars
   const data = await getPricingData()
   const myactivitydata = await getMyActivityList()
+  const myRouteListData = await getMyRouteList()
 
   console.log('---myactivitydata')
   console.log(myactivitydata.data)
+
+  console.log('---myRouteListData')
+  console.log(myRouteListData.data)
 
   return (
     <Grid container spacing={6}>
@@ -91,7 +129,7 @@ const UserViewTab = async () => {
         <UserLeftOverview />
       </Grid>
       <Grid item xs={12} lg={8} md={7}>
-        <UserRight tabContentList={tabContentList(data, myactivitydata.data)} />
+        <UserRight tabContentList={tabContentList(data, myactivitydata.data, myRouteListData.data)} />
       </Grid>
     </Grid>
   )

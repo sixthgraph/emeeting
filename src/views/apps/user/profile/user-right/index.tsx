@@ -17,9 +17,6 @@ const UserRight = ({ tabContentList }: { tabContentList: { [key: string]: ReactE
   // States
   const [activeTab, setActiveTab] = useState('overview')
 
-  console.log('tabContentList')
-  console.log(tabContentList)
-
   const handleChange = (event: SyntheticEvent, value: string) => {
     setActiveTab(value)
   }

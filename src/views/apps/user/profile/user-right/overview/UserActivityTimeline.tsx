@@ -31,9 +31,9 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
   }
 })
 
-const UserActivityTimeLine = ({ data }: { data: any }) => {
-  console.log('---activity data')
-  console.log(data)
+const UserActivityTimeLine = ({ data }: { data?: any }) => {
+  // console.log('---activity data')
+  // console.log(data)
 
   const { lang: locale } = useParams()
 
@@ -97,6 +97,7 @@ const UserActivityTimeLine = ({ data }: { data: any }) => {
                         <Chip
                           className='mb-2'
                           label={item.wid}
+                          size='small'
                           color='primary'
                           variant='tonal'
                           icon={<i className='tabler-grid-pattern' />}

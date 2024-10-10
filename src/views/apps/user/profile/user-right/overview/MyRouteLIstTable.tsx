@@ -5,7 +5,6 @@ import { useState, useMemo, useEffect } from 'react'
 
 // MUI Imports
 import Typography from '@mui/material/Typography'
-import LinearProgress from '@mui/material/LinearProgress'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import MenuItem from '@mui/material/MenuItem'
@@ -30,26 +29,19 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// Type Imports
-import type { ThemeColor } from '@core/types'
-
 // Component Imports
-import CustomAvatar from '@core/components/mui/Avatar'
+import { Chip } from '@mui/material'
+
 import CustomTextField from '@core/components/mui/TextField'
 import TablePaginationComponent from '@components/TablePaginationComponent'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-type ProjectListDataType = {
-  id: number
-  img: string
-  hours: string
-  totalTask: string
-  projectType: string
-  projectTitle: string
-  progressValue: number
-  progressColor: ThemeColor
+type RouteListDataType = {
+  complete: string
+  routename: string
+  total: string
 }
 
 declare module '@tanstack/table-core' {
@@ -62,78 +54,6 @@ declare module '@tanstack/table-core' {
 }
 
 // Vars
-const projectTable: ProjectListDataType[] = [
-  {
-    id: 1,
-    hours: '18:42',
-    progressValue: 78,
-    totalTask: '122/240',
-    progressColor: 'success',
-    projectType: 'React Project',
-    projectTitle: 'BGC eCommerce App',
-    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/react-bg.png'
-  },
-  {
-    id: 2,
-    hours: '20:42',
-    progressValue: 18,
-    totalTask: '9/56',
-    progressColor: 'error',
-    projectType: 'Figma Project',
-    projectTitle: 'Falcon Logo Design',
-    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/figma-bg.png'
-  },
-  {
-    id: 3,
-    hours: '120:87',
-    progressValue: 62,
-    totalTask: '290/320',
-    progressColor: 'primary',
-    projectType: 'VueJs Project',
-    projectTitle: 'Dashboard Design',
-    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/vue-bg.png'
-  },
-  {
-    id: 4,
-    hours: '89:19',
-    progressValue: 8,
-    totalTask: '7/63',
-    progressColor: 'error',
-    projectType: 'Xamarin Project',
-    projectTitle: 'Foodista Mobile App',
-    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/icons/mobile-bg.png'
-  },
-  {
-    id: 5,
-    hours: '230:10',
-    progressValue: 49,
-    totalTask: '120/186',
-    progressColor: 'warning',
-    projectType: 'Python Project',
-    projectTitle: 'Dojo React Project',
-    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/python-bg.png'
-  },
-  {
-    id: 6,
-    hours: '342:41',
-    progressValue: 92,
-    totalTask: '99/109',
-    progressColor: 'success',
-    projectType: 'Sketch Project',
-    projectTitle: 'Blockchain Website',
-    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/sketch-bg.png'
-  },
-  {
-    id: 7,
-    hours: '12:45',
-    progressValue: 88,
-    totalTask: '98/110',
-    progressColor: 'success',
-    projectType: 'HTML Project',
-    projectTitle: 'Hoffman Website',
-    img: process.env.NEXT_PUBLIC_BASEPATH + '/images/logos/html-bg.png'
-  }
-]
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -178,53 +98,44 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<ProjectListDataType>()
+const columnHelper = createColumnHelper<RouteListDataType>()
 
-const ProjectListTable = () => {
+const MyRouteListTable = ({ routeData }: { routeData?: RouteListDataType }) => {
   // States
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[projectTable])
+  const [data, setData] = useState<any>(...[routeData])
   const [globalFilter, setGlobalFilter] = useState('')
 
+  console.log('---routeData')
+  console.log(routeData)
+
   // Hooks
-  const columns = useMemo<ColumnDef<ProjectListDataType, any>[]>(
+  const columns = useMemo<ColumnDef<RouteListDataType, any>[]>(
     () => [
-      columnHelper.accessor('projectTitle', {
-        header: 'Workflow',
+      columnHelper.accessor('routename', {
+        header: 'App Name',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
-            <CustomAvatar src={row.original.img} size={34} />
             <div className='flex flex-col'>
               <Typography className='font-medium' color='text.primary'>
-                {row.original.projectTitle}
+                {row.original.routename}
               </Typography>
-              <Typography variant='body2'>{row.original.projectType}</Typography>
+              <div className='flex gap-4'>
+                <Chip className='mb-2' label='workflow' size='small' color='warning' variant='tonal' />
+              </div>
             </div>
           </div>
         )
       }),
-      columnHelper.accessor('totalTask', {
-        header: 'Total Task',
-        cell: ({ row }) => <Typography color='text.primary'>{row.original.totalTask}</Typography>
+      columnHelper.accessor('total', {
+        header: 'Total Work',
+        cell: ({ row }) => <Typography color='text.primary'>{row.original.total}</Typography>
       }),
-      columnHelper.accessor('progressValue', {
-        header: 'Progress',
-        cell: ({ row }) => (
-          <>
-            <Typography color='text.primary'>{`${row.original.progressValue}%`}</Typography>
-            <LinearProgress
-              color={row.original.progressColor}
-              value={row.original.progressValue}
-              variant='determinate'
-              className='is-full'
-            />
-          </>
-        )
-      }),
-      columnHelper.accessor('hours', {
-        header: 'Hours',
-        cell: ({ row }) => <Typography>{row.original.hours}</Typography>
+
+      columnHelper.accessor('complete', {
+        header: 'Completed',
+        cell: ({ row }) => <Typography>{row.original.complete}</Typography>
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -262,7 +173,7 @@ const ProjectListTable = () => {
 
   return (
     <Card>
-      <CardHeader title='My Project List' className='flex flex-wrap gap-4' />
+      <CardHeader title='My Application List' className='flex flex-wrap gap-4' />
       <div className='flex items-center justify-between p-6 gap-4'>
         <div className='flex items-center gap-2'>
           <Typography>Show</Typography>
@@ -351,4 +262,4 @@ const ProjectListTable = () => {
   )
 }
 
-export default ProjectListTable
+export default MyRouteListTable
