@@ -5,7 +5,8 @@ import { useState } from 'react'
 
 // import { redirect } from 'next/navigation'
 import { useParams } from 'next/navigation'
-import Link from 'next/link'
+
+// import Link from 'next/link'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -63,6 +64,27 @@ const DocumentListTable = ({
     setConfirm(false)
   }
 
+  const base64ToFile = async (base64String: any, fileName: any) => {
+    // Split the base64 string into two parts
+    const arr = base64String.split(',')
+    const mimeString = arr[0].match(/:(.*?);/)[1] // Get the MIME type
+    const b64Data = arr[1] // Get the actual data
+
+    // Decode the Base64 string
+    const byteCharacters = atob(b64Data) // Decode the Base64
+    const byteNumbers = new Uint8Array(byteCharacters.length)
+
+    // Convert to byte array
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i)
+    }
+
+    // Create a file from the byte array
+    const blob = new Blob([byteNumbers], { type: mimeString })
+
+    return new File([blob], fileName, { type: mimeString })
+  }
+
   // Hooks
   const { lang: locale } = useParams()
 
@@ -107,6 +129,47 @@ const DocumentListTable = ({
     return type
   }
 
+  const openNewWindow = (urlStr: any) => {
+    const newWin = window.open(urlStr, '_blank')
+
+    if (!newWin) {
+      alert('Please allow popups for this website')
+    }
+  }
+
+  const handleGetAttachData = async (wid: any, id: any) => {
+    const reqBody = {
+      wid: wid,
+      itemno: id
+    }
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/list`, reqBody)
+
+      if (response.data.message === 'success') {
+        console.log(response.data.data)
+
+        return response.data.data
+      } else {
+        console.error('File delete failed')
+      }
+    } catch (error: any) {
+      console.error('File delete failed', error.message)
+    }
+  }
+
+  const handleOpenAttachment = async (wid: any, id: any) => {
+    console.log('handleOpenAttachment start')
+
+    handleGetAttachData(wid, id).then(r => {
+      console.log('link to')
+      console.log(r.attachname)
+      const attUrl = 'https://' + r.attachname
+
+      openNewWindow(attUrl)
+    })
+  }
+
   // Delete
   const handleDeleteFile = async () => {
     const reqBody = deletefile
@@ -130,6 +193,9 @@ const DocumentListTable = ({
     handleClose()
     setEditFile({})
   }
+
+  console.log('attachment sg --')
+  console.log(attachment)
 
   return (
     <>
@@ -171,12 +237,9 @@ const DocumentListTable = ({
                     <td className='pli-2 plb-3'>
                       <div className='flex flex-col'>
                         {row.wid !== '' ? (
-                          <Link
-                            target='_blank'
-                            href={'https://rd.infoma.net' + row.attachname.replace('D:\\routeflow', '\\routefile')}
-                          >
+                          <div className='cursor-pointer' onClick={() => handleOpenAttachment(row.wid, row.itemno)}>
                             <Typography color='text.primary'>{row.filename}</Typography>
-                          </Link>
+                          </div>
                         ) : (
                           <>
                             <Typography color='text.primary'>{row.filename}</Typography>

@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     console.log(itemno)
 
     console.log('----- attm list-------------')
-    console.log(res.data)
+    console.log(res.data.data)
 
     if (getattm_res.message == 'success') {
       const response = NextResponse.json({
