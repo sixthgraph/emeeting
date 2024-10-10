@@ -14,10 +14,12 @@ import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
-import Checkbox from '@mui/material/Checkbox'
+
+// import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Divider from '@mui/material/Divider'
+
+// import FormControlLabel from '@mui/material/FormControlLabel'
+// import Divider from '@mui/material/Divider'
 
 // Third-party Imports
 import { Controller, useForm } from 'react-hook-form'
@@ -251,7 +253,7 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
             />
 
             <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
-              <FormControlLabel control={<Checkbox />} label='Remember me' />
+              {/* <FormControlLabel control={<Checkbox />} label='Remember me' /> */}
               <Typography
                 className='text-end'
                 color='primary'
@@ -264,7 +266,7 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
             <Button fullWidth variant='contained' type='submit'>
               Login
             </Button>
-            <div className='flex justify-center items-center flex-wrap gap-2'>
+            {/* <div className='flex justify-center items-center flex-wrap gap-2'>
               <Typography>New on our platform?</Typography>
               <Typography component={Link} href={getLocalizedUrl('/register', locale as Locale)} color='primary'>
                 Create an account
@@ -281,7 +283,7 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
               onClick={() => signIn('google')}
             >
               Sign in with Google
-            </Button>
+            </Button> */}
             {/* <div className='flex justify-center items-center gap-1.5'>
               <IconButton className='text-facebook' size='small'>
                 <i className='tabler-brand-facebook-filled' />
