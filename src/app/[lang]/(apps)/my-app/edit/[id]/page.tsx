@@ -37,6 +37,7 @@ const getData = async (workflowid: any) => {
 
 const editMyAppPage = async ({ params }: { params: { id: string } }) => {
   const data = await getData(params.id)
+
   console.log('data')
   console.log(data)
 

@@ -26,6 +26,11 @@ import { getDictionary } from '@/utils/getDictionary'
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 
 import './custom-eform.css'
+import './custom-routeflow.css'
+
+// import '@/css/jquery-ui.css'
+// import '@/css/jquery-ui.theme.css'
+// import '@/css/jsplumb.css'
 
 // import './eform.module.css'
 
@@ -70,6 +75,16 @@ const Layout = async ({ children, params }: ChildrenType & { params: { lang: Loc
               async
               strategy='afterInteractive'
               src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
+            />
+            <Script
+              async
+              strategy='afterInteractive'
+              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_plugins/jquery-ui-1.13.2/jquery-ui.js'
+            />
+            <Script
+              async
+              strategy='afterInteractive'
+              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_plugins/jsPlumb/jquery.jsPlumb-1.4.1-all-min.js'
             />
             {children}
           </HorizontalLayout>

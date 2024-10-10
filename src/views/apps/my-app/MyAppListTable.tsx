@@ -5,10 +5,13 @@ import { useEffect, useState, useMemo } from 'react'
 
 import { useParams } from 'next/navigation'
 
+import Link from 'next/link'
+
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
-import { styled } from '@mui/material/styles'
+
+// import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import type { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -45,7 +48,6 @@ import CustomTextField from '@core/components/mui/TextField'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import Link from 'next/link'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -57,7 +59,7 @@ declare module '@tanstack/table-core' {
 }
 
 // Styled Components
-const Icon = styled('i')({})
+// const Icon = styled('i')({})
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Search field filter for Datatable
@@ -108,7 +110,9 @@ const columnHelper = createColumnHelper<MyAppTypeWithAction>()
 const MyAppListTable = (tableData: any) => {
   // console.log('tableData')
   // console.log(tableData?.tableData.data)
-  const [data, setData] = useState(...[tableData?.tableData.data])
+  // const [data, setData] = useState(...[tableData?.tableData.data])
+
+  const data = tableData?.tableData.data
   const [globalFilter, setGlobalFilter] = useState('')
   const { lang: locale } = useParams()
 

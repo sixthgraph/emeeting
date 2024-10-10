@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 import axios from '@/utils/axios'
 
@@ -15,6 +16,7 @@ export async function POST(req: NextRequest) {
     const response = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/workflow/${workflowid}`, {
       headers
     })
+
     const resData = response?.data
 
     return NextResponse.json(resData)
