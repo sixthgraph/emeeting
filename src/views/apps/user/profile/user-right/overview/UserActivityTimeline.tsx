@@ -2,6 +2,7 @@
 
 // MUI Imports
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -94,14 +95,21 @@ const UserActivityTimeLine = ({ data }: { data?: any }) => {
                             {formatshortdate(item.Date)}
                           </Typography>
                         </div>
-                        <Chip
-                          className='mb-2'
-                          label={item.wid}
-                          size='small'
-                          color='primary'
-                          variant='tonal'
-                          icon={<i className='tabler-grid-pattern' />}
-                        />
+                        <Link
+                          href={{
+                            pathname: `/${locale}/work`,
+                            query: `wid=${item.wid}`
+                          }}
+                        >
+                          <Chip
+                            className='mb-2 cursor-pointer hover:bg-primary hover:text-white'
+                            label={item.wid}
+                            size='small'
+                            color='primary'
+                            variant='tonal'
+                            icon={<i className='tabler-grid-pattern' />}
+                          />
+                        </Link>
                         <Typography className='mbe-2'>
                           <span className='font-semibold'>Subject : </span>
                           {item.subject}

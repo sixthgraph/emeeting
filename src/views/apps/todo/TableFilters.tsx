@@ -64,9 +64,6 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: TodoTy
     }
   })
 
-  console.log('myRoute == ')
-  console.log(myRoute)
-
   return (
     <CardContent>
       <Grid container spacing={6}>

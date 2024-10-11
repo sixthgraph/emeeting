@@ -1,4 +1,6 @@
 'use client'
+import { useEffect, useState } from 'react'
+
 import { redirect } from 'next/navigation'
 
 import { useSession } from 'next-auth/react'
@@ -11,6 +13,10 @@ import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import type { ButtonProps } from '@mui/material/Button'
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'
+
+// Custom Components Imports
+import CustomBadge from '@core/components/mui/Badge'
 
 // Type Imports
 import type { ThemeColor } from '@core/types'
@@ -23,8 +29,13 @@ import OpenDialogOnElementClick from '@components/dialogs/OpenDialogOnElementCli
 import CustomAvatar from '@core/components/mui/Avatar'
 import type { UsersType } from '@/types/apps/userTypes'
 import { getInitials } from '@/utils/getInitials'
+import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
+import AvatarUploader from './AvatarUpload'
+import axios from '@/utils/axios'
 
-const UserDetails = () => {
+const UserDetails = ({ userInfoData }: { userInfoData?: any }) => {
+  const [open, setOpen] = useState<boolean>(false)
+
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -33,23 +44,20 @@ const UserDetails = () => {
   })
 
   // Vars
-  const name = session?.user.name
+  const [userInfo, setUserInfo] = useState<any>(...[userInfoData])
+  // const name = session?.user.name
   const email = session?.user.email
   const role: any = session?.user.role
   const roles = ['Admin', 'Worker', 'Viewer', 'Super User']
-  const userAvatar: any = session?.user.avatar
+  //const [userAvatar, setUserAvatar] = useState(userInfo?.avatar) //const userAvatar: any = session?.user.avatar
+  const userAvatar = userInfo?.avatar //const userAvatar: any = session?.user.avatar
   const userFullname: any = session?.user.name
   const userDep: any = session?.user.dep
   const userRole = roles[role - 1]
-  const nameObj: any = name?.split(' ')
 
-  let firstname: any = ''
-  let lastname: any = ''
-
-  if (nameObj) {
-    firstname = nameObj[0]
-    lastname = nameObj[1]
-  }
+  const firstname = userInfo?.firstname
+  const lastname = userInfo?.lastname
+  const name = firstname + ' ' + lastname
 
   const userData = {
     name: name,
@@ -80,13 +88,59 @@ const UserDetails = () => {
     variant
   })
 
+  const handleOpenUploadAvatar = () => {
+    console.log('upload avatar')
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+    handleGetUserInfo()
+  }
+
+  const handleGetUserInfo = async () => {
+    console.log('handleGetUserInfo start')
+
+    try {
+      const token = session?.user.token
+
+      const reqBody = {
+        token: token,
+        email: email
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/get-user-info`, reqBody)
+
+      console.log('get user info response')
+      console.log(response.data)
+
+      setUserInfo(response.data)
+
+      if (response.statusText === 'OK') {
+        return response.data
+      } else {
+        return 'User not found'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const getAvatar = (params: Pick<UsersType, 'avatar' | 'fullName'>) => {
     const { avatar, fullName } = params
 
     if (avatar) {
       return (
         <>
-          <CustomAvatar variant='rounded' src={avatar} size={120} />
+          <CustomBadge
+            color='primary'
+            className='cursor-pointer'
+            onClick={() => handleOpenUploadAvatar()}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<i className='tabler-pencil text-sm' />}
+          >
+            <CustomAvatar variant='rounded' src={avatar} size={120} />
+          </CustomBadge>
           <Typography variant='h5'>{`${userData.name}`}</Typography>
         </>
       )
@@ -205,7 +259,7 @@ const UserDetails = () => {
               element={Button}
               elementProps={buttonProps('Edit', 'primary', 'contained')}
               dialog={EditUserInfo}
-              dialogProps={{ data: userData }}
+              dialogProps={{ data: userData, handleGetUserInfo: handleGetUserInfo }}
             />
             {/* <OpenDialogOnElementClick
               element={Button}
@@ -216,6 +270,38 @@ const UserDetails = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog
+        disableEscapeKeyDown
+        aria-labelledby='customized-dialog-title'
+        open={open}
+        PaperProps={{ sx: { overflow: 'visible' } }}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            handleClose()
+          }
+        }}
+      >
+        <DialogTitle id='customized-dialog-title'>
+          <Typography variant='h5' component='span'>
+            Upload Picture Profile
+          </Typography>
+          <DialogCloseButton onClick={handleClose} disableRipple>
+            <i className='tabler-x' />
+          </DialogCloseButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className='align-middle border-dashed border-2 border-gray-300 min-h-[20rem] min-w-[30rem]'>
+            <div className='mt-10 align-middle'>
+              <AvatarUploader
+                handleClose={() => {
+                  handleClose()
+                }}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

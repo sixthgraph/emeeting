@@ -4,6 +4,10 @@
 import { useState, useMemo, useEffect } from 'react'
 
 // MUI Imports
+import Link from 'next/link'
+
+import { useParams } from 'next/navigation'
+
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -106,9 +110,7 @@ const MyRouteListTable = ({ routeData }: { routeData?: RouteListDataType }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState<any>(...[routeData])
   const [globalFilter, setGlobalFilter] = useState('')
-
-  console.log('---routeData')
-  console.log(routeData)
+  const { lang: locale } = useParams()
 
   // Hooks
   const columns = useMemo<ColumnDef<RouteListDataType, any>[]>(
@@ -118,12 +120,19 @@ const MyRouteListTable = ({ routeData }: { routeData?: RouteListDataType }) => {
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
             <div className='flex flex-col'>
-              <Typography className='font-medium' color='text.primary'>
-                {row.original.routename}
-              </Typography>
-              <div className='flex gap-4'>
-                <Chip className='mb-2' label='workflow' size='small' color='warning' variant='tonal' />
-              </div>
+              <Link
+                href={{
+                  pathname: `/${locale}/todo`,
+                  query: `name=${row.original.routename}`
+                }}
+              >
+                <Typography className='font-medium hover:text-primary' color='text.primary'>
+                  {row.original.routename}
+                </Typography>
+                <div className='flex gap-4'>
+                  <Chip className='mb-2' label='workflow' size='small' color='warning' variant='tonal' />
+                </div>
+              </Link>
             </div>
           </div>
         )

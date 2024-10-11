@@ -64,26 +64,26 @@ const DocumentListTable = ({
     setConfirm(false)
   }
 
-  const base64ToFile = async (base64String: any, fileName: any) => {
-    // Split the base64 string into two parts
-    const arr = base64String.split(',')
-    const mimeString = arr[0].match(/:(.*?);/)[1] // Get the MIME type
-    const b64Data = arr[1] // Get the actual data
+  // const base64ToFile = async (base64String: any, fileName: any) => {
+  //   // Split the base64 string into two parts
+  //   const arr = base64String.split(',')
+  //   const mimeString = arr[0].match(/:(.*?);/)[1] // Get the MIME type
+  //   const b64Data = arr[1] // Get the actual data
 
-    // Decode the Base64 string
-    const byteCharacters = atob(b64Data) // Decode the Base64
-    const byteNumbers = new Uint8Array(byteCharacters.length)
+  //   // Decode the Base64 string
+  //   const byteCharacters = atob(b64Data) // Decode the Base64
+  //   const byteNumbers = new Uint8Array(byteCharacters.length)
 
-    // Convert to byte array
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i)
-    }
+  //   // Convert to byte array
+  //   for (let i = 0; i < byteCharacters.length; i++) {
+  //     byteNumbers[i] = byteCharacters.charCodeAt(i)
+  //   }
 
-    // Create a file from the byte array
-    const blob = new Blob([byteNumbers], { type: mimeString })
+  //   // Create a file from the byte array
+  //   const blob = new Blob([byteNumbers], { type: mimeString })
 
-    return new File([blob], fileName, { type: mimeString })
-  }
+  //   return new File([blob], fileName, { type: mimeString })
+  // }
 
   // Hooks
   const { lang: locale } = useParams()

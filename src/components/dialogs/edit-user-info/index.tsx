@@ -41,6 +41,7 @@ type EditUserInfoProps = {
   open: boolean
   setOpen: (open: boolean) => void
   data?: EditUserInfoData
+  handleGetUserInfo: () => void
 }
 
 const initialData: EditUserInfoProps['data'] = {
@@ -63,10 +64,7 @@ const status = ['Status', 'Active', 'Inactive', 'Suspended']
 
 //const countries = ['Select Country', 'France', 'Russia', 'China', 'UK', 'US']
 
-const EditUserInfo = ({ open, setOpen, data }: EditUserInfoProps) => {
-  // console.log('data --- ')
-  // console.log(data)
-
+const EditUserInfo = ({ open, setOpen, data, handleGetUserInfo }: EditUserInfoProps) => {
   // States
   const [userData, setUserData] = useState<EditUserInfoProps['data']>(data || initialData)
   const [openAlert, setOpenAlert] = useState<boolean>(false)
@@ -79,6 +77,7 @@ const EditUserInfo = ({ open, setOpen, data }: EditUserInfoProps) => {
     setOpen(false)
     setUserData(initialData)
     setOpenAlert(false)
+    handleGetUserInfo()
   }
 
   const handleUpdateData = async () => {
@@ -89,6 +88,7 @@ const EditUserInfo = ({ open, setOpen, data }: EditUserInfoProps) => {
         console.log('Update user success.')
 
         setOpenAlert(true)
+        //handleGetUserInfo()
 
         //handleClose()
         //updateUserList()
