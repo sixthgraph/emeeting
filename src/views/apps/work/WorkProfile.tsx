@@ -367,6 +367,8 @@ const WorkProfile = ({
     console.log('start handleNotificateion')
     console.log('notificationData ===')
     console.log(notificationData)
+
+    return true
   }
 
   const handleDecision = async () => {
@@ -855,8 +857,10 @@ const WorkProfile = ({
           handleDocument().then(docRes => {
             if (docRes) {
               handleDecision().then(() => {
-                handlesendwork().then(() => {
-                  handleNotificateion()
+                handleNotificateion().then((r: any) => {
+                  if (r) {
+                    handlesendwork()
+                  }
                 })
               })
             }

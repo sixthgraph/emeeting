@@ -81,6 +81,30 @@ const getMyActivityList = async () => {
   }
 }
 
+const handleGetUserStat = async () => {
+  const session = await getServerSession(options)
+
+  try {
+    const token = session?.user.token
+    const email = session?.user.email
+
+    const reqBody = {
+      token: token,
+      email: email
+    }
+
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/get-my-stat`, reqBody)
+
+    if (response.statusText === 'OK') {
+      return response.data
+    } else {
+      return 'User not found'
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const getMyRouteList = async () => {
   const session = await getServerSession(options)
 
@@ -116,20 +140,26 @@ const UserViewTab = async () => {
   const data = await getPricingData()
   const myactivitydata = await getMyActivityList()
   const myRouteListData = await getMyRouteList()
+  const myStat = await handleGetUserStat()
 
-  console.log('---myactivitydata')
-  console.log(myactivitydata.data)
+  const activityData = myactivitydata?.data
 
-  console.log('---myRouteListData')
-  console.log(myRouteListData.data)
+  // console.log('---myactivitydata')
+  // console.log(myactivitydata?.data)
+
+  // console.log('---myRouteListData')
+  // console.log(myRouteListData?.data)
+
+  // console.log('-- myStat')
+  // console.log(myStat)
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} lg={4} md={5}>
-        <UserLeftOverview />
+        <UserLeftOverview myStat={myStat} />
       </Grid>
       <Grid item xs={12} lg={8} md={7}>
-        <UserRight tabContentList={tabContentList(data, myactivitydata.data, myRouteListData.data)} />
+        <UserRight tabContentList={tabContentList(data, activityData, myRouteListData.data)} />
       </Grid>
     </Grid>
   )

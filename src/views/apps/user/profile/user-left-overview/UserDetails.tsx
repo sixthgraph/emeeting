@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { redirect } from 'next/navigation'
 
@@ -33,7 +33,7 @@ import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 import AvatarUploader from './AvatarUpload'
 import axios from '@/utils/axios'
 
-const UserDetails = ({ userInfoData }: { userInfoData?: any }) => {
+const UserDetails = ({ userInfoData, myStatData }: { userInfoData?: any; myStatData?: any }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const { data: session } = useSession({
@@ -45,10 +45,12 @@ const UserDetails = ({ userInfoData }: { userInfoData?: any }) => {
 
   // Vars
   const [userInfo, setUserInfo] = useState<any>(...[userInfoData])
+
   // const name = session?.user.name
   const email = session?.user.email
   const role: any = session?.user.role
   const roles = ['Admin', 'Worker', 'Viewer', 'Super User']
+
   //const [userAvatar, setUserAvatar] = useState(userInfo?.avatar) //const userAvatar: any = session?.user.avatar
   const userAvatar = userInfo?.avatar //const userAvatar: any = session?.user.avatar
   const userFullname: any = session?.user.name
@@ -99,8 +101,6 @@ const UserDetails = ({ userInfoData }: { userInfoData?: any }) => {
   }
 
   const handleGetUserInfo = async () => {
-    console.log('handleGetUserInfo start')
-
     try {
       const token = session?.user.token
 
@@ -110,9 +110,6 @@ const UserDetails = ({ userInfoData }: { userInfoData?: any }) => {
       }
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/get-user-info`, reqBody)
-
-      console.log('get user info response')
-      console.log(response.data)
 
       setUserInfo(response.data)
 
@@ -185,7 +182,7 @@ const UserDetails = ({ userInfoData }: { userInfoData?: any }) => {
                   <i className='tabler-checkbox' />
                 </CustomAvatar>
                 <div>
-                  <Typography variant='h5'>1.23k</Typography>
+                  <Typography variant='h5'>{myStatData?.complete}</Typography>
                   <Typography>Task Done</Typography>
                 </div>
               </div>
@@ -194,8 +191,8 @@ const UserDetails = ({ userInfoData }: { userInfoData?: any }) => {
                   <i className='tabler-briefcase' />
                 </CustomAvatar>
                 <div>
-                  <Typography variant='h5'>568</Typography>
-                  <Typography>Project Done</Typography>
+                  <Typography variant='h5'>{myStatData?.total}</Typography>
+                  <Typography>Task Total</Typography>
                 </div>
               </div>
             </div>

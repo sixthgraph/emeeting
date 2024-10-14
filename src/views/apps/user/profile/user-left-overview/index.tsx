@@ -9,8 +9,6 @@ import { options } from '@/app/api/auth/[...nextauth]/options'
 import UserDetails from './UserDetails'
 import axios from '@/utils/axios'
 
-// import UserPlan from './UserPlan'
-
 const handleGetUserInfo = async (token: any, email: any) => {
   console.log('handleGetUserInfo start')
 
@@ -22,9 +20,6 @@ const handleGetUserInfo = async (token: any, email: any) => {
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/get-user-info`, reqBody)
 
-    console.log('get user info response')
-    console.log(response.data)
-
     if (response.statusText === 'OK') {
       return response.data
     } else {
@@ -35,7 +30,7 @@ const handleGetUserInfo = async (token: any, email: any) => {
   }
 }
 
-const UserLeftOverview = async () => {
+const UserLeftOverview = async ({ myStat }: { myStat?: any }) => {
   const session = await getServerSession(options)
   const token = session?.user.token
   const email = session?.user.email
@@ -44,11 +39,11 @@ const UserLeftOverview = async () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <UserDetails userInfoData={userInfo} />
+        <UserDetails myStatData={myStat} userInfoData={userInfo} />
       </Grid>
-      {/* <Grid item xs={12}>
-        <UserPlan />
-      </Grid> */}
+      <Grid item xs={12}>
+        {/* <UserPlan /> */}
+      </Grid>
     </Grid>
   )
 }
