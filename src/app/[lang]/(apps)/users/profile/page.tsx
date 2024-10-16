@@ -139,10 +139,11 @@ const UserViewTab = async () => {
   // Vars
   const data = await getPricingData()
   const myactivitydata = await getMyActivityList()
-  const myRouteListData = await getMyRouteList()
+  const myRouteList = await getMyRouteList()
   const myStat = await handleGetUserStat()
 
   const activityData = myactivitydata?.data
+  const myRouteListData = myRouteList?.data
 
   // console.log('---myactivitydata')
   // console.log(myactivitydata?.data)
@@ -159,7 +160,7 @@ const UserViewTab = async () => {
         <UserLeftOverview myStat={myStat} />
       </Grid>
       <Grid item xs={12} lg={8} md={7}>
-        <UserRight tabContentList={tabContentList(data, activityData, myRouteListData.data)} />
+        <UserRight tabContentList={tabContentList(data, activityData, myRouteListData)} />
       </Grid>
     </Grid>
   )

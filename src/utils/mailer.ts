@@ -2,7 +2,9 @@
 
 import nodemailer from 'nodemailer'
 
-export const sendEmail = async (email: any, wid: any) => {
+// export const sendEmail = async (email: any, wid: any, sendFor: any) => {
+
+export const sendEmail = async (reqData: any, sendFor: any) => {
   console.log('start sendEmail')
 
   try {
@@ -20,11 +22,38 @@ export const sendEmail = async (email: any, wid: any) => {
       }
     })
 
-    const mailOptions = {
-      from: 'webmaster@excelink.co.th',
-      to: email,
-      subject: 'New work from RouteFlow',
-      html: `<p>Click <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/work?wid=${wid}">here</a> please...</p>`
+    const mailOptions: any = {
+      // from: 'webmaster@excelink.co.th',
+      // to: email,
+      // subject: 'New work from RouteFlow',
+      // html: `<p>Click <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/work?wid=${wid}">here</a> please...</p>`
+    }
+
+    if (sendFor == 'send-work') {
+      const { email, wid } = reqData
+
+      mailOptions.from = 'webmaster@excelink.co.th'
+      mailOptions.to = email
+      mailOptions.subject = 'New work from RouteFlow'
+      mailOptions.html = `<p>Click <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/work?wid=${wid}">here</a> please...</p>`
+    }
+
+    if (sendFor == 'forgot-password') {
+      const { email } = reqData
+
+      mailOptions.from = 'webmaster@excelink.co.th'
+      mailOptions.to = email
+      mailOptions.subject = 'New work from RouteFlow'
+      mailOptions.html = `<p>Click <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/forgot-password">here</a> for set new password...</p>`
+    }
+
+    if (sendFor == 'send-notification') {
+      const { title, message, email } = reqData
+
+      mailOptions.from = 'webmaster@excelink.co.th'
+      mailOptions.to = email
+      mailOptions.subject = title
+      mailOptions.html = `<p>${message}</p>`
     }
 
     console.log('mailOptions = ')

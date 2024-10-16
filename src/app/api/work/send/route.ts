@@ -47,22 +47,20 @@ export async function POST(request: NextRequest) {
 
     toemail.push(reqBody.uid)
 
-    const reqBodynotification = {
+    const reqData = {
       wid: reqBody.wid,
       email: toemail,
       from: reqBody.senderuid,
       message: `New work incoming. ${reqBody.wid} `
     }
 
-    console.log('--reqBodynotification--')
-    console.log(reqBodynotification)
+    console.log('--reqData--')
+    console.log(reqData)
 
     try {
-      const res_notification = await axios.post(
-        `${process.env.ROUTE_FLOW_API_URL}/createnotification`,
-        reqBodynotification,
-        { headers }
-      )
+      const res_notification = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createnotification`, reqData, {
+        headers
+      })
 
       console.log('--res notification--')
       console.log(res_notification)
@@ -70,9 +68,9 @@ export async function POST(request: NextRequest) {
       console.log('error' + error.message)
     }
 
-    const mailresponse = await sendEmail(reqBody.uid, reqBody.wid)
+    const mailResponse = await sendEmail(reqData, 'send-work')
 
-    console.log(mailresponse)
+    console.log(mailResponse)
 
     const response = NextResponse.json({
       message: 'Send work successful',

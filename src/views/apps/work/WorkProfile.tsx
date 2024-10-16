@@ -72,9 +72,6 @@ const getDocuments = async (wid: any) => {
 
     let resData = response.data.data
 
-    console.log('getDocument return')
-    console.log(response)
-
     if (!resData) {
       resData = []
     }
@@ -161,14 +158,16 @@ const WorkProfile = ({
 
   // console.log('workData ===')
   // console.log(workData)
+
   // console.log('attachment ===')
   // console.log(attachment)
   // console.log('eformData from === workData?.eformdata')
   // console.log(eformData)
   // console.log('conditionData -----')
   // console.log(conditionData)
-  // console.log('notificationData----')
-  // console.log(notificationData)
+  console.log('notificationData----')
+  console.log(notificationData)
+
   // console.log('documentList')
   // console.log(documentList)
   // console.log('curNodeData -------')
@@ -282,11 +281,7 @@ const WorkProfile = ({
   }
 
   const mapDocument = async (resData: any) => {
-    console.log('mapDocument --- start')
     const attData = resData
-
-    console.log('documentList')
-    console.log(documentList)
 
     if (documentList) {
       for (const item of documentList) {
@@ -368,7 +363,85 @@ const WorkProfile = ({
     console.log('notificationData ===')
     console.log(notificationData)
 
-    return true
+    let pass = false
+
+    if (notificationData) {
+      for (const item of notificationData) {
+        // console.log('-------mail item-------')
+        // console.log(item)
+
+        if (item.status === 'active') {
+          const reqData: any = {}
+
+          reqData.action = item.action
+          reqData.message = item.message
+          reqData.from = item.from
+          reqData.title = item.title
+
+          if (item.send_type.includes('send_email')) {
+            reqData.email = []
+
+            const emailList = []
+
+            const toPerson = item.to_person
+
+            for (const person of toPerson) {
+              emailList.push(person.userid)
+            }
+
+            const toDapt = item.to_dept
+
+            for (const dept of toDapt) {
+              if (dept.bid === 'next-worker') {
+                const dept_email = conditionData[0].userid
+
+                if (dept_email) {
+                  emailList.push(dept_email)
+                }
+              }
+
+              if (dept.bid === 'requestor') {
+                const dept_email = workData.usercreateinfo[0].email
+
+                if (dept_email) {
+                  emailList.push(dept_email)
+                }
+              }
+
+              if (dept.bid === 'previous-worker') {
+                const workInProcess = workData.workinprocess
+                const dept_email = workInProcess[workInProcess.length - 1].senderuid
+
+                if (dept_email) {
+                  emailList.push(dept_email)
+                }
+              }
+            }
+
+            reqData.email = emailList
+            console.log('send email by reqData')
+            console.log(reqData)
+
+            try {
+              const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/send-notification`, reqData)
+
+              if (response.data.message === 'success') {
+                //pass = true
+                console.log('send notification by email success')
+              }
+            } catch (error: any) {
+              console.log('send notification failed. ', error.message)
+            }
+          }
+        }
+      }
+
+      pass = true
+    } else {
+      pass = true
+    } //if notificationData
+
+    return pass
   }
 
   const handleDecision = async () => {
@@ -870,8 +943,8 @@ const WorkProfile = ({
     })
   }
 
-  console.log('---conditionData')
-  console.log(conditionData)
+  // console.log('---conditionData')
+  // console.log(conditionData)
 
   const handlesendwork = async () => {
     if (conditionData.length > 1) {
