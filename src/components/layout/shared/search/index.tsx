@@ -1,10 +1,10 @@
 'use client'
 
 // React Imports
-import type { ElementType, ReactNode } from 'react'
+import { useState, type ElementType, type ReactNode } from 'react'
 
 // Next Imports
-import { useParams, usePathname, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 // MUI Imports
 import { IconButton } from '@mui/material'
@@ -17,9 +17,6 @@ import { KBarProvider, KBarPortal, KBarPositioner, KBarSearch, useKBar } from 'k
 import type { ChildrenType } from '@core/types'
 import type { Locale } from '@configs/i18n'
 
-// Component Imports
-import SearchResults from './SearchResults'
-
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
 import { useSettings } from '@core/hooks/useSettings'
@@ -31,7 +28,7 @@ import { getLocalizedUrl } from '@/utils/i18n'
 import StyledKBarAnimator from './StyledKBarAnimator'
 
 // Data Imports
-import data from '@/data/searchData'
+// import data from '@/data/searchData'
 
 type ComponentWithUseKBarProps = Partial<ChildrenType> & {
   className?: string
@@ -66,27 +63,44 @@ const ComponentWithUseKBar = (props: ComponentWithUseKBarProps) => {
 // NavSearch Component
 const NavSearch = () => {
   // Hooks
-  const router = useRouter()
-  const pathName = usePathname()
+  // const router = useRouter()
+  // const pathName = usePathname()
+
   const { settings } = useSettings()
   const { isBreakpointReached } = useVerticalNav()
   const isSmallScreen = useMedia('(max-width: 600px)', false)
   const { lang: locale } = useParams()
 
+  // const [searchData, setSearchData] = useState(data)
+  const defaultValue = ''
+  const [inputValue, setInputValue] = useState(defaultValue)
+
   // Vars
   // Search Actions Data with 'perform' method
-  const searchActions = data.map(item => ({
-    ...item,
-    url: undefined, // Remove the 'url' key
-    // Add 'perform' method
-    perform: () =>
-      item.url.startsWith('http')
-        ? window.open(item.url, '_blank')
-        : router.push(getLocalizedUrl(item.url, locale as Locale))
-  }))
+  // const searchActions = data.map(item => ({
+  //   ...item,
+  //   url: undefined, // Remove the 'url' key
+  //   // Add 'perform' method
+  //   perform: () =>
+  //     item.url.startsWith('http')
+  //       ? window.open(item.url, '_blank')
+  //       : router.push(getLocalizedUrl(item.url, locale as Locale))
+  // }))
+
+  const handleGotoStarch = () => {
+    const url = getLocalizedUrl(`search-work/${inputValue}`, locale as Locale)
+
+    window.location.href = url
+
+    //router.push(getLocalizedUrl(`search-work/${inputValue}`, locale as Locale))
+  }
+
+  const handleKeyPress = (event: { key: any }) => {
+    if (event.key === 'Enter') return handleGotoStarch()
+  }
 
   return (
-    <KBarProvider actions={searchActions}>
+    <KBarProvider>
       <ComponentWithUseKBar
         triggerClick
         className='ts-nav-search-icon flex cursor-pointer'
@@ -102,6 +116,7 @@ const NavSearch = () => {
           <IconButton className='text-textPrimary'>
             <i className='tabler-search' />
           </IconButton>
+
           <div className='whitespace-nowrap text-textDisabled'>Search ⌘K</div>
         </div>
       </ComponentWithUseKBar>
@@ -113,6 +128,8 @@ const NavSearch = () => {
                 <i className='tabler-search' />
               </div>
               <KBarSearch
+                onKeyDown={handleKeyPress}
+                onChange={e => setInputValue(e.target.value)}
                 defaultPlaceholder=''
                 name='search-input'
                 className='grow min-is-0 plb-1 pli-1.5 text-[16px] outline-0 border-0 bg-transparent text-inherit font-[inherit] focus:outline-none focus-visible:outline-none'
@@ -124,7 +141,7 @@ const NavSearch = () => {
                 icon={<i className='tabler-x text-[22px] text-textPrimary' />}
               />
             </div>
-            <SearchResults currentPath={pathName} data={data} />
+            {/* <SearchResults currentPath={pathName} data={searchData} /> */}
           </StyledKBarAnimator>
         </KBarPositioner>
         <div

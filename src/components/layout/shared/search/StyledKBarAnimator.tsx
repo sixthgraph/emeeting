@@ -11,10 +11,33 @@ type StyledKBarAnimatorProps = {
 }
 
 const StyledKBarAnimator = styled(KBarAnimator)<StyledKBarAnimatorProps>`
-  & > div {
+  /* & > div {
     inline-size: 600px;
     max-inline-size: 90dvw;
     block-size: 580px;
+    max-block-size: 90dvh;
+    background: var(--mui-palette-background-paper);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    ${({ isSmallScreen }) =>
+    isSmallScreen &&
+    `
+      min-block-size: 100dvh;
+      max-block-size: 100dvh;
+      min-inline-size: 100dvw;
+      max-inline-size: 100dvw;
+      border-radius: 0;
+    `}
+    ${({ skin }) => skin !== 'bordered' && `box-shadow: var(--mui-customShadows-lg);`}
+  } */
+
+  & > div {
+    inline-size: 600px;
+    max-inline-size: 90dvw;
+    /* block-size: 580px; */
     max-block-size: 90dvh;
     background: var(--mui-palette-background-paper);
     border-radius: var(--border-radius);

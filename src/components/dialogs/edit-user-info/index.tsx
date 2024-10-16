@@ -88,10 +88,6 @@ const EditUserInfo = ({ open, setOpen, data, handleGetUserInfo }: EditUserInfoPr
         console.log('Update user success.')
 
         setOpenAlert(true)
-        //handleGetUserInfo()
-
-        //handleClose()
-        //updateUserList()
       }
     } catch (error: any) {
       console.log('Update user failed. ', error.message)
