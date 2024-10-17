@@ -211,28 +211,26 @@ const MyRouteListTable = ({ routeData }: { routeData?: RouteListDataType }) => {
                 {headerGroup.headers.map(header => (
                   <th key={header.id}>
                     {header.isPlaceholder ? null : (
-                      <>
-                        <div
-                          className={classnames({
-                            'flex items-center': header.column.getIsSorted(),
-                            'cursor-pointer select-none': header.column.getCanSort()
-                          })}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {{
-                            asc: <i className='tabler-chevron-up text-xl' />,
-                            desc: <i className='tabler-chevron-down text-xl' />
-                          }[header.column.getIsSorted() as 'asc' | 'desc'] ?? null}
-                        </div>
-                      </>
+                      <div
+                        className={classnames({
+                          'flex items-center': header.column.getIsSorted(),
+                          'cursor-pointer select-none': header.column.getCanSort()
+                        })}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {{
+                          asc: <i className='tabler-chevron-up text-xl' />,
+                          desc: <i className='tabler-chevron-down text-xl' />
+                        }[header.column.getIsSorted() as 'asc' | 'desc'] ?? null}
+                      </div>
                     )}
                   </th>
                 ))}
               </tr>
             ))}
           </thead>
-          {data.length === 0 ? ( //{table.getFilteredRowModel().rows.length === 0 ? (
+          {table.getFilteredRowModel().rows.length === 0 ? ( //{data.length === 0 ? (
             <tbody>
               <tr>
                 <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>

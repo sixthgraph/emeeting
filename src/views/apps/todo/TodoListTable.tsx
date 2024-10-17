@@ -315,6 +315,16 @@ const TodoListTable = ({ tableData }: Props) => {
                   {/* <Typography color='text.primary' className='font-xs text-slate-400'>
                     Department : {row.original.currentdeptname}
                   </Typography> */}
+                  {row.original.wid && (
+                    <Chip
+                      className='mr-2'
+                      label={row.original.wid}
+                      size='small'
+                      color='secondary'
+                      variant='tonal'
+                      icon={<i className='tabler-grid-pattern' />}
+                    />
+                  )}
                   {row.original.status && (
                     <Chip variant='tonal' size='small' className='mr-2' label={row.original.status} color='warning' />
                   )}

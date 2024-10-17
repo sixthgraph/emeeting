@@ -720,9 +720,9 @@ const UserDrawerForm = ({
               <CustomTextField
                 rows={16}
                 multiline
-                label='Department Name'
+                label='Fullname and Email'
                 value={insertData.userData}
-                placeholder='Enter your department name'
+                placeholder='firstname lastname email, ...'
                 onChange={e => setInsertData({ ...insertData, userData: e.target.value })}
               />
 

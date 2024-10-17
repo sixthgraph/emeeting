@@ -33,9 +33,6 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
 })
 
 const UserActivityTimeLine = ({ data }: { data?: any }) => {
-  // console.log('---activity data')
-  // console.log(data)
-
   const { lang: locale } = useParams()
 
   const formatshortdate = (date: any) => {
