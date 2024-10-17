@@ -219,8 +219,10 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
         $('#' + fieldElem.id).removeAttr('disabled')
       }
 
-      for (const fieldElem of editField) {
-        $('#' + fieldElem.id).removeAttr('disabled')
+      if (editField) {
+        for (const fieldElem of editField) {
+          $('#' + fieldElem.id).removeAttr('disabled')
+        }
       }
 
       //}
