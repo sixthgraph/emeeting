@@ -55,41 +55,36 @@ const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
   }
 }
 
-const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData?: any; commentWorkData?: any }) => {
+const WorkMessage = ({
+  chatMemberData,
+  commentdetailData,
+  commentWorkData
+}: {
+  chatMemberData?: any
+  commentdetailData?: any
+  commentWorkData?: any
+}) => {
   const commentData = commentdetailData?.comment
-  const chatmember = commentdetailData?.member
 
-  // console.log('commentdetailData')
-  // console.log(commentdetailData)
-  // console.log('commentWorkData')
-  // console.log(commentWorkData)
+  // const chatmember = commentdetailData?.member
+  // console.log('chatMemberData')
+  // console.log(chatMemberData)
+
+  let chatmember = []
+
+  if (commentdetailData?.member) {
+    chatmember = commentdetailData?.member
+  }
+
   // console.log('chatmember---')
   // console.log(chatmember)
-  // const [commentList, setCommentList] = useState<any>(commentData)
-
-  // const body = document.body,
-  //   html = document.documentElement
-  // const docHeight = Math.max(
-  //   body.scrollHeight,
-  //   body.offsetHeight,
-  //   html.clientHeight,
-  //   html.scrollHeight,
-  //   html.offsetHeight
-  // )
-
-  //const screenHeight = screen.height
 
   const { data: session } = useSession()
   const [commentList, setCommentList] = useState<any>()
-
-  // const [messageHeight, setMessageHeight] = useState<number>(screenHeight - 270)
   const [screenHeight, setScreenHeight] = useState<number>()
   const [messageHeight, setMessageHeight] = useState<number>()
   const token = session?.user.token
   const email = session?.user.email
-
-  // console.log('commentList === ')
-  // console.log(commentList)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialData = {
@@ -114,14 +109,9 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const [replyRef, setReplyRef] = useState<any>(initialReplyRef)
   const [openReply, setOpenReply] = useState<boolean>(false)
   const [personName, setPersonName] = useState<string[]>([])
-
-  // const [members, setMembers] = useState<any>([])
-
-  const [members, setMembers] = useState<string[]>([])
+  const [members, setMembers] = useState<string[]>(chatmember)
   const [memberopen, setmemberOpen] = useState(false)
-
   const [userList, setUserList] = useState<any>()
-
   const itemsRef = useRef<HTMLInputElement>(null)
   const params = useParams()
   const { lang: locale } = params
@@ -132,10 +122,6 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
     setMessageHeight(screen.height - 270)
     setOpenReply(false)
   }, [commentdetailData?.comment])
-
-  // useEffect(() => {
-  //   setNewMessage(initialData)
-  // }, [initialData])
 
   useEffect(() => {
     if (screenHeight) openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
@@ -161,16 +147,7 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
 
       setUserList(response.data)
 
-      //const userListObject = response.data
-
-      const userListObj = []
-
-      for (const item of response.data) {
-        userListObj.push(item)
-      }
-
-      console.log('userListObj')
-      console.log(userListObj)
+      return response.data
     } catch (err) {
       console.log(err)
     }
@@ -178,29 +155,21 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
 
   const handleClickOpenMember = async () => {
     console.log('Open Member')
-    console.log(userList)
 
     if (userList == undefined) {
-      console.log('start get user')
-      getUserList()
+      getUserList().then(r => {
+        for (const item of chatMemberData) {
+          const selUser = r.find((elem: any) => elem.email == item.email)
 
-      console.log('userList if')
-      console.log(userList)
+          item.avatar = selUser.avatar
+          item.username = selUser.firstname + ' ' + selUser.lastname
+        }
+
+        if (chatmember.length == 0) {
+          setMembers(chatMemberData)
+        }
+      })
     } else {
-      //const leftUsers = userList.filter(u => members.findIndex(lu => lu.email === u.email) === -1)
-
-      // const result = userList.filter(
-      //   function ({ email }: any) {
-      //     console.log('email')
-      //     console.log(email)
-
-      //     console.log(!this.has(email))
-
-      //     return !this.has(email)
-      //   },
-      //   new Set(chatmember.map(({ email }: any) => email))
-      // )
-
       interface User {
         email: string
       }
@@ -208,20 +177,10 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
       const chatMemberEmails = new Set(chatmember.map(({ email }: User) => email))
 
       const result = userList.filter(function (this: Set<string>, { email }: User) {
-        console.log('email')
-        console.log(email)
-        console.log(!this.has(email))
-
         return !this.has(email)
       }, chatMemberEmails)
 
       setUserList(result)
-
-      console.log('userList else')
-      console.log(userList)
-
-      // console.log('chatmember')
-      // console.log(chatmember)
     }
 
     setmemberOpen(true)
@@ -230,8 +189,6 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   const handleCloseMembers = () => {
     console.log('Close Member')
     setmemberOpen(false)
-
-    // setmemberOpen(false)
   }
 
   // Reset
@@ -242,43 +199,35 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
   }
 
   const handleSubmitMember = async () => {
-    console.log('Submit Member')
-
-    //***body format****/
-    // {
-    //   "wid": "66ab566acaa7bbd88368defe",
-    //   "email": [
-    //     "chulapak@excelink.co.th",
-    //     "webmaster@excelink.co.th"
-    //     ],
-    //   "invite_by": "supakorn@excelink.co.th"
-    // }
-    //*************/
-
     const newuserlist = personName
-
-    console.log(newuserlist)
+    const memberObj = members
 
     for (const item of personName) {
-      members.push(item)
-    }
+      const selUser = userList.find((elem: any) => elem.email === item)
 
-    console.log(members)
+      const newData: any = {
+        email: item,
+        registerdate: '',
+        invite_by: email,
+        username: selUser.firstname + ' ' + selUser.lastname,
+        avatar: selUser.avatar
+      }
+
+      memberObj.push(newData)
+    }
 
     const upudateNewUserList: any = {
       wid: commentWorkData?.wid,
-      email: members,
+      email: newuserlist,
       invite_by: email
     }
-
-    console.log(upudateNewUserList)
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/invite`, upudateNewUserList)
 
       if (response.data.message === 'success') {
         console.log('Update user success.')
-        setMembers(members)
+        setMembers(memberObj)
         handleReset()
       }
     } catch (error: any) {
@@ -301,9 +250,6 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
       }
     }
   }
-
-  console.log('commentData')
-  console.log(commentData)
 
   useEffect(() => {
     if (!openReply) setNewMessage(initialData)
@@ -363,9 +309,6 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
       registeruid: '',
       wid: initialData.wid
     }) //sg bug here
-
-    console.log('handleOpenReply set newMessage to')
-    console.log(newMessage)
   }
 
   const getWorkMessage = async () => {
@@ -881,9 +824,9 @@ const WorkMessage = ({ commentdetailData, commentWorkData }: { commentdetailData
               </CustomTextField>
             </div>
             <div className='flex flex-col gap-4'>
-              {chatmember?.length} Members
+              {members?.length} Members
               <List className='pt-0 px-0'>
-                {chatmember?.map((user: any, index: any) => (
+                {members?.map((user: any, index: any) => (
                   <ListItem key={index} disablePadding onClick={() => handleCloseMembers()}>
                     <ListItemButton>
                       <ListItemAvatar>

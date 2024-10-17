@@ -15,7 +15,8 @@ const WorkDetailV2 = ({
   commentdata,
   documentdata,
   nodedata,
-  notificationdata
+  notificationdata,
+  commentMemberData
 }: {
   data: Data
   conditiondata?: any
@@ -23,6 +24,7 @@ const WorkDetailV2 = ({
   documentdata?: any
   nodedata?: any
   notificationdata?: any
+  commentMemberData?: any
 }) => {
   const workData = data?.data
 
@@ -47,7 +49,11 @@ const WorkDetailV2 = ({
         </Grid>
       </Grid>
       <Grid item xs={4}>
-        <WorkMessage commentdetailData={commentdata} commentWorkData={commentWorkData} />
+        <WorkMessage
+          chatMemberData={commentMemberData}
+          commentdetailData={commentdata}
+          commentWorkData={commentWorkData}
+        />
       </Grid>
     </Grid>
   )

@@ -7,6 +7,15 @@ export async function POST(req: NextRequest) {
   const reqBody = await req.json()
   const { queryData, token } = reqBody
 
+  const text: any = queryData.Text
+
+  const textStr = decodeURIComponent(text)
+
+  queryData.Text = textStr
+
+  // console.log('queryData')
+  // console.log(queryData)
+
   try {
     const headers = {
       Authorization: `Bearer ${token}`,

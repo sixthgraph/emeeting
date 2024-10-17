@@ -9,6 +9,7 @@ import { getServerSession } from 'next-auth'
 import { options } from '../../auth/[...nextauth]/options'
 
 export async function POST(request: NextRequest) {
+  console.log('start comment invite')
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 

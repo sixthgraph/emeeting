@@ -4,9 +4,8 @@ import { getServerSession } from 'next-auth'
 
 import axios from 'axios'
 
-import { Typography } from '@mui/material'
-
 import { options } from '@/app/api/auth/[...nextauth]/options'
+import SearchWorkList from '@/views/apps/search-work'
 
 const getData = async (query: any) => {
   const session = await getServerSession(options)
@@ -42,10 +41,10 @@ const getData = async (query: any) => {
 }
 
 const searchWorkPage = async ({ params }: { params: { query: string } }) => {
-  const data = await getData(params.query)
-  const dataStr = JSON.stringify(data)
+  const keyword = decodeURIComponent(params.query)
+  const data = await getData(keyword)
 
-  return <Typography> {dataStr}</Typography>
+  return <SearchWorkList keywordData={keyword} searchData={data} />
 }
 
 export default searchWorkPage

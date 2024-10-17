@@ -42,6 +42,42 @@ const getData = async ({ wid, dep, wip }: { wid?: any; dep?: any; wip?: any }) =
   }
 }
 
+const getChatMember = async (wid: any) => {
+  // try {
+  //   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment/member/list`, {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       wid: wid
+  //     })
+  //   })
+
+  //   const data = await res.json()
+
+  //   return data.commentdata
+  // } catch (err) {
+  //   console.log(err)
+  // }
+
+  const session = await getServerSession(options)
+  const token = session?.user.token
+
+  try {
+    const reqBody = { wid: wid, token: token }
+
+    const headers = {
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0'
+    }
+
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/member/list`, reqBody, { headers })
+
+    return response.data[0].member
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const workPage = async ({ searchParams }: any) => {
   const { wid, dep, wip } = searchParams
   const res = await getData({ wid, dep, wip })
@@ -52,8 +88,10 @@ const workPage = async ({ searchParams }: any) => {
   const notificationData = res?.data.notificationData
   const nodeData = res?.data.nodeData
 
-  console.log('---page res worklist')
-  console.log(notificationData)
+  const commentMember = await getChatMember(wid)
+
+  console.log('commentMember page')
+  console.log(commentMember)
 
   if (data) {
     return (
@@ -64,6 +102,7 @@ const workPage = async ({ searchParams }: any) => {
         documentdata={documentData}
         nodedata={nodeData}
         notificationdata={notificationData}
+        commentMemberData={commentMember}
       />
     )
   } else {
