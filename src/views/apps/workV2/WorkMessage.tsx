@@ -64,8 +64,7 @@ const WorkMessage = ({
   commentdetailData?: any
   commentWorkData?: any
 }) => {
-  const commentData = commentdetailData?.comment
-
+  // const commentData = commentdetailData?.comment
   // const chatmember = commentdetailData?.member
   // console.log('chatMemberData')
   // console.log(chatMemberData)
