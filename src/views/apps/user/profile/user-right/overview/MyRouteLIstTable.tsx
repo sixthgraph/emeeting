@@ -42,11 +42,7 @@ import TablePaginationComponent from '@components/TablePaginationComponent'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-type RouteListDataType = {
-  complete: string
-  routename: string
-  total: string
-}
+import type { RouteListDataType, RouteListTypeWithAction } from '@/types/apps/routeListType'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -102,18 +98,22 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<RouteListDataType>()
+const columnHelper = createColumnHelper<RouteListTypeWithAction>()
 
-const MyRouteListTable = ({ routeData }: { routeData?: RouteListDataType }) => {
+type Props = {
+  routeData?: RouteListDataType[]
+}
+
+const MyRouteListTable = ({ routeData }: Props) => {
   // States
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState<any>(...[routeData])
+  const [data, setData] = useState(...[routeData])
   const [globalFilter, setGlobalFilter] = useState('')
   const { lang: locale } = useParams()
 
   // Hooks
-  const columns = useMemo<ColumnDef<RouteListDataType, any>[]>(
+  const columns = useMemo<ColumnDef<RouteListTypeWithAction, any>[]>(
     () => [
       columnHelper.accessor('routename', {
         header: 'App Name',
@@ -152,7 +152,7 @@ const MyRouteListTable = ({ routeData }: { routeData?: RouteListDataType }) => {
   )
 
   const table = useReactTable({
-    data,
+    data: data as RouteListDataType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
