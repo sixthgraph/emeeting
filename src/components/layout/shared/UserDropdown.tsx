@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 
 // Next Imports
-import { useParams, useRouter } from 'next/navigation'
+import { redirect, useParams, useRouter } from 'next/navigation'
 
 import { signOut, useSession } from 'next-auth/react'
 
@@ -102,7 +102,15 @@ const UserDropdown = () => {
   //   required: true
   // })
 
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
+
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      console.log('redirect to users/profile')
+      redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/users/profile`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+    }
+  })
 
   const userData: any = session?.user
 

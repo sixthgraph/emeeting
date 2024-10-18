@@ -105,6 +105,16 @@ type Props = {
 }
 
 const MyRouteListTable = ({ routeData }: Props) => {
+  // const { data: session } = useSession({
+  //   required: true,
+  //   onUnauthenticated() {
+  //     console.log('redirect to users/profile')
+  //     redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/users/profile`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+  //   }
+  // })
+
+  // console.log(session?.user.email)
+
   // States
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
