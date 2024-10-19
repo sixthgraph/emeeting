@@ -107,14 +107,14 @@ const DebouncedInput = ({
 const columnHelper = createColumnHelper<CommentTypeWithAction>()
 
 const CommentListTable = ({ commentData }: { commentData?: any }) => {
-  // const [data, setData] = useState(...[commentData])
+  const [data, setData] = useState<any>([])
   const [widData, setWidData] = useState('')
   const [globalFilter, setGlobalFilter] = useState('')
   const [rowSelection, setRowSelection] = useState({})
   const [commentOpen, setCommentOpen] = useState(false)
 
-  console.log('commentData ---------------- ')
-  console.log(commentData)
+  // console.log('commentData ---------------- ')
+  // console.log(commentData)
 
   // Hooks
   const { lang: locale } = useParams()
@@ -123,6 +123,12 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
     setWidData(wid)
     setCommentOpen(true)
   }
+
+  useEffect(() => {
+    if (commentData !== null) {
+      setData(commentData)
+    }
+  }, [commentData])
 
   // Table Columns config
   const columns = useMemo<ColumnDef<CommentTypeWithAction, any>[]>(
@@ -187,7 +193,7 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
 
   // Table config
   const table = useReactTable({
-    data: commentData as CommentType[], //data: data as CommentType[],
+    data: data as CommentType[], //data: data as CommentType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter // search field
