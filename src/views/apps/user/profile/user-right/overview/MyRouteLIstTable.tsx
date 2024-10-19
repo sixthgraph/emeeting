@@ -105,6 +105,9 @@ type Props = {
 }
 
 const MyRouteListTable = ({ routeData }: Props) => {
+  console.log('routeData ---- ')
+  console.log(routeData)
+
   // const { data: session } = useSession({
   //   required: true,
   //   onUnauthenticated() {
@@ -118,9 +121,15 @@ const MyRouteListTable = ({ routeData }: Props) => {
   // States
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[routeData])
+  const [data, setData] = useState<any>([])
+
+  // const [data, setData] = useState(...[routeData])
   const [globalFilter, setGlobalFilter] = useState('')
   const { lang: locale } = useParams()
+
+  if (routeData !== undefined) {
+    setData(routeData)
+  }
 
   // Hooks
   const columns = useMemo<ColumnDef<RouteListTypeWithAction, any>[]>(
@@ -244,7 +253,7 @@ const MyRouteListTable = ({ routeData }: Props) => {
             <tbody>
               <tr>
                 <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
-                  No data available
+                  Your application list not found!
                 </td>
               </tr>
             </tbody>

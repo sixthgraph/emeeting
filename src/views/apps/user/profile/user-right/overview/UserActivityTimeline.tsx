@@ -120,6 +120,11 @@ const UserActivityTimeLine = ({ data }: { data?: any }) => {
                   )
                 }
               })}
+            {!data && (
+              <div className='flex flex-col items-center'>
+                <Typography>Your activity not found!</Typography>
+              </div>
+            )}
           </Timeline>
         </CardContent>
       </Card>

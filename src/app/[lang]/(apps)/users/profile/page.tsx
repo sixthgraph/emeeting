@@ -125,8 +125,17 @@ const getMyRouteList = async () => {
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/my-route-list`, reqBody, { headers })
 
+    const responseData = response.data.data
+
+    // if (!responseData) {
+    //   responseData = []
+    // }
+
+    // console.log('getMyRouteList return')
+    // console.log(responseData)
+
     if (response.data.message === 'success') {
-      return response.data
+      return responseData
     } else {
       return 'Data not found'
     }
