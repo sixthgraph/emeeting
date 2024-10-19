@@ -299,9 +299,6 @@ const TodoListTable = ({ tableData }: Props) => {
             }}
           >
             <div className='flex flex-col '>
-              {/* <Typography color='text.primary' className='font-medium'>
-                Route Name : {row.original.routename}
-              </Typography> */}
               <Typography color='text.primary' className='font-medium'>
                 {row.original.subject}
               </Typography>
@@ -312,9 +309,6 @@ const TodoListTable = ({ tableData }: Props) => {
                   </Typography>
                 </div>
                 <div className=''>
-                  {/* <Typography color='text.primary' className='font-xs text-slate-400'>
-                    Department : {row.original.currentdeptname}
-                  </Typography> */}
                   {row.original.wid && (
                     <Chip
                       className='mr-2'

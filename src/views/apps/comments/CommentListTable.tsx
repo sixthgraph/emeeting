@@ -9,6 +9,7 @@ import {
   AvatarGroup,
   Card,
   CardHeader,
+  Chip,
   IconButton,
   MenuItem,
   TablePagination,
@@ -161,12 +162,35 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
               query: `wid=${row.original.wid}`
             }}
           >
-            <div className='flex flex-col'>
+            <div className='flex flex-col '>
               <Typography color='text.primary' className='font-medium'>
                 {row.original.subject}
               </Typography>
-              <Typography variant='body2'>WorkID : {row.original.wid}</Typography>
-              <Typography variant='body2'>Route Name : {row.original.routename}</Typography>
+              <div className='flex flex-col'>
+                <div>
+                  <Typography color='text.primary' className='font-xs text-slate-400'>
+                    {row.original.routename}
+                  </Typography>
+                </div>
+                <div className=''>
+                  {row.original.wid && (
+                    <Chip
+                      className='mr-2'
+                      label={row.original.wid}
+                      size='small'
+                      color='secondary'
+                      variant='tonal'
+                      icon={<i className='tabler-grid-pattern' />}
+                    />
+                  )}
+                  {/* {row.original.status && (
+                    <Chip variant='tonal' size='small' className='mr-2' label={row.original.status} color='warning' />
+                  )}
+                  {row.original.currentdeptname && (
+                    <Chip variant='tonal' size='small' label={row.original.currentdeptname} color='info' />
+                  )} */}
+                </div>
+              </div>
             </div>
           </Link>
         )

@@ -1,13 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-import { Divider, Drawer, IconButton, Typography } from '@mui/material'
+import { Chip, Divider, Drawer, IconButton, Typography } from '@mui/material'
 
 import { useSession } from 'next-auth/react'
 
 import axios from '@/utils/axios'
 
-import WorkMessage from '../workV2/WorkMessage'
+import WorkMessageV2 from '../workV2/WorkMessage_v2'
 
 const CommentDrawer_v2 = ({ wid, open, handleClose }: { wid?: any; open: boolean; handleClose: () => void }) => {
   const { data: session } = useSession()
@@ -66,29 +66,34 @@ const CommentDrawer_v2 = ({ wid, open, handleClose }: { wid?: any; open: boolean
   }
 
   return (
-    <>
-      <Drawer
-        open={open}
-        anchor='right'
-        variant='temporary'
-        onClose={handleReset}
-        ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
-      >
-        <div className='flex items-center justify-between plb-5 pli-6'>
-          <div>
-            <Typography variant='h5'>{`${commentWorkData?.subject}`}</Typography>
-            <Typography variant='body2'> {`Work ID : ${commentWorkData?.wid}`}</Typography>
-          </div>
-          <IconButton onClick={handleClose}>
-            <i className='tabler-x text-textPrimary' />
-          </IconButton>
+    <Drawer
+      open={open}
+      anchor='right'
+      variant='temporary'
+      onClose={handleReset}
+      ModalProps={{ keepMounted: true }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
+    >
+      <div className='flex items-center justify-between plb-5 pli-6'>
+        <div>
+          <Typography variant='h5'>{`${commentWorkData?.subject}`}</Typography>
+          <Chip
+            className='mr-2'
+            label={commentWorkData?.wid}
+            size='small'
+            color='secondary'
+            variant='tonal'
+            icon={<i className='tabler-grid-pattern' />}
+          />
         </div>
-        <Divider />
+        <IconButton onClick={handleClose}>
+          <i className='tabler-x text-textPrimary' />
+        </IconButton>
+      </div>
+      <Divider />
 
-        <WorkMessage commentdetailData={commentdata} commentWorkData={commentWorkData} />
-      </Drawer>
-    </>
+      <WorkMessageV2 commentdetailData={commentdata} commentWorkData={commentWorkData} />
+    </Drawer>
   )
 }
 

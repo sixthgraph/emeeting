@@ -257,7 +257,17 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
                     {row.original.routename}
                   </Typography>
                 </div>
-                <div className=''>
+                <div>
+                  {row.original.wid && (
+                    <Chip
+                      className='mr-2'
+                      label={row.original.wid}
+                      size='small'
+                      color='secondary'
+                      variant='tonal'
+                      icon={<i className='tabler-grid-pattern' />}
+                    />
+                  )}
                   {row.original.status && (
                     <Chip
                       variant='tonal'

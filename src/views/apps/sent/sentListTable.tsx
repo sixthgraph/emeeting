@@ -258,6 +258,16 @@ const SentListTable = ({ tableData, depData }: Props) => {
                   </Typography>
                 </div>
                 <div className=''>
+                  {row.original.wid && (
+                    <Chip
+                      className='mr-2'
+                      label={row.original.wid}
+                      size='small'
+                      color='secondary'
+                      variant='tonal'
+                      icon={<i className='tabler-grid-pattern' />}
+                    />
+                  )}
                   {row.original.status && (
                     <Chip
                       variant='tonal'
