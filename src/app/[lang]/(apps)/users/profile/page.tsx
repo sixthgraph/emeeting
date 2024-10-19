@@ -33,7 +33,7 @@ const tabContentList = (
   myactivitydata: any,
   myRouteListData: any
 ): { [key: string]: ReactElement } => ({
-  overview: <OverViewTab data={myactivitydata} routeData={myRouteListData} />,
+  overview: <OverViewTab data={myactivitydata} routeData={myRouteListData} />, // sg he
   security: <SecurityTab />,
   'billing-plans': <BillingPlans data={data} />,
   notifications: <NotificationsTab />,
@@ -125,20 +125,9 @@ const getMyRouteList = async () => {
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/my-route-list`, reqBody, { headers })
 
-    const responseData = response.data.data
+    const responseData = response.data
 
-    // if (!responseData) {
-    //   responseData = []
-    // }
-
-    // console.log('getMyRouteList return')
-    // console.log(responseData)
-
-    if (response.data.message === 'success') {
-      return responseData
-    } else {
-      return 'Data not found'
-    }
+    return responseData
   } catch (err) {
     console.log(err)
   }
@@ -155,10 +144,10 @@ const UserViewTab = async () => {
   const myRouteListData = myRouteList?.data
 
   // console.log('---myactivitydata')
-  // console.log(myactivitydata?.data)
+  // console.log(myactivitydata)
 
   // console.log('---myRouteListData')
-  // console.log(myRouteListData?.data)
+  // console.log(myRouteListData)
 
   // console.log('-- myStat')
   // console.log(myStat)

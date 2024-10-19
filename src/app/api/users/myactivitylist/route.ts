@@ -19,15 +19,9 @@ export async function POST(req: NextRequest) {
       Expires: '0'
     }
 
-    console.log('getlatestactivity')
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getlatestactivity?id=${email}`)
-
     const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getlatestactivity?id=${email}`, {
       headers
     })
-
-    console.log('getlatestactivity')
-    console.log(res.data)
 
     const myactivitydata = res.data.data.detail
 

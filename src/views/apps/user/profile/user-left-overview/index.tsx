@@ -10,8 +10,6 @@ import UserDetails from './UserDetails'
 import axios from '@/utils/axios'
 
 const handleGetUserInfo = async (token: any, email: any) => {
-  console.log('handleGetUserInfo start')
-
   try {
     const reqBody = {
       token: token,

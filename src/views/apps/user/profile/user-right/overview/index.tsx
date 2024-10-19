@@ -19,9 +19,6 @@ import MyRouteListTable from './MyRouteLIstTable'
 // }
 
 const OverViewTab = async ({ data, routeData }: { data: any; routeData?: any }) => {
-  // Vars
-  // const invoiceData = await getData()
-
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

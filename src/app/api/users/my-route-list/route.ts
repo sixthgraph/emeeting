@@ -23,7 +23,11 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    const myRouteData = res.data.data.detail
+    let myRouteData = res.data.data.detail
+
+    if (myRouteData === null || myRouteData === undefined) {
+      myRouteData = []
+    }
 
     const response2 = NextResponse.json({
       message: res.data.message,
