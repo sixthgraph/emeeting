@@ -195,7 +195,7 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
           <div className='flex flex-col gap-1'>
             <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}`}</Typography>
             <Typography>Please sign-in to your account</Typography>
-            {!!props.error && <Typography>Authentication Failed</Typography>}
+            {!!props.error && <Typography className='text-error'>Authentication Failed!</Typography>}
           </div>
 
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
