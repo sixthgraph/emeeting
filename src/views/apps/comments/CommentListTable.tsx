@@ -256,7 +256,7 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
                     <th
                       key={header.id}
                       style={{
-                        width: header.index === 0 ? 160 : 'auto' && header.index === 2 ? 180 : 'auto'
+                        width: header.index === 0 ? 160 : header.index === 2 ? 180 : 'auto'
                       }}
                     >
                       {header.isPlaceholder ? null : (

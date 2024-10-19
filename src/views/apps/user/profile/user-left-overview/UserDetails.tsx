@@ -144,9 +144,17 @@ const UserDetails = ({ userInfoData, myStatData }: { userInfoData?: any; myStatD
     } else {
       return (
         <>
-          <CustomAvatar variant='rounded' size={120}>
-            {getInitials(fullName as string)}
-          </CustomAvatar>
+          <CustomBadge
+            color='primary'
+            className='cursor-pointer'
+            onClick={() => handleOpenUploadAvatar()}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<i className='tabler-pencil text-sm' />}
+          >
+            <CustomAvatar variant='rounded' size={120}>
+              {getInitials(fullName as string)}
+            </CustomAvatar>
+          </CustomBadge>
           <Typography variant='h5'>{`${userData.name}`}</Typography>
         </>
       )
