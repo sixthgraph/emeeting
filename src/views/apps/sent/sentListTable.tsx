@@ -253,9 +253,7 @@ const SentListTable = ({ tableData, depData }: Props) => {
               </Typography>
               <div className='flex flex-col'>
                 <div>
-                  <Typography color='text.primary' className='font-xs text-slate-400'>
-                    {row.original.routename}
-                  </Typography>
+                  <Typography variant='body2'>{row.original.routename}</Typography>
                 </div>
                 <div className=''>
                   {row.original.wid && (
@@ -304,7 +302,7 @@ const SentListTable = ({ tableData, depData }: Props) => {
             }}
           >
             <div className='flex items-center gap-2'>
-              <Typography className='capitalize' color='text.primary'>
+              <Typography className='text-sm' color='text.primary'>
                 {formatshortdate(row.original.createdate)}
               </Typography>
             </div>

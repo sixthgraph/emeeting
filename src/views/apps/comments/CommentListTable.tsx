@@ -168,9 +168,7 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
               </Typography>
               <div className='flex flex-col'>
                 <div>
-                  <Typography color='text.primary' className='font-xs text-slate-400'>
-                    {row.original.routename}
-                  </Typography>
+                  <Typography variant='body2'>{row.original.routename}</Typography>
                 </div>
                 <div className=''>
                   {row.original.wid && (

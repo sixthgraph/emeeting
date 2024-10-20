@@ -93,7 +93,7 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: SentTy
             onChange={e => setRoute(e.target.value)}
             SelectProps={{ displayEmpty: true }}
           >
-            <MenuItem value=''>Select RouteFlow</MenuItem>
+            <MenuItem value=''>Select Application</MenuItem>
             {myRoute?.map((route: any, index: any) => (
               <MenuItem key={index} value={route.workflowid}>
                 {route.routename}
