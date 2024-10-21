@@ -277,7 +277,7 @@ const NewReqListTable = ({ tableData }: Props) => {
   const columns = useMemo<ColumnDef<NewReqTypeWithAction, any>[]>(
     () => [
       columnHelper.accessor('routename', {
-        header: 'Route Name',
+        header: 'App Name',
         cell: ({ row }) => (
           <div className='flex items-center gap-4 cursor-pointer' onClick={() => handleClickOpen(row)}>
             <div className='flex flex-col'>

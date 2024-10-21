@@ -6,7 +6,9 @@ import { useState, useMemo, useEffect } from 'react'
 // MUI Imports
 import Link from 'next/link'
 
-import { useParams } from 'next/navigation'
+import { redirect, useParams } from 'next/navigation'
+
+import { useSession } from 'next-auth/react'
 
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
@@ -105,15 +107,17 @@ type Props = {
 }
 
 const MyRouteListTable = ({ routeData }: Props) => {
-  // const { data: session } = useSession({
-  //   required: true,
-  //   onUnauthenticated() {
-  //     console.log('redirect to users/profile')
-  //     redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/users/profile`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
-  //   }
-  // })
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      console.log('redirect to users/profile')
+      redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/users/profile`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+    }
+  })
 
-  // console.log(session?.user.email)
+  console.log(session?.user.email)
+
+  const email = session?.user.email
 
   // States
   const [rowSelection, setRowSelection] = useState({})
@@ -199,91 +203,95 @@ const MyRouteListTable = ({ routeData }: Props) => {
   })
 
   return (
-    <Card>
-      <CardHeader title='My Application List' className='flex flex-wrap gap-4' />
-      <div className='flex items-center justify-between p-6 gap-4'>
-        <div className='flex items-center gap-2'>
-          <Typography>Show</Typography>
-          <CustomTextField
-            select
-            value={table.getState().pagination.pageSize}
-            onChange={e => table.setPageSize(Number(e.target.value))}
-            className='is-[70px]'
-          >
-            <MenuItem value='5'>5</MenuItem>
-            <MenuItem value='7'>7</MenuItem>
-            <MenuItem value='10'>10</MenuItem>
-          </CustomTextField>
-        </div>
-        <DebouncedInput
-          value={globalFilter ?? ''}
-          onChange={value => setGlobalFilter(String(value))}
-          placeholder='Search Workflow'
-        />
-      </div>
-      <div className='overflow-x-auto'>
-        <table className={tableStyles.table}>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id}>
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={classnames({
-                          'flex items-center': header.column.getIsSorted(),
-                          'cursor-pointer select-none': header.column.getCanSort()
-                        })}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {{
-                          asc: <i className='tabler-chevron-up text-xl' />,
-                          desc: <i className='tabler-chevron-down text-xl' />
-                        }[header.column.getIsSorted() as 'asc' | 'desc'] ?? null}
-                      </div>
-                    )}
-                  </th>
+    <>
+      {email && (
+        <Card>
+          <CardHeader title='My Application List' className='flex flex-wrap gap-4' />
+          <div className='flex items-center justify-between p-6 gap-4'>
+            <div className='flex items-center gap-2'>
+              <Typography>Show</Typography>
+              <CustomTextField
+                select
+                value={table.getState().pagination.pageSize}
+                onChange={e => table.setPageSize(Number(e.target.value))}
+                className='is-[70px]'
+              >
+                <MenuItem value='5'>5</MenuItem>
+                <MenuItem value='7'>7</MenuItem>
+                <MenuItem value='10'>10</MenuItem>
+              </CustomTextField>
+            </div>
+            <DebouncedInput
+              value={globalFilter ?? ''}
+              onChange={value => setGlobalFilter(String(value))}
+              placeholder='Search Workflow'
+            />
+          </div>
+          <div className='overflow-x-auto'>
+            <table className={tableStyles.table}>
+              <thead>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                      <th key={header.id}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={classnames({
+                              'flex items-center': header.column.getIsSorted(),
+                              'cursor-pointer select-none': header.column.getCanSort()
+                            })}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {{
+                              asc: <i className='tabler-chevron-up text-xl' />,
+                              desc: <i className='tabler-chevron-down text-xl' />
+                            }[header.column.getIsSorted() as 'asc' | 'desc'] ?? null}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </thead>
-          {table.getFilteredRowModel().rows.length === 0 ? ( //{data.length === 0 ? (
-            <tbody>
-              <tr>
-                <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
-                  Your application list not found!
-                </td>
-              </tr>
-            </tbody>
-          ) : (
-            <tbody>
-              {table
-                .getRowModel()
-                .rows.slice(0, table.getState().pagination.pageSize)
-                .map(row => {
-                  return (
-                    <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
-                      {row.getVisibleCells().map(cell => (
-                        <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                      ))}
-                    </tr>
-                  )
-                })}
-            </tbody>
-          )}
-        </table>
-      </div>
-      <TablePagination
-        component={() => <TablePaginationComponent table={table} />}
-        count={table.getFilteredRowModel().rows.length}
-        rowsPerPage={table.getState().pagination.pageSize}
-        page={table.getState().pagination.pageIndex}
-        onPageChange={(_, page) => {
-          table.setPageIndex(page)
-        }}
-      />
-    </Card>
+              </thead>
+              {table.getFilteredRowModel().rows.length === 0 ? ( //{data.length === 0 ? (
+                <tbody>
+                  <tr>
+                    <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
+                      Your application list not found!
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
+                <tbody>
+                  {table
+                    .getRowModel()
+                    .rows.slice(0, table.getState().pagination.pageSize)
+                    .map(row => {
+                      return (
+                        <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
+                          {row.getVisibleCells().map(cell => (
+                            <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                          ))}
+                        </tr>
+                      )
+                    })}
+                </tbody>
+              )}
+            </table>
+          </div>
+          <TablePagination
+            component={() => <TablePaginationComponent table={table} />}
+            count={table.getFilteredRowModel().rows.length}
+            rowsPerPage={table.getState().pagination.pageSize}
+            page={table.getState().pagination.pageIndex}
+            onPageChange={(_, page) => {
+              table.setPageIndex(page)
+            }}
+          />
+        </Card>
+      )}
+    </>
   )
 }
 
