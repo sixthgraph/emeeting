@@ -263,7 +263,11 @@ const TodoListTable = ({ tableData }: Props) => {
                 <Typography color='text.primary' className='font-medium'>
                   {row.original.createby}
                 </Typography>
-                <Typography variant='body2'>{row.original.email}</Typography>
+                <Typography variant='body2'>{row.original.currentdeptname}</Typography>
+                {/* <Typography variant='body2'>{row.original.email}</Typography> */}
+                {/* {row.original.currentdeptname && (
+                  <Chip variant='tonal' size='small' label={row.original.currentdeptname} color='info' />
+                )} */}
               </div>
             </div>
           </Link>
@@ -320,9 +324,9 @@ const TodoListTable = ({ tableData }: Props) => {
                   {row.original.status && (
                     <Chip variant='tonal' size='small' className='mr-2' label={row.original.status} color='warning' />
                   )}
-                  {row.original.currentdeptname && (
+                  {/* {row.original.currentdeptname && (
                     <Chip variant='tonal' size='small' label={row.original.currentdeptname} color='info' />
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
