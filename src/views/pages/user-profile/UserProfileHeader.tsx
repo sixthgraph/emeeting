@@ -12,9 +12,6 @@ import Button from '@mui/material/Button'
 // Type Imports
 
 const UserProfileHeader = ({ userData }: { userData?: any }) => {
-  console.log('userData ----')
-  console.log(userData)
-
   const params = useParams()
   const { lang: locale } = params
 

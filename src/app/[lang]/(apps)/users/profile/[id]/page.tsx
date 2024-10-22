@@ -4,30 +4,80 @@ import dynamic from 'next/dynamic'
 
 import { getServerSession } from 'next-auth'
 
-// Type Imports
-import type { Data } from '@/types/pages/profileTypes'
-
 import { options } from '@/app/api/auth/[...nextauth]/options'
 import axios from '@/utils/axios'
 
 // import type { PricingPlanType } from '@/types/pages/pricingTypes'
 import UserProfile from '@/views/pages/user-profile'
 
-// Data Imports
-import { getProfileData } from '@/app/server/action'
+const OverviewTab = dynamic(() => import('@views/pages/user-profile/overview'))
+const FeedTab = dynamic(() => import('@views/pages/user-profile/feed'))
 
-const ProfileTab = dynamic(() => import('@views/pages/user-profile/profile'))
-const TeamsTab = dynamic(() => import('@views/pages/user-profile/teams'))
-const ProjectsTab = dynamic(() => import('@views/pages/user-profile/projects'))
-const ConnectionsTab = dynamic(() => import('@views/pages/user-profile/connections'))
+// const ProfileTab = dynamic(() => import('@views/pages/user-profile/profile'))
+// const TeamsTab = dynamic(() => import('@views/pages/user-profile/teams'))
+// const ProjectsTab = dynamic(() => import('@views/pages/user-profile/projects'))
+// const ConnectionsTab = dynamic(() => import('@views/pages/user-profile/connections'))
 
 // Vars
-const tabContentList = (data?: Data, userData?: any, myStat?: any): { [key: string]: ReactElement } => ({
-  profile: <ProfileTab data={data?.users.profile} userData={userData} myStat={myStat} />,
-  teams: <TeamsTab data={data?.users.teams} />,
-  projects: <ProjectsTab data={data?.users.projects} />,
-  connections: <ConnectionsTab data={data?.users.connections} />
+const tabContentList = (activityData?: any, myRouteListData?: any): { [key: string]: ReactElement } => ({
+  overview: <OverviewTab activityData={activityData?.data} myRouteListData={myRouteListData?.data} />,
+  feed: <FeedTab />
+
+  // profile: <ProfileTab data={data?.users.profile} />
+  // teams: <TeamsTab data={data?.users.teams} />,
+  // projects: <ProjectsTab data={data?.users.projects} />,
+  // connections: <ConnectionsTab data={data?.users.connections} />
 })
+
+const getMyActivityList = async (token: any, email: any) => {
+  try {
+    const reqBody = {
+      token: token,
+      email: email
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0'
+    }
+
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/myactivitylist`, reqBody, { headers })
+
+    if (response.data.message === 'success') {
+      return response.data
+    } else {
+      return 'Data not found'
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const getMyRouteList = async (token: any, email: any) => {
+  try {
+    const reqBody = {
+      token: token,
+      email: email
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0'
+    }
+
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/my-route-list`, reqBody, { headers })
+
+    const responseData = response.data
+
+    return responseData
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 const handleGetUserInfo = async (token: any, email: any) => {
   try {
@@ -73,14 +123,13 @@ const ProfilePage = async ({ params }: { params: { id: string } }) => {
   const token = session?.user.token
   const email = decodeURIComponent(params.id)
   const userData = await handleGetUserInfo(token, email)
-
-  console.log('user data')
-  console.log(userData)
-
-  const data = await getProfileData()
   const myStat = await handleGetUserStat(token, email)
+  const activityData = await getMyActivityList(token, email)
+  const myRouteListData = await getMyRouteList(token, email)
 
-  return <UserProfile userData={userData} myStat={myStat} tabContentList={tabContentList(data, userData, myStat)} />
+  return (
+    <UserProfile userData={userData} myStat={myStat} tabContentList={tabContentList(activityData, myRouteListData)} />
+  )
 }
 
 export default ProfilePage

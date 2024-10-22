@@ -25,7 +25,7 @@ const UserProfile = ({
   myStat?: any
 }) => {
   // States
-  const [activeTab, setActiveTab] = useState('profile')
+  const [activeTab, setActiveTab] = useState('overview')
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setActiveTab(value)
@@ -49,13 +49,31 @@ const UserProfile = ({
                     <Tab
                       label={
                         <div className='flex items-center gap-1.5'>
+                          <i className='tabler-dashboard text-lg' />
+                          Overview
+                        </div>
+                      }
+                      value='overview'
+                    />
+                    <Tab
+                      label={
+                        <div className='flex items-center gap-1.5'>
+                          <i className='tabler-news text-lg' />
+                          News Feed
+                        </div>
+                      }
+                      value='feed'
+                    />
+                    {/* <Tab
+                      label={
+                        <div className='flex items-center gap-1.5'>
                           <i className='tabler-user-check text-lg' />
                           Profile
                         </div>
                       }
                       value='profile'
-                    />
-                    <Tab
+                    /> */}
+                    {/*  <Tab
                       label={
                         <div className='flex items-center gap-1.5'>
                           <i className='tabler-users text-lg' />
@@ -81,7 +99,7 @@ const UserProfile = ({
                         </div>
                       }
                       value='connections'
-                    />
+                    /> */}
                   </CustomTabList>
 
                   <TabPanel value={activeTab} className='p-0'>

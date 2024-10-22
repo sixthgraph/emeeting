@@ -17,9 +17,6 @@ import OptionMenu from '@core/components/option-menu'
 import Link from '@components/Link'
 
 const Teams = ({ data }: { data?: TeamsTabType[] }) => {
-  console.log('team data')
-  console.log(JSON.stringify(data))
-
   return (
     <Grid container spacing={6}>
       {data &&
