@@ -36,6 +36,8 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
+import { Tooltip } from '@mui/material'
+
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import type { TodoType, TodoTypeWithAction } from '@/types/apps/todoTypes'
 import type { UsersType } from '@/types/apps/userTypes'
@@ -255,10 +257,13 @@ const TodoListTable = ({ tableData }: Props) => {
             }}
           >
             <div className='flex items-center gap-4'>
-              {getAvatar({
-                avatar: row.original.avatar,
-                fullName: row.original.createby
-              })}
+              <Tooltip title={row.original.createby}>
+                {getAvatar({
+                  avatar: row.original.avatar,
+                  fullName: row.original.createby
+                })}
+              </Tooltip>
+
               <div className='flex flex-col'>
                 <Typography color='text.primary' className='font-medium'>
                   {row.original.createby}

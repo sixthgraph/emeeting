@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from 'react'
 
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 import {
   Avatar,
@@ -120,6 +120,8 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
   // Hooks
   const { lang: locale } = useParams()
 
+  const router = useRouter()
+
   const getWorkData = async (wid: any) => {
     setWidData(wid)
     setCommentOpen(true)
@@ -143,9 +145,8 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
                 <Tooltip title={person.username} key={index}>
                   <Avatar
                     src={person.avatar}
-                    onClick={() => {
-                      console.log('click member')
-                    }}
+                    className='cursor-pointer'
+                    onClick={() => router.push(`/en/users/profile/${person.email}`)}
                   ></Avatar>
                 </Tooltip>
               ))}
