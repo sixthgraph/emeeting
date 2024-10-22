@@ -10,14 +10,17 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
 
-// Type Imports
-import type { Data } from '@/types/pages/profileTypes'
-
 // Component Imports
 import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
 
-const UserProfile = ({ tabContentList, data }: { tabContentList: { [key: string]: ReactElement }; data: Data }) => {
+const UserProfile = ({
+  tabContentList,
+  userData
+}: {
+  tabContentList: { [key: string]: ReactElement }
+  userData?: any
+}) => {
   // States
   const [activeTab, setActiveTab] = useState('profile')
 
@@ -26,9 +29,18 @@ const UserProfile = ({ tabContentList, data }: { tabContentList: { [key: string]
   }
 
   return (
+    // <Grid container spacing={6}>
+    //   <Grid item xs={12} lg={4} md={5}>
+
+    //   </Grid>
+    //   <Grid item xs={12} lg={8} md={7}>
+
+    //   </Grid>
+    // </Grid>
+
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <UserProfileHeader data={data?.profileHeader} />
+        <UserProfileHeader userData={userData} />
       </Grid>
       {activeTab === undefined ? null : (
         <Grid item xs={12} className='flex flex-col gap-6'>

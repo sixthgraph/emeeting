@@ -10,11 +10,11 @@ import ActivityTimeline from './ActivityTimeline'
 import ConnectionsTeams from './ConnectionsTeams'
 import ProjectsTable from './ProjectsTables'
 
-const ProfileTab = ({ data }: { data?: ProfileTabType }) => {
+const ProfileTab = ({ data, userData, myStat }: { data?: ProfileTabType; userData?: any; myStat: any }) => {
   return (
     <Grid container spacing={6}>
       <Grid item lg={4} md={5} xs={12}>
-        <AboutOverview data={data} />
+        <AboutOverview data={data} userData={userData} myStat={myStat} />
       </Grid>
       <Grid item lg={8} md={7} xs={12}>
         <Grid container spacing={6}>

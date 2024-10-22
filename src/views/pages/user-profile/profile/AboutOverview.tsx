@@ -42,7 +42,24 @@ const renderTeams = (teams: ProfileTeamsType[]) => {
   )
 }
 
-const AboutOverview = ({ data }: { data?: ProfileTabType }) => {
+const AboutOverview = ({ data, userData, myStat }: { data?: ProfileTabType; userData?: any; myStat?: any }) => {
+  const roles = ['Admin', 'Worker', 'Viewer', 'Super User']
+
+  const aboutData = [
+    { property: 'Full Name', value: `${userData?.firstname} ${userData?.lastname}`, icon: 'tabler-user' },
+    { property: 'Status', value: `${userData?.status}`, icon: 'tabler-check' },
+    { property: 'Role', value: roles[Number(`${userData?.role}`) - 1], icon: 'tabler-crown' },
+    { property: 'Country', value: 'TH', icon: 'tabler-flag' },
+    { property: 'Language', value: 'English', icon: 'tabler-language' }
+  ]
+
+  const statData = [
+    { property: 'Task Done', value: myStat?.complete, icon: 'tabler-checkbox' },
+    { property: 'Task Total', value: myStat?.total, icon: 'tabler-briefcase' }
+  ]
+
+  console.log('data?.overview')
+  console.log(data?.overview)
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -52,7 +69,7 @@ const AboutOverview = ({ data }: { data?: ProfileTabType }) => {
               <Typography className='uppercase' variant='body2' color='text.disabled'>
                 About
               </Typography>
-              {data?.about && renderList(data?.about)}
+              {userData && renderList(aboutData)}
             </div>
             <div className='flex flex-col gap-4'>
               <Typography className='uppercase' variant='body2' color='text.disabled'>
@@ -62,10 +79,20 @@ const AboutOverview = ({ data }: { data?: ProfileTabType }) => {
             </div>
             <div className='flex flex-col gap-4'>
               <Typography className='uppercase' variant='body2' color='text.disabled'>
+                Department
+              </Typography>
+              {userData?.dep.map((item: any, index: any) => (
+                <div key={index} className='flex items-center gap-2'>
+                  {item.depname} / {item.positionname}
+                </div>
+              ))}
+            </div>
+            {/* <div className='flex flex-col gap-4'>
+              <Typography className='uppercase' variant='body2' color='text.disabled'>
                 Teams
               </Typography>
               {data?.teams && renderTeams(data?.teams)}
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </Grid>
@@ -76,7 +103,7 @@ const AboutOverview = ({ data }: { data?: ProfileTabType }) => {
               <Typography className='uppercase' variant='body2' color='text.disabled'>
                 Overview
               </Typography>
-              {data?.overview && renderList(data?.overview)}
+              {myStat && renderList(statData)}
             </div>
           </CardContent>
         </Card>
