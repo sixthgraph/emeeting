@@ -19,16 +19,14 @@ export default function FormRenderPage() {
         }}
       />
       <Script
-        src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-builder.min.js'
-        onLoad={() => {
-          console.log('Script has loaded form-builder.min.js')
-        }}
+        async
+        strategy='afterInteractive'
+        src={`${process.env.BASEPATH}/assets/form-builder/2022/form-builder.min.js`}
       />
       <Script
-        src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
-        onLoad={() => {
-          console.log('Script has loaded form-render.min.js')
-        }}
+        async
+        strategy='afterInteractive'
+        src={`${process.env.BASEPATH}/assets/form-builder/2022/form-render.min.js`}
       />
 
       <Script

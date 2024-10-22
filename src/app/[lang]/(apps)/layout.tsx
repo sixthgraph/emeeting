@@ -69,22 +69,22 @@ const Layout = async ({ children, params }: ChildrenType & { params: { lang: Loc
             <Script
               async
               strategy='afterInteractive'
-              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-builder.min.js'
+              src={`${process.env.BASEPATH}/assets/form-builder/2022/form-builder.min.js`}
             />
             <Script
               async
               strategy='afterInteractive'
-              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
+              src={`${process.env.BASEPATH}/assets/form-builder/2022/form-render.min.js`}
             />
             <Script
               async
               strategy='afterInteractive'
-              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_plugins/jquery-ui-1.13.2/jquery-ui.js'
+              src={`${process.env.BASEPATH}/assets/jquery-ui-1.13.2/jquery-ui.js`}
             />
             <Script
               async
               strategy='afterInteractive'
-              src='https://rd.excelink.co.th/saraban.dev/assets/vendor_plugins/jsPlumb/jquery.jsPlumb-1.4.1-all-min.js'
+              src={`${process.env.BASEPATH}/assets/jsPlumb/jquery.jsPlumb-1.4.1-all-min.js`}
             />
             {children}
           </HorizontalLayout>
