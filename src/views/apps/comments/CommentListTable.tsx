@@ -108,7 +108,8 @@ const DebouncedInput = ({
 const columnHelper = createColumnHelper<CommentTypeWithAction>()
 
 const CommentListTable = ({ commentData }: { commentData?: any }) => {
-  const [data, setData] = useState<any>([])
+  // const [data, setData] = useState(...[commentData])
+  const data = commentData
   const [widData, setWidData] = useState('')
   const [globalFilter, setGlobalFilter] = useState('')
   const [rowSelection, setRowSelection] = useState({})
@@ -127,11 +128,14 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
     setCommentOpen(true)
   }
 
-  useEffect(() => {
-    if (commentData !== null) {
-      setData(commentData)
-    }
-  }, [commentData])
+  // useEffect(() => {
+  //   console.log('commentData')
+  //   console.log(commentData)
+
+  //   if (commentData !== null && commentData !== undefined) {
+  //     setData(commentData)
+  //   }
+  // }, [commentData])
 
   // Table Columns config
   const columns = useMemo<ColumnDef<CommentTypeWithAction, any>[]>(
