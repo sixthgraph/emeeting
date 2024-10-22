@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 
 // Type Imports
-import type { ProfileTeamsType, ProfileCommonType } from '@/types/pages/profileTypes'
+import type { ProfileCommonType } from '@/types/pages/profileTypes'
 
 const renderList = (list: ProfileCommonType[]) => {
   return (
@@ -18,7 +18,7 @@ const renderList = (list: ProfileCommonType[]) => {
             <Typography className='font-medium'>
               {`${item.property.charAt(0).toUpperCase() + item.property.slice(1)}:`}
             </Typography>
-            <Typography> {item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
+            <Typography> {item.value && item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
           </div>
         </div>
       )
@@ -26,21 +26,21 @@ const renderList = (list: ProfileCommonType[]) => {
   )
 }
 
-const renderTeams = (teams: ProfileTeamsType[]) => {
-  return (
-    teams.length > 0 &&
-    teams.map((item, index) => {
-      return (
-        <div key={index} className='flex items-center flex-wrap gap-2'>
-          <Typography className='font-medium'>
-            {item.property.charAt(0).toUpperCase() + item.property.slice(1)}
-          </Typography>
-          <Typography>{item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
-        </div>
-      )
-    })
-  )
-}
+// const renderTeams = (teams: ProfileTeamsType[]) => {
+//   return (
+//     teams.length > 0 &&
+//     teams.map((item, index) => {
+//       return (
+//         <div key={index} className='flex items-center flex-wrap gap-2'>
+//           <Typography className='font-medium'>
+//             {item.property.charAt(0).toUpperCase() + item.property.slice(1)}
+//           </Typography>
+//           <Typography>{item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
+//         </div>
+//       )
+//     })
+//   )
+// }
 
 const AboutOverview = ({ userData, myStat }: { userData?: any; myStat?: any }) => {
   const roles = ['Admin', 'Worker', 'Viewer', 'Super User']
@@ -93,7 +93,7 @@ const AboutOverview = ({ userData, myStat }: { userData?: any; myStat?: any }) =
               <Typography className='uppercase' variant='body2' color='text.disabled'>
                 Department
               </Typography>
-              {userData?.dep.map((item: any, index: any) => (
+              {userData?.dep?.map((item: any, index: any) => (
                 <div key={index} className='flex items-center gap-2'>
                   {item.depname} / {item.positionname}
                 </div>

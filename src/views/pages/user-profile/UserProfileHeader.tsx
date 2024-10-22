@@ -65,14 +65,15 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
               {userData?.firstname} {userData?.lastname}
             </Typography>
             <div className='flex flex-wrap gap-6 justify-center sm:justify-normal'>
-              {userData?.dep.map((item: any, index: any) => (
-                <div key={index} className='flex items-center gap-2'>
-                  <i className='tabler-shield' />
-                  <Typography className='font-medium'>
-                    {item.depname} / {item.positionname}
-                  </Typography>
-                </div>
-              ))}
+              {userData &&
+                userData.dep?.map((item: any, index: any) => (
+                  <div key={index} className='flex items-center gap-2'>
+                    <i className='tabler-shield' />
+                    <Typography className='font-medium'>
+                      {item.depname} / {item.positionname}
+                    </Typography>
+                  </div>
+                ))}
               {/* <div className='flex items-center gap-2'>
                 <i className='tabler-map-pin' />
                 <Typography className='font-medium'>{data?.location}</Typography>

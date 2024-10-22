@@ -174,7 +174,7 @@ const UserDropdown = () => {
                   <Divider className='mlb-1' />
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/en/users/profile')}>
                     <i className='tabler-user text-[22px]' />
-                    <Typography color='text.primary'>My Profile</Typography>
+                    <Typography color='text.primary'>Profile Setting</Typography>
                   </MenuItem>
                   {/* <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='tabler-settings text-[22px]' />

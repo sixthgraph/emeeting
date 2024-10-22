@@ -11,7 +11,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/en/users/profile',
+        destination: '/en/home',
         permanent: true,
         locale: false
       }

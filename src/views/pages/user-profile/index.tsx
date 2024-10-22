@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactElement, SyntheticEvent } from 'react'
 
 // MUI Imports
@@ -25,7 +25,15 @@ const UserProfile = ({
   myStat?: any
 }) => {
   // States
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useState('feed')
+  const [myProfile, setMyProfile] = useState(false)
+
+  useEffect(() => {
+    if (userData.email == userData.myEmail) {
+      setMyProfile(true)
+      setActiveTab('overview')
+    }
+  }, [userData])
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setActiveTab(value)
@@ -45,26 +53,27 @@ const UserProfile = ({
             {activeTab === undefined ? null : (
               <Grid item xs={12} className='flex flex-col gap-6'>
                 <TabContext value={activeTab}>
-                  <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
-                    <Tab
-                      label={
-                        <div className='flex items-center gap-1.5'>
-                          <i className='tabler-dashboard text-lg' />
-                          Overview
-                        </div>
-                      }
-                      value='overview'
-                    />
-                    <Tab
-                      label={
-                        <div className='flex items-center gap-1.5'>
-                          <i className='tabler-news text-lg' />
-                          News Feed
-                        </div>
-                      }
-                      value='feed'
-                    />
-                    {/* <Tab
+                  {myProfile ? (
+                    <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
+                      <Tab
+                        label={
+                          <div className='flex items-center gap-1.5'>
+                            <i className='tabler-dashboard text-lg' />
+                            Overview
+                          </div>
+                        }
+                        value='overview'
+                      />
+                      <Tab
+                        label={
+                          <div className='flex items-center gap-1.5'>
+                            <i className='tabler-news text-lg' />
+                            News Feed
+                          </div>
+                        }
+                        value='feed'
+                      />
+                      {/* <Tab
                       label={
                         <div className='flex items-center gap-1.5'>
                           <i className='tabler-user-check text-lg' />
@@ -72,8 +81,8 @@ const UserProfile = ({
                         </div>
                       }
                       value='profile'
-                    /> */}
-                    {/*  <Tab
+                    />
+                    <Tab
                       label={
                         <div className='flex items-center gap-1.5'>
                           <i className='tabler-users text-lg' />
@@ -99,8 +108,21 @@ const UserProfile = ({
                         </div>
                       }
                       value='connections'
-                    /> */}
-                  </CustomTabList>
+                    />  */}
+                    </CustomTabList>
+                  ) : (
+                    <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
+                      <Tab
+                        label={
+                          <div className='flex items-center gap-1.5'>
+                            <i className='tabler-news text-lg' />
+                            News Feed
+                          </div>
+                        }
+                        value='feed'
+                      />
+                    </CustomTabList>
+                  )}
 
                   <TabPanel value={activeTab} className='p-0'>
                     {tabContentList[activeTab]}

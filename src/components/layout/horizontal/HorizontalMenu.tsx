@@ -97,7 +97,8 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
         {/* <MenuItem href={`/${locale}/dashboard`} icon={<i className='tabler-dashboard' />}>
           {dictionary['navigation'].dashboard}
         </MenuItem> */}
-        <MenuItem href={`/${locale}/users/profile`} icon={<i className='tabler-dashboard' />}>
+        {/* <MenuItem href={`/${locale}/users/profile/${email}`} icon={<i className='tabler-home' />}> */}
+        <MenuItem href={`/${locale}/home`} icon={<i className='tabler-home' />}>
           {dictionary['navigation'].home}
         </MenuItem>
         <MenuItem href={`/${locale}/todo`} icon={<i className='tabler-inbox' />}>
