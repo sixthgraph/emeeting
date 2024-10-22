@@ -1,7 +1,7 @@
 // Type Imports
-import type { PermissionRowType } from '@/types/apps/permissionTypes'
+// import type { PermissionRowType } from '@/types/apps/permissionTypes'
 
-export const db: PermissionRowType[] = [
+export const db: any[] = [
   {
     id: 1,
     name: 'Management',

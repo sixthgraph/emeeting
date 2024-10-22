@@ -1,7 +1,7 @@
 // Type Imports
-import type { ECommerceType } from '@/types/apps/ecommerceTypes'
+// import type { ECommerceType } from '@/types/apps/ecommerceTypes'
 
-export const db: ECommerceType = {
+export const db: any = {
   products: [
     {
       id: 1,

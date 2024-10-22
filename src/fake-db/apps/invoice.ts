@@ -1,10 +1,10 @@
 // Type Imports
-import type { InvoiceType } from '@/types/apps/invoiceTypes'
+// import type { InvoiceType } from '@/types/apps/invoiceTypes'
 
 const now = new Date()
 const currentMonth = now.toLocaleString('default', { month: 'short' })
 
-export const db: InvoiceType[] = [
+export const db: any[] = [
   {
     id: '4987',
     issuedDate: `13 ${currentMonth} ${now.getFullYear()}`,

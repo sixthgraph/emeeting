@@ -1,7 +1,7 @@
 // Type Imports
-import type { FaqType } from '@/types/pages/faqTypes'
+// import type { FaqType } from '@/types/pages/faqTypes'
 
-export const db: FaqType[] = [
+export const db: any[] = [
   {
     id: 'payment',
     title: 'Payment',

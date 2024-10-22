@@ -20,6 +20,7 @@
     "@emotion/styled": "11.11.0",
     "@floating-ui/react": "0.26.9",
     "@formatjs/intl-localematcher": "^0.5.4",
+    "@fullcalendar/core": "^6.1.15",
     "@hookform/resolvers": "^3.3.4",
     "@iconify/json": "2.2.190",
     "@mui/lab": "5.0.0-alpha.167",

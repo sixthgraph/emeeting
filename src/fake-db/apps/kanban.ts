@@ -1,6 +1,6 @@
-import type { KanbanType } from '@/types/apps/kanbanTypes'
+// import type { KanbanType } from '@/types/apps/kanbanTypes'
 
-export const db: KanbanType = {
+export const db: any = {
   columns: [
     {
       id: 1,

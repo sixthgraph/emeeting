@@ -1,10 +1,9 @@
 // Type Imports
-import type { ChatDataType } from '@/types/apps/chatTypes'
 
 const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
 const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2)
 
-export const db: ChatDataType = {
+export const db: any = {
   profileUser: {
     id: 1,
     avatar: '/images/avatars/1.png',

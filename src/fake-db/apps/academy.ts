@@ -1,7 +1,7 @@
 // Type Imports
-import type { AcademyType } from '@/types/apps/academyTypes'
+// import type { AcademyType } from '@/types/apps/academyTypes'
 
-export const db: AcademyType = {
+export const db: any = {
   courses: [
     {
       id: 1,
