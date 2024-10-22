@@ -80,7 +80,7 @@ const ProfilePage = async ({ params }: { params: { id: string } }) => {
   const data = await getProfileData()
   const myStat = await handleGetUserStat(token, email)
 
-  return <UserProfile userData={userData} tabContentList={tabContentList(data, userData, myStat)} />
+  return <UserProfile userData={userData} myStat={myStat} tabContentList={tabContentList(data, userData, myStat)} />
 }
 
 export default ProfilePage

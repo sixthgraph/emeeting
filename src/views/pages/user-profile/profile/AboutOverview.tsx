@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 
 // Type Imports
-import type { ProfileTeamsType, ProfileCommonType, ProfileTabType } from '@/types/pages/profileTypes'
+import type { ProfileTeamsType, ProfileCommonType } from '@/types/pages/profileTypes'
 
 const renderList = (list: ProfileCommonType[]) => {
   return (
@@ -42,7 +42,7 @@ const renderTeams = (teams: ProfileTeamsType[]) => {
   )
 }
 
-const AboutOverview = ({ data, userData, myStat }: { data?: ProfileTabType; userData?: any; myStat?: any }) => {
+const AboutOverview = ({ userData, myStat }: { userData?: any; myStat?: any }) => {
   const roles = ['Admin', 'Worker', 'Viewer', 'Super User']
 
   const aboutData = [
@@ -58,8 +58,20 @@ const AboutOverview = ({ data, userData, myStat }: { data?: ProfileTabType; user
     { property: 'Task Total', value: myStat?.total, icon: 'tabler-briefcase' }
   ]
 
-  console.log('data?.overview')
-  console.log(data?.overview)
+  const dataContact = [
+    {
+      property: 'Contact',
+      value: '(123) 456-7890',
+      icon: 'tabler-phone-call'
+    },
+    { property: 'Skype', value: `${userData.firstname}.${userData.lastname}`, icon: 'tabler-messages' },
+    {
+      property: 'Email',
+      value: `${userData.email}`,
+      icon: 'tabler-mail'
+    }
+  ]
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -75,7 +87,7 @@ const AboutOverview = ({ data, userData, myStat }: { data?: ProfileTabType; user
               <Typography className='uppercase' variant='body2' color='text.disabled'>
                 Contacts
               </Typography>
-              {data?.contacts && renderList(data?.contacts)}
+              {dataContact && renderList(dataContact)}
             </div>
             <div className='flex flex-col gap-4'>
               <Typography className='uppercase' variant='body2' color='text.disabled'>
