@@ -39,7 +39,7 @@ const UserDetails = ({ userInfoData, myStatData }: { userInfoData?: any; myStatD
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+      redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`)
     }
   })
 
