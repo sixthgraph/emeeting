@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react'
 
 import styles from './styles.module.css'
 import CustomTextField from '@core/components/mui/TextField'
+import SamplePostCard from './SamplePostCard'
 
 // Styled CustomTextField component
 const CustomTextFieldStyled = styled(CustomTextField)<TextFieldProps>(({ theme }) => ({
@@ -56,9 +57,7 @@ const FeedTab = () => {
         </Card>
       </Grid>
       <Grid item xs={12}>
-        <Card>
-          <CardContent>Post content here</CardContent>
-        </Card>
+        <SamplePostCard />
       </Grid>
     </Grid>
   )
