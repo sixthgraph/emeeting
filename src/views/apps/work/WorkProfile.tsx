@@ -39,7 +39,8 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  LinearProgress
+  LinearProgress,
+  Tooltip
 } from '@mui/material'
 
 import Timeline from '@mui/lab/Timeline'
@@ -1073,16 +1074,28 @@ const WorkProfile = ({
 
   const expandIcon = (value: string) => <i className={expanded === value ? 'tabler-minus' : 'tabler-plus'} />
 
-  const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
-    const { avatar, fullName } = params
+  const getAvatar = (params: Pick<any, 'avatar' | 'fullName' | 'email'>) => {
+    const { avatar, fullName, email } = params
 
     if (avatar) {
-      return <CustomAvatar src={avatar} size={55} variant='rounded' />
+      return (
+        <Tooltip title='View profile'>
+          <CustomAvatar
+            src={avatar}
+            size={55}
+            variant='rounded'
+            className='cursor-pointer'
+            onClick={() => router.push(`/en/users/profile/${email}`)}
+          />
+        </Tooltip>
+      )
     } else {
       return (
-        <CustomAvatar size={55} variant='rounded'>
-          {getInitials(fullName as string)}
-        </CustomAvatar>
+        <Tooltip title='View profile'>
+          <CustomAvatar size={55} className='cursor-pointer' variant='rounded'>
+            {getInitials(fullName as string)}
+          </CustomAvatar>
+        </Tooltip>
       )
     }
   }
@@ -1165,7 +1178,8 @@ const WorkProfile = ({
                       workData?.usercreateinfo[0] &&
                       getAvatar({
                         avatar: workData?.usercreateinfo[0].avatar,
-                        fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname
+                        fullName: workData?.usercreateinfo[0].firstname + ' ' + workData?.usercreateinfo[0].lastname,
+                        email: workData?.usercreateinfo[0].email
                       })}
                   </div>
                   <div className='flex flex-1 flex flex-col items-start justify-start'>

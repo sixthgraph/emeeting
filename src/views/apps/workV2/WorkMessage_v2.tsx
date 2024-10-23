@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import Link from 'next/link'
 
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 import {
   Card,
@@ -13,6 +13,7 @@ import {
   Divider,
   IconButton,
   InputAdornment,
+  Tooltip,
   Typography
 } from '@mui/material'
 
@@ -41,20 +42,6 @@ import CustomTextField from '@/@core/components/mui/TextField'
 
 import axios from '@/utils/axios'
 
-const getAvatar = (params: Pick<any, 'avatar' | 'fullName'>) => {
-  const { avatar, fullName } = params
-
-  if (avatar) {
-    return <CustomAvatar src={avatar} size={45} variant='rounded' />
-  } else {
-    return (
-      <CustomAvatar size={45} variant='rounded'>
-        {getInitials(fullName as string)}
-      </CustomAvatar>
-    )
-  }
-}
-
 const WorkMessageV2 = ({
   chatMemberData,
   commentdetailData,
@@ -79,6 +66,7 @@ const WorkMessageV2 = ({
   // console.log(chatmember)
 
   const { data: session } = useSession()
+  const router = useRouter()
   const [commentList, setCommentList] = useState<any>()
   const [screenHeight, setScreenHeight] = useState<number>()
   const token = session?.user.token
@@ -133,6 +121,32 @@ const WorkMessageV2 = ({
   }, [commentdetailData?.comment, documentHeight])
 
   useEffect(() => {}, [openReply, screenHeight])
+
+  const getAvatar = (params: Pick<any, 'avatar' | 'fullName' | 'email'>) => {
+    const { avatar, fullName, email } = params
+
+    if (avatar) {
+      return (
+        <Tooltip title='View profile'>
+          <CustomAvatar
+            src={avatar}
+            size={45}
+            variant='rounded'
+            className='cursor-pointer'
+            onClick={() => router.push(`/en/users/profile/${email}`)}
+          />
+        </Tooltip>
+      )
+    } else {
+      return (
+        <Tooltip title='View profile'>
+          <CustomAvatar size={45} variant='rounded'>
+            {getInitials(fullName as string)}
+          </CustomAvatar>
+        </Tooltip>
+      )
+    }
+  }
 
   const handleClick = () => {
     console.info('You clicked the Chip.')
@@ -424,7 +438,8 @@ const WorkMessageV2 = ({
                         <div className='flex  me-5'>
                           {getAvatar({
                             avatar: `${item.avatar}`,
-                            fullName: `${item.username}`
+                            fullName: `${item.username}`,
+                            email: `${item.registeruid}`
                           })}
                         </div>
                         <div className='flex flex-col flex-1 '>
@@ -460,7 +475,8 @@ const WorkMessageV2 = ({
                             <div className=' me-5'>
                               {getAvatar({
                                 avatar: `${itemReply.avatar}`,
-                                fullName: `${itemReply.username}`
+                                fullName: `${itemReply.username}`,
+                                email: `${itemReply.registeruid}`
                               })}
                             </div>
                             <div className='flex flex-col '>
@@ -627,7 +643,8 @@ const WorkMessageV2 = ({
                         <div className='flex  me-5'>
                           {getAvatar({
                             avatar: `${item.avatar}`,
-                            fullName: `${item.username}`
+                            fullName: `${item.username}`,
+                            email: `${item.registeruid}`
                           })}
                         </div>
                         <div className='flex flex-col flex-1 '>
@@ -663,7 +680,8 @@ const WorkMessageV2 = ({
                             <div className=' me-5'>
                               {getAvatar({
                                 avatar: `${itemReply.avatar}`,
-                                fullName: `${itemReply.username}`
+                                fullName: `${itemReply.username}`,
+                                email: `${itemReply.registeruid}`
                               })}
                             </div>
                             <div className='flex flex-col '>
@@ -857,7 +875,8 @@ const WorkMessageV2 = ({
                       <ListItemAvatar>
                         {getAvatar({
                           avatar: `${user.avatar}`,
-                          fullName: `${user.username}`
+                          fullName: `${user.username}`,
+                          email: `${user.email}`
                         })}
                         {/* <Avatar>
                           <i className='tabler-user' />
