@@ -171,10 +171,15 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
                 </div>
               </div>
             </div>
-            {myProfile && (
+            {myProfile ? (
               <Button variant='contained' onClick={handleOpenUploadCover} className='flex gap-2'>
                 {/* <i className='tabler-user-check !text-base'></i> */}
                 <span>Change Cover</span>
+              </Button>
+            ) : (
+              <Button variant='contained' className='flex gap-2'>
+                <i className='tabler-message-circle !text-base'></i>
+                <span>Send Message</span>
               </Button>
             )}
             {/* <Button variant='contained' className='flex gap-2'>
