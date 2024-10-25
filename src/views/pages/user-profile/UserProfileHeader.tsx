@@ -92,13 +92,10 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/get-user-info`, reqBody)
 
-      if (response.statusText === 'OK') {
-        setData(response.data)
+      // console.log('handleGetUserInfo return')
+      // console.log(response.data)
 
-        return response.data
-      } else {
-        return 'User not found'
-      }
+      return response.data
     } catch (err) {
       console.log(err)
     }
@@ -118,7 +115,11 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
 
   const handleClose = () => {
     setOpen(false)
-    handleGetUserInfo()
+    handleGetUserInfo().then(r => {
+      console.log('r')
+      console.log(r)
+      setData(r)
+    })
     setUploadMode('')
   }
 
