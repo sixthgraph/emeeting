@@ -346,6 +346,8 @@ const WorkProfile = ({
 
     const reqBody = workData
 
+    //return //sg stop here
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, reqBody)
 
@@ -810,37 +812,86 @@ const WorkProfile = ({
         const require_field: any = item.require_field
 
         for (const elem of require_field) {
-          const field = document.getElementById(elem.id) as HTMLInputElement
+          if (elem.field !== 'checkbox' && elem.field !== 'radio') {
+            const field = document.getElementById(elem.id) as HTMLInputElement
 
-          if (field) {
-            if (field.value === '') {
-              inputPass = false
-              const fieldLabel = document.querySelector("[for='" + elem.id + "']") as HTMLLabelElement
+            if (field) {
+              if (field.value === '') {
+                inputPass = false
+                const fieldLabel = document.querySelector("[for='" + elem.id + "']") as HTMLLabelElement
 
-              // sg here
+                // sg here
 
-              // console.log('----- start field not value ----')
-              // console.log(`formId : ${item.formid}`)
-              // console.log(`formName : ${eformName}`)
-              // console.log(`fieldName : ${fieldLabel.textContent}`)
-              // console.log(`fieldId : ${elem.id}`)
-              // console.log('----- end field not value ----')
+                // console.log('----- start field not value ----')
+                // console.log(`formId : ${item.formid}`)
+                // console.log(`formName : ${eformName}`)
+                // console.log(`fieldName : ${fieldLabel.textContent}`)
+                // console.log(`fieldId : ${elem.id}`)
+                // console.log('----- end field not value ----')
 
-              newData.requireField.push({
-                fieldId: elem.id,
-                fieldName: fieldLabel.textContent
-              })
+                newData.requireField.push({
+                  fieldId: elem.id,
+                  fieldName: fieldLabel.textContent
+                })
 
-              field?.classList.add('border-red-500')
-              field?.classList.add('error')
+                field?.classList.add('border-red-500')
+                field?.classList.add('error')
+              } else {
+                field?.classList.remove('border-red-500')
+                field?.classList.remove('error')
+              }
             } else {
-              field?.classList.remove('border-red-500')
-              field?.classList.remove('error')
+              inputPass = false
+              console.log('field not found!')
+
+              //return inputPass
             }
           } else {
-            inputPass = false
+            // console.log('Code for ---')
+            // console.log(elem)
 
-            return inputPass
+            const field = document.getElementsByName(elem.id)
+
+            // console.log('field')
+            // console.log(field)
+            // console.log('-------------------')
+
+            const groupValue: any = []
+            let groupParent: any
+
+            for (const fieldElem of field) {
+              // console.log('--')
+              // console.log('fieldElem')
+              // console.log(fieldElem)
+              const selElem: any = fieldElem
+
+              // console.log(selElem.value)
+              // console.log(selElem.checked)
+              // console.log('--')
+
+              groupParent = fieldElem?.parentElement?.parentElement
+
+              if (!selElem.checked) {
+                inputPass = false
+                fieldElem?.parentElement?.parentElement?.classList.add('border-red-500')
+                fieldElem?.parentElement?.parentElement?.classList.add('error')
+              }
+
+              groupValue.push(selElem.checked)
+            }
+
+            if (groupValue.includes(false)) {
+              newData.requireField.push({
+                fieldId: elem.id,
+                fieldName: elem.label
+              })
+            }
+
+            if (groupValue.includes(true)) {
+              inputPass = true
+              groupParent?.classList.remove('error')
+              groupParent?.classList.remove('border-red-500')
+            }
           }
         }
 
@@ -848,9 +899,12 @@ const WorkProfile = ({
       }
 
       setReqFieldData(newObjData)
+
+      //inputPass = false // sg stop here for dev
     }
 
     if (!inputPass) {
+      // sg working here
       setDialogTitle('กรุณากรอกข้อมูลให้ครบถ้วน')
       setDialogMsg('requireField')
       console.log('reqFieldData')

@@ -2180,4 +2180,17 @@
   .bg-info {
     background-color: #26acf8;
   }
+
+  div.error {
+    border-width: 1px;
+  }
+
+  div.checkbox > label,
+  div.radio > label {
+    display: inline;
+  }
+  div.radio-group,
+  div.checkbox-group {
+    margin-block-start: 8px;
+  }
 }

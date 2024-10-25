@@ -20,13 +20,8 @@ export async function POST(request: NextRequest) {
 
     const reqBody = await request.json()
 
-    console.log('reqBody === ')
-    console.log(JSON.stringify(reqBody))
-
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createworkinfo`, reqBody, { headers })
 
-    console.log('ressssss ----')
-    console.log(res.data)
     const work = res.data.data.detail
 
     const response = NextResponse.json({

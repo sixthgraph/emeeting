@@ -1,8 +1,13 @@
 // import * as FriendCard from './../pages/FriendCard';
 
 // import * as formRender from 'https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
+declare global {
+  interface JQuery {
+    formRender(data: any): void
+  }
+}
 
-const eddata: any = []
+const updateData: any = []
 
 const checkIndex = (elemId: any, data: any) => {
   return data.findIndex((x: any) => x._id === elemId)
@@ -11,22 +16,72 @@ const checkIndex = (elemId: any, data: any) => {
 const mergeObj = (a: any, b: any, prop: any) => {
   const reduced = []
 
+  // console.log('start mergObj')
+  // console.log('form_data')
+  // console.log(a) //form_data
+  // console.log('form_template')
+  // console.log(b) //form_template
+
   for (let i = 0; i < a.length; i++) {
     const aitem = a[i]
     let found = false
 
-    for (let ii = 0; ii < b.length; ii++) {
-      if (aitem[prop] === b[ii][prop]) {
-        b[ii]['value'] = aitem['value']
-        found = true
-        break
+    if (aitem.fieldType === 'checkbox-group') {
+      const nameStr = aitem.name
+      const name = nameStr.replace('[]', '')
+      const aitemValue = aitem.value
+      const item = b.find((elem: any) => elem.name === name)
+
+      item.value = aitemValue.toString() //sg test here
+
+      const itemValues = item.values
+
+      for (let ii = 0; ii < aitemValue.length; ii++) {
+        const itemFound = itemValues.find((itemElem: any) => itemElem.value === aitemValue[ii])
+
+        if (itemFound) {
+          itemFound.selected = true
+        }
+      }
+    } // if checkbox-group
+
+    if (aitem.fieldType === 'radio-group') {
+      const nameStr = aitem.name
+      const name = nameStr.replace('[]', '')
+      const aitemValue = aitem.value
+      const item = b.find((elem: any) => elem.name === name)
+
+      item.value = aitemValue
+    } //if radio
+
+    if (aitem.fieldType === 'select') {
+      const nameStr = aitem.name
+      const name = nameStr.replace('[]', '')
+      const aitemValue = aitem.value
+      const item = b.find((elem: any) => elem.name === name)
+
+      item.value = aitemValue
+    }
+
+    if (aitem.fieldType !== 'checkbox-group' && aitem.fieldType !== 'radio-group' && aitem.fieldType !== 'select') {
+      for (let ii = 0; ii < b.length; ii++) {
+        if (aitem[prop] === b[ii][prop]) {
+          b[ii]['value'] = aitem['value']
+          found = true
+          break
+        }
+      }
+
+      if (!found) {
+        reduced.push(aitem)
       }
     }
 
-    if (!found) {
-      reduced.push(aitem)
-    }
+    //return reduced.concat(b)
   }
+
+  // console.log('mergeObj return')
+  // console.log(reduced.concat(b))
 
   return reduced.concat(b)
 }
@@ -35,13 +90,16 @@ export const getEdata = async (workData: any) => {
   let i: any
   const elem: any = workData
 
+  // console.log('workData formrender')
+  // console.log(workData)
+
   for (i in elem) {
     const index = checkIndex(elem[i]._id, workData)
     const tempData = []
 
-    for (let idx = 0; idx < eddata.length; idx++) {
-      if (eddata[idx].eid === elem[i]._id) {
-        tempData.push(eddata[idx])
+    for (let idx = 0; idx < updateData.length; idx++) {
+      if (updateData[idx].eid === elem[i]._id) {
+        tempData.push(updateData[idx])
       }
     }
 
@@ -55,12 +113,6 @@ export const getEdata = async (workData: any) => {
   }
 
   return workData
-}
-
-declare global {
-  interface JQuery {
-    formRender(data: any): void
-  }
 }
 
 export const formRenderV1 = (dataObj: string) => {
@@ -86,7 +138,7 @@ export const formRenderV1 = (dataObj: string) => {
         const parentId = $(this).parents('div.rendered-form').parent().attr('id')
         const parentIdArr: any = parentId?.split('-')
 
-        const check: any = eddata.filter((obj: { eid: any; name: string | undefined }) => {
+        const check: any = updateData.filter((obj: { eid: any; name: string | undefined }) => {
           if (obj.name == id && obj.eid == parentIdArr[2]) {
             return true
           }
@@ -99,9 +151,9 @@ export const formRenderV1 = (dataObj: string) => {
             eid: parentIdArr[2]
           }
 
-          eddata.push(newData)
+          updateData.push(newData)
         } else {
-          eddata.filter((obj: { value: any; eid: any; name: string | undefined }) => {
+          updateData.filter((obj: { value: any; eid: any; name: string | undefined }) => {
             if (obj.name == id && obj.eid == parentIdArr[2]) {
               obj.value = v
             }
@@ -115,8 +167,8 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
   let i: any
   const elem: any = dataObj
 
-  console.log('elem ---- from render eform')
-  console.log(elem)
+  // console.log('elem ---- from render eform')
+  // console.log(elem)
 
   for (i in elem) {
     $('#fb-render-' + elem[i]._id).formRender({
@@ -132,36 +184,6 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
           )
         )
         .attr('disabled', 'disabled')
-
-      // .on('change', function () {
-      //   //$('input', '#fb-render-' + elem[i]._id).on('change', function () {
-      //   const v = $(this).val()
-      //   const id = $(this).attr('id')
-      //   const parentId = $(this).parents('div.rendered-form').parent().attr('id')
-      //   const parentIdArr: any = parentId?.split('-')
-
-      //   const check: any = eddata.filter((obj: { eid: any; name: string | undefined }) => {
-      //     if (obj.name == id && obj.eid == parentIdArr[2]) {
-      //       return true
-      //     }
-      //   })
-
-      //   if (check.length == 0) {
-      //     const newData = {
-      //       name: id,
-      //       value: v,
-      //       eid: parentIdArr[2]
-      //     }
-
-      //     eddata.push(newData)
-      //   } else {
-      //     eddata.filter((obj: { value: any; eid: any; name: string | undefined }) => {
-      //       if (obj.name == id && obj.eid == parentIdArr[2]) {
-      //         obj.value = v
-      //       }
-      //     })
-      //   }
-      // })
     } // view
 
     if (elem[i].privilege === 'modify') {
@@ -173,13 +195,35 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
         )
         .attr('disabled', 'disabled')
         .on('change', function () {
-          //$('input', '#fb-render-' + elem[i]._id).on('change', function () {
-          const v = $(this).val()
-          const id = $(this).attr('id')
+          let v = $(this).val()
+          let id = $(this).attr('id')
+          let fieldType = $(this).attr('type')
           const parentId = $(this).parents('div.rendered-form').parent().attr('id')
           const parentIdArr: any = parentId?.split('-')
 
-          const check: any = eddata.filter((obj: { eid: any; name: string | undefined }) => {
+          if ($(this).is('.radio-group')) {
+            const child = $('input', this)
+
+            id = $(child[0]).attr('name')
+            v = $("input[name='" + id + "']:checked").val()
+            fieldType = 'radio-group'
+          }
+
+          if ($(this).is('.checkbox-group')) {
+            const child = $('input', this)
+            const values: any = []
+
+            id = $(child[0]).attr('name')
+
+            $.each($("input[name='" + id + "']:checked"), function () {
+              values.push($(this).val())
+            })
+
+            v = values
+            fieldType = 'checkbox-group'
+          }
+
+          const check: any = updateData.filter((obj: { eid: any; name: string | undefined }) => {
             if (obj.name == id && obj.eid == parentIdArr[2]) {
               return true
             }
@@ -189,16 +233,22 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
             const newData = {
               name: id,
               value: v,
-              eid: parentIdArr[2]
+              eid: parentIdArr[2],
+              fieldType: fieldType
             }
 
-            eddata.push(newData)
+            updateData.push(newData)
           } else {
-            eddata.filter((obj: { value: any; eid: any; name: string | undefined }) => {
+            updateData.filter((obj: { value: any; eid: any; name: string | undefined }) => {
               if (obj.name == id && obj.eid == parentIdArr[2]) {
                 obj.value = v
               }
             })
+          }
+
+          if (fieldType === 'checkbox-group' || fieldType === 'radio-group') {
+            console.log('checkbox-group change ----') //
+            handleEditWork()
           }
         })
         .on('blur', function () {
@@ -216,12 +266,16 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
       const editField = selElem.editable_field
 
       for (const fieldElem of reqField) {
-        $('#' + fieldElem.id).removeAttr('disabled')
+        $('[id="' + fieldElem.id + '"]').removeAttr('disabled')
+
+        //$('#' + fieldElem.id).removeAttr('disabled')
       }
 
       if (editField) {
         for (const fieldElem of editField) {
-          $('#' + fieldElem.id).removeAttr('disabled')
+          $('[id="' + fieldElem.id + '"]').removeAttr('disabled')
+
+          //$('#' + fieldElem.id).removeAttr('disabled')
         }
       }
 

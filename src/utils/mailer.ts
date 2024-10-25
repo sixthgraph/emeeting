@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer'
 // export const sendEmail = async (email: any, wid: any, sendFor: any) => {
 
 export const sendEmail = async (reqData: any, sendFor: any) => {
-  console.log('start sendEmail')
+  // console.log('start sendEmail')
 
   try {
     // eslint-disable-next-line import/no-named-as-default-member
@@ -56,13 +56,13 @@ export const sendEmail = async (reqData: any, sendFor: any) => {
       mailOptions.html = `<p>${message}</p>`
     }
 
-    console.log('mailOptions = ')
-    console.log(mailOptions)
+    // console.log('mailOptions = ')
+    // console.log(mailOptions)
 
     const mailresponse = await transport.sendMail(mailOptions)
 
-    console.log('mailresponse ----- ')
-    console.log(mailresponse)
+    // console.log('mailresponse ----- ')
+    // console.log(mailresponse)
 
     return mailresponse
   } catch (error: any) {
