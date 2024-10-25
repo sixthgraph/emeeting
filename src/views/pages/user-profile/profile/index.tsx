@@ -5,12 +5,13 @@ import Grid from '@mui/material/Grid'
 import type { ProfileTabType } from '@/types/pages/profileTypes'
 
 // Component Imports
-import AboutOverview from './AboutOverview'
+// import AboutOverview from './AboutOverview'
 import ActivityTimeline from './ActivityTimeline'
 import ConnectionsTeams from './ConnectionsTeams'
 import ProjectsTable from './ProjectsTables'
 
-const ProfileTab = ({ data, userData, myStat }: { data?: ProfileTabType; userData?: any; myStat: any }) => {
+// const ProfileTab = ({ data, userData, myStat }: { data?: ProfileTabType; userData?: any; myStat: any }) => {
+const ProfileTab = ({ data }: { data?: ProfileTabType }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
