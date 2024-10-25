@@ -911,10 +911,24 @@ const WorkProfile = ({
       console.log(reqFieldData)
 
       if (reqFieldData.length > 0) {
-        const firstReqForm: any = reqFieldData[0]
-        const formId: any = firstReqForm.formId
+        // const firstReqForm: any = reqFieldData[0]
+
+        let formId: any = ''
 
         if (curTab == 'forms') {
+          for (let i = 0; i < reqFieldData.length; i++) {
+            console.log('reqFieldData[' + i + ']')
+            console.log(reqFieldData[i])
+            const elem: any = reqFieldData[i]
+
+            console.log('elem.requireField')
+            console.log(elem.requireField)
+
+            if (elem.requireField.length != 0 && formId === '') {
+              formId = elem.formId
+            }
+          }
+
           const firstReqFieldId = document.body.getElementsByClassName('error')[0].id
 
           setFirstReqField(firstReqFieldId)
@@ -1613,7 +1627,7 @@ const WorkProfile = ({
           <DialogContentText id='alert-dialog-description'>
             {dialogMsg == 'requireField'
               ? reqFieldData?.map((item: any, index: any) => (
-                  <Alert key={index} severity='error'>
+                  <Alert className='mt-2' key={index} severity='error'>
                     <AlertTitle>แบบฟอร์ม : {item.formName}</AlertTitle>
                     {item.requireField?.map((reqItem: any, reqIndex: any) => (
                       <span key={reqIndex}> [{reqItem.fieldName}] </span>
