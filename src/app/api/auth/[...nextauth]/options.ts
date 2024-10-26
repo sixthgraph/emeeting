@@ -78,7 +78,7 @@ async function refreshAccessToken(tokenObject: any, userEmail: any) {
 export const options: NextAuthOptions = {
   // secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/en/login'
+    signIn: `${process.env.NEXT_PUBLIC_APP_BASEPATH_URL}/en/login`
   },
   providers: [
     Google({
