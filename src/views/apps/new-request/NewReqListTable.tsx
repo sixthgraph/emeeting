@@ -256,7 +256,7 @@ const NewReqListTable = ({ tableData }: Props) => {
       if (response.data.message === 'success') {
         console.log('Create work success.')
         const wid = response.data.data
-        const path = `${process.env.NEXT_PUBLIC_APP_URL}/en/work?wid=${wid}&wip=&dep=${formData.Registerdep}&routename=${createLink.routename}&workflowid=${createLink.workflowid}`
+        const path = `${process.env.NEXT_PUBLIC_APP_BASEPATH_URL}/en/work?wid=${wid}&wip=&dep=${formData.Registerdep}&routename=${createLink.routename}&workflowid=${createLink.workflowid}`
 
         console.log('wid')
         console.log(wid)

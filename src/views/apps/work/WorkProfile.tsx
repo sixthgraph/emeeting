@@ -1056,7 +1056,7 @@ const WorkProfile = ({
         console.log(response.data.message)
       }
 
-      const path = `/${locale}/todo`
+      const path = `${process.env.NEXT_PUBLIC_APP_BASEPATH_URL}/${locale}/todo`
 
       window.location.href = path //navigate(path)
     } catch (error: any) {
