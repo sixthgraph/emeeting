@@ -89,6 +89,7 @@ const UserDropdown = () => {
       await signOut({ redirect: true })
 
       // Redirect to login page
+      // router.push(process.env.NEXT_PUBLIC_BASEPATH + getLocalizedUrl('/login', locale as Locale))
       router.push(process.env.NEXT_PUBLIC_BASEPATH + getLocalizedUrl('/login', locale as Locale))
     } catch (error) {
       console.error(error)

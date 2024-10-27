@@ -17,7 +17,7 @@ const SamplePostCard = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardMedia image='/images/posts/5.png' className='bs-[180px]' />
+          <CardMedia image={`${process.env.NEXT_PUBLIC_BASEPATH}/images/posts/5.png`} className='bs-[180px]' />
           <CardContent className='relative'>
             <Avatar
               src='https://rd.infoma.net/routefile/userdisplay/663185f9db3fa50eafc889ad/b16b1e7a-34da-4d12-b814-5fba08826154.jpg'
@@ -76,7 +76,7 @@ const SamplePostCard = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardMedia image='/images/posts/2.png' className='bs-[180px]' />
+          <CardMedia image={`${process.env.NEXT_PUBLIC_BASEPATH}/images/posts/2.png`} className='bs-[180px]' />
           <CardContent className='relative'>
             <Avatar
               src='https://rd.infoma.net/routefile/userdisplay/667a90b269833176719371ef/7f2e5a3e-0cb7-430b-9c9f-2a5534f0f3f8.jpg'
@@ -135,7 +135,7 @@ const SamplePostCard = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardMedia image='/images/posts/3.png' className='bs-[185px]' />
+          <CardMedia image={`${process.env.NEXT_PUBLIC_BASEPATH}/images/posts/3.png`} className='bs-[185px]' />
           <CardContent className='relative'>
             <Avatar
               src='https://rd.infoma.net/routefile/userdisplay/663185f9db3fa50eafc889ad/b16b1e7a-34da-4d12-b814-5fba08826154.jpg'
