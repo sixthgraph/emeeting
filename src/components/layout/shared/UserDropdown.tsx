@@ -108,7 +108,7 @@ const UserDropdown = () => {
     required: true,
     onUnauthenticated() {
       console.log('redirect to users/profile')
-      redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/users/profile`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+      redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
     }
   })
 
