@@ -128,7 +128,11 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
       <Card>
         {/* <CardMedia image='/images/pages/profile-banner.png' className='bs-[250px]' /> */}
         <CardMedia
-          image={data.coverprofile !== '' ? data?.coverprofile : '/images/pages/profile-banner.png'}
+          image={
+            data.coverprofile !== ''
+              ? data?.coverprofile
+              : process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/profile-banner.png'
+          }
           className='bs-[250px]'
         />
         <CardContent className='flex gap-5 justify-center flex-col items-center md:items-end md:flex-row !pt-0 md:justify-start'>

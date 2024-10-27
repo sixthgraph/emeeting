@@ -176,11 +176,13 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
       formData: elem[i].form_template
     })
 
+    //#fb-render-671d9e8747ce4df2f9415c99
+
     if (elem[i].privilege === 'view') {
       $('#fb-render-' + elem[i]._id)
         .find(
           $(
-            'input[type="text"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+            'input[type="text"],input[type="radio"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
           )
         )
         .attr('disabled', 'disabled')
@@ -190,7 +192,7 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
       $('#fb-render-' + elem[i]._id)
         .find(
           $(
-            'input[type="text"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+            'select,input[type="text"],input[type="radio"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
           )
         )
         .attr('disabled', 'disabled')
@@ -258,22 +260,33 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
 
       const selElem = elem[i]
 
-      console.log('elem[i] ' + i)
-      console.log(elem[i])
+      // console.log('elem[i] ' + i)
+      // console.log(elem[i])
 
       //for (const elemField of selElem) {
       const reqField = selElem.require_field
       const editField = selElem.editable_field
 
       for (const fieldElem of reqField) {
-        $('[id="' + fieldElem.id + '"]').removeAttr('disabled')
+        $('[id="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+
+        if (fieldElem.field === 'checkbox') {
+          $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+        }
+
+        if (fieldElem.field === 'radio') {
+          $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+        }
+
+        if (fieldElem.field === 'select') {
+        }
 
         //$('#' + fieldElem.id).removeAttr('disabled')
       }
 
       if (editField) {
         for (const fieldElem of editField) {
-          $('[id="' + fieldElem.id + '"]').removeAttr('disabled')
+          $('[id="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
 
           //$('#' + fieldElem.id).removeAttr('disabled')
         }

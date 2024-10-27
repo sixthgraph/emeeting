@@ -65,10 +65,10 @@ const ForgotPassword = ({ mode }: { mode: SystemMode }) => {
   const router = useRouter()
 
   // Vars
-  const darkImg = '/images/pages/auth-mask-dark.png'
-  const lightImg = '/images/pages/auth-mask-light.png'
-  const darkIllustration = '/images/illustrations/auth/V3-forgot-password-dark.png'
-  const lightIllustration = '/images/illustrations/auth/V3-forgot-password-light.png'
+  const darkImg = `${process.env.NEXT_PUBLIC_BASEPATH}/images/pages/auth-mask-dark.png`
+  const lightImg = `${process.env.NEXT_PUBLIC_BASEPATH}/images/pages/auth-mask-light.png`
+  const darkIllustration = `${process.env.NEXT_PUBLIC_BASEPATH}/images/illustrations/auth/V3-forgot-password-dark.png`
+  const lightIllustration = `${process.env.NEXT_PUBLIC_BASEPATH}/images/illustrations/auth/V3-forgot-password-light.png`
 
   // Hooks
   const { lang: locale } = useParams()

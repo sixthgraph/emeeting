@@ -1,3 +1,7 @@
 .bgImage {
   background: url('/images/pages/faq-header.png');
 }
+
+.bgImageStyle = {
+  background: `url(${process.env.NEXT_PUBLIC_BASEPATH}/ images/pages/faq-header.png) `;
+}

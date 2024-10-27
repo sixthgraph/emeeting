@@ -51,7 +51,11 @@ const ActivityTimeline = () => {
               <Typography className='mbe-2'>Invoices have been paid to the company.</Typography>
               <div className='flex'>
                 <div className='flex gap-2.5 items-center pli-2.5 bg-actionHover plb-[0.3125rem] rounded'>
-                  <img alt='invoice.pdf' src='/images/icons/pdf-document.png' className='bs-5' />
+                  <img
+                    alt='invoice.pdf'
+                    src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/icons/pdf-document.png`}
+                    className='bs-5'
+                  />
                   <Typography className='font-medium'>invoice.pdf</Typography>
                 </div>
               </div>
@@ -69,7 +73,7 @@ const ActivityTimeline = () => {
               </div>
               <Typography className='mbe-2'>Project meeting with john @10:15am</Typography>
               <div className='flex items-center gap-2.5'>
-                <CustomAvatar src='/images/avatars/1.png' size={32} />
+                <CustomAvatar src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/1.png`} size={32} />
                 <div>
                   <Typography className='font-medium' variant='body2'>
                     Lester McCarthy (Client)
@@ -91,9 +95,9 @@ const ActivityTimeline = () => {
               </div>
               <Typography className='mbe-2'>6 team members in a project</Typography>
               <AvatarGroup total={6}>
-                <Avatar alt='Remy Sharp' src='/images/avatars/1.png' />
-                <Avatar alt='Travis Howard' src='/images/avatars/2.png' />
-                <Avatar alt='Cindy Baker' src='/images/avatars/3.png' />
+                <Avatar alt='Remy Sharp' src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/1.png`} />
+                <Avatar alt='Travis Howard' src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/2.png`} />
+                <Avatar alt='Cindy Baker' src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/3.png`} />
               </AvatarGroup>
             </TimelineContent>
           </TimelineItem>

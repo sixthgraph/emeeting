@@ -81,12 +81,16 @@ const Register = ({ mode }: { mode: SystemMode }) => {
   const [errorState, setErrorState] = useState<ErrorType | null>(null)
 
   // Vars
-  const darkImg = '/images/pages/auth-mask-dark.png'
-  const lightImg = '/images/pages/auth-mask-light.png'
-  const darkIllustration = '/images/illustrations/auth/V3-register-dark.png'
-  const lightIllustration = '/images/illustrations/auth/V3-register-light.png'
-  const borderedDarkIllustration = '/images/illustrations/auth/V3-register-dark-border.png'
-  const borderedLightIllustration = '/images/illustrations/auth/V3-register-light-border.png'
+  const darkImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/auth-mask-dark.png'
+  const lightImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/auth-mask-light.png'
+  const darkIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-register-dark.png'
+  const lightIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-register-light.png'
+
+  const borderedDarkIllustration =
+    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-register-dark-border.png'
+
+  const borderedLightIllustration =
+    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V3-register-light-border.png'
 
   // Hooks
   const router = useRouter()

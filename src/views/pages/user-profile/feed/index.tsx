@@ -11,7 +11,7 @@ import classnames from 'classnames'
 // Styles imports
 import { useSession } from 'next-auth/react'
 
-import styles from './styles.module.css'
+// import styles from './styles.module.css'
 import CustomTextField from '@core/components/mui/TextField'
 import SamplePostCard from './SamplePostCard'
 
@@ -31,10 +31,15 @@ const FeedTab = () => {
   const fullname = session?.user.name
   const avatar = session?.user.avatar
 
+  const bgImageStyle = {
+    backgroundImage: `url(${process.env.NEXT_PUBLIC_BASEPATH}/images/pages/faq-header.png)`
+  }
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Card className={classnames(' bg-transparent bg-cover', styles.bgImage)} elevation={0}>
+        {/* <Card className={classnames(' bg-transparent bg-cover', styles.bgImage)} elevation={0}> */}
+        <Card className={classnames(' bg-transparent bg-cover', bgImageStyle)} elevation={0}>
           {/* <CardContent className='flex flex-col items-center is-full text-center !plb-[5.8125rem] pli-5'> */}
           <CardContent className='flex flex-col items-center is-full text-center  pli-5'>
             {/* <Typography variant='h4' className='mbe-2.5'>
@@ -45,7 +50,11 @@ const FeedTab = () => {
               {avatar ? (
                 <Avatar src={avatar} className='mr-2' alt='Victor Anderson' />
               ) : (
-                <Avatar src='/images/avatars/avatar.png' className='mr-2' alt='Victor Anderson' />
+                <Avatar
+                  src={`${process.env.NEXT_PUBLIC_BASEPATH}/images/avatars/avatar.png`}
+                  className='mr-2'
+                  alt='Victor Anderson'
+                />
               )}
               <CustomTextFieldStyled
                 className='is-full sm:max-is-[55%] md:max-is-[600px]'
