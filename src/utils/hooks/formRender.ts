@@ -288,6 +288,17 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
         for (const fieldElem of editField) {
           $('[id="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
 
+          if (fieldElem.field === 'checkbox') {
+            $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+          }
+
+          if (fieldElem.field === 'radio') {
+            $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+          }
+
+          if (fieldElem.field === 'select') {
+          }
+
           //$('#' + fieldElem.id).removeAttr('disabled')
         }
       }
