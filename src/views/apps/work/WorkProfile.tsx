@@ -164,6 +164,7 @@ const WorkProfile = ({
   // console.log(attachment)
   // console.log('eformData from === workData?.eformdata')
   // console.log(eformData)
+
   // console.log('conditionData -----')
   // console.log(conditionData)
   // console.log('notificationData----')
@@ -186,9 +187,11 @@ const WorkProfile = ({
     }
 
     eformData = eformData.filter((elem: any) => {
-      return elem.privilege !== 'disable'
+      return elem.privilege !== 'disable' && elem.privilege !== undefined
     })
   }
+
+  // console.log(eFormDataObj[2].privilege)
 
   if (documentList && documentProperties) {
     for (const item of documentList) {
@@ -863,6 +866,7 @@ const WorkProfile = ({
               // console.log('--')
               // console.log('fieldElem')
               // console.log(fieldElem)
+
               const selElem: any = fieldElem
 
               // console.log(selElem.value)
@@ -1210,12 +1214,22 @@ const WorkProfile = ({
       return elem.privilege == 'modify'
     })
 
-    if (requireForm[0].formid) {
-      setExpanded('panel-' + requireForm[0].formid)
+    if (requireForm[0]) {
+      if (requireForm[0].formid) {
+        // sg bug here
+        setExpanded('panel-' + requireForm[0].formid)
+      }
+    } else {
+      //TODO expand first panel
     }
 
     for (const item of requireForm) {
       const require_field: any = item.require_field
+
+      // console.log('item of requireForm')
+      // console.log(item)
+
+      // console.log(item.formid) // sg working here
 
       for (const elem of require_field) {
         const field = document.getElementById(elem.id) as HTMLInputElement
@@ -1407,7 +1421,9 @@ const WorkProfile = ({
                       <Typography className='text-slate-900'>{form.form_name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <div id={`fb-render-${form.Id}`}>Loading...</div>
+                      <div id={form.form_id}>
+                        <div id={`fb-render-${form.Id}`}>Loading...{form.Id}</div>
+                      </div>
                       {/* <div id={`fb-render-${form.form_id}`}>Loading...</div> */}
                     </AccordionDetails>
                   </Accordion>

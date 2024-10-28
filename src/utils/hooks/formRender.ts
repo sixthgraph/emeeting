@@ -1,11 +1,6 @@
 // import * as FriendCard from './../pages/FriendCard';
 
 // import * as formRender from 'https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
-declare global {
-  interface JQuery {
-    formRender(data: any): void
-  }
-}
 
 const updateData: any = []
 
@@ -115,6 +110,12 @@ export const getEdata = async (workData: any) => {
   return workData
 }
 
+declare global {
+  interface JQuery {
+    formRender(data: any): void
+  }
+}
+
 export const formRenderV1 = (dataObj: string) => {
   let i: any
   const elem: any = dataObj
@@ -171,10 +172,20 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
   // console.log(elem)
 
   for (i in elem) {
-    $('#fb-render-' + elem[i]._id).formRender({
-      dataType: 'json',
-      formData: elem[i].form_template
-    })
+    // console.log('elem[i]._id')
+    // console.log(elem[i]._id)
+    // console.log($('#fb-render-' + elem[i]._id).length)
+
+    // console.log(elem[i].form_template)
+
+    if ($('#fb-render-' + elem[i]._id).length == 1) {
+      $('#fb-render-' + elem[i]._id).formRender({
+        dataType: 'json',
+        formData: elem[i].form_template
+      })
+    } else {
+      console.log('can not render eform id ' + elem[i]._id)
+    }
 
     //#fb-render-671d9e8747ce4df2f9415c99
 
@@ -192,7 +203,7 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
       $('#fb-render-' + elem[i]._id)
         .find(
           $(
-            'select,input[type="text"],input[type="radio"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+            'select,input[type="text"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
           )
         )
         .attr('disabled', 'disabled')
@@ -204,10 +215,15 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
           const parentIdArr: any = parentId?.split('-')
 
           if ($(this).is('.radio-group')) {
+            console.log('.radio-group change ')
             const child = $('input', this)
+
+            console.log(this)
 
             id = $(child[0]).attr('name')
             v = $("input[name='" + id + "']:checked").val()
+            console.log('value')
+            console.log(v)
             fieldType = 'radio-group'
           }
 
@@ -248,9 +264,13 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
             })
           }
 
+          console.log('updateData')
+          console.log(updateData)
+
           if (fieldType === 'checkbox-group' || fieldType === 'radio-group') {
+            // sg found bug here
             console.log('checkbox-group change ----') //
-            handleEditWork()
+            handleEditWork() // sg remark here
           }
         })
         .on('blur', function () {

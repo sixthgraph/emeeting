@@ -117,9 +117,23 @@ export async function POST(req: NextRequest) {
           headers
         })
 
-        const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/startpoint`, {
-          headers
-        })
+        // const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/startpoint`, {
+        //   headers
+        // })
+
+        const res_node = await axios.get(
+          `${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/${workinfo.blockid}`,
+          {
+            headers
+          }
+        )
+
+        // console.log(`${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/${workinfo.blockid}`)
+        // console.log('res_node.data')
+        // console.log(res_node.data)
+
+        console.log('workinfo.eformdata')
+        console.log(workinfo.eformdata)
 
         try {
           const res_notification = await axios.get(

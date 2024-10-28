@@ -114,8 +114,8 @@ const WorkMessage = ({
     if (screenHeight) openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
   }, [openReply, screenHeight])
 
-  console.log('commentdetailData?.comment')
-  console.log(commentdetailData?.comment)
+  // console.log('commentdetailData?.comment')
+  // console.log(commentdetailData?.comment)
 
   const getAvatar = (params: Pick<any, 'avatar' | 'fullName' | 'email'>) => {
     const { avatar, fullName, email } = params
