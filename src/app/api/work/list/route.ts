@@ -31,8 +31,8 @@ export async function POST(req: NextRequest) {
     const workinfo = res.data.data.detail
     const workinprocess = res.data.data.detail.workinprocess
 
-    console.log('workinfo')
-    console.log(workinfo)
+    console.log('workinfo 555')
+    console.log(res.data.data)
 
     // console.log('--workinprocess 1---')
     // console.log(workinprocess)
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
         //return item
       })
 
-      console.log('---curwip--')
+      console.log('---curwip 111--')
       console.log(curwip.length)
 
       if (curwip.length == 0) {
@@ -132,8 +132,11 @@ export async function POST(req: NextRequest) {
         // console.log('res_node.data')
         // console.log(res_node.data)
 
-        console.log('workinfo.eformdata')
-        console.log(workinfo.eformdata)
+        console.log('sg check getnextprecess url')
+        console.log(`${process.env.ROUTE_FLOW_API_URL}/notification/${curwip[0].rid}/${curwip[0].pid}`)
+        console.log(
+          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`
+        )
 
         try {
           const res_notification = await axios.get(
@@ -153,6 +156,9 @@ export async function POST(req: NextRequest) {
           let condata = resnp2.data.data
 
           const condataDetail = condata.detail
+
+          console.log('condataDetail 555')
+          console.log(condataDetail)
 
           let condataObj = []
 

@@ -43,21 +43,6 @@ const getData = async ({ wid, dep, wip }: { wid?: any; dep?: any; wip?: any }) =
 }
 
 const getChatMember = async (wid: any) => {
-  // try {
-  //   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment/member/list`, {
-  //     method: 'POST',
-  //     body: JSON.stringify({
-  //       wid: wid
-  //     })
-  //   })
-
-  //   const data = await res.json()
-
-  //   return data.commentdata
-  // } catch (err) {
-  //   console.log(err)
-  // }
-
   const session = await getServerSession(options)
   const token = session?.user.token
 
@@ -90,8 +75,8 @@ const workPage = async ({ searchParams }: any) => {
 
   const commentMember = await getChatMember(wid)
 
-  console.log('commentMember page')
-  console.log(commentMember)
+  console.log('conditionData')
+  console.log(conditionData)
 
   if (data) {
     return (

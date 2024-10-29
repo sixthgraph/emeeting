@@ -165,8 +165,9 @@ const WorkProfile = ({
   // console.log('eformData from === workData?.eformdata')
   // console.log(eformData)
 
-  // console.log('conditionData -----')
-  // console.log(conditionData)
+  console.log('conditionData -----')
+  console.log(conditionData)
+
   // console.log('notificationData----')
   // console.log(notificationData)
 

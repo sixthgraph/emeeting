@@ -203,7 +203,7 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
       $('#fb-render-' + elem[i]._id)
         .find(
           $(
-            'select,input[type="text"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+            'select,input[type="text"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
           )
         )
         .attr('disabled', 'disabled')
@@ -275,7 +275,7 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
         })
         .on('blur', function () {
           console.log('blur ----') //
-          handleEditWork()
+          handleEditWork() // sg remark here
         })
 
       const selElem = elem[i]
