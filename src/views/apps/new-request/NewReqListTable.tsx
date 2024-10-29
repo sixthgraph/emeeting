@@ -367,7 +367,7 @@ const NewReqListTable = ({ tableData }: Props) => {
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search Route Name'
+              placeholder='Search App Name'
               className='is-full sm:is-auto'
             />
           </div>
@@ -452,7 +452,7 @@ const NewReqListTable = ({ tableData }: Props) => {
           </DialogCloseButton>
         </DialogTitle>
         <DialogContent>
-          <Typography className='text-xs'>Route name:</Typography>
+          <Typography className='text-xs'>App name:</Typography>
           <Typography className='font-bold pb-4'>{createLink.routename}</Typography>
           <form noValidate autoComplete='off' className='flex flex-col gap-6'>
             {/* <div className='flex gap4 flex-col'> */}

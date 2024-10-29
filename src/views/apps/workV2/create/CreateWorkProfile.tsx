@@ -239,7 +239,7 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
                 </FormControl>
               </div>
               <div className='flex-1 flex flex-col items-start justify-start'>
-                <Typography className='text-xs'>Route name:</Typography>
+                <Typography className='text-xs'>App name:</Typography>
                 <Typography className='font-bold pb-4'>{routename}</Typography>
                 <TextField
                   fullWidth

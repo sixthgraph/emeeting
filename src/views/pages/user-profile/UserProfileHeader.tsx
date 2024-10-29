@@ -145,10 +145,22 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 badgeContent={<i className='tabler-pencil text-sm' />}
               >
-                <img height={120} width={120} src={data?.avatar} className='rounded' alt='Profile Background' />
+                <img
+                  height={120}
+                  width={120}
+                  src={data?.avatar ? data.avatar : process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/avatar.png'}
+                  className='rounded'
+                  alt='Profile Background'
+                />
               </CustomBadge>
             ) : (
-              <img height={120} width={120} src={data?.avatar} className='rounded' alt='Profile Background' />
+              <img
+                height={120}
+                width={120}
+                src={data?.avatar ? data.avatar : process.env.NEXT_PUBLIC_BASEPATH + '/images/avatars/avatar.png'}
+                className='rounded'
+                alt='Profile Background'
+              />
             )}
           </div>
           <div className='flex is-full justify-start self-end flex-col items-center gap-6 sm-gap-0 sm:flex-row sm:justify-between sm:items-end '>
