@@ -13,19 +13,11 @@ import { io } from 'socket.io-client'
 //   reconnectionAttempts: 5
 // })
 
-export const socket = io('ws://rd.infoma.net/routeflow-api', {
+export const socket = io('http://localhost:9995', {
   secure: false,
   rejectUnauthorized: false,
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   reconnectionAttempts: 5
-
-  //reconnectionDelayMax: 10000,
-  // auth: {
-  //   token: '123'
-  // },
-  // query: {
-  //   'my-key': 'my-value'
-  // }
 })

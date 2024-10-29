@@ -42,7 +42,7 @@ import tableStyles from '@core/styles/table.module.css'
 
 import type { CommentType, CommentTypeWithAction } from '@/types/apps/commentTypes'
 
-import { socket } from '@/components/socket/socket'
+// import { socket } from '@/components/socket/socket'
 
 // import OptionMenu from '@/@core/components/option-menu'
 
@@ -117,36 +117,39 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
   const [rowSelection, setRowSelection] = useState({})
   const [commentOpen, setCommentOpen] = useState(false)
 
-  const [isConnected, setIsConnected] = useState(false)
-  const [transport, setTransport] = useState('N/A')
+  // const [isConnected, setIsConnected] = useState(false)
+  // const [transport, setTransport] = useState('N/A')
 
-  useEffect(() => {
-    if (socket.connected) {
-      onConnect()
-    }
+  // useEffect(() => {
+  //   console.log('try connect to socket')
 
-    function onConnect() {
-      setIsConnected(true)
-      setTransport(socket.io.engine.transport.name)
+  //   if (socket.connected) {
+  //     onConnect()
+  //   }
 
-      socket.io.engine.on('upgrade', transport => {
-        setTransport(transport.name)
-      })
-    }
+  //   function onConnect() {
+  //     console.log('socket on connected')
+  //     setIsConnected(true)
+  //     setTransport(socket.io.engine.transport.name)
 
-    function onDisconnect() {
-      setIsConnected(false)
-      setTransport('N/A')
-    }
+  //     socket.io.engine.on('upgrade', transport => {
+  //       setTransport(transport.name)
+  //     })
+  //   }
 
-    socket.on('connect', onConnect)
-    socket.on('disconnect', onDisconnect)
+  //   function onDisconnect() {
+  //     setIsConnected(false)
+  //     setTransport('N/A')
+  //   }
 
-    return () => {
-      socket.off('connect', onConnect)
-      socket.off('disconnect', onDisconnect)
-    }
-  }, [])
+  //   socket.on('connect', onConnect)
+  //   socket.on('disconnect', onDisconnect)
+
+  //   return () => {
+  //     socket.off('connect', onConnect)
+  //     socket.off('disconnect', onDisconnect)
+  //   }
+  // }, [])
 
   // console.log('commentData ---------------- ')
   // console.log(commentData)
@@ -285,10 +288,10 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
     <>
       <Card>
         <CardHeader title='Comments' className='pbe-4' />
-        <div>
+        {/* <div>
           <p>Status: {isConnected ? 'connected' : 'disconnected'}</p>
           <p>Transport: {transport}</p>
-        </div>
+        </div> */}
         {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
