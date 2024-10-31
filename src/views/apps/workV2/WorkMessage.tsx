@@ -135,10 +135,9 @@ const WorkMessage = ({
         console.log('update-work-message')
         console.log(data)
         updateWorkMessage().then(() => {
-          //setTimeout(() => {
-          scrollToElement()
-
-          //}, 200)
+          setTimeout(() => {
+            scrollToElement()
+          }, 200)
         })
       })
     }
@@ -147,9 +146,10 @@ const WorkMessage = ({
       socket.emit('join-work-id', wid)
     }
 
+    const container = document.getElementById('commentContainer') as HTMLDivElement
+
     const scrollToElement = () => {
       if (commentContainerRef.current) {
-        const container = document.getElementById('commentContainer') as HTMLDivElement
         const height = container.scrollHeight - container.clientHeight
 
         container.scrollTo({ top: height, behavior: 'smooth' })
