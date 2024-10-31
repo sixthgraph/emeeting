@@ -77,7 +77,7 @@ const WorkMessage = ({
   const [messageHeight, setMessageHeight] = useState<number>()
   const token = session?.user.token
   const email = session?.user.email
-  const commentPanelRef = useRef<HTMLDivElement>(null)
+  const commentContainerRef = useRef<HTMLDivElement>(null)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialData = {
@@ -114,6 +114,15 @@ const WorkMessage = ({
     setScreenHeight(screen.height)
     setMessageHeight(screen.height - 270)
     setOpenReply(false)
+
+    setTimeout(() => {
+      if (commentContainerRef.current) {
+        const container = document.getElementById('commentContainer') as HTMLDivElement
+        const height = container.scrollHeight - container.clientHeight
+
+        container.scrollTo({ top: height })
+      }
+    }, 300)
   }, [commentdetailData?.comment])
 
   useEffect(() => {
@@ -126,9 +135,10 @@ const WorkMessage = ({
         console.log('update-work-message')
         console.log(data)
         updateWorkMessage().then(() => {
-          setTimeout(() => {
-            scrollToElement()
-          }, 500)
+          //setTimeout(() => {
+          scrollToElement()
+
+          //}, 200)
         })
       })
     }
@@ -138,8 +148,11 @@ const WorkMessage = ({
     }
 
     const scrollToElement = () => {
-      if (commentPanelRef.current) {
-        commentPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (commentContainerRef.current) {
+        const container = document.getElementById('commentContainer') as HTMLDivElement
+        const height = container.scrollHeight - container.clientHeight
+
+        container.scrollTo({ top: height, behavior: 'smooth' })
       }
     }
 
@@ -667,7 +680,12 @@ const WorkMessage = ({
             className='pbe-4'
           />
 
-          <CardContent className='pb-0' style={{ maxHeight: '560px', overflow: 'auto' }}>
+          <CardContent
+            id='commentContainer'
+            ref={commentContainerRef}
+            className='pb-0'
+            style={{ maxHeight: '560px', overflow: 'auto' }}
+          >
             {commentList &&
               commentList.map((item: any, index: any) => {
                 return (
@@ -769,7 +787,6 @@ const WorkMessage = ({
 
                     {/* end reply content */}
                     <Divider className='mb-3' />
-                    <div ref={commentPanelRef}></div>
                     {/* end reply tool */}
                   </div>
                 ) // return
