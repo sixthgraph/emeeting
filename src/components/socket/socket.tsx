@@ -13,11 +13,13 @@ import { io } from 'socket.io-client'
 //   reconnectionAttempts: 5
 // })
 
-export const socket = io('http://localhost:9995', {
-  secure: false,
-  rejectUnauthorized: false,
-  reconnection: true,
-  reconnectionDelay: 1000,
-  reconnectionDelayMax: 5000,
-  reconnectionAttempts: 5
+const uri = 'http://127.0.0.1:8000'
+
+export const socket = io(uri, {
+  // secure: false,
+  // rejectUnauthorized: false,
+  // reconnection: true,
+  // reconnectionDelay: 1000,
+  // reconnectionDelayMax: 5000,
+  // reconnectionAttempts: 5
 })

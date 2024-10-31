@@ -42,8 +42,6 @@ import tableStyles from '@core/styles/table.module.css'
 
 import type { CommentType, CommentTypeWithAction } from '@/types/apps/commentTypes'
 
-// import { socket } from '@/components/socket/socket'
-
 // import OptionMenu from '@/@core/components/option-menu'
 
 // import Link from '@components/Link'
@@ -116,40 +114,6 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [rowSelection, setRowSelection] = useState({})
   const [commentOpen, setCommentOpen] = useState(false)
-
-  // const [isConnected, setIsConnected] = useState(false)
-  // const [transport, setTransport] = useState('N/A')
-
-  // useEffect(() => {
-  //   console.log('try connect to socket')
-
-  //   if (socket.connected) {
-  //     onConnect()
-  //   }
-
-  //   function onConnect() {
-  //     console.log('socket on connected')
-  //     setIsConnected(true)
-  //     setTransport(socket.io.engine.transport.name)
-
-  //     socket.io.engine.on('upgrade', transport => {
-  //       setTransport(transport.name)
-  //     })
-  //   }
-
-  //   function onDisconnect() {
-  //     setIsConnected(false)
-  //     setTransport('N/A')
-  //   }
-
-  //   socket.on('connect', onConnect)
-  //   socket.on('disconnect', onDisconnect)
-
-  //   return () => {
-  //     socket.off('connect', onConnect)
-  //     socket.off('disconnect', onDisconnect)
-  //   }
-  // }, [])
 
   // console.log('commentData ---------------- ')
   // console.log(commentData)
@@ -288,10 +252,6 @@ const CommentListTable = ({ commentData }: { commentData?: any }) => {
     <>
       <Card>
         <CardHeader title='Comments' className='pbe-4' />
-        {/* <div>
-          <p>Status: {isConnected ? 'connected' : 'disconnected'}</p>
-          <p>Transport: {transport}</p>
-        </div> */}
         {/* <TableFilters setData={setData} tableData={tableData} /> */}
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
