@@ -47,9 +47,6 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
     }
   }, [data?.email, email])
 
-  console.log('userData')
-  console.log(userData)
-
   const formatshortdate = (date: any) => {
     const m_th_names = [
       'ม.ค.',

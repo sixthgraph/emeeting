@@ -42,6 +42,8 @@ import CustomTextField from '@/@core/components/mui/TextField'
 
 import axios from '@/utils/axios'
 
+import { socket } from '@/components/socket/socket'
+
 const WorkMessage = ({
   chatMemberData,
   commentdetailData,
@@ -55,6 +57,9 @@ const WorkMessage = ({
   // const chatmember = commentdetailData?.member
   // console.log('chatMemberData')
   // console.log(chatMemberData)
+
+  // console.log('commentWorkData')
+  // console.log(commentWorkData)
 
   let chatmember = []
 
@@ -72,6 +77,7 @@ const WorkMessage = ({
   const [messageHeight, setMessageHeight] = useState<number>()
   const token = session?.user.token
   const email = session?.user.email
+  const commentPanelRef = useRef<HTMLDivElement>(null)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialData = {
@@ -109,6 +115,54 @@ const WorkMessage = ({
     setMessageHeight(screen.height - 270)
     setOpenReply(false)
   }, [commentdetailData?.comment])
+
+  useEffect(() => {
+    if (socket.connected) {
+      const wid = commentWorkData?.wid
+
+      joinRoomByWid(wid)
+
+      socket.on('update-work-message', data => {
+        console.log('update-work-message')
+        console.log(data)
+        updateWorkMessage().then(() => {
+          scrollToElement()
+        })
+      })
+    }
+
+    function joinRoomByWid(wid: any) {
+      socket.emit('join-work-id', wid)
+    }
+
+    const scrollToElement = () => {
+      if (commentPanelRef.current) {
+        commentPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+
+    const updateWorkMessage = async () => {
+      const reqBody = {
+        wid: commentWorkData.wid,
+        token: token
+      }
+
+      try {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/comment/list`, reqBody)
+        const newCommentData = response.data
+
+        if (newCommentData) {
+          setCommentList(newCommentData.comment)
+        }
+      } catch (error: any) {
+        console.log('Get work comment failed. ', error.message)
+      }
+    }
+
+    // function leaveRoomByWid(wid: any) {
+    //   socket.emit('join-work-id', wid)
+    // }
+  }, [commentWorkData, token])
 
   useEffect(() => {
     if (screenHeight) openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
@@ -359,6 +413,7 @@ const WorkMessage = ({
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
+        socket.emit('update-work-message', data)
       } else {
         console.log(response.data.message)
       }
@@ -711,6 +766,7 @@ const WorkMessage = ({
 
                     {/* end reply content */}
                     <Divider className='mb-3' />
+                    <div ref={commentPanelRef}></div>
                     {/* end reply tool */}
                   </div>
                 ) // return
