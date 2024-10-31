@@ -126,7 +126,9 @@ const WorkMessage = ({
         console.log('update-work-message')
         console.log(data)
         updateWorkMessage().then(() => {
-          scrollToElement()
+          setTimeout(() => {
+            scrollToElement()
+          }, 500)
         })
       })
     }
@@ -340,6 +342,7 @@ const WorkMessage = ({
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
+        socket.emit('update-work-message', data)
       } else {
         console.log(response.data.message)
       }
