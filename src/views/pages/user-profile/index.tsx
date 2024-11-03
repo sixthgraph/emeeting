@@ -49,7 +49,7 @@ const UserProfile = ({
           <Grid item xs={12} lg={4} md={5}>
             <AboutOverview userData={userData} myStat={myStat} />
           </Grid>
-          <Grid item xs={12} lg={8} md={7} spacing={6}>
+          <Grid item xs={12} lg={8} md={7}>
             {activeTab === undefined ? null : (
               <Grid item xs={12} className='flex flex-col gap-6'>
                 <TabContext value={activeTab}>
