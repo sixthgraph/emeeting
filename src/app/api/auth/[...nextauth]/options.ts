@@ -80,7 +80,7 @@ export const options: NextAuthOptions = {
   secret: 'xd9aV6GOOMOqEXMLReLl4hVu/U/4kmWTQq+FWUUyCIE=',
   pages: {
     signIn: `${process.env.NEXT_PUBLIC_APP_BASEPATH_URL}/en/login`,
-    error: `${process.env.NEXT_PUBLIC_APP_BASEPATH_URL}/en/error`
+    error: `/en/error`
   },
   providers: [
     Google({
