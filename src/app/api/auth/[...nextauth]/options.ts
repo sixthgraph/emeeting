@@ -15,8 +15,7 @@ const login = async (credentials: any) => {
   }
 
   try {
-    //const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, user)
-    const response = await axios.post(`https://routeflow.vercel.app/api/users/login`, user)
+    const response = await axios.post(`${process.env.API_URL}/users/login`, user) // const response = await axios.post(`http://localhost:3000/api/users/login`, user)
 
     if (response.data.success) {
       //console.log('Login success. ========> return : ', response.data)
@@ -77,8 +76,7 @@ async function refreshAccessToken(tokenObject: any, userEmail: any) {
 }
 
 export const options: NextAuthOptions = {
-  //secret: process.env.NEXTAUTH_SECRET,
-  secret: 'xd9aV6GOOMOqEXMLReLl4hVu/U/4kmWTQq+FWUUyCIE=',
+  secret: process.env.NEXTAUTH_SECRET, //secret: 'xd9aV6GOOMOqEXMLReLl4hVu/U/4kmWTQq+FWUUyCIE=',
   pages: {
     signIn: `${process.env.NEXT_PUBLIC_APP_BASEPATH_URL}/en/login`
   },
