@@ -5,6 +5,7 @@ import { headers } from 'next/headers'
 const getData = async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/todo/list`, {
+      method: 'GET',
       headers: headers()
     })
 
