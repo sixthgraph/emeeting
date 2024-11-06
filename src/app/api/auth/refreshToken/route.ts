@@ -15,7 +15,13 @@ export async function POST(req: NextRequest) {
       Expires: '0'
     }
 
+    console.log('refresh token to ====')
+    console.log(`${process.env.ROUTE_FLOW_API_URL}/refreshtoken`)
+
     const response = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/refreshtoken`, { email: email }, { headers })
+
+    console.log('refresh token response')
+    console.log(response)
 
     return NextResponse.json(response.data)
   } catch (error: any) {
