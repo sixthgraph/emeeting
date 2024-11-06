@@ -4,7 +4,7 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
 
-import { signOut, signIn } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 
 import axios from 'axios'
 
@@ -211,7 +211,7 @@ export const options: NextAuthOptions = {
       } else {
         console.log('refreshToken failed')
 
-        signIn()
+        //signIn()
 
         //return null
 
