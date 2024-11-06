@@ -9,6 +9,8 @@ import Facebook from 'next-auth/providers/facebook'
 
 import axios from 'axios'
 
+let today: any = new Date()
+
 const login = async (credentials: any) => {
   const user = {
     email: credentials.username,
@@ -59,11 +61,15 @@ const login = async (credentials: any) => {
 // }
 
 async function refreshAccessToken(tokenObject: any, userEmail: any) {
+  console.log('start refresh token')
+
   try {
     const tokenResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refreshToken`, {
       token: tokenObject,
       email: userEmail
     })
+
+    today = new Date()
 
     return {
       message: tokenResponse.data.message,
@@ -114,8 +120,8 @@ export const options: NextAuthOptions = {
           const result = await login(credentials)
           const user = result.data
 
-          console.log('api return after sigin')
-          console.log(result)
+          // console.log('api return after sigin')
+          // console.log(result)
 
           return user
         } catch (err) {
@@ -203,23 +209,62 @@ export const options: NextAuthOptions = {
         token.avatar = user.avatar
         token.dep = user.dep
         token.role = user.role
+        token.tokenExpire = today
       }
+
+      const expireTime: any = new Date(String(token.tokenExpire))
+
+      const diffMs = today - expireTime // milliseconds between now & Christmas
+
+      // const diffDays = Math.floor(diffMs / 86400000); // days
+
+      // const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+
+      const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000) // minutes
+
+      // console.log(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes")
+
+      console.log('NextAuth start refresh -----')
+      console.log(token.token)
+      console.log(expireTime)
+      console.log(today)
+      console.log('-------')
+
+      console.log('NextAuth compare expire time')
+      console.log(diffMins + ' minutes')
+
+      if (diffMins == 19 || diffMins > 19) {
+        const refreshTokenData = await refreshAccessToken(token.token, token.email)
+
+        if (refreshTokenData.message == 'success') {
+          token.token = refreshTokenData.token
+          token.tokenExpire = today
+        } else {
+          token.token = 'null'
+        }
+      }
+
+      /* // sg here
 
       const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
-      //if (refreshTokenData.message == 'success') {
+      if (refreshTokenData.message == 'success') {
       token.token = refreshTokenData.token
 
-      // } else {
-      //   token.token = 'null'
-      // }
+       } else {
+         token.token = 'null'
+       }
+         */
 
       return token
     },
     session: async ({ session, token }) => {
       if (token && token.firstname && token.token) {
+        const tExpire: any = token.tokenExpire
+
         session.user.name = token.name
         session.user.token = token.token
+        session.user.tokenExpire = tExpire
         session.user.avatar = token.avatar
         session.user.dep = token.dep
         session.user.role = token.role
