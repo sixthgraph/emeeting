@@ -4,7 +4,8 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
 
-import { signOut, signIn } from 'next-auth/react'
+// import { signOut, signIn } from 'next-auth/react'
+// import { signIn } from 'next-auth/react'
 
 import axios from 'axios'
 
@@ -70,7 +71,8 @@ async function refreshAccessToken(tokenObject: any, userEmail: any) {
     }
   } catch (error) {
     return {
-      message: 'refresh token error'
+      message: 'refresh token error',
+      token: 'null'
     }
   }
 }
@@ -203,31 +205,12 @@ export const options: NextAuthOptions = {
         token.role = user.role
       }
 
-      if (session) {
-        const refreshTokenData = await refreshAccessToken(token.token, token.email)
+      const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
-        if (refreshTokenData.message == 'success') {
-          // console.log('refreshToken success')
-          token.token = refreshTokenData.token
-        } else {
-          console.log('refreshToken failed')
-
-          signIn()
-
-          return null
-
-          // token.name = ''
-          // token.firstname = ''
-          // token.token = ''
-          // token.email = ''
-
-          //const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-          const logoutCognitoUrl = `${process.env.EXT_PUBLIC_APP_URL}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-
-          signOut({ redirect: false }).then(() => console.log('logoutCognitoUrl === ', logoutCognitoUrl))
-
-          return null
-        }
+      if (refreshTokenData.message == 'success') {
+        token.token = refreshTokenData.token
+      } else {
+        token.token = 'null'
       }
 
       return token

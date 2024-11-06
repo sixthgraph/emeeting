@@ -86,7 +86,7 @@ const handleGetUserInfo = async (token: any, email: any) => {
     if (response.statusText === 'OK') {
       return response.data
     } else {
-      return 'User not found'
+      return []
     }
   } catch (err) {
     console.log(err)

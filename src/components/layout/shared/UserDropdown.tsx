@@ -1,11 +1,11 @@
 'use client'
 
 // React Imports
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 
 // Next Imports
-import { redirect, useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 import { signOut, useSession } from 'next-auth/react'
 
@@ -58,9 +58,22 @@ const UserDropdown = () => {
     required: true,
     onUnauthenticated() {
       console.log('redirect to users/profile')
-      redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`
+
+      //redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`)
+      // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+      router.push(url)
     }
   })
+
+  useEffect(() => {
+    if (session?.user.token === 'null') {
+      signOut()
+    }
+  })
+
+  console.log('session')
+  console.log(session)
 
   const userData: any = session?.user
 
