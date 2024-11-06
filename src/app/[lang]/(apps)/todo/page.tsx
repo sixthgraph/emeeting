@@ -3,9 +3,11 @@ import { headers } from 'next/headers'
 // import TodoList from '@/views/apps/todo'
 
 const getData = async () => {
+  console.log('getData form todo page')
+  console.log(`${process.env.NEXT_PUBLIC_API_URL}/todo/list`)
+
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/todo/list`, {
-      method: 'GET',
       headers: headers()
     })
 
