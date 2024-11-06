@@ -203,45 +203,32 @@ export const options: NextAuthOptions = {
         token.role = user.role
       }
 
-      if (!session) {
-        console.log('session not found goto signIn')
+      if (session) {
+        const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
-        //signIn()
+        if (refreshTokenData.message == 'success') {
+          // console.log('refreshToken success')
+          token.token = refreshTokenData.token
+        } else {
+          console.log('refreshToken failed')
 
-        const logoutCognitoUrl = `${process.env.EXT_PUBLIC_APP_URL}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
+          signIn()
 
-        signOut({ redirect: false }).then(() => console.log('logoutCognitoUrl === ', logoutCognitoUrl))
+          return null
 
-        return null
+          // token.name = ''
+          // token.firstname = ''
+          // token.token = ''
+          // token.email = ''
+
+          //const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
+          const logoutCognitoUrl = `${process.env.EXT_PUBLIC_APP_URL}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
+
+          signOut({ redirect: false }).then(() => console.log('logoutCognitoUrl === ', logoutCognitoUrl))
+
+          return null
+        }
       }
-
-      const refreshTokenData = await refreshAccessToken(token.token, token.email)
-
-      if (refreshTokenData.message == 'success') {
-        // console.log('refreshToken success')
-        token.token = refreshTokenData.token
-      } else {
-        console.log('refreshToken failed')
-
-        signIn()
-
-        return null
-
-        // token.name = ''
-        // token.firstname = ''
-        // token.token = ''
-        // token.email = ''
-
-        //const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-        const logoutCognitoUrl = `${process.env.EXT_PUBLIC_APP_URL}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-
-        signOut({ redirect: false }).then(() => console.log('logoutCognitoUrl === ', logoutCognitoUrl))
-
-        // signOut({ redirect: false })
-        return null
-      }
-
-      //console.log('tokenB 5 ==== ', refreshTokenData)
 
       return token
     },
