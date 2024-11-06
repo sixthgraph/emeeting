@@ -205,7 +205,12 @@ export const options: NextAuthOptions = {
 
       if (!session) {
         console.log('session not found goto signIn')
-        signIn()
+
+        //signIn()
+
+        const logoutCognitoUrl = `${process.env.EXT_PUBLIC_APP_URL}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
+
+        signOut({ redirect: false }).then(() => console.log('logoutCognitoUrl === ', logoutCognitoUrl))
 
         return null
       }
