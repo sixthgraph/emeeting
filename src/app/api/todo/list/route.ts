@@ -5,9 +5,13 @@ import { getServerSession } from 'next-auth'
 import { options } from './../../auth/[...nextauth]/options'
 
 export async function GET() {
+  console.log('todo route start method GET')
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
   const email = serverSession?.user.email
+
+  console.log('token from todo route ====')
+  console.log(token)
 
   try {
     const headers = {
