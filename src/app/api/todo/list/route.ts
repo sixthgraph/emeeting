@@ -20,6 +20,7 @@ export async function GET() {
     }
 
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}`, {
+      method: 'GET',
       headers
     })
 
