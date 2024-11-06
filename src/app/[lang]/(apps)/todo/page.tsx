@@ -1,31 +1,36 @@
-import { headers } from 'next/headers'
+import { getServerSession } from 'next-auth'
 
-// import TodoList from '@/views/apps/todo'
+import { options } from '@/app/api/auth/[...nextauth]/options'
+import axios from '@/utils/axios'
 
-const getData = async () => {
-  console.log('getData form todo page')
-  console.log(`${process.env.NEXT_PUBLIC_API_URL}/todo/list`)
+import TodoList from '@/views/apps/todo'
+
+const getTodoData = async () => {
+  const session = await getServerSession(options)
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/todo/list`, {
-      headers: headers()
-    })
+    const reqBody = {
+      token: session?.user.token,
+      email: session?.user.email
+    }
 
-    const data = await res.json()
+    const headers = {
+      Authorization: `Bearer ${reqBody.token}`,
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0'
+    }
 
-    return data
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/todo/list`, reqBody, { headers })
+
+    return response.data
   } catch (err) {
     console.log(err)
   }
 }
 
 export default async function TodoListApp() {
-  const data = await getData()
+  const data = await getTodoData()
 
-  console.log('todo return')
-  console.log(data)
-
-  //return <TodoList todoData={data.todo} />
-
-  return 'todo page'
+  return <TodoList todoData={data} />
 }
