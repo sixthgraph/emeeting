@@ -34,6 +34,9 @@ const getMyActivityList = async (token: any, email: any) => {
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/myactivitylist`, reqBody, { headers })
 
+    console.log('myactivitylist return')
+    console.log(response.data)
+
     if (response.data.message === 'success') {
       return response.data
     } else {
