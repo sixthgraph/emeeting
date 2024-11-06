@@ -213,7 +213,7 @@ export const options: NextAuthOptions = {
 
         signIn()
 
-        return null
+        //return null
 
         // token.name = ''
         // token.firstname = ''
@@ -226,7 +226,7 @@ export const options: NextAuthOptions = {
         signOut({ redirect: false }).then(() => console.log('logoutCognitoUrl === ', logoutCognitoUrl))
 
         // signOut({ redirect: false })
-        return false
+        return null
       }
 
       //console.log('tokenB 5 ==== ', refreshTokenData)
