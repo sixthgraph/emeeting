@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 
-import TodoList from '@/views/apps/todo'
+// import TodoList from '@/views/apps/todo'
 
 const getData = async () => {
   try {
@@ -19,5 +19,10 @@ const getData = async () => {
 export default async function TodoListApp() {
   const data = await getData()
 
-  return <TodoList todoData={data.todo} />
+  console.log('todo return')
+  console.log(data)
+
+  //return <TodoList todoData={data.todo} />
+
+  return 'todo page'
 }
