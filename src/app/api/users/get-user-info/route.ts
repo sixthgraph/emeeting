@@ -17,8 +17,9 @@ export async function POST(req: NextRequest) {
     }
 
     const response = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getuserinfo?id=${email}`, { headers })
+    const userInfoData = response?.data.data.detail
 
-    return NextResponse.json(response.data.data.detail)
+    return NextResponse.json(userInfoData)
   } catch (error: any) {
     return NextResponse.json({ error: error.massage })
   }
