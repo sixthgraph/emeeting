@@ -4,7 +4,7 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
 
-import { signOut } from 'next-auth/react'
+import { signOut, signIn } from 'next-auth/react'
 
 import axios from 'axios'
 
@@ -203,6 +203,13 @@ export const options: NextAuthOptions = {
         token.role = user.role
       }
 
+      if (!session) {
+        console.log('session not found goto signIn')
+        signIn()
+
+        return null
+      }
+
       const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
       if (refreshTokenData.message == 'success') {
@@ -211,9 +218,9 @@ export const options: NextAuthOptions = {
       } else {
         console.log('refreshToken failed')
 
-        //signIn()
+        signIn()
 
-        //return null
+        return null
 
         // token.name = ''
         // token.firstname = ''
