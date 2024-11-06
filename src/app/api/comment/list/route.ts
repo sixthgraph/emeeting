@@ -1,34 +1,27 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-import { getServerSession } from 'next-auth'
-
-import { options } from '../../auth/[...nextauth]/options'
-
-export async function GET() {
-  const serverSession = await getServerSession(options)
-  const token = serverSession?.user.token
-  const email = serverSession?.user.email
+export async function POST(req: NextRequest) {
+  const reqBody = await req.json()
+  const { token, email } = reqBody
 
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
-      cache: 'no-store'
+      cache: 'force-cache'
     }
 
-    console.log()
-
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getmycomment?id=${email}`, {
-      headers
-    })
-
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getmycomment?id=${email}`, { headers })
     const commentData = await response.json()
 
-    const data = {
-      commentdata: commentData.data.detail
-    }
+    if (commentData.message === 'success') {
+      return NextResponse.json(commentData.data.detail)
+    } else {
+      const NotFoundData: any = []
 
-    return NextResponse.json(data)
-  } catch (error: any) {
-    return NextResponse.json({ error: error.massage })
+      return NextResponse.json(NotFoundData)
+    }
+  } catch (err: any) {
+    return NextResponse.json({ error: err.massage })
   }
 }
