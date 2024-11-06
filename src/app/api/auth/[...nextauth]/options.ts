@@ -207,11 +207,12 @@ export const options: NextAuthOptions = {
 
       const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
-      if (refreshTokenData.message == 'success') {
-        token.token = refreshTokenData.token
-      } else {
-        token.token = 'null'
-      }
+      //if (refreshTokenData.message == 'success') {
+      token.token = refreshTokenData.token
+
+      // } else {
+      //   token.token = 'null'
+      // }
 
       return token
     },
