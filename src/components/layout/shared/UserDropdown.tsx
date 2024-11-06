@@ -67,13 +67,12 @@ const UserDropdown = () => {
   })
 
   useEffect(() => {
+    console.log('user dropdown check session')
+
     if (session?.user.token === 'null') {
       signOut()
     }
-  })
-
-  console.log('session')
-  console.log(session)
+  }, [session?.user.token])
 
   const userData: any = session?.user
 
