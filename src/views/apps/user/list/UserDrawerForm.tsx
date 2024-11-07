@@ -116,12 +116,6 @@ const UserDrawerForm = ({
   const [errorDepartment, setErrorDepartment] = useState<boolean>(false)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  console.log('userlist lenght ----- ', userDepData.length)
-  console.log('userlist  ----- ', userDepData)
-
-  console.log('updateData ---')
-  console.log(updateData)
-
   //HOOK
   const {
     control,
@@ -255,8 +249,6 @@ const UserDrawerForm = ({
   }
 
   const updateUserList = async () => {
-    console.log('updateUserList start')
-
     try {
       const reqBody = { token: token }
 
@@ -280,7 +272,6 @@ const UserDrawerForm = ({
 
   const onSubmit = async () => {
     if (formData.dep.length == 0) {
-      console.log(formData)
       setErrorDepartment(true)
 
       return
@@ -289,11 +280,7 @@ const UserDrawerForm = ({
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, formData)
 
-      console.log('signup response===', response.data)
-
       if (response.data.success) {
-        console.log('signup success')
-
         if (tableData) {
           const updateData: any = {
             firstname: formData.firstname,
@@ -310,9 +297,6 @@ const UserDrawerForm = ({
 
         //sg call updateUserList and update tableData
         updateUserList()
-
-        // setData(tableData)
-
         handleClose()
       } else {
         console.log('register failed.')
@@ -382,8 +366,6 @@ const UserDrawerForm = ({
       if (response.data.success) {
         updateUserList()
         handleClose()
-      } else {
-        console.log('add users failed.')
       }
     } catch (error: any) {
       console.log('Add users failed. ', error.message)
@@ -418,14 +400,9 @@ const UserDrawerForm = ({
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/updateMany`, reqUpdateData)
 
-      console.log('Update many users response===', response.data)
-
       if (response.data.success) {
-        console.log('add users success')
         handleClose()
         updateUserList()
-      } else {
-        console.log('update users failed.')
       }
     } catch (error: any) {
       console.log('Update users failed. ', error.message)
@@ -437,7 +414,6 @@ const UserDrawerForm = ({
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, formData)
 
       if (response.data.message === 'success') {
-        console.log('Update user success.')
         handleClose()
         updateUserList()
       }

@@ -1,5 +1,3 @@
-// Next Imports
-
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
@@ -8,13 +6,6 @@ import axios from 'axios'
 export async function POST(req: NextRequest) {
   const reqBody = await req.json()
   const { wid, dep, token, email, wip } = reqBody
-
-  // console.log(workflowid)
-  // console.log(blockid)
-
-  // console.log('reqBody---')
-  // console.log(reqBody)
-  //let twid = '66ab566acaa7bbd88368defe'
 
   try {
     const headers = {
@@ -31,13 +22,6 @@ export async function POST(req: NextRequest) {
     const workinfo = res.data.data.detail
     const workinprocess = res.data.data.detail.workinprocess
 
-    console.log('workinfo 555')
-    console.log(res.data.data)
-
-    // console.log('--workinprocess 1---')
-    // console.log(workinprocess)
-
-    // console.log(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`)
     let commentdata
 
     try {
@@ -47,22 +31,14 @@ export async function POST(req: NextRequest) {
 
       commentdata = res_comment.data.data.detail
     } catch (err: any) {
-      console.log('catch error')
       console.log(err.message)
 
       commentdata = null
     }
 
-    console.log('***commentdata')
-    console.log(commentdata)
-
     if (!commentdata) {
       commentdata = null
     }
-
-    // const dataObj = workinprocess.filter((item: any) => {
-    //   return item.id === wip //'6699081a5848117c8af11a20'
-    // })
 
     const myworkinprocess = workinprocess.filter((item: any) => {
       return item.uid === email
@@ -75,17 +51,10 @@ export async function POST(req: NextRequest) {
 
     if (wip == '' || wip == null) {
       const curwip = workinprocess.filter((item: any) => {
-        //item.action == '', item.uid == email
         return item.action == ''
-
-        //return item
       })
 
-      console.log('---curwip 111--')
-      console.log(curwip.length)
-
       if (curwip.length == 0) {
-        //const condata = null
         const condataObj = ['null']
 
         const response2 = NextResponse.json({
@@ -97,9 +66,6 @@ export async function POST(req: NextRequest) {
           documentData: 'aaa',
           res_notification: null
         })
-
-        console.log('---response2')
-        console.log(response2)
 
         return response2
       } else {
@@ -117,25 +83,11 @@ export async function POST(req: NextRequest) {
           headers
         })
 
-        // const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/startpoint`, {
-        //   headers
-        // })
-
         const res_node = await axios.get(
           `${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/${workinfo.blockid}`,
           {
             headers
           }
-        )
-
-        // console.log(`${process.env.ROUTE_MANAGER_API_URL}/block/${curwip[0].rid}/${workinfo.blockid}`)
-        // console.log('res_node.data')
-        // console.log(res_node.data)
-
-        console.log('sg check getnextprecess url')
-        console.log(`${process.env.ROUTE_FLOW_API_URL}/notification/${curwip[0].rid}/${curwip[0].pid}`)
-        console.log(
-          `${process.env.ROUTE_FLOW_API_URL}/getnextprocess?workflowid=${curwip[0].rid}&blockid=${curwip[0].pid}&wid=${wid}`
         )
 
         try {
@@ -156,9 +108,6 @@ export async function POST(req: NextRequest) {
           let condata = resnp2.data.data
 
           const condataDetail = condata.detail
-
-          console.log('condataDetail 555')
-          console.log(condataDetail)
 
           let condataObj = []
 
@@ -218,7 +167,6 @@ export async function POST(req: NextRequest) {
       }
     }
   } catch (error: any) {
-    console.log('catch error')
     console.log(error.message)
 
     return NextResponse.json({ error: error.message }, { status: 500 })

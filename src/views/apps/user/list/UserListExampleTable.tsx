@@ -180,18 +180,12 @@ let initialData = {
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
 const UserListExampleTable = ({ tableData }: { tableData?: UsersTypeExample[] }) => {
-  // console.log('tableData=== ')
-  // console.log(tableData)
-
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
-
-  console.log('data tablefilter ===')
-  console.log(data)
 
   // Hooks
   const { lang: locale } = useParams()
@@ -214,17 +208,10 @@ const UserListExampleTable = ({ tableData }: { tableData?: UsersTypeExample[] })
   }
 
   const updateUserData = () => {
-    //const [updateData, setUpdateData] = useState<FormDataType>(initialData)
-
-    console.log('initialData ===')
-    console.log(initialData)
     setAddUserOpen(!addUserOpen)
   }
 
   const handleDeleteUser = async (email: object) => {
-    console.log('email ===')
-    console.log(email)
-
     try {
       const response = await axios.post('/api/apps/user-delete', email)
 

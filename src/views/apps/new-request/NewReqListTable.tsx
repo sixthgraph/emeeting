@@ -167,9 +167,6 @@ const NewReqListTable = ({ tableData }: Props) => {
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/eforms`, reqBody, { headers })
 
-      console.log('response.data --- ')
-      console.log(response.data)
-
       if (response.data.message === 'success') {
         return response.data
       } else {
@@ -182,8 +179,6 @@ const NewReqListTable = ({ tableData }: Props) => {
 
   const handleClickOpen = async (row: any) => {
     setOpen(true)
-    console.log('row')
-    console.log(row.original)
 
     const linkData = {
       routename: row.original.routename[0],
@@ -192,19 +187,7 @@ const NewReqListTable = ({ tableData }: Props) => {
       query: `dep=${row.original.basketid}&rid=${row.original.workflowid}&pid=${row.original.processid}&routename=${row.original.routename}`
     }
 
-    console.log('linkData')
-    console.log(linkData)
-
     setCreateLink(linkData)
-
-    console.log('createLink')
-    console.log(createLink)
-
-    // const newInitialData = { registerdep: '', Registerdep: userData?.dep[0].depid, Subject: '' }
-
-    // setFormData(newInitialData)
-
-    // userData?.dep && (formData.Registerdep = userData?.dep[0].depid)
   }
 
   const handleClose = () => {
@@ -214,7 +197,6 @@ const NewReqListTable = ({ tableData }: Props) => {
   }
 
   const onSubmit = async () => {
-    // const eformData = await getEdata(workData)
     const eformDataObj = await getEformData()
 
     const eformDataDetail = eformDataObj.data
@@ -245,23 +227,12 @@ const NewReqListTable = ({ tableData }: Props) => {
       Blockid: 'startpoint'
     }
 
-    // console.log('reqBody - data ===')
-    // console.log(data)
-
-    // return
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/create`, data)
 
       if (response.data.message === 'success') {
-        console.log('Create work success.')
         const wid = response.data.data
         const path = `${process.env.NEXT_PUBLIC_APP_BASEPATH_URL}/en/work?wid=${wid}&wip=&dep=${formData.Registerdep}&routename=${createLink.routename}&workflowid=${createLink.workflowid}`
-
-        console.log('wid')
-        console.log(wid)
-        console.log('path')
-        console.log(path)
 
         // redirect(path)
         window.location.href = path

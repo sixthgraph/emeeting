@@ -10,12 +10,8 @@ export async function POST(request: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 
-  console.log('server token ==', token)
-
   try {
     const reqBody = await request.json()
-
-    console.log('reqBody add ==== ', reqBody)
 
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createdeppositions`, reqBody, {
       headers: {
@@ -24,7 +20,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    //const res = await axios.post(`https://rd.infoma.net/routeflow-api/createusergroup`, reqBody)
     const group = res.data.data.detail
 
     const response = NextResponse.json({

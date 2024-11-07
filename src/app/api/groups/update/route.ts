@@ -10,9 +10,6 @@ export async function POST(req: NextRequest) {
   const token = serverSession?.user.token
   const reqBody = await req.json()
 
-  console.log('reqBody update=====')
-  console.log(reqBody)
-
   try {
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/updateusergroup`, {
       method: 'POST',
@@ -24,9 +21,6 @@ export async function POST(req: NextRequest) {
     })
 
     const data = await response.json()
-
-    console.log('server response')
-    console.log(data)
 
     return NextResponse.json(data)
   } catch (error: any) {

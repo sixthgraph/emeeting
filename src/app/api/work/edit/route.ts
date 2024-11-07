@@ -10,9 +10,6 @@ export async function POST(request: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 
-  console.log('server token === ')
-  console.log(token)
-
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -20,14 +17,8 @@ export async function POST(request: NextRequest) {
     }
 
     const reqBody = await request.json()
-
-    // console.log('edit work reqBody ===')
-    // console.log(reqBody)
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/updateworkinfo`, reqBody, { headers })
     const work = res.data.data.detail
-
-    // console.log('edit work response ===')
-    // console.log(res)
 
     const response = NextResponse.json({
       message: 'Edit work successful',

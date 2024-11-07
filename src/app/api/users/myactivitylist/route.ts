@@ -1,9 +1,5 @@
-// Next Imports
-
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-
-//import { headers } from 'next/headers';
 
 import axios from 'axios'
 
@@ -23,9 +19,6 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    console.log('myactivity list route return ======')
-    console.log(res.data)
-
     const myactivitydata = res?.data.data.detail
 
     const response2 = NextResponse.json({
@@ -36,7 +29,6 @@ export async function POST(req: NextRequest) {
 
     return response2
   } catch (error: any) {
-    console.log('catch error')
     console.log(error.message)
 
     return NextResponse.json({ error: error.message }, { status: 500 })

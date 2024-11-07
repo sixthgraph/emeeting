@@ -24,8 +24,6 @@ const getData = async () => {
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/my-request/list`, reqBody, { headers })
 
-    // console.log(response.data)
-
     return response.data
   } catch (err) {
     console.log(err)
@@ -34,9 +32,6 @@ const getData = async () => {
 
 const myRequestPage = async () => {
   const data = await getData()
-
-  // console.log('my-items data------')
-  // console.log(data.detail)
 
   return <MyrequestList myrequestData={data.detail}></MyrequestList>
 }

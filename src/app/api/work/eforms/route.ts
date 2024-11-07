@@ -1,5 +1,3 @@
-// Next Imports
-
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
@@ -21,32 +19,10 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    console.log('rid ===')
-    console.log(rid)
-
-    console.log('res === ')
-    console.log(res)
-
-    // const res_node = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/block/${rid}/startpoint`, {
-    //   headers
-    // })
-
-    // const res_doc = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/workflow/documents/${rid}`, {
-    //   headers
-    // })
-
-    // console.log('res_doc')
-    // console.log(res_doc.data)
-
-    //https://rd.excelink.co.th/routeflow-api/block/66826eb05aab127bc19d62ae/startpoint
-
     const response = NextResponse.json({
       message: 'success',
       success: true,
       data: res.data
-
-      // nodeData: res_node.data,
-      // docData: res_doc.data
     })
 
     return response

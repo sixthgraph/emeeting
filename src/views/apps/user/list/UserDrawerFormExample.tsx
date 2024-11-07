@@ -69,7 +69,7 @@ const UserDrawerFormExample = ({ open, updateData, handleClose }: Props) => {
     setFormData(initialData)
 
     try {
-      const response = await axios.post('/api/apps/signup', formData) //console.log('Add user success. ', response.data)
+      const response = await axios.post('/api/apps/signup', formData)
 
       router.push(`/${locale}/users`)
 
@@ -78,15 +78,6 @@ const UserDrawerFormExample = ({ open, updateData, handleClose }: Props) => {
         success: true,
         response
       })
-
-      /*
-      const savedUser = await axios.post('http://localhost:9995/register', formData)
-      return NextResponse.json({
-        message: 'User created successfully',
-        success: true,
-        savedUser
-      })
-      */
     } catch (error: any) {
       console.log('Add user failed. ', error.message)
     }
@@ -109,13 +100,8 @@ const UserDrawerFormExample = ({ open, updateData, handleClose }: Props) => {
   }
 
   const handleUpdateData = async () => {
-    console.log('handleUpdateData start === ')
-    console.log(formData)
-
     try {
       const response = await axios.post('/api/apps/user-update', formData)
-
-      console.log('Update user success. ', response.data)
 
       return NextResponse.json({
         message: 'User created successfully',
@@ -128,7 +114,6 @@ const UserDrawerFormExample = ({ open, updateData, handleClose }: Props) => {
   }
 
   useEffect(() => {
-    console.log('open = ', open)
     setFormData(updateData)
   }, [open, updateData])
 

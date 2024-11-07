@@ -1,8 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-// import jwt from 'jsonwebtoken'
-
 import axios from 'axios'
 import { getServerSession } from 'next-auth'
 
@@ -20,20 +18,8 @@ export async function POST(request: NextRequest) {
 
     const reqBody = await request.json()
 
-    //***body format****/
-    //   {
-    //     "casetype": "global",
-    //     "text": "direc 19 2024"
-    // }
-    //*************/
-
-    console.log('reqBody === ')
-    console.log(reqBody)
-
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/searchwork`, reqBody, { headers })
 
-    console.log('searchwork res ----')
-    console.log(res.data)
     const search_res = res.data
 
     if (search_res.message == 'success') {

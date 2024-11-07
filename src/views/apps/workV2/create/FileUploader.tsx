@@ -67,24 +67,7 @@ const FileUploader = ({
     }
   }
 
-  // const handleUploadFile_sg = async () => {
-  //   console.log('start handleUPloadFile')
-  //   console.log('files')
-  //   console.log(files)
-
-  //   // const res = await uploadAttachment(wid, email, dep, rid, pid, files)
-  //   const res = await uploadAttachment('wid', 'email', 'dep', 'rid', 'pid', files)
-
-  //   console.log('handleUploadFile return')
-
-  //   console.log(res)
-  // }
-
   const handleUploadFile = async () => {
-    console.log('--attmData--')
-    console.log(wid)
-    console.log(email)
-
     const headers = {
       Accept: '*/*',
       Authorization: `Bearer ${token}`
@@ -102,20 +85,16 @@ const FileUploader = ({
     form.append('filename', '')
     form.append('file', files[0])
 
-    console.log('----form body createattachment from client call------')
-    console.log(form)
-
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
         method: 'POST',
         body: form,
         headers: headers
-
-        // mode: 'no-cors'
       })
 
-      console.log('response createattachment from client call------')
-      console.log(response)
+      if (response) {
+        console.log('createattachment success')
+      }
 
       handleClose()
     } catch (error: any) {
@@ -130,72 +109,12 @@ const FileUploader = ({
     setFiles([...filtered])
   }
 
-  // const toBase64 = (file: File) => {
-  //   return new Promise((resolve, reject) => {
-  //     const fileReader = new FileReader()
-
-  //     fileReader.readAsDataURL(file)
-
-  //     fileReader.onload = () => {
-  //       resolve(fileReader.result)
-  //     }
-
-  //     fileReader.onerror = error => {
-  //       reject(error)
-  //     }
-  //   })
-  // }
-
-  // const handleSignPdf = async () => {
-  //   const form = new FormData()
-
-  //   const base64 = await toBase64(files[0] as File)
-
-  //   setBase64(base64 as string)
-
-  //   const reqBody: any = {
-  //     unsignedPdf: base64, //base64,
-  //     uid: 'chulapak',
-  //     pwd: 'infoma',
-  //     x0: '100',
-  //     y0: '100',
-  //     imageWidth: '100',
-  //     imageHeight: '70',
-  //     pageNumber: '0'
-  //   }
-  //   const headers = {
-  //     Accept: '*/*',
-  //     Authorization: `Bearer ${token}`
-  //   }
-
-  //   try {
-  //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/attachment/sign`, {
-  //       method: 'post',
-  //       headers: headers,
-  //       body: JSON.stringify(reqBody)
-  //     })
-
-  //     console.log('response attachment/sign ------')
-
-  //     const data = response
-
-  //     console.log('----- DATA -----')
-  //     console.log(data)
-  //   } catch (err: any) {
-  //     console.log('----- error -----')
-  //     console.log(err.message)
-  //   }
-  // }
-
   const handleEditFile = async () => {
-    console.log('--attmData--')
-
     const headers = {
       Accept: '*/*',
       Authorization: `Bearer ${token}`
     }
 
-    // console.log(attmData)
     const form = new FormData()
 
     form.append('wid', wid)
@@ -208,17 +127,6 @@ const FileUploader = ({
     form.append('action', '')
     form.append('file', files[0])
 
-    // const updateData: any = {
-    //   wid: wid,
-    //   uid: email,
-    //   dep: dep,
-    //   itemno: fileData.itemno,
-    //   file: files[0]
-    // }
-
-    console.log('----form body updateattachment from client call------')
-    console.log(form)
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_FLOW_API_URL}/updateattachment?wid=${wid}&uid=${email}&dep=${dep}&id=${fileData.itemno}`,
@@ -229,17 +137,10 @@ const FileUploader = ({
         }
       )
 
-      console.log('response updateattachment from client call------')
       const data = response.json()
 
-      console.log('----- DATA -----')
       console.log(data)
 
-      // const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/update`, form)
-
-      // if (response.data.message === 'success') {
-      //   console.log('Update user success.')
-      // }
       handleClose()
     } catch (error: any) {
       console.log('update from client call failed. ', error.message)

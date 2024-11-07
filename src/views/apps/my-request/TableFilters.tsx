@@ -46,9 +46,6 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: Myrequ
     }
   })
 
-  console.log('myDep')
-  console.log(myDep)
-
   tableData?.map(todo => {
     const haveRoute = myRoute.find((item: any) => {
       return item.workflowid == todo.workflowid

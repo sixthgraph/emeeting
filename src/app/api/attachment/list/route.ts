@@ -15,10 +15,6 @@ export async function POST(req: NextRequest) {
   try {
     const serverSession = await getServerSession(options)
     const token = serverSession?.user.token
-
-    console.log('server token2 ====')
-    console.log(token)
-
     const headers = { Authorization: `Bearer ${token}`, 'Cache-Control': 'no-cache', Pragma: 'no-cache', Expires: '0' }
 
     const res = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getattachment?wid=${wid}&id=${itemno}`, {
@@ -26,12 +22,6 @@ export async function POST(req: NextRequest) {
     })
 
     const getattm_res = res.data
-
-    console.log(wid)
-    console.log(itemno)
-
-    console.log('----- attm list-------------')
-    console.log(res.data.data)
 
     if (getattm_res.message == 'success') {
       const response = NextResponse.json({

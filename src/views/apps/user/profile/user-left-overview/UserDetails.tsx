@@ -91,7 +91,6 @@ const UserDetails = ({ userInfoData, myStatData }: { userInfoData?: any; myStatD
   })
 
   const handleOpenUploadAvatar = () => {
-    console.log('upload avatar')
     setOpen(true)
   }
 

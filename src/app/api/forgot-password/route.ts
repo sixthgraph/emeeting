@@ -9,16 +9,11 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json()
     const { email } = reqBody
 
-    console.log(reqBody)
-
     const reqData = {
       email: email
     }
 
     const mailresponse = await sendEmail(reqData, 'forgot-password')
-
-    console.log('mailresponse ===')
-    console.log(mailresponse)
 
     return NextResponse.json({
       message: 'User created successfully',

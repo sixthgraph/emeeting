@@ -32,8 +32,6 @@ const getData = async () => {
 const newRequestPage = async () => {
   const data = await getData()
 
-  //console.log(data)
-
   return <NewRequestList newRequestData={data} />
 }
 

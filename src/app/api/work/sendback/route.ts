@@ -1,8 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-// import jwt from 'jsonwebtoken'
-
 import axios from 'axios'
 
 import { getServerSession } from 'next-auth'
@@ -20,9 +18,6 @@ export async function POST(request: NextRequest) {
 
   try {
     const reqBody = await request.json()
-
-    console.log('sendback reqbody---')
-    console.log(reqBody)
 
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/sendback`, reqBody, { headers })
     const sent = res.data.data.detail

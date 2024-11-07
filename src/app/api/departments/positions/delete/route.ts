@@ -16,11 +16,6 @@ export async function POST(req: NextRequest) {
 
   const reqBody = await req.json()
 
-  console.log('reqBody ======')
-  console.log(reqBody)
-
-  //const { formData } = reqBody
-
   try {
     const response = await fetch(
       `${process.env.ROUTE_FLOW_API_URL}/deletedepposition?id=${reqBody.positioncode}&dep=${reqBody.dep}`,
@@ -34,9 +29,6 @@ export async function POST(req: NextRequest) {
     )
 
     const data = await response.json()
-
-    console.log('server response')
-    console.log(data)
 
     return NextResponse.json(data)
   } catch (error: any) {

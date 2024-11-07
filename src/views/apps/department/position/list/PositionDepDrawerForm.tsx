@@ -60,8 +60,7 @@ const PositionDepDrawerForm = ({
   const [formData, setFormData] = useState<PositionDepFormDataType>(initialData)
   const [positonName, setPositonName] = useState<string[]>([])
 
-  console.log('tableData === ')
-  console.log(tableData)
+  //TODO remove setData not use
   console.log('setData')
   console.log(setData)
 
@@ -87,9 +86,6 @@ const PositionDepDrawerForm = ({
     }
   }
 
-  console.log('positionData')
-  console.log(positionData)
-
   const havePosition = (pc: any) => {
     const result = tableData.find((item: any) => item.positioncode === pc)
 
@@ -104,24 +100,14 @@ const PositionDepDrawerForm = ({
     return true
   })
 
-  console.log('addPosObjData')
-  console.log(addPosObjData)
-
   useEffect(() => {
     setFormData(updateData)
     setPositonName([])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
-  console.log('updateData ===')
-  console.log(updateData)
-
   const handleChange = (event: SelectChangeEvent<string[]>) => {
-    console.log('event.target')
-    console.log(event.target)
     setPositonName(event.target.value as string[])
-    console.log('positonName')
-    console.log(positonName)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -141,19 +127,11 @@ const PositionDepDrawerForm = ({
       updatePosData.push(newData)
     }
 
-    console.log('updatePosData === ')
-    console.log(updatePosData)
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/positions/add`, updatePosData)
 
-      console.log('Add response===', response.data)
-
       if (response.data.success) {
-        console.log('Add success')
-
         handleClose()
-        console.log('Call updateDepPositionList')
         updateDepPositionList()
       } else {
         console.log('add failed.')
@@ -183,12 +161,7 @@ const PositionDepDrawerForm = ({
 
       const response = await axios.post('/api/departments/positions/update', newData)
 
-      console.log('position formdate=====')
-      console.log(formData)
-      console.log(response.data)
-
       if (response.data.message === 'success') {
-        console.log('Update position success.')
         handleClose()
         updateDepPositionList()
       }

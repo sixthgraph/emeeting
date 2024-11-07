@@ -9,7 +9,8 @@ import type { WorkinfoType } from '@/types/apps/workType'
 import ConnectionsTeams from './ConnectionsTeams'
 
 const ProfileTab = ({ data }: { data?: WorkinfoType }) => {
-  console.log(data?.documents)
+  //TODO remove data not use
+  console.log(data)
 
   return (
     <Grid container spacing={6}>

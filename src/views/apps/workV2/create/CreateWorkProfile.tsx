@@ -84,9 +84,6 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 }))
 
 const CreateWorkProfile = ({ workData }: { workData: any }) => {
-  console.log('CreateWorkProfile----')
-  console.log(workData)
-
   const initialData: any = {
     Registerdep: '',
     Subject: ''
@@ -175,28 +172,14 @@ const CreateWorkProfile = ({ workData }: { workData: any }) => {
       Blockid: 'startpoint'
     }
 
-    console.log('reqBody - data ===')
-    console.log(data)
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/create`, data)
 
       if (response.data.message === 'success') {
-        console.log('Create work success.')
-
         const wid = response.data.data
         const path = `${process.env.NEXT_PUBLIC_APP_URL}/en/work?wid=${wid}&wip=&dep=${formData.Registerdep}&routename=${routename}&workflowid=${routeId}`
 
-        console.log('wid')
-        console.log(wid)
-        console.log('path')
-        console.log(path)
-
-        // redirect(path)
-
         window.location.href = path
-
-        // navigate(path)
       }
     } catch (error: any) {
       console.log('Create work failed. ', error.message)

@@ -22,11 +22,6 @@ const TableFilters = ({
   depData?: DepartmentsType[]
 }) => {
   // States
-  //const [role, setRole] = useState<UsersType['role']>('')
-
-  //const [status, setStatus] = useState<UsersType['status']>('')
-
-  // console.log('tableData === >', tableData)
 
   const [statecode, setStatecode] = useState<DepartmentsType['statecode']>('')
   const [parent, setParent] = useState<DepartmentsType['parent']>('')

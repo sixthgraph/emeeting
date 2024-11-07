@@ -29,11 +29,6 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    console.log('res_doc')
-    console.log(res_doc.data)
-
-    //https://rd.excelink.co.th/routeflow-api/block/66826eb05aab127bc19d62ae/startpoint
-
     const response = NextResponse.json({
       message: 'success',
       success: true,

@@ -15,9 +15,6 @@ export async function POST() {
       cache: 'force-cache'
     }
 
-    console.log('url getmyitems------------')
-    console.log(`${process.env.ROUTE_FLOW_API_URL}/getmyitems?id=${email}`)
-
     const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getmyitems?id=${email}`, { headers })
     const depres = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
     const myitemData = await response.json()

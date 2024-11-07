@@ -9,9 +9,6 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json()
     const { fullName, company, role, username, password, country, contact, email, plan, status } = reqBody
 
-    //const savedUser = await axios.post('http://localhost:9995/register', reqBody)
-    // const savedUser = await axios.post('https://rd.excelink.co.th/routeflow-api-main/register', reqBody)
-
     //check if user already exits
     const user = await User.findOne({ email })
 
@@ -40,8 +37,6 @@ export async function POST(request: NextRequest) {
     })
 
     const savedUser = await newUser.save()
-
-    console.log(savedUser)
 
     return NextResponse.json({
       message: 'User created successfully',

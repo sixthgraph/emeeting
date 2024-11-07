@@ -53,7 +53,6 @@ const DocumentListTable = ({
   }
 
   const handleClose = () => {
-    console.log('handleClose start')
     handleCheckDocument()
     setOpen(false)
     setReqUploadOpen(false)
@@ -147,8 +146,6 @@ const DocumentListTable = ({
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/list`, reqBody)
 
       if (response.data.message === 'success') {
-        console.log(response.data.data)
-
         return response.data.data
       } else {
         console.error('File delete failed')
@@ -159,11 +156,7 @@ const DocumentListTable = ({
   }
 
   const handleOpenAttachment = async (wid: any, id: any) => {
-    console.log('handleOpenAttachment start')
-
     handleGetAttachData(wid, id).then(r => {
-      console.log('link to')
-      console.log(r.attachname)
       const attUrl = 'https://' + r.attachname
 
       openNewWindow(attUrl)
@@ -178,7 +171,7 @@ const DocumentListTable = ({
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attachment/delete`, reqBody)
 
       if (response.data.message === 'success') {
-        console.log(response.data.data.detail)
+        console.log('success')
       } else {
         console.error('File delete failed')
       }
@@ -193,9 +186,6 @@ const DocumentListTable = ({
     handleClose()
     setEditFile({})
   }
-
-  console.log('attachment sg --')
-  console.log(attachment)
 
   return (
     <>

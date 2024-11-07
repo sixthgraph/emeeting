@@ -20,7 +20,7 @@ const TableFilters = ({ setData, tableData }: { setData: any; tableData?: TodoTy
   const myRoute: any = []
   const myTask: any = []
 
-  console.log('myTask')
+  //TODO myTask
   console.log(myTask)
 
   useEffect(() => {

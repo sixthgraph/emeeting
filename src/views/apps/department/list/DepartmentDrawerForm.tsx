@@ -112,35 +112,12 @@ const DepartmentDrawerForm = ({
     setFormData(initialData)
 
     try {
-      console.log(formData.statecode)
       formData.create_by = String(emailData)
       formData.update_by = String(emailData)
 
-      // const parsedData = addDepartmentFormSchema.safeParse(formData)
-
-      // if (!parsedData.success) {
-      //   const errArr: any[] = []
-      //   const { errors: err } = parsedData.error
-
-      //   //sg here
-      //   for (let i = 0; i < err.length; i++) {
-      //     errArr.push({ for: err[i].path[0], message: err[i].message })
-      //     setErrors(errArr)
-      //   }
-
-      //   setErrors(errArr)
-
-      //   throw err
-      // }
-
-      // console.log('Form submitted successfully', parsedData.data)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/add`, formData)
 
-      console.log('add department response===', response.data)
-
       if (response.data.success) {
-        console.log('add department success')
-
         if (tableData) {
           const addData: any = {
             depname: formData.depname,
@@ -149,8 +126,6 @@ const DepartmentDrawerForm = ({
             path: formData.path,
             sort: formData.sort
           }
-
-          console.log(addData)
 
           tableData.push(addData)
         }
@@ -172,7 +147,6 @@ const DepartmentDrawerForm = ({
   }
 
   const handleInsertMany = async () => {
-    console.log('eiei')
     const insertObj = []
     const depnameStr = insertData.depname
     const re = /\n/gi
@@ -204,34 +178,10 @@ const DepartmentDrawerForm = ({
       } //if
     } //for
 
-    console.log('insertObj === ')
-    console.log(insertObj)
-
-    // return
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/addMany`, insertObj)
 
-      console.log('add department response===', response.data)
-
       if (response.data.success) {
-        console.log('add department success')
-
-        // if (tableData) {
-        //   const addData: any = {
-        //     depname: formData.depname,
-        //     statecode: formData.statecode,
-        //     docuname: formData.docuname,
-        //     path: formData.path,
-        //     sort: formData.sort
-        //   }
-
-        //   console.log(addData)
-
-        //   tableData.push(addData)
-        // }
-
-        // setData(tableData)
         handleClose()
         handleRefresh()
       } else {
@@ -244,13 +194,11 @@ const DepartmentDrawerForm = ({
 
   const handleUpdateData = async () => {
     try {
-      console.log('dep=>' + formData.dep)
       formData.update_by = String(emailData)
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/update`, formData)
 
       if (response.data.message === 'success') {
-        console.log('Update department success.')
         handleClose()
 
         const index = tableData?.findIndex(x => x.dep == formData.dep)
@@ -271,8 +219,6 @@ const DepartmentDrawerForm = ({
   }
 
   const handleUpdateManyData = async () => {
-    console.log('under construction...')
-
     const reqBody: any = {
       dep: [],
       path: formData.path
@@ -282,14 +228,10 @@ const DepartmentDrawerForm = ({
       reqBody.dep.push(elem.dep)
     }
 
-    console.log('reqBody')
-    console.log(reqBody)
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/updateMany`, reqBody)
 
       if (response.data.message === 'success') {
-        console.log('Update department success.')
         handleClose()
         updateDepartmentList()
       }
@@ -299,7 +241,6 @@ const DepartmentDrawerForm = ({
   }
 
   useEffect(() => {
-    console.log('useEffect start')
     setFormData(updateData)
 
     if (open) {

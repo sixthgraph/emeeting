@@ -10,14 +10,8 @@ export async function POST(request: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 
-  console.log('server token')
-  console.log(token)
-
   try {
     const reqBody = await request.json()
-
-    console.log('===createdepartment===')
-    console.log(reqBody)
 
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createdepartment`, reqBody, {
       headers: {

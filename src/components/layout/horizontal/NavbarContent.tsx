@@ -14,7 +14,7 @@ import LanguageDropdown from '@components/layout/shared/LanguageDropdown'
 import NotificationsDropdown from '@components/layout/shared/NotificationsDropdown'
 
 // Hook Imports
-// import useHorizontalNav from '@menu/hooks/useHorizontalNav'
+import useHorizontalNav from '@menu/hooks/useHorizontalNav'
 import type { NotificationsType } from '@components/layout/shared/NotificationsDropdown'
 
 // Util Imports
@@ -70,7 +70,7 @@ const notifications: NotificationsType[] = [
 
 const NavbarContent = () => {
   // Hooks
-  // const { isBreakpointReached } = useHorizontalNav()
+  const { isBreakpointReached } = useHorizontalNav()
 
   return (
     <div
@@ -79,8 +79,8 @@ const NavbarContent = () => {
       <div className='flex items-center gap-4'>
         <NavToggle />
         {/* Hide Logo on Smaller screens */}
-        {/* {!isBreakpointReached && <Logo />} */}
-        {<Logo />}
+        {!isBreakpointReached && <Logo />}
+        {/* {<Logo />} //sg here */}
       </div>
       <div className='flex items-center'>
         <ModeDropdown />

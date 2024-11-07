@@ -13,9 +13,6 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json()
 
-    console.log('===createuserinfos===')
-    console.log(reqBody)
-
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createusers`, reqBody, {
       headers: {
         Authorization: `Bearer ${token}`,

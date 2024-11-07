@@ -15,8 +15,6 @@ import { getServerSession } from 'next-auth'
 import { options } from '../../auth/[...nextauth]/options'
 
 export async function POST(request: NextRequest) {
-  console.log('start post ---')
-
   try {
     const serverSession = await getServerSession(options)
     const token = serverSession?.user.token
@@ -24,8 +22,6 @@ export async function POST(request: NextRequest) {
     const headers = {
       Accept: '*/*',
       Authorization: `Bearer ${token}`
-
-      // 'Content-Type': 'multipart/form-data'
     }
 
     const reqBody = await request.json()
@@ -35,21 +31,7 @@ export async function POST(request: NextRequest) {
     form.append('wid', reqBody.wid)
     form.append('id', reqBody.id)
     form.append('dep', reqBody.dep)
-
     form.append('file', '/Users/sixthgraph/Desktop/avatar.png')
-
-    // form.append('file', 'blob:http://localhost:3000/46f22899-7b07-492b-9f9c-a9666761deb1')
-
-    // //form.append('my_buffer', new Blob([1, 2, 3]))
-    // form.append('file', reqBody.file)
-
-    console.log('createattachment reqBody')
-
-    //console.log(`${process.env.ROUTE_FLOW_API_URL}/createattachment`)
-    console.log(form)
-    console.log(reqBody.file)
-
-    //const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createattachment`, form, { headers })
 
     const res = await fetch(`${process.env.ROUTE_FLOW_API_URL}/createattachment`, {
       method: 'POST',
@@ -58,13 +40,7 @@ export async function POST(request: NextRequest) {
     })
 
     const data = await res.json()
-
-    console.log(data)
-
     const attm = data
-
-    console.log('----res createattachment-----')
-    console.log(res)
 
     const response = NextResponse.json({
       message: data,
@@ -74,7 +50,6 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error: any) {
-    console.log('----error createattachment-----')
     console.log(error)
 
     return NextResponse.json({ error: error.message }, { status: 500 })

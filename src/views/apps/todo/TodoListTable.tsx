@@ -153,38 +153,12 @@ type Props = {
 }
 
 const TodoListTable = ({ tableData }: Props) => {
-  // States
-  //const [rowSelection, setRowSelection] = useState({})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[tableData])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  // console.log('tableData =====')
-  // console.log(tableData)
-  // console.log('depData 1 =====')
-  // console.log(depData)
-
   // Hooks
   const { lang: locale } = useParams()
-
-  // depData?.map(dep => {
-  //   const id = String(dep.dep)
-
-  //   depObj[id] = {
-  //     dep: String(dep.dep),
-  //     depname: String(dep.depname),
-  //     docuname: Number(dep.docuname),
-  //     path: String(dep.path),
-  //     sort: Number(dep.sort),
-  //     statecode: String(dep.statecode)
-  //   }
-  // })
-
-  // console.log('depObj==')
-  // console.log(depObj)
-
-  console.log('tableData === ')
-  console.log(tableData)
 
   const formatshortdate = (date: any) => {
     const m_th_names = [
@@ -222,17 +196,6 @@ const TodoListTable = ({ tableData }: Props) => {
   // Table Columns config
   const columns = useMemo<ColumnDef<TodoTypeWithAction, any>[]>(
     () => [
-      // {
-      //   id: 'select',
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler()
-      //       }}
-      //     />
-      //   ),
       columnHelper.accessor('viewstatus', {
         header: '',
         cell: ({ row }) => (

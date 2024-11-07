@@ -80,11 +80,7 @@ const ForgotPassword = ({ mode }: { mode: SystemMode }) => {
   const characterIllustration = useImageVariant(mode, lightIllustration, darkIllustration)
 
   const onSubmit = async () => {
-    console.log('submit start')
-
     try {
-      console.log(`${process.env.NEXT_PUBLIC_API_URL}/forgot-password`)
-      console.log(user)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/forgot-password`, user)
 
       console.log('Send email success. ', response.data)

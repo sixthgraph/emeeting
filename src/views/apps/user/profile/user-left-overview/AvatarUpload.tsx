@@ -10,16 +10,9 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import DialogActions from '@mui/material/DialogActions'
 
-// import axios from 'axios'
-
 // Third-party Imports
 import { useDropzone } from 'react-dropzone'
-
-//import { async } from '../../../../app/api/work/list/route'
-
 import { useSession } from 'next-auth/react'
-
-// import axios from '@/utils/axios'
 
 type FileProp = {
   name: string
@@ -72,9 +65,6 @@ const AvatarUploader = ({ handleClose }: { handleClose: () => void }) => {
     form.append('id', email)
     form.append('file', files[0])
 
-    console.log('----form body createattachment from client call------')
-    console.log(form)
-
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createavatar`, {
         method: 'POST',
@@ -82,8 +72,9 @@ const AvatarUploader = ({ handleClose }: { handleClose: () => void }) => {
         headers: headers
       })
 
-      console.log('response createavatar from client call------')
-      console.log(response)
+      if (response) {
+        console.log('createavatar success')
+      }
 
       handleClose()
     } catch (error: any) {

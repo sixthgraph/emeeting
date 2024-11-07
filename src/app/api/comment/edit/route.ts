@@ -1,8 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-// import jwt from 'jsonwebtoken'
-
 import axios from 'axios'
 import { getServerSession } from 'next-auth'
 
@@ -19,25 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const reqBody = await request.json()
-
-    //******/ reqBody format
-    // {
-    //   "wid": "66ab566acaa7bbd88368defe",
-    //   "message": "New Reply",
-    //   "file": "",
-    //   "location": "",
-    //   "level": 1,
-    //   "itemno": 2,
-    //   "reply_itemno": 1
-    // }
-
-    console.log('reqBody === ')
-    console.log(reqBody)
-
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/updatecomment`, reqBody, { headers })
-
-    console.log('updatecomment_response ----')
-    console.log(res.data)
     const update_res = res.data
 
     if (update_res.message == 'success') {

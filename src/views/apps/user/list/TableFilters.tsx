@@ -48,9 +48,6 @@ const TableFilters = ({ setData, tableData, depData }: { setData: any; tableData
     }
   }
 
-  console.log('positionData')
-  console.log(positionData)
-
   useEffect(() => {
     const filteredData = tableData?.filter((user: any) => {
       if (role && String(user.role) !== role) return false

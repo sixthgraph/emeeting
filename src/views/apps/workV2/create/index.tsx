@@ -1,23 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
-
 import { Grid } from '@mui/material'
 
 import CreateWorkProfile from './CreateWorkProfile'
 
 const WorkCreate = ({ data, nodeData, docData }: { data: any; nodeData: any; docData: any }) => {
-  console.log('nodeData')
+  //TODO remove nodeData and docData not use
   console.log(nodeData)
-  console.log('docData')
   console.log(docData)
-
-  useEffect(() => {
-    if (window) {
-      //window.sessionStorage.setItem('eformData', JSON.stringify(data))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <Grid container spacing={6}>

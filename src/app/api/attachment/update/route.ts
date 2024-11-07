@@ -9,18 +9,12 @@ export async function POST(req: NextRequest) {
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
   const reqBody = await req.json()
-
-  console.log('reqBody update=====')
-  console.log(reqBody)
-
   const today = new Date()
 
   const update: any = {
     uid: reqBody.uid,
     attachdate: today
   }
-
-  console.log(update)
 
   try {
     const response = await fetch(
@@ -36,9 +30,6 @@ export async function POST(req: NextRequest) {
     )
 
     const data = await response.json()
-
-    console.log('server response')
-    console.log(data)
 
     return NextResponse.json(data)
   } catch (error: any) {

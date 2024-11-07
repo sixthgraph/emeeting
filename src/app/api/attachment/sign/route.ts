@@ -30,18 +30,8 @@ export async function POST(request: NextRequest) {
     //***debug by ohm */
     reqBody.uid = 'nbtc123456'
     reqBody.pwd = 'Nbtc123456'
-
-    console.log('reqBody === ')
-    console.log(reqBody)
-
     const signuri = 'https://rd.excelink.co.th/SarabanSignPDF.rt5/service.asmx/addSignature'
-
-    //const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/createcomment`, reqBody, { headers })
-
     const urlencoded = new URLSearchParams()
-
-    //const form = new FormData()
-
     let base64: string
 
     base64 = reqBody.unsignedPdf
@@ -55,20 +45,6 @@ export async function POST(request: NextRequest) {
     urlencoded.append('imageHeight', reqBody.imageHeight)
     urlencoded.append('pageNumber', reqBody.pageNumber)
 
-    // const res = await fetch(signuri, {
-    //   method: 'POST',
-    //   body: urlencoded,
-    //   headers: headers,
-    //   redirect: 'follow'
-    // })
-
-    // const requestOptions = {
-    //   method: 'POST',
-    //   headers: headers,
-    //   body: urlencoded,
-    //   redirect: 'follow'
-    // }
-
     const res = await fetch(signuri, {
       method: 'POST',
       body: urlencoded,
@@ -79,19 +55,11 @@ export async function POST(request: NextRequest) {
         return response.text()
       })
       .then(function (data) {
-        console.log('this will be a string')
-        console.log(data) // this will be a string
-        // const parser = new DOMParser()
-        // const xmlDoc = parser.parseFromString(data, 'application/xml')
-
-        return data
+        return data //will be string
       })
       .catch(error => console.error(error))
 
     const create_res = await res
-
-    console.log('addsignature_res ----')
-    console.log(create_res)
 
     if (create_res) {
       const response = NextResponse.json({

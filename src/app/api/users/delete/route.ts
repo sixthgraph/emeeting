@@ -1,10 +1,5 @@
-// import type { NextRequest } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-
-//mport axios from 'axios'
-
-// import { headers } from 'next/headers'
 
 import { getServerSession } from 'next-auth'
 
@@ -25,9 +20,6 @@ export async function POST(req: NextRequest) {
     })
 
     const data = await response.json()
-
-    console.log('server response')
-    console.log(data)
 
     return NextResponse.json(data)
   } catch (error: any) {

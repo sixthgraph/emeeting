@@ -23,9 +23,6 @@ export async function POST(req: NextRequest) {
 
     const memberData = await response.json()
 
-    console.log('memberData route')
-    console.log(memberData)
-
     return NextResponse.json(memberData)
   } catch (error: any) {
     return NextResponse.json({ error: error.massage })

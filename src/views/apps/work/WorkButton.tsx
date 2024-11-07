@@ -17,9 +17,6 @@ const handleEditwork = async (workData: any, workflowid: any, blockid: any) => {
   workData.workflowid = workflowid
   workData.blockId = blockid
 
-  console.log('(workData) reqbody ===')
-  console.log(workData)
-
   try {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, workData)
 
@@ -34,11 +31,6 @@ const handleEditwork = async (workData: any, workflowid: any, blockid: any) => {
 }
 
 const WorkButton = async ({ workData, paramsData }: { workData: any; paramsData: any }) => {
-  console.log('footer work data===')
-  console.log(workData)
-  console.log('paramsData')
-  console.log(paramsData)
-
   const workflowid = paramsData.workflowid
   const blockid = paramsData.blockid
 

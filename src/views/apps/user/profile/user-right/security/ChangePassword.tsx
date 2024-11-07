@@ -84,11 +84,6 @@ const ChangePassword = () => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, userData)
 
       if (response.data.message === 'success') {
-        console.log('Update user success.')
-
-        //setOpenAlert(true)
-        //handleClose()
-        //updateUserList()
         setOpenAlert(true)
         setUserData(data)
         setConfirmPassword('')

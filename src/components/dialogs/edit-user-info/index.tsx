@@ -85,8 +85,6 @@ const EditUserInfo = ({ open, setOpen, data, handleGetUserInfo }: EditUserInfoPr
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, userData)
 
       if (response.data.message === 'success') {
-        console.log('Update user success.')
-
         setOpenAlert(true)
       }
     } catch (error: any) {

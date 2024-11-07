@@ -51,19 +51,11 @@ const WorkMessageV2 = ({
   commentdetailData?: any
   commentWorkData?: any
 }) => {
-  // const commentData = commentdetailData?.comment
-  // const chatmember = commentdetailData?.member
-  // console.log('chatMemberData')
-  // console.log(chatMemberData)
-
   let chatmember = []
 
   if (commentdetailData?.member) {
     chatmember = commentdetailData?.member
   }
-
-  // console.log('chatmember---')
-  // console.log(chatmember)
 
   const { data: session } = useSession()
   const router = useRouter()
@@ -163,9 +155,6 @@ const WorkMessageV2 = ({
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/get-user-list`, token, { headers })
 
-      console.log('response get user')
-      console.log(response.data)
-
       setUserList(response.data)
 
       return response.data
@@ -175,8 +164,6 @@ const WorkMessageV2 = ({
   }
 
   const handleClickOpenMember = async () => {
-    console.log('Open Member')
-
     if (userList == undefined) {
       getUserList().then(r => {
         for (const item of chatMemberData) {
@@ -208,7 +195,6 @@ const WorkMessageV2 = ({
   }
 
   const handleCloseMembers = () => {
-    console.log('Close Member')
     setmemberOpen(false)
   }
 
@@ -247,7 +233,6 @@ const WorkMessageV2 = ({
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/invite`, upudateNewUserList)
 
       if (response.data.message === 'success') {
-        console.log('Update user success.')
         setMembers(memberObj)
         handleReset()
       }
@@ -293,13 +278,10 @@ const WorkMessageV2 = ({
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, data)
 
       if (response.data.message === 'success') {
-        console.log('---Call reply comment success.------------------')
         setNewMessage(initialData)
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
-      } else {
-        console.log(response.data.message)
       }
     } catch (error: any) {
       console.log('add reply comment failed. ', error.message)
@@ -314,13 +296,11 @@ const WorkMessageV2 = ({
     let reply_itemno: any
 
     if (level == 0) {
-      console.log('reply first level')
       parent_itemno = itemno
       reply_itemno = 0
 
       // setReplyRef({ ...replyRef, parent_itemno: parent_itemno2 })
     } else {
-      console.log('reply second level')
       reply_itemno = itemno
 
       // parent_itemno = parentItemno
@@ -366,13 +346,10 @@ const WorkMessageV2 = ({
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, data)
 
       if (response.data.message === 'success') {
-        console.log('---Call add comment success.------------------')
         setNewMessage(initialData)
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
-      } else {
-        console.log(response.data.message)
       }
     } catch (error: any) {
       console.log('add new comment failed. ', error.message)

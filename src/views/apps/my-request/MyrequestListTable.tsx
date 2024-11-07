@@ -161,9 +161,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [trackingOpen, setTrackingOpen] = useState(false)
 
-  console.log('tableData =====')
-  console.log(tableData)
-
+  //TODO remove depData not use
   console.log('depData ===')
   console.log(depData)
 
@@ -199,8 +197,7 @@ const MyrequestListTable = ({ tableData, depData }: Props) => {
         throw new Error('Failed to fetch workdata')
       }
     } catch (err: any) {
-      console.log('--work/list response ---')
-      console.log(err)
+      console.log('--work/list response ---', err)
 
       throw new Error(err.message)
     }

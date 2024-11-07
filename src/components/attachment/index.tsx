@@ -20,9 +20,6 @@ export const getDocument = async (wid: any) => {
 
     let resData = response.data.data
 
-    console.log('getDocument return')
-    console.log(response)
-
     if (!resData) {
       resData = []
     }
@@ -34,8 +31,6 @@ export const getDocument = async (wid: any) => {
 }
 
 export const uploadAttachment = async (wid: any, email: any, dep: any, rid: any, pid: any, files: any) => {
-  console.log('uploadAttachment start')
-
   try {
     const serverSession = await getServerSession(options)
     const token = serverSession?.user.token
@@ -57,21 +52,13 @@ export const uploadAttachment = async (wid: any, email: any, dep: any, rid: any,
     form.append('refid', '')
     form.append('action', '')
     form.append('filename', '')
-
-    //form.append('my_buffer', new Blob([1, 2, 3]))
     form.append('file', files[0])
-
-    console.log('----form body createattachment from client call------')
-    console.log(form)
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
       method: 'POST',
       body: form,
       headers: headers
     })
-
-    console.log('response createattachment from client call------')
-    console.log(response)
 
     return response
   } catch (error: any) {

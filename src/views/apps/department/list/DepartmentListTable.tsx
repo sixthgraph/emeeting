@@ -198,10 +198,7 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
   }
 
   const updateDepartmentList = async () => {
-    console.log('updateDepartmentList start')
     setRowSelection({})
-    console.log('rowSelection')
-    console.log(rowSelection)
 
     try {
       const reqBody = { token: session?.user.token }
@@ -214,9 +211,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
       }
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/list`, reqBody, { headers })
-
-      console.log('response.data')
-      console.log(response.data)
 
       setData(response.data.data.detail)
     } catch (err) {
@@ -235,7 +229,6 @@ const DepartmentListTable = ({ tableData, stateinfoData }: Props) => {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/departments/delete`, dep)
 
         if (response.data.message === 'success') {
-          console.log(response.data.data.detail)
           handleCloseConfirm()
           updateDepartmentList()
         } else {

@@ -13,9 +13,6 @@ export async function POST(req: NextRequest) {
 
   queryData.Text = textStr
 
-  // console.log('queryData')
-  // console.log(queryData)
-
   try {
     const headers = {
       Authorization: `Bearer ${token}`,

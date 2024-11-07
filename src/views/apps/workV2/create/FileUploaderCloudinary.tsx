@@ -1,5 +1,5 @@
 // React Imports
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // MUI Imports
 import List from '@mui/material/List'
@@ -12,14 +12,6 @@ import Typography from '@mui/material/Typography'
 // Third-party Imports
 import { useDropzone } from 'react-dropzone'
 
-//import { async } from '../../../../app/api/work/list/route'
-
-import { useSession } from 'next-auth/react'
-
-// import axios from '@/utils/axios'
-
-//import axios from '@/utils/axios'
-
 type FileProp = {
   name: string
   type: string
@@ -27,32 +19,12 @@ type FileProp = {
 }
 
 const FileUploaderCloudinary = ({ attmData }: { attmData?: any }) => {
+  //TODO remove attmData not use
+  console.log('attmData')
+  console.log(attmData)
+
   // States
   const [files, setFiles] = useState<File[]>([])
-
-  const wid = attmData.wid
-  const email = attmData.email
-  const dep = attmData.dep
-
-  console.log(wid, email, dep)
-
-  const { data: session } = useSession()
-
-  const token = session?.user.token
-
-  console.log(token)
-
-  useEffect(() => {
-    console.log('files ----')
-    console.log(files)
-  }, [files])
-
-  // Hooks
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   onDrop: (acceptedFiles: File[]) => {
-  //     setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
-  //   }
-  // })
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[]) => {
@@ -84,9 +56,6 @@ const FileUploaderCloudinary = ({ attmData }: { attmData?: any }) => {
     formData.append('upload_preset', 'frendsbook')
 
     const URL: any = process.env.NEXT_PUBLIC_CLOUDINARY_URL
-
-    console.log('URL')
-    console.log(URL)
 
     const data = await fetch(URL, {
       method: 'POST',

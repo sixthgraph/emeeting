@@ -141,10 +141,7 @@ const Register = ({ mode }: { mode: SystemMode }) => {
         router.push(getLocalizedUrl(redirectURL, locale as Locale))
       }
     } catch (error: any) {
-      // console.log('error === ', error)
-
       if (error) {
-        //setErrorState(error.response.data)
         console.log(error.response.data.error)
         setSignupStatus(error.response.data.error)
       }

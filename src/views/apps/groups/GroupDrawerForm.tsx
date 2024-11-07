@@ -125,25 +125,9 @@ const GroupDrawerForm = ({ open, setData, updateData, userData, getGroupData, ha
   }
 
   const onSubmit = async () => {
-    /*===== remove this for enable require members ======*/
-    // if (formData.member.length == 0) {
-    //   console.log(formData)
-    //   setErrorMember(true)
-
-    //   return
-    // }
-
-    //   console.log(formData)
-    // }
-    /*===== remove this for enable require members ======*/
-
     // ADD
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/add`, formData)
-
-      console.log(formData)
-
-      console.log('Create response===', response.data)
 
       if (response.data.success) {
         // noon here
@@ -207,7 +191,6 @@ const GroupDrawerForm = ({ open, setData, updateData, userData, getGroupData, ha
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, newFormData)
 
       if (response.data.message === 'success') {
-        console.log('Update user success.')
         handleClose()
 
         const newData = await getGroupData()
@@ -262,11 +245,7 @@ const GroupDrawerForm = ({ open, setData, updateData, userData, getGroupData, ha
   }
 
   const handleAddMember = () => {
-    console.log('Add member edit')
     const newMember: any = userList
-
-    console.log('newMember')
-    console.log(newMember)
 
     for (const item of personName) {
       newMember.push(item)

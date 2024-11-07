@@ -26,8 +26,6 @@ const UserList = ({
   const { data: session, update } = useSession()
   const [tokenData, setTokenData] = useState(session?.user.token)
 
-  //console.log('tokenData === ', tokenData)
-
   async function updateSession() {
     await update({
       ...session,
@@ -44,7 +42,6 @@ const UserList = ({
   }, [tokenData])
 
   if (tokenData !== updateToken) {
-    console.log('update token')
     setTokenData(updateToken)
   }
 

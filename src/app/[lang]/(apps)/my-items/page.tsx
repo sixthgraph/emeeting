@@ -50,9 +50,6 @@ const myItemsPage = async ({ searchParams }: any) => {
   // }
 
   return <>{data}</>
-
-  // console.log('my-items data------')
-  // console.log(data)
 }
 
 export default myItemsPage

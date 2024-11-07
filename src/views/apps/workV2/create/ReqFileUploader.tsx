@@ -36,9 +36,6 @@ const ReqFileUploader = ({
   const { data: session } = useSession()
   const token = session?.user.token
 
-  console.log('reqDocData')
-  console.log(reqDocData)
-
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
     onDrop: (acceptedFiles: File[]) => {
@@ -52,9 +49,6 @@ const ReqFileUploader = ({
   })
 
   const renderFilePreview = (file: FileProp) => {
-    console.log('file')
-    console.log(file)
-
     if (file.type.startsWith('image')) {
       return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file as any)} />
     } else {
@@ -87,8 +81,9 @@ const ReqFileUploader = ({
         headers: headers
       })
 
-      console.log('response createattachment from client call------')
-      console.log(response)
+      if (response) {
+        console.log('createattachment success')
+      }
 
       handleClose()
     } catch (error: any) {

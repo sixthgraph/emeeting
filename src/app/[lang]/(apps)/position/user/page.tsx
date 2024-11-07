@@ -40,26 +40,12 @@ const getData = async ({ dep }: { dep?: any }) => {
 const userDepPage = async ({ searchParams }: any) => {
   const { dep } = searchParams
 
-  // dep = { dep: '66542134cf450c9ba79c2e23' }
   const data = await getData({ dep })
   const positionDepData = data.data.detail
   const positionData = data.data.positions
   const depData = data.data.departments
 
-  // console.log('data.data.deps===============')
-  // console.log(data.data.departments)
-  // console.log('end data.data.deps===============')
-
-  // console.log('positionDepData====')
-  // console.log(positionDepData)
-  return (
-    <PositionDepList positionDepData={positionDepData} positionData={positionData} depData={depData} />
-
-    // <>
-    //   <h1>user level list</h1>
-    //   department id : {dep}
-    // </>
-  )
+  return <PositionDepList positionDepData={positionDepData} positionData={positionData} depData={depData} />
 }
 
 export default userDepPage

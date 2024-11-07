@@ -193,9 +193,6 @@ const GroupListTable = ({ tableData, userData }: Props) => {
 
       let resData = response.data.data.detail
 
-      console.log('getDocument return')
-      console.log(resData)
-
       if (!resData) {
         resData = []
       }
@@ -207,13 +204,10 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   }
 
   const handleSubmitMember = async () => {
-    console.log('SubmitMember-start')
     const newMember: any = members
 
     for (const item of personName) {
-      //members.push(item)
       newMember.push(item)
-      console.log(newMember)
     }
 
     setMembers(newMember)
@@ -229,7 +223,6 @@ const GroupListTable = ({ tableData, userData }: Props) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, updateFormdata)
 
       if (response.data.message === 'success') {
-        console.log('Update user success.')
         setMembers(members)
         handleCloseMembers()
       }
@@ -241,14 +234,10 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   }
 
   const handleDeleteMember = async (email: any) => {
-    console.log(email)
-
     const updatedMembers = members.filter((newMember: any) => newMember !== email)
 
     if (updatedMembers.length !== members.length) {
       const members = updatedMembers
-
-      console.log('Updated Members ----- ', members)
 
       setMembers(members)
 
@@ -259,14 +248,10 @@ const GroupListTable = ({ tableData, userData }: Props) => {
         member: members
       }
 
-      console.log(updateFormdata)
-
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/groups/update`, updateFormdata)
 
         if (response.data.message === 'success') {
-          console.log('Update user success.')
-
           // handleReset()
         }
       } catch (error: any) {
@@ -280,11 +265,8 @@ const GroupListTable = ({ tableData, userData }: Props) => {
   useEffect(() => {}, [members])
 
   const handleClickOpenMember = async (groupid: object, member: any) => {
-    console.log('handleClickOpenMember')
     let i: any
     const elem: any = member
-
-    console.log(member)
 
     for (i in elem) {
       setMembers(elem[i])

@@ -1,15 +1,12 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-// import jwt from 'jsonwebtoken'
-
 import axios from 'axios'
 import { getServerSession } from 'next-auth'
 
 import { options } from '../../auth/[...nextauth]/options'
 
 export async function POST(request: NextRequest) {
-  console.log('start comment invite')
   const serverSession = await getServerSession(options)
   const token = serverSession?.user.token
 
@@ -20,25 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const reqBody = await request.json()
-
-    //***body format****/
-    // {
-    //   "wid": "66ab566acaa7bbd88368defe",
-    //   "email": [
-    //     "chulapak@excelink.co.th",
-    //     "webmaster@excelink.co.th"
-    //     ],
-    //   "invite_by": "supakorn@excelink.co.th"
-    // }
-    //*************/
-
-    console.log('reqBody === NOON')
-    console.log(reqBody)
-
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/invitecomment`, reqBody, { headers })
-
-    console.log('invite res ----')
-    console.log(res.data)
     const delete_res = res.data
 
     if (delete_res.message == 'success') {

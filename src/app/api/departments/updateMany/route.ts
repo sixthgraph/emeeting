@@ -13,9 +13,6 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json()
 
-    console.log('===update department reqbody===')
-    console.log(reqBody)
-
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/updatedepartments`, reqBody, {
       headers: {
         Authorization: `Bearer ${token}`,

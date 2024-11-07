@@ -224,11 +224,11 @@ export const options: NextAuthOptions = {
 
       // console.log(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes")
 
-      console.log('NextAuth start refresh -----')
-      console.log(token.token)
-      console.log(expireTime)
-      console.log(today)
-      console.log('-------')
+      // console.log('NextAuth start compare refresh -----')
+      // console.log(token.token)
+      // console.log(expireTime)
+      // console.log(today)
+      // console.log('-------')
 
       console.log('NextAuth compare expire time')
       console.log(diffMins + ' minutes')

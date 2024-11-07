@@ -1,8 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-// import jwt from 'jsonwebtoken'
-
 import axios from 'axios'
 import { getServerSession } from 'next-auth'
 
@@ -19,25 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const reqBody = await request.json()
-
-    //******/ delete comment
-    // {
-    //   "wid": "66ab566acaa7bbd88368defe",
-    //   "message": "",
-    //   "file": "",
-    //   "location": "",
-    //   "level": 1,
-    //   "itemno": 2,
-    //   "reply_itemno": 2
-    // }
-
-    console.log('reqBody === ')
-    console.log(reqBody)
-
     const res = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/deletecomment`, reqBody, { headers })
-
-    console.log('delete res ----')
-    console.log(res.data)
     const delete_res = res.data
 
     if (delete_res.message == 'success') {

@@ -84,6 +84,10 @@ const StateinfoDrawerForm = ({
   const { data: session } = useSession()
   const emailData = session?.user.email
 
+  //TODO remove setData and tableData not use
+  console.log(setData)
+  console.log(tableData)
+
   //HOOK
   const {
     control,
@@ -97,115 +101,6 @@ const StateinfoDrawerForm = ({
     }
   })
 
-  console.log('setData')
-  console.log(setData)
-  console.log('tableData')
-  console.log(tableData)
-
-  // const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-  //   try {
-  //     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, {
-  //       statecode: data.statecode,
-  //       desc: data.desc,
-  //       redirect: false
-  //     })
-
-  //     if (res && res.data.success) {
-  //       const redirectURL = searchParams.get('redirectTo') ?? '/stateinfo'
-
-  //       router.push(getLocalizedUrl(redirectURL, locale as Locale))
-  //     }
-  //   } catch (error: any) {
-  //     // console.log('error === ', error)
-
-  //     if (error) {
-  //       //setErrorState(error.response.data)
-  //       console.log(error.response.data.error)
-  //       setSignupStatus(error.response.data.error)
-  //     }
-  //   }
-  // }
-
-  // const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-
-  //   setFormData(initialData)
-
-  //   //Add
-  //   try {
-  //     formData.create_by = String(emailData)
-  //     formData.update_by = String(emailData)
-
-  //     //====const parsedData = StateinfoFormSchema.safeParse(formData)
-
-  //     // if (!parsedData.success) {
-  //     //   const errArr: any[] = []
-  //     //   const { errors: err } = parsedData.error
-
-  //     //   //sg here
-  //     //   for (let i = 0; i < err.length; i++) {
-  //     //     errArr.push({ for: err[i].path[0], message: err[i].message })
-  //     //     setErrors(errArr)
-  //     //   }
-
-  //     //   setErrors(errArr)
-
-  //     //   throw err
-  //     // }
-
-  //     // console.log('Form submitted successfully', parsedData.data)
-  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, formData)
-
-  //     console.log('Add response===', response.data)
-
-  //     if (response.data.success) {
-  //       console.log('Add success')
-
-  //       if (tableData) {
-  //         const addData: any = {
-  //           statecode: formData.statecode,
-  //           desc: formData.desc,
-  //           ref: formData.ref,
-  //           remark: formData.remark,
-  //           create_date: '',
-  //           create_by: emailData,
-  //           update_date: '',
-  //           update_by: emailData
-  //         }
-
-  //         console.log('add ====' + emailData)
-
-  //         console.log(addData)
-
-  //         //tableData.push(addData)
-  //         tableData.push(addData)
-  //       }
-
-  //       console.log(tableData)
-
-  //       setData(tableData)
-  //       handleClose()
-  //       handleRefresh()
-  //     } else {
-  //       console.log('add failed.')
-  //     }
-  //   } catch (error: any) {
-  //     console.log('Add stateinfo failed. ', error.message)
-  //   }
-  // }
-
-  // const {
-  //   control,
-  //   handleSubmit,
-  //   formState: { errors }
-  // } = useForm<FormData>({
-  //   resolver: valibotResolver(StateinfoFormSchema),
-  //   defaultValues: {
-  //     statecode: '',
-  //     desc: ''
-  //   }
-  // })
-
   const onSubmit = async () => {
     setFormData(initialData)
 
@@ -214,13 +109,9 @@ const StateinfoDrawerForm = ({
       formData.create_by = String(emailData)
       formData.update_by = String(emailData)
 
-      // console.log('Form submitted successfully', parsedData.data)
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/add`, formData)
 
-      console.log('Add response===', response.data)
-
       if (response.data.success) {
-        console.log('Add success')
         updateStateInfoList()
         handleClose()
       } else {
@@ -244,12 +135,7 @@ const StateinfoDrawerForm = ({
 
       const response = await axios.post('/api/stateinfos/update', formData)
 
-      console.log('stateinfo formdate=====')
-      console.log(formData)
-      console.log(response.data)
-
       if (response.data.message === 'success') {
-        console.log('Update stateinfo success.')
         updateStateInfoList()
         handleClose()
       }

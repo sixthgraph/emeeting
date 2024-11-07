@@ -130,13 +130,6 @@ type Props = {
 }
 
 const PositionDepListTable = ({ tableData, positionData, depData, depId }: Props) => {
-  console.log('tableData')
-  console.log(tableData)
-  console.log('depData')
-  console.log(depData)
-  console.log('dep')
-  console.log(depId)
-
   const router = useRouter()
   let depName = ''
 
@@ -221,8 +214,6 @@ const PositionDepListTable = ({ tableData, positionData, depData, depId }: Props
   const handleCloseConfirm = () => setConfirm(false)
 
   const updateDepPositionList = async () => {
-    console.log('updateDepPositionList start')
-
     try {
       const reqBody = {
         dep: depId,

@@ -96,10 +96,6 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
   }, [open])
 
   const getData = async ({ wid }: { wid?: any }) => {
-    console.log('getData start')
-    console.log('wid')
-    console.log(wid)
-
     try {
       const reqBody = {
         wid: wid,
@@ -117,19 +113,11 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
 
       const data = response.data
 
-      console.log('response')
-      console.log(response)
-
-      console.log('data')
-      console.log(data)
-
       setWorkData(data[0].workInfo)
 
       const dataObj = []
 
       for (const item of data) {
-        console.log(item.comment)
-        console.log(item.member)
         setCommentList(item.comment)
         setMemberList(item.member)
 
@@ -146,43 +134,18 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
     }
   }
 
-  console.log('commentList')
-  console.log(commentList)
-
   const handleReset = () => {
     handleClose() //setFormData(initialData)
   }
 
   const handleCloseMembers = () => {
-    console.log('Close Member')
     setmemberOpen(false)
-
-    // setmemberOpen(false)
   }
 
   const handleSubmitMember = async () => {
-    console.log('Submit Member')
-
-    //***body format****/
-    // {
-    //   "wid": "66ab566acaa7bbd88368defe",
-    //   "email": [
-    //     "chulapak@excelink.co.th",
-    //     "webmaster@excelink.co.th"
-    //     ],
-    //   "invite_by": "supakorn@excelink.co.th"
-    // }
-    //*************/
-
-    const newuserlist = personName
-
-    console.log(newuserlist)
-
     for (const item of personName) {
       members.push(item)
     }
-
-    console.log(members)
 
     const upudateNewUserList: any = {
       wid: workData?.wid,
@@ -190,13 +153,10 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
       invite_by: email
     }
 
-    console.log(upudateNewUserList)
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/invite`, upudateNewUserList)
 
       if (response.data.message === 'success') {
-        console.log('Update user success.')
         setMembers(members)
         handleReset()
       }
@@ -232,9 +192,6 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/get-user-list`, token, { headers })
 
-      console.log('response get user')
-      console.log(response.data)
-
       setUserList(response.data)
 
       //const userListObject = response.data
@@ -244,9 +201,6 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
       for (const item of response.data) {
         userListObj.push(item)
       }
-
-      console.log('userListObj')
-      console.log(userListObj)
     } catch (err) {
       console.log(err)
     }
@@ -260,16 +214,12 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
     let reply_itemno: any
 
     if (level == 0) {
-      console.log('reply first level')
       parent_itemno = itemno
       reply_itemno = 0
 
       // setReplyRef({ ...replyRef, parent_itemno: parent_itemno2 })
     } else {
-      console.log('reply second level')
       reply_itemno = itemno
-
-      // parent_itemno = parentItemno
     }
 
     itemsRef?.current?.focus()
@@ -282,21 +232,11 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
       level: 1,
       registeruid: ''
     }) //sg bug here
-
-    console.log('handleOpenReply set newMessage to')
-    console.log(newMessage)
   }
 
   const handleClickOpenMember = async () => {
-    console.log('Open Member')
-    console.log(userList)
-
     if (userList == undefined) {
-      console.log('start get user')
       getUserList()
-
-      console.log('userList if')
-      console.log(userList)
     } else {
       interface User {
         email: string
@@ -305,17 +245,10 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
       const chatMemberEmails = new Set(memberList.map(({ email }: User) => email))
 
       const result = userList.filter(function (this: Set<string>, { email }: User) {
-        console.log('email')
-        console.log(email)
-        console.log(!this.has(email))
-
         return !this.has(email)
       }, chatMemberEmails)
 
       setUserList(result)
-
-      console.log('userList else')
-      console.log(userList)
     }
 
     setmemberOpen(true)
@@ -344,22 +277,14 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
   }
 
   const handleSendMessage = async () => {
-    console.log('newMessage')
-    console.log(newMessage)
-
-    //return
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, newMessage)
 
       if (response.data.message === 'success') {
-        console.log('---Call add comment success.------------------')
         setNewMessage(initialData)
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
-      } else {
-        console.log(response.data.message)
       }
     } catch (error: any) {
       console.log('add new comment failed. ', error.message)
@@ -371,13 +296,10 @@ const CommentDrawer = ({ wid, open, handleClose }: { wid?: any; open: boolean; h
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comment/add`, newMessage)
 
       if (response.data.message === 'success') {
-        console.log('---Call reply comment success.------------------')
         setNewMessage(initialData)
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
-      } else {
-        console.log(response.data.message)
       }
     } catch (error: any) {
       console.log('add reply comment failed. ', error.message)

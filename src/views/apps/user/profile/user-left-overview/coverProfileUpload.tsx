@@ -72,9 +72,6 @@ const CoverProfileUploader = ({ handleClose }: { handleClose: () => void }) => {
     form.append('id', email)
     form.append('file', files[0])
 
-    console.log('----form body createattachment from client call------')
-    console.log(form)
-
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createcoverprofile`, {
         method: 'POST',
@@ -82,12 +79,13 @@ const CoverProfileUploader = ({ handleClose }: { handleClose: () => void }) => {
         headers: headers
       })
 
-      console.log('response createcoverprofile from client call------')
-      console.log(response)
+      if (response) {
+        console.log('createcoverprofile success')
+      }
 
       handleClose()
     } catch (error: any) {
-      console.log('createavatar from client call failed. ', error.message)
+      console.log('create cover profile from client call failed. ', error.message)
     }
   }
 

@@ -110,12 +110,9 @@ const MyRouteListTable = ({ routeData }: Props) => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      console.log('redirect to users/profile')
       redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
     }
   })
-
-  console.log(session?.user.email)
 
   const email = session?.user.email
 

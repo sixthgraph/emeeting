@@ -57,7 +57,6 @@ const UserDropdown = () => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      console.log('redirect to users/profile')
       const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`
 
       //redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`)
@@ -67,8 +66,6 @@ const UserDropdown = () => {
   })
 
   useEffect(() => {
-    console.log('user dropdown check session')
-
     if (session?.user.token === 'null') {
       signOut()
     }
@@ -87,8 +84,6 @@ const UserDropdown = () => {
 
     function onConnect() {
       setIsConnected('var(--mui-palette-success-main)')
-      console.log(userEmail)
-
       socket.emit('join-email', userEmail)
     }
   }, [userEmail])

@@ -108,15 +108,9 @@ const DebouncedInput = ({
 const columnHelper = createColumnHelper<MyAppTypeWithAction>()
 
 const MyAppListTable = (tableData: any) => {
-  // console.log('tableData')
-  // console.log(tableData?.tableData.data)
-  // const [data, setData] = useState(...[tableData?.tableData.data])
-
   const data = tableData?.tableData.data
   const [globalFilter, setGlobalFilter] = useState('')
   const { lang: locale } = useParams()
-
-  console.log(data)
 
   const formatshortdate = (date: any) => {
     const m_th_names = [

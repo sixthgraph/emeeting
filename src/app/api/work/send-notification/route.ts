@@ -16,13 +16,7 @@ export async function POST(request: NextRequest) {
       message: message
     }
 
-    console.log('--reqData--')
-    console.log(reqData)
-
     const mailResponse = await sendEmail(reqData, 'send-notification')
-
-    console.log('mailResponse notification ---- ')
-    console.log(mailResponse)
 
     const response = NextResponse.json({
       message: 'success',
@@ -32,8 +26,7 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error: any) {
-    console.log('----res send-----')
-    console.log(error.message)
+    console.log('----res send-----', error.message)
 
     return NextResponse.json({ error: error.message }, { status: 500 })
   }

@@ -89,9 +89,6 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/get-user-info`, reqBody)
 
-      // console.log('handleGetUserInfo return')
-      // console.log(response.data)
-
       return response.data
     } catch (err) {
       console.log(err)
@@ -99,13 +96,11 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
   }
 
   const handleOpenUploadAvatar = () => {
-    console.log('upload avatar')
     setUploadMode('avatar')
     setOpen(true)
   }
 
   const handleOpenUploadCover = () => {
-    console.log('upload cover')
     setUploadMode('cover')
     setOpen(true)
   }
@@ -113,8 +108,6 @@ const UserProfileHeader = ({ userData }: { userData?: any }) => {
   const handleClose = () => {
     setOpen(false)
     handleGetUserInfo().then(r => {
-      console.log('r')
-      console.log(r)
       setData(r)
     })
     setUploadMode('')

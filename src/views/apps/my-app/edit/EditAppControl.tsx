@@ -16,9 +16,6 @@ const EditAppControl = (appData: any) => {
   const workFlowData = appData?.appData.data
   const routeName = workFlowData[0].name
 
-  console.log('workFlowData')
-  console.log(workFlowData)
-
   return (
     <Card>
       <CardHeader title={routeName} />
@@ -56,7 +53,6 @@ const EditAppControl = (appData: any) => {
         src={`${basepath}/script/test-render.js`}
         strategy='lazyOnload'
         onReady={() => {
-          console.log('route render has loaded')
           routeRender(workFlowData)
         }}
       />

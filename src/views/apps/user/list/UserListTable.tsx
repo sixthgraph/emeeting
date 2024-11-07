@@ -184,7 +184,6 @@ type Props = {
 }
 
 const UserListTable = ({ tableData, roleData, depData }: Props) => {
-  //console.log('depData === ', depData)
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [openMode, setOpenMode] = useState('add') // insert-one || update-one || insert-many || update-many
@@ -267,10 +266,7 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
   }
 
   const updateUserList = async () => {
-    console.log('updateUserList start')
     setRowSelection({})
-    console.log('rowSelection')
-    console.log(rowSelection)
 
     try {
       const reqBody = { token: token }
@@ -300,7 +296,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/delete`, email)
 
       if (response.data.message === 'success') {
-        console.log(response.data.data.detail)
         handleCloseConfirm()
 
         //window.location.reload()
@@ -326,7 +321,6 @@ const UserListTable = ({ tableData, roleData, depData }: Props) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/deleteMany`, reqBody)
 
       if (response.data.message === 'success') {
-        console.log(response.data.data.detail)
         handleCloseConfirm()
         updateUserList()
       } else {

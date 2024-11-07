@@ -17,9 +17,6 @@ export async function POST(req: NextRequest) {
 
     const response = await axios.post(`${process.env.ROUTE_FLOW_API_URL}/refreshtoken`, { email: email }, { headers })
 
-    console.log('refresh token response =====')
-    console.log(response)
-
     return NextResponse.json(response.data)
   } catch (error: any) {
     return NextResponse.json({ error: error.massage })

@@ -21,8 +21,6 @@ const CommentDrawer_v2 = ({ wid, open, handleClose }: { wid?: any; open: boolean
   }, [open])
 
   const getData = async ({ wid }: { wid?: any }) => {
-    console.log('getData start')
-
     try {
       const reqBody = {
         wid: wid,

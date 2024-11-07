@@ -51,9 +51,6 @@ export const formRender = (dataObj: string) => {
         }
       })
 
-      console.log('check.length')
-      console.log(check.length)
-
       if (check.length == 0) {
         const newData = {
           id: id,
@@ -69,9 +66,6 @@ export const formRender = (dataObj: string) => {
           }
         })
       }
-
-      console.log('eddata ===')
-      console.log(eddata)
     })
   }
 }

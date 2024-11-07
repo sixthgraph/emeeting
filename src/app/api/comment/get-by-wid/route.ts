@@ -21,20 +21,11 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    console.log('resWorkData.data')
-    console.log(resWorkData.data.data.detail)
-
     const resComment = await axios.get(`${process.env.ROUTE_FLOW_API_URL}/getcomment?wid=${wid}`, {
       headers
     })
 
-    console.log('resComment comment')
-    console.log(resComment.data.data.detail)
     const data: any = [resComment.data.data.detail]
-
-    console.log('data === ')
-    console.log(data)
-
     const workData = resWorkData.data.data.detail
 
     const workDataObj = {
@@ -45,8 +36,6 @@ export async function POST(req: NextRequest) {
     }
 
     const resObj: any = []
-
-    //resObj.workInfo = workDataObj
 
     if (data[0] !== null) {
       for (const item of data) {
@@ -62,16 +51,8 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    //return response.data.data.detail
-
-    //resObj[0].workInfo = workDataObj
-
-    console.log('resObj ===')
-    console.log(resObj)
-
     return NextResponse.json(resObj)
   } catch (error: any) {
-    console.log('catch error')
     console.log(error.message)
 
     return NextResponse.json({ error: error.message }, { status: 500 })

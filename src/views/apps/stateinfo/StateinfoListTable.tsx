@@ -132,10 +132,6 @@ const StateinfoListTable = ({ tableData }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
-  console.log('tabledata =', tableData)
-
-  //console.log('data =', data)
-
   const stateinfoDrawerOpenHandle = () => {
     initialData = {
       statecode: '',
@@ -196,9 +192,6 @@ const StateinfoListTable = ({ tableData }: Props) => {
     if (maxState < 99) maxStateStr = '0' + String(maxState)
     setCurMaxState(maxStateStr)
 
-    console.log('maxStateStr')
-    console.log(curMaxState)
-
     return maxState
   }
 
@@ -207,8 +200,6 @@ const StateinfoListTable = ({ tableData }: Props) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/stateinfos/delete`, statecode)
 
       if (response.data.message === 'success') {
-        console.log('=====stateinfo')
-        console.log(response.data)
         updateStateInfoList()
       } else {
         console.error('Stateinfo delete failed')

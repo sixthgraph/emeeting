@@ -139,18 +139,8 @@ const UserViewTab = async () => {
   const myactivitydata = await getMyActivityList()
   const myRouteList = await getMyRouteList()
   const myStat = await handleGetUserStat()
-
   const activityData = myactivitydata?.data
   const myRouteListData = myRouteList?.data
-
-  // console.log('---myactivitydata')
-  // console.log(myactivitydata)
-
-  // console.log('---myRouteListData')
-  // console.log(myRouteListData)
-
-  // console.log('-- myStat')
-  // console.log(myStat)
 
   return (
     <Grid container spacing={6}>

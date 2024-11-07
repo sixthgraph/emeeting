@@ -8,8 +8,8 @@ import type { WorkinfoType } from '@/types/apps/workType'
 import ActivityTimeline from './ActivityTimeline'
 
 const ActivityTab = ({ data }: { data?: WorkinfoType }) => {
-  //console.log(data)
-  console.log(data?.Activities)
+  //TODO remove data not use
+  console.log(data)
 
   return (
     <Grid container spacing={6}>

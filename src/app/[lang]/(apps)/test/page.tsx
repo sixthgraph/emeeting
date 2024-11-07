@@ -26,9 +26,6 @@ const getData = async () => {
 export default async function Page() {
   const users = await getData()
 
-  console.log('Users list ====')
-  console.log(users)
-
   return (
     <div>
       <h1>Test call Routeflow-api with AXIOS</h1>

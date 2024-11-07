@@ -93,15 +93,15 @@ const PositionDrawerForm = ({
     }
   })
 
+  //TODO remove setData not use
   console.log('setData')
   console.log(setData)
+
+  //TODO remove tableData not use
   console.log('tableData')
   console.log(tableData)
 
   const handleInsertMany = async () => {
-    console.log('insertData == ')
-    console.log(insertData)
-
     const insertObj = []
     const depnameStr = insertData.desc
     const re = /\n/gi
@@ -139,16 +139,12 @@ const PositionDrawerForm = ({
       } //if
     } //for
 
-    console.log('insertObj === ')
-    console.log(insertObj)
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/addMany`, insertObj)
 
       console.log('Add response===', response.data)
 
       if (response.data.success) {
-        console.log('Add success')
         updatePositionList()
         handleClose()
       } else {
@@ -173,10 +169,7 @@ const PositionDrawerForm = ({
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/add`, formData)
 
-      console.log('Add response===', response.data)
-
       if (response.data.success) {
-        console.log('Add success')
         setFormData(initialData)
         updatePositionList()
         handleClose()
@@ -205,13 +198,7 @@ const PositionDrawerForm = ({
 
       const response = await axios.post('/api/positions/update', formData)
 
-      console.log('position formdate=====')
-      console.log(formData)
-      console.log('response.data update one')
-      console.log(response.data)
-
       if (response.data.message === 'success') {
-        console.log('Update position success.')
         updatePositionList()
         handleClose()
       }

@@ -69,12 +69,8 @@ const AccordionDetails = styled(MuiAccordionDetails)<AccordionDetailsProps>(({ t
 import type { WorkinfoType } from '@/types/apps/workType'
 
 const EformList = ({ data }: { data?: WorkinfoType }) => {
-  console.log('data eform list')
-  console.log(data?.EFORMS)
-
-  // useEffect(() => {
-  //   console.log($('#input').val())
-  // })
+  //TODO remove data not use
+  console.log(data)
 
   // States
   const [expanded, setExpanded] = useState<string | false>('panel1')

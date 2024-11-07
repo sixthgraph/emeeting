@@ -205,7 +205,6 @@ const PositionListTable = ({ tableData }: Props) => {
     let newTableData: any = []
 
     newTableData = data
-    console.log('getMaxPositionCode start')
 
     let maxValue = 0
     const values = Object.values(newTableData)
@@ -215,8 +214,6 @@ const PositionListTable = ({ tableData }: Props) => {
 
       maxValue = Math.max(maxValue, valueFromObject)
     })
-    console.log('maxValue')
-    console.log(maxValue)
 
     let maxPosition: any = maxValue
     let maxPositionStr: any = ''
@@ -278,8 +275,6 @@ const PositionListTable = ({ tableData }: Props) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/positions/delete`, positioncode)
 
       if (response.data.message === 'success') {
-        console.log('=====positioninfo')
-        console.log(response.data)
         handleCloseConfirm()
         updatePositionList()
       } else {
