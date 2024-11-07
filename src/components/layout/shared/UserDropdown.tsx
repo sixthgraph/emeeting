@@ -78,7 +78,10 @@ const UserDropdown = () => {
   const userEmail: any = session?.user.email
 
   useEffect(() => {
+    console.log('try connect to socket')
+
     if (socket.connected) {
+      console.log('socket connected')
       onConnect()
     }
 
