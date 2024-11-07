@@ -23,7 +23,10 @@ export async function POST(req: NextRequest) {
       headers
     })
 
-    const myactivitydata = res.data.data.detail
+    console.log('myactivity list route return ======')
+    console.log(res.data)
+
+    const myactivitydata = res?.data.data.detail
 
     const response2 = NextResponse.json({
       message: res.data.message,

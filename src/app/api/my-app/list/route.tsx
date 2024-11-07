@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-import { getServerSession } from 'next-auth'
-
-import { options } from '../../auth/[...nextauth]/options'
 import axios from '@/utils/axios'
 
-export async function GET() {
-  const serverSession = await getServerSession(options)
-  const token = serverSession?.user.token
+export async function POST(req: NextRequest) {
+  const reqBody = await req.json()
+  const { token } = reqBody
 
   try {
     const headers = {
@@ -16,6 +14,7 @@ export async function GET() {
     }
 
     const response = await axios.get(`${process.env.ROUTE_MANAGER_API_URL}/workflows`, { headers })
+
     const resData = response?.data
 
     return NextResponse.json(resData)

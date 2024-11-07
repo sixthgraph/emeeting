@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 
 // Next Imports
-import { redirect, useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 import { signOut, useSession } from 'next-auth/react'
 
@@ -36,7 +36,7 @@ import { getInitials } from '@/utils/getInitials'
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import type { UsersType } from '@/types/apps/userTypes'
 
-import { socket } from '@/components/socket/socket'
+//import { socket } from '@/components/socket/socket'
 
 const UserDropdown = () => {
   // States
@@ -52,17 +52,32 @@ const UserDropdown = () => {
 
   const { settings } = useSettings()
 
-  const [isConnected, setIsConnected] = useState('var(--mui-palette-error-main)')
+  //const [isConnected, setIsConnected] = useState('var(--mui-palette-error-main)')
 
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       console.log('redirect to users/profile')
-      redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`) // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`
+
+      //redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin?callbackUrl=/en/home`)
+      // redirect('/api/auth/signin?callbackUrl=/en/users/profile')
+      router.push(url)
     }
   })
 
+  useEffect(() => {
+    console.log('user dropdown check session')
+
+    if (session?.user.token === 'null') {
+      signOut()
+    }
+  }, [session?.user.token])
+
   const userData: any = session?.user
+
+  /**
+
   const userEmail: any = session?.user.email
 
   useEffect(() => {
@@ -77,6 +92,7 @@ const UserDropdown = () => {
       socket.emit('join-email', userEmail)
     }
   }, [userEmail])
+   */
 
   // Styled component for badge content
   const BadgeContentSpan = styled('span')({
@@ -84,7 +100,7 @@ const UserDropdown = () => {
     height: 8,
     borderRadius: '50%',
     cursor: 'pointer',
-    backgroundColor: `${isConnected}`,
+    backgroundColor: `var(--mui-palette-success-main)`, //backgroundColor: `${isConnected}`,
     boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
   })
 

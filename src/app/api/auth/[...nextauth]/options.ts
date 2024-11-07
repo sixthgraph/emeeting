@@ -4,9 +4,12 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
 
-import { signOut, signIn } from 'next-auth/react'
+// import { signOut, signIn } from 'next-auth/react'
+// import { signIn } from 'next-auth/react'
 
 import axios from 'axios'
+
+let today: any = new Date()
 
 const login = async (credentials: any) => {
   const user = {
@@ -58,11 +61,15 @@ const login = async (credentials: any) => {
 // }
 
 async function refreshAccessToken(tokenObject: any, userEmail: any) {
+  console.log('start refresh token')
+
   try {
     const tokenResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refreshToken`, {
       token: tokenObject,
       email: userEmail
     })
+
+    today = new Date()
 
     return {
       message: tokenResponse.data.message,
@@ -70,7 +77,8 @@ async function refreshAccessToken(tokenObject: any, userEmail: any) {
     }
   } catch (error) {
     return {
-      message: 'refresh token error'
+      message: 'refresh token error',
+      token: 'null'
     }
   }
 }
@@ -112,8 +120,8 @@ export const options: NextAuthOptions = {
           const result = await login(credentials)
           const user = result.data
 
-          console.log('api return after sigin')
-          console.log(result)
+          // console.log('api return after sigin')
+          // console.log(result)
 
           return user
         } catch (err) {
@@ -201,42 +209,62 @@ export const options: NextAuthOptions = {
         token.avatar = user.avatar
         token.dep = user.dep
         token.role = user.role
+        token.tokenExpire = today
       }
+
+      const expireTime: any = new Date(String(token.tokenExpire))
+
+      const diffMs = today - expireTime // milliseconds between now & Christmas
+
+      // const diffDays = Math.floor(diffMs / 86400000); // days
+
+      // const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+
+      const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000) // minutes
+
+      // console.log(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes")
+
+      console.log('NextAuth start refresh -----')
+      console.log(token.token)
+      console.log(expireTime)
+      console.log(today)
+      console.log('-------')
+
+      console.log('NextAuth compare expire time')
+      console.log(diffMins + ' minutes')
+
+      if (diffMins == 19 || diffMins > 19) {
+        const refreshTokenData = await refreshAccessToken(token.token, token.email)
+
+        if (refreshTokenData.message == 'success') {
+          token.token = refreshTokenData.token
+          token.tokenExpire = today
+        } else {
+          token.token = 'null'
+        }
+      }
+
+      /* // sg here
 
       const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
       if (refreshTokenData.message == 'success') {
-        // console.log('refreshToken success')
-        token.token = refreshTokenData.token
-      } else {
-        console.log('refreshToken failed')
+      token.token = refreshTokenData.token
 
-        signIn()
-
-        return null
-
-        // token.name = ''
-        // token.firstname = ''
-        // token.token = ''
-        // token.email = ''
-
-        //const logoutCognitoUrl = `${process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-        const logoutCognitoUrl = `${process.env.EXT_PUBLIC_APP_URL}/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}&logout_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/login&response_type=code`
-
-        signOut({ redirect: false }).then(() => console.log('logoutCognitoUrl === ', logoutCognitoUrl))
-
-        // signOut({ redirect: false })
-        return false
-      }
-
-      //console.log('tokenB 5 ==== ', refreshTokenData)
+       } else {
+         token.token = 'null'
+       }
+         */
 
       return token
     },
     session: async ({ session, token }) => {
       if (token && token.firstname && token.token) {
+        const tExpire: any = token.tokenExpire
+
         session.user.name = token.name
         session.user.token = token.token
+        session.user.tokenExpire = tExpire
         session.user.avatar = token.avatar
         session.user.dep = token.dep
         session.user.role = token.role

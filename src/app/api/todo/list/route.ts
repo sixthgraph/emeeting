@@ -1,37 +1,28 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-import { getServerSession } from 'next-auth'
-
-import { options } from './../../auth/[...nextauth]/options'
-
-export async function GET() {
-  const serverSession = await getServerSession(options)
-  const token = serverSession?.user.token
-  const email = serverSession?.user.email
+export async function POST(req: NextRequest) {
+  const reqBody = await req.json()
+  const { token, email } = reqBody
 
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
-      cache: 'no-store'
+      cache: 'force-cache'
     }
 
-    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}`, {
-      headers
-    })
+    const response = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getworklist?id=${email}`, { headers })
 
-    // const depres = await fetch(`${process.env.ROUTE_FLOW_API_URL}/getdepartment`, { headers })
     const todoData = await response.json()
 
-    // const depData = await depres.json()
+    if (todoData.message === 'success') {
+      return NextResponse.json(todoData.data.detail)
+    } else {
+      const NotFoundData: any = []
 
-    const data = {
-      todo: todoData.data.detail
-
-      // dep: depData.data.detail
+      return NextResponse.json(NotFoundData)
     }
-
-    return NextResponse.json(data)
-  } catch (error: any) {
-    return NextResponse.json({ error: error.massage })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.massage })
   }
 }

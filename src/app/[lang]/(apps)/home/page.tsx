@@ -37,7 +37,13 @@ const getMyActivityList = async (token: any, email: any) => {
     if (response.data.message === 'success') {
       return response.data
     } else {
-      return 'Data not found'
+      const notFoundData = {
+        message: 'unsuccess',
+        success: true,
+        data: []
+      }
+
+      return notFoundData
     }
   } catch (err) {
     console.log(err)
@@ -80,7 +86,7 @@ const handleGetUserInfo = async (token: any, email: any) => {
     if (response.statusText === 'OK') {
       return response.data
     } else {
-      return 'User not found'
+      return []
     }
   } catch (err) {
     console.log(err)

@@ -14,6 +14,7 @@ declare module 'next-auth' {
       dep: string
       role: number
       avatar: string
+      tokenExpire: date
     }
   }
   interface User extends DefaultUser {
@@ -23,6 +24,7 @@ declare module 'next-auth' {
     dep: string
     role: number
     avatar: string
+    tokenExpire: date
   }
 }
 
