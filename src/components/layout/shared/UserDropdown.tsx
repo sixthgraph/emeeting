@@ -36,7 +36,7 @@ import { getInitials } from '@/utils/getInitials'
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import type { UsersType } from '@/types/apps/userTypes'
 
-//import { socket } from '@/components/socket/socket'
+import { socket } from '@/components/socket/socket'
 
 const UserDropdown = () => {
   // States
@@ -52,7 +52,7 @@ const UserDropdown = () => {
 
   const { settings } = useSettings()
 
-  //const [isConnected, setIsConnected] = useState('var(--mui-palette-error-main)')
+  const [isConnected, setIsConnected] = useState('var(--mui-palette-error-main)')
 
   const { data: session } = useSession({
     required: true,
@@ -76,7 +76,7 @@ const UserDropdown = () => {
 
   const userData: any = session?.user
 
-  /**
+  //**
 
   const userEmail: any = session?.user.email
 
@@ -92,15 +92,16 @@ const UserDropdown = () => {
       socket.emit('join-email', userEmail)
     }
   }, [userEmail])
-   */
+
+  //*/
 
   // Styled component for badge content
   const BadgeContentSpan = styled('span')({
     width: 8,
     height: 8,
     borderRadius: '50%',
-    cursor: 'pointer',
-    backgroundColor: `var(--mui-palette-success-main)`, //backgroundColor: `${isConnected}`,
+    cursor: 'pointer', //backgroundColor: `var(--mui-palette-success-main)`,
+    backgroundColor: `${isConnected}`,
     boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
   })
 
