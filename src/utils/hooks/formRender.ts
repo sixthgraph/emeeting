@@ -1,6 +1,23 @@
 // import * as FriendCard from './../pages/FriendCard';
 
 // import * as formRender from 'https://rd.excelink.co.th/saraban.dev/assets/vendor_components/form-builder/2022/form-render.min.js'
+declare global {
+  interface JQuery {
+    formRender(data: any): void
+  }
+  interface JQuery {
+    datetimepicker(data: any): void
+  }
+  interface datetimepicker {
+    setLocale(data: any): void
+  }
+
+  // interface datetimepicker {
+
+  //   setLocale(data: any): void
+
+  // }
+}
 
 const updateData: any = []
 
@@ -81,6 +98,24 @@ const mergeObj = (a: any, b: any, prop: any) => {
   return reduced.concat(b)
 }
 
+const thaiDatepicker = (el: any) => {
+  // $.datetimepicker.setLocale('th')
+  // $.fn.datetimepicker.setLocale('th')
+
+  // $(el).attr('readonly', true)
+  //$(el).addClass('date-readonly')
+
+  $(el).datetimepicker({
+    timepicker: false,
+    format: 'd/m/Y',
+    lang: 'th',
+    yearOffset: 543,
+    validateOnBlur: false,
+    regional: 'th',
+    locale: 'th'
+  })
+}
+
 export const getEdata = async (workData: any) => {
   let i: any
   const elem: any = workData
@@ -108,12 +143,6 @@ export const getEdata = async (workData: any) => {
   }
 
   return workData
-}
-
-declare global {
-  interface JQuery {
-    formRender(data: any): void
-  }
 }
 
 export const formRenderV1 = (dataObj: string) => {
@@ -188,6 +217,10 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
     }
 
     //#fb-render-671d9e8747ce4df2f9415c99
+
+    $('input[type="date"]', '#fb-render-' + elem[i]._id)
+      .addClass('datepicker')
+      .attr('type', 'text')
 
     if (elem[i].privilege === 'view') {
       $('#fb-render-' + elem[i]._id)
@@ -326,4 +359,6 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
       //}
     } //modify
   }
+
+  thaiDatepicker('.datepicker')
 }

@@ -9,7 +9,8 @@ import Logo from '@components/layout/shared/Logo'
 import ModeDropdown from '@components/layout/shared/ModeDropdown'
 import UserDropdown from '@components/layout/shared/UserDropdown'
 import NavSearch from '@components/layout/shared/search'
-import LanguageDropdown from '@components/layout/shared/LanguageDropdown'
+
+// import LanguageDropdown from '@components/layout/shared/LanguageDropdown'
 
 import NotificationsDropdown from '@components/layout/shared/NotificationsDropdown'
 
@@ -85,7 +86,7 @@ const NavbarContent = () => {
       <div className='flex items-center'>
         <ModeDropdown />
         <NavSearch />
-        <LanguageDropdown />
+        {/* <LanguageDropdown />  // sg here*/}
         <NotificationsDropdown notifications={notifications} />
         <UserDropdown />
       </div>

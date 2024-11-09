@@ -7,6 +7,8 @@ import type { SyntheticEvent } from 'react'
 import Script from 'next/script'
 import { useParams, useRouter } from 'next/navigation'
 
+import '@/css/jquery.datetimepicker.css'
+
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -23,6 +25,9 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails'
 import type { AccordionProps } from '@mui/material/Accordion'
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
+
+// Third-party Imports
+import { ToastContainer, toast } from 'react-toastify'
 
 import {
   Alert,
@@ -355,8 +360,9 @@ const WorkProfile = ({
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, reqBody)
 
-      if (response.data.message === 'success') {
+      if (response.data.message.includes('success')) {
         console.log('---Call Editwork success.------------------')
+        toast.success('Successfully saved!') // sg here
       } else {
         console.log(response.data.message)
       }
@@ -1660,7 +1666,7 @@ const WorkProfile = ({
           </Button>
         </DialogActions>
       </Dialog>
-      {/* <WorkButton workData={workData} paramsData={paramsData} /> */}
+      <ToastContainer />
     </>
   )
 }

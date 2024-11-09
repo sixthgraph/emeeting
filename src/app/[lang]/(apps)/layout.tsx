@@ -69,6 +69,11 @@ const Layout = async ({ children, params }: ChildrenType & { params: { lang: Loc
             <Script
               async
               strategy='afterInteractive'
+              src={`${process.env.BASEPATH}/assets/jquery-datetimepicker/jquery.datetimepicker.full.min.js`}
+            />
+            <Script
+              async
+              strategy='afterInteractive'
               src={`${process.env.BASEPATH}/assets/form-builder/2022/form-builder.min.js`}
             />
             <Script
