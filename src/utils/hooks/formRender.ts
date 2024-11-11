@@ -194,12 +194,25 @@ export const formRenderV1 = (dataObj: string) => {
   }
 }
 
-export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) => {
+export const formRenderV2 = async (
+  dataObj: string,
+  handleEditWork: () => void,
+  conditionData: string,
+  workAction: any
+) => {
   let i: any
   const elem: any = dataObj
+  let myWork = false
 
   // console.log('elem ---- from render eform')
   // console.log(elem)
+
+  if (conditionData[0] !== 'null' && conditionData[0] !== 'end-process' && workAction == '') {
+    console.log('This is myWork')
+    myWork = true
+  } else {
+    console.log('This is not myWork')
+  }
 
   for (i in elem) {
     // console.log('elem[i]._id')
@@ -223,123 +236,109 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
       .addClass('datepicker')
       .attr('type', 'text')
 
-    if (elem[i].privilege === 'view') {
-      $('#fb-render-' + elem[i]._id)
-        .find(
-          $(
-            'input[type="text"],input[type="radio"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+    if (myWork) {
+      if (elem[i].privilege === 'view') {
+        $('#fb-render-' + elem[i]._id)
+          .find(
+            $(
+              'input[type="text"],input[type="radio"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+            )
           )
-        )
-        .attr('disabled', 'disabled')
-    } // view
+          .attr('disabled', 'disabled')
+      } // view
 
-    if (elem[i].privilege === 'modify') {
-      $('#fb-render-' + elem[i]._id)
-        .find(
-          $(
-            'select,input[type="text"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+      if (elem[i].privilege === 'modify') {
+        console.log(elem[i].privilege)
+        console.log(myWork)
+        console.log('33333')
+        $('#fb-render-' + elem[i]._id)
+          .find(
+            $(
+              'select,input[type="text"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+            )
           )
-        )
-        .attr('disabled', 'disabled')
-        .on('change', function () {
-          let v = $(this).val()
-          let id = $(this).attr('id')
-          let fieldType = $(this).attr('type')
-          const parentId = $(this).parents('div.rendered-form').parent().attr('id')
-          const parentIdArr: any = parentId?.split('-')
+          .attr('disabled', 'disabled')
+          .on('change', function () {
+            let v = $(this).val()
+            let id = $(this).attr('id')
+            let fieldType = $(this).attr('type')
+            const parentId = $(this).parents('div.rendered-form').parent().attr('id')
+            const parentIdArr: any = parentId?.split('-')
 
-          if ($(this).is('.radio-group')) {
-            console.log('.radio-group change ')
-            const child = $('input', this)
+            if ($(this).is('.radio-group')) {
+              console.log('.radio-group change ')
+              const child = $('input', this)
 
-            console.log(this)
+              console.log(this)
 
-            id = $(child[0]).attr('name')
-            v = $("input[name='" + id + "']:checked").val()
-            console.log('value')
-            console.log(v)
-            fieldType = 'radio-group'
-          }
-
-          if ($(this).is('.checkbox-group')) {
-            const child = $('input', this)
-            const values: any = []
-
-            id = $(child[0]).attr('name')
-
-            $.each($("input[name='" + id + "']:checked"), function () {
-              values.push($(this).val())
-            })
-
-            v = values
-            fieldType = 'checkbox-group'
-          }
-
-          const check: any = updateData.filter((obj: { eid: any; name: string | undefined }) => {
-            if (obj.name == id && obj.eid == parentIdArr[2]) {
-              return true
-            }
-          })
-
-          if (check.length == 0) {
-            const newData = {
-              name: id,
-              value: v,
-              eid: parentIdArr[2],
-              fieldType: fieldType
+              id = $(child[0]).attr('name')
+              v = $("input[name='" + id + "']:checked").val()
+              console.log('value')
+              console.log(v)
+              fieldType = 'radio-group'
             }
 
-            updateData.push(newData)
-          } else {
-            updateData.filter((obj: { value: any; eid: any; name: string | undefined }) => {
+            if ($(this).is('.checkbox-group')) {
+              const child = $('input', this)
+              const values: any = []
+
+              id = $(child[0]).attr('name')
+
+              $.each($("input[name='" + id + "']:checked"), function () {
+                values.push($(this).val())
+              })
+
+              v = values
+              fieldType = 'checkbox-group'
+            }
+
+            const check: any = updateData.filter((obj: { eid: any; name: string | undefined }) => {
               if (obj.name == id && obj.eid == parentIdArr[2]) {
-                obj.value = v
+                return true
               }
             })
-          }
 
-          console.log('updateData')
-          console.log(updateData)
+            if (check.length == 0) {
+              const newData = {
+                name: id,
+                value: v,
+                eid: parentIdArr[2],
+                fieldType: fieldType
+              }
 
-          if (fieldType === 'checkbox-group' || fieldType === 'radio-group') {
-            // sg found bug here
-            console.log('checkbox-group change ----') //
+              updateData.push(newData)
+            } else {
+              updateData.filter((obj: { value: any; eid: any; name: string | undefined }) => {
+                if (obj.name == id && obj.eid == parentIdArr[2]) {
+                  obj.value = v
+                }
+              })
+            }
+
+            console.log('updateData')
+            console.log(updateData)
+
+            if (fieldType === 'checkbox-group' || fieldType === 'radio-group') {
+              // sg found bug here
+              console.log('checkbox-group change ----') //
+              handleEditWork() // sg remark here
+            }
+          })
+          .on('blur', function () {
+            console.log('blur ----') //
             handleEditWork() // sg remark here
-          }
-        })
-        .on('blur', function () {
-          console.log('blur ----') //
-          handleEditWork() // sg remark here
-        })
+          })
 
-      const selElem = elem[i]
+        const selElem = elem[i]
 
-      // console.log('elem[i] ' + i)
-      // console.log(elem[i])
+        // console.log('elem[i] ' + i)
+        // console.log(elem[i])
 
-      //for (const elemField of selElem) {
-      const reqField = selElem.require_field
-      const editField = selElem.editable_field
+        //for (const elemField of selElem) {
+        const reqField = selElem.require_field
+        const editField = selElem.editable_field
 
-      for (const fieldElem of reqField) {
-        $('[id="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
-
-        if (fieldElem.field === 'checkbox') {
-          $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
-        }
-
-        if (fieldElem.field === 'radio') {
-          $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
-        }
-
-        if (fieldElem.field === 'select') {
-        }
-
-        //$('#' + fieldElem.id).removeAttr('disabled')
-      }
-
-      if (editField) {
-        for (const fieldElem of editField) {
+        for (const fieldElem of reqField) {
           $('[id="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
 
           if (fieldElem.field === 'checkbox') {
@@ -355,10 +354,37 @@ export const formRenderV2 = async (dataObj: string, handleEditWork: () => void) 
 
           //$('#' + fieldElem.id).removeAttr('disabled')
         }
-      }
 
-      //}
-    } //modify
+        if (editField) {
+          for (const fieldElem of editField) {
+            $('[id="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+
+            if (fieldElem.field === 'checkbox') {
+              $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+            }
+
+            if (fieldElem.field === 'radio') {
+              $('[name="' + fieldElem.id + '"]', '#fb-render-' + elem[i]._id).removeAttr('disabled')
+            }
+
+            if (fieldElem.field === 'select') {
+            }
+
+            //$('#' + fieldElem.id).removeAttr('disabled')
+          }
+        }
+
+        //}
+      } //modify
+    } else {
+      $('#fb-render-' + elem[i]._id)
+        .find(
+          $(
+            'input[type="text"],input[type="radio"],input[type="checkbox"],input[type = "number"],input[type = "formulatext"],input[type = "hidden"],input[type = "date"] ,select, button, h1, h2, h3, p, address, output, canvas, blockquote, textarea, .checkbox-group, .radio-group'
+          )
+        )
+        .attr('disabled', 'disabled')
+    }
   }
 
   thaiDatepicker('.datepicker')

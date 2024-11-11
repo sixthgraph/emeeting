@@ -31,9 +31,13 @@ const getData = async () => {
 }
 
 const sentPage = async () => {
-  const data = await getData()
+  const resData = await getData()
 
-  return <SentList sentData={data.detail}></SentList>
+  const data = resData?.detail
+
+  const dataReversed = data.reverse()
+
+  return <SentList sentData={dataReversed}></SentList>
 }
 
 export default sentPage

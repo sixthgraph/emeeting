@@ -29,6 +29,7 @@
     "@mui/material-nextjs": "5.15.11",
     "@tanstack/match-sorter-utils": "^8.15.1",
     "@tanstack/react-table": "^8.16.0",
+    "@tanstack/table-core": "^8.20.5",
     "bcryptjs": "^2.4.3",
     "classnames": "2.5.1",
     "formBuilder": "^3.19.7",

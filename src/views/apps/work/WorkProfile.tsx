@@ -152,6 +152,7 @@ const WorkProfile = ({
   const [open, setOpen] = useState<boolean>(false)
   const [reqFieldData, setReqFieldData] = useState([])
   const [firstReqField, setFirstReqField] = useState<any>('')
+
   let eformData = workData?.eformdata
   const workInprocess = workData?.workinprocess
   const curBlockId = workData?.blockid
@@ -168,11 +169,11 @@ const WorkProfile = ({
 
   // console.log('attachment ===')
   // console.log(attachment)
-  // console.log('eformData from === workData?.eformdata')
-  // console.log(eformData)
+  console.log('eformData from === workData?.eformdata')
+  console.log(eformData)
 
-  // console.log('conditionData -----')
-  // console.log(conditionData)
+  console.log('conditionData -----')
+  console.log(conditionData)
 
   // console.log('notificationData----')
   // console.log(notificationData)
@@ -233,7 +234,8 @@ const WorkProfile = ({
   const [reqStatus, setReqStatus] = useState<boolean>(false)
   const [curTab, setCurTab] = useState('forms')
   const [dialogMsg, setDialogMsg] = useState('Msg')
-  const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0].form_id)
+
+  const [expanded, setExpanded] = useState<string | false>('panel-' + eformData[0]?.form_id)
   const params = useParams()
   const { lang: locale } = params
   const basepath = process.env.NEXT_PUBLIC_BASEPATH
@@ -803,128 +805,130 @@ const WorkProfile = ({
 
     let inputPass = true
 
-    if (curTask.includes('input')) {
-      const eformlist = curNodeData[0].eformlist
-      const newObjData: any = reqFieldData
+    if (conditionData[0] !== 'null' && conditionData[0] !== 'end-process' && workData.action == '') {
+      if (curTask.includes('input')) {
+        const eformlist = curNodeData[0].eformlist
+        const newObjData: any = reqFieldData
 
-      console.log('check require field')
+        console.log('check require field')
 
-      const requireForm = eformlist.filter((elem: any) => {
-        return elem.privilege == 'modify'
-      })
+        const requireForm = eformlist.filter((elem: any) => {
+          return elem.privilege == 'modify'
+        })
 
-      for (const item of requireForm) {
-        const eformName = eformData.find((ef: any) => {
-          return ef.form_id == item.formid
-        }).form_name
+        for (const item of requireForm) {
+          const eformName = eformData.find((ef: any) => {
+            return ef.form_id == item.formid
+          }).form_name
 
-        const newData: any = {
-          formId: item.formid,
-          formName: eformName,
-          requireField: []
-        }
+          const newData: any = {
+            formId: item.formid,
+            formName: eformName,
+            requireField: []
+          }
 
-        // console.log('newData')
-        // console.log(newData)
+          // console.log('newData')
+          // console.log(newData)
 
-        // console.log('--------------')
-        // console.log(`formid : ${item.formid}`)
-        // console.log(item.require_field)
-        // console.log('--------------')
+          // console.log('--------------')
+          // console.log(`formid : ${item.formid}`)
+          // console.log(item.require_field)
+          // console.log('--------------')
 
-        const require_field: any = item.require_field
+          const require_field: any = item.require_field
 
-        for (const elem of require_field) {
-          if (elem.field !== 'checkbox' && elem.field !== 'radio') {
-            const field = document.getElementById(elem.id) as HTMLInputElement
+          for (const elem of require_field) {
+            if (elem.field !== 'checkbox' && elem.field !== 'radio') {
+              const field = document.getElementById(elem.id) as HTMLInputElement
 
-            if (field) {
-              if (field.value === '') {
-                inputPass = false
-                const fieldLabel = document.querySelector("[for='" + elem.id + "']") as HTMLLabelElement
+              if (field) {
+                if (field.value === '') {
+                  inputPass = false
+                  const fieldLabel = document.querySelector("[for='" + elem.id + "']") as HTMLLabelElement
 
-                // sg here
+                  // sg here
 
-                // console.log('----- start field not value ----')
-                // console.log(`formId : ${item.formid}`)
-                // console.log(`formName : ${eformName}`)
-                // console.log(`fieldName : ${fieldLabel.textContent}`)
-                // console.log(`fieldId : ${elem.id}`)
-                // console.log('----- end field not value ----')
+                  // console.log('----- start field not value ----')
+                  // console.log(`formId : ${item.formid}`)
+                  // console.log(`formName : ${eformName}`)
+                  // console.log(`fieldName : ${fieldLabel.textContent}`)
+                  // console.log(`fieldId : ${elem.id}`)
+                  // console.log('----- end field not value ----')
 
-                newData.requireField.push({
-                  fieldId: elem.id,
-                  fieldName: fieldLabel.textContent
-                })
+                  newData.requireField.push({
+                    fieldId: elem.id,
+                    fieldName: fieldLabel.textContent
+                  })
 
-                field?.classList.add('border-red-500')
-                field?.classList.add('error')
+                  field?.classList.add('border-red-500')
+                  field?.classList.add('error')
+                } else {
+                  field?.classList.remove('border-red-500')
+                  field?.classList.remove('error')
+                }
               } else {
-                field?.classList.remove('border-red-500')
-                field?.classList.remove('error')
+                inputPass = false
+                console.log('field not found!')
+
+                //return inputPass
               }
             } else {
-              inputPass = false
-              console.log('field not found!')
+              // console.log('Code for ---')
+              // console.log(elem)
 
-              //return inputPass
-            }
-          } else {
-            // console.log('Code for ---')
-            // console.log(elem)
+              const field = document.getElementsByName(elem.id)
 
-            const field = document.getElementsByName(elem.id)
+              // console.log('field')
+              // console.log(field)
+              // console.log('-------------------')
 
-            // console.log('field')
-            // console.log(field)
-            // console.log('-------------------')
+              const groupValue: any = []
+              let groupParent: any
 
-            const groupValue: any = []
-            let groupParent: any
+              for (const fieldElem of field) {
+                // console.log('--')
+                // console.log('fieldElem')
+                // console.log(fieldElem)
 
-            for (const fieldElem of field) {
-              // console.log('--')
-              // console.log('fieldElem')
-              // console.log(fieldElem)
+                const selElem: any = fieldElem
 
-              const selElem: any = fieldElem
+                // console.log(selElem.value)
+                // console.log(selElem.checked)
+                // console.log('--')
 
-              // console.log(selElem.value)
-              // console.log(selElem.checked)
-              // console.log('--')
+                groupParent = fieldElem?.parentElement?.parentElement
 
-              groupParent = fieldElem?.parentElement?.parentElement
+                if (!selElem.checked) {
+                  inputPass = false
+                  fieldElem?.parentElement?.parentElement?.classList.add('border-red-500')
+                  fieldElem?.parentElement?.parentElement?.classList.add('error')
+                }
 
-              if (!selElem.checked) {
-                inputPass = false
-                fieldElem?.parentElement?.parentElement?.classList.add('border-red-500')
-                fieldElem?.parentElement?.parentElement?.classList.add('error')
+                groupValue.push(selElem.checked)
               }
 
-              groupValue.push(selElem.checked)
-            }
+              if (groupValue.includes(false)) {
+                newData.requireField.push({
+                  fieldId: elem.id,
+                  fieldName: elem.label
+                })
+              }
 
-            if (groupValue.includes(false)) {
-              newData.requireField.push({
-                fieldId: elem.id,
-                fieldName: elem.label
-              })
-            }
-
-            if (groupValue.includes(true)) {
-              inputPass = true
-              groupParent?.classList.remove('error')
-              groupParent?.classList.remove('border-red-500')
+              if (groupValue.includes(true)) {
+                inputPass = true
+                groupParent?.classList.remove('error')
+                groupParent?.classList.remove('border-red-500')
+              }
             }
           }
+
+          newObjData.push(newData)
         }
 
-        newObjData.push(newData)
+        setReqFieldData(newObjData)
+
+        //inputPass = false // sg stop here for dev
       }
-
-      setReqFieldData(newObjData)
-
-      //inputPass = false // sg stop here for dev
     }
 
     if (!inputPass) {
@@ -1243,24 +1247,26 @@ const WorkProfile = ({
       //TODO expand first panel
     }
 
-    for (const item of requireForm) {
-      const require_field: any = item.require_field
+    if (conditionData[0] !== 'null' && conditionData[0] !== 'end-process' && workData.action == '') {
+      for (const item of requireForm) {
+        const require_field: any = item.require_field
 
-      // console.log('item of requireForm')
-      // console.log(item)
+        // console.log('item of requireForm')
+        // console.log(item)
 
-      // console.log(item.formid) // sg working here
+        // console.log(item.formid) // sg working here
 
-      for (const elem of require_field) {
-        const field = document.getElementById(elem.id) as HTMLInputElement
+        for (const elem of require_field) {
+          const field = document.getElementById(elem.id) as HTMLInputElement
 
-        if (field) {
-          if (field.value === '') {
-            field?.classList.add('border-red-500')
-            field?.classList.add('error')
-          } else {
-            field?.classList.remove('border-red-500')
-            field?.classList.remove('error')
+          if (field) {
+            if (field.value === '') {
+              field?.classList.add('border-red-500')
+              field?.classList.add('error')
+            } else {
+              field?.classList.remove('border-red-500')
+              field?.classList.remove('error')
+            }
           }
         }
       }
@@ -1442,7 +1448,7 @@ const WorkProfile = ({
                     </AccordionSummary>
                     <AccordionDetails>
                       <div id={form.form_id}>
-                        <div id={`fb-render-${form.Id}`}>Loading...{form.Id}</div>
+                        <div id={`fb-render-${form.Id}`}>Loading...</div>
                       </div>
                       {/* <div id={`fb-render-${form.form_id}`}>Loading...</div> */}
                     </AccordionDetails>
@@ -1454,7 +1460,7 @@ const WorkProfile = ({
                 strategy='lazyOnload'
                 onReady={() => {
                   console.log('form render has loaded')
-                  formRenderV2(eformData, handleEditwork)
+                  formRenderV2(eformData, handleEditwork, conditionData, workData?.action)
                 }}
               />
             </TabPanel>

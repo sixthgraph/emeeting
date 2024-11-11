@@ -237,7 +237,7 @@ export const options: NextAuthOptions = {
       console.log('NextAuth compare expire time')
       console.log(diffMins + ' minutes')
 
-      if (diffMins == 19 || diffMins > 19) {
+      if (diffMins == 19 || diffMins > 19 || diffMins < 0) {
         const refreshTokenData = await refreshAccessToken(token.token, token.email)
 
         if (refreshTokenData.message == 'success') {
