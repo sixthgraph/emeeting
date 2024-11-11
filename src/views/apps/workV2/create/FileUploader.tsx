@@ -19,8 +19,6 @@ import { useDropzone } from 'react-dropzone'
 
 import { useSession } from 'next-auth/react'
 
-import axios from '@/utils/axios'
-
 // import axios from '@/utils/axios'
 
 type FileProp = {
@@ -152,16 +150,16 @@ const FileUploader = ({
     const filename = files[0].name
 
     try {
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_FLOW_API_URL}/updateattachment?wid=${wid}&uid=${email}&dep=${dep}&id=${fileData.itemno}`,
-      //   {
-      //     method: 'POST',
-      //     body: form,
-      //     headers: headers
-      //   }
-      // )
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_FLOW_API_URL}/updateattachment?wid=${wid}&uid=${email}&dep=${dep}&id=${fileData.itemno}`,
+        {
+          method: 'POST',
+          body: form,
+          headers: headers
+        }
+      )
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
+      //const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
 
       //const data = response.json()
 

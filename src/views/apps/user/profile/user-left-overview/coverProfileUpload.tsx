@@ -10,8 +10,6 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import DialogActions from '@mui/material/DialogActions'
 
-// import axios from 'axios'
-
 // Third-party Imports
 import { useDropzone } from 'react-dropzone'
 

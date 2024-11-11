@@ -12,7 +12,7 @@ import DialogActions from '@mui/material/DialogActions'
 import { useDropzone } from 'react-dropzone'
 import { useSession } from 'next-auth/react'
 
-import axios from '@/utils/axios'
+// import axios from '@/utils/axios'
 
 type FileProp = {
   name: string
@@ -77,13 +77,13 @@ const ReqFileUploader = ({
     form.append('file', files[0])
 
     try {
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
-      //   method: 'POST',
-      //   body: form,
-      //   headers: headers
-      // })
+      const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
+        method: 'POST',
+        body: form,
+        headers: headers
+      })
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
+      //const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
 
       if (response) {
         console.log('createattachment success')
