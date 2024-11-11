@@ -28,6 +28,7 @@ import type { AccordionDetailsProps } from '@mui/material/AccordionDetails'
 
 // Third-party Imports
 import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import {
   Alert,
@@ -1207,7 +1208,7 @@ const WorkProfile = ({
     const formattedDate = d.toLocaleString()
     const curr_time = formattedDate.split(',')[1]
 
-    if (locale == 'th') {
+    if (locale == 'th' || locale == 'en') {
       return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year + ' ' + curr_time
     }
 

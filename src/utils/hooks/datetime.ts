@@ -16,7 +16,7 @@ export const Formatshortdate = (date: any) => {
   const formattedDate = d.toLocaleString()
   const curr_time = formattedDate.split(',')[1]
 
-  if (locale == 'th') {
+  if (locale == 'th' || locale == 'en') {
     return curr_date + ' ' + m_th_names[curr_month] + ' ' + curr_year + ' ' + curr_time
   }
 

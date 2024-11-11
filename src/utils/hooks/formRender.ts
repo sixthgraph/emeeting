@@ -99,7 +99,8 @@ const mergeObj = (a: any, b: any, prop: any) => {
 }
 
 const thaiDatepicker = (el: any) => {
-  // $.datetimepicker.setLocale('th')
+  $.datetimepicker.setLocale('th')
+
   // $.fn.datetimepicker.setLocale('th')
 
   // $(el).attr('readonly', true)

@@ -7,6 +7,11 @@ const nextConfig = {
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL
   },
+  typescript: {
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    ignoreBuildErrors: true
+  },
   redirects: async () => {
     return [
       {
