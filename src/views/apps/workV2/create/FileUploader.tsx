@@ -91,7 +91,8 @@ const FileUploader = ({
       form.append('file', files[i])
 
       console.log('start upload -----')
-      console.log(files[i])
+
+      // console.log(files[i])
 
       const filename = files[i].name
 
