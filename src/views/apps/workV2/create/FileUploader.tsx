@@ -96,15 +96,15 @@ const FileUploader = ({
       const filename = files[i].name
 
       try {
-        // const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
-        //   method: 'POST',
-        //   body: form,
-        //   headers: headers
-        // })
+        const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
+          method: 'POST',
+          body: form,
+          headers: headers
+        })
 
-        console.log(form)
+        //console.log(form)
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
+        //const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
 
         if (response) {
           console.log(`Upload ${filename} success!`)
