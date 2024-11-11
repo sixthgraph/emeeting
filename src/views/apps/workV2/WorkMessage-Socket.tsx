@@ -42,7 +42,7 @@ import CustomTextField from '@/@core/components/mui/TextField'
 
 import axios from '@/utils/axios'
 
-// import { socket } from '@/components/socket/socket'
+import { socket } from '@/components/socket/socket'
 
 const WorkMessage = ({
   chatMemberData,
@@ -114,8 +114,6 @@ const WorkMessage = ({
     }, 300)
   }, [commentdetailData?.comment])
 
-  /**
-   *
   useEffect(() => {
     if (socket.connected) {
       const wid = commentWorkData?.wid
@@ -169,7 +167,6 @@ const WorkMessage = ({
     //   socket.emit('join-work-id', wid)
     // }
   }, [commentWorkData, token])
-   */
 
   useEffect(() => {
     if (screenHeight) openReply ? setMessageHeight(screenHeight - 340) : setMessageHeight(screenHeight - 270)
@@ -336,8 +333,7 @@ const WorkMessage = ({
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
-
-        // socket.emit('update-work-message', data)
+        socket.emit('update-work-message', data)
       }
     } catch (error: any) {
       console.log('add reply comment failed. ', error.message)
@@ -402,8 +398,7 @@ const WorkMessage = ({
         setReplyRef(initialReplyRef)
         setOpenReply(false)
         getWorkMessage()
-
-        // socket.emit('update-work-message', data)
+        socket.emit('update-work-message', data)
       }
     } catch (error: any) {
       console.log('add new comment failed. ', error.message)
