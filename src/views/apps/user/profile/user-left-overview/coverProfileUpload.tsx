@@ -19,7 +19,7 @@ import { useDropzone } from 'react-dropzone'
 
 import { useSession } from 'next-auth/react'
 
-import axios from '@/utils/axios'
+// import axios from '@/utils/axios'
 
 // import axios from '@/utils/axios'
 

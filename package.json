@@ -51,6 +51,7 @@
     "react-perfect-scrollbar": "1.5.8",
     "react-toastify": "^10.0.4",
     "react-use": "17.5.0",
+    "react-virtual": "^2.10.4",
     "server-only": "0.0.1",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
