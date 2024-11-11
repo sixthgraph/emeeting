@@ -19,6 +19,8 @@ import { useDropzone } from 'react-dropzone'
 
 import { useSession } from 'next-auth/react'
 
+import axios from '@/utils/axios'
+
 // import axios from '@/utils/axios'
 
 type FileProp = {
@@ -68,38 +70,56 @@ const FileUploader = ({
   }
 
   const handleUploadFile = async () => {
+    // sg here
     const headers = {
       Accept: '*/*',
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      mode: 'cors'
     }
 
-    const form = new FormData()
+    for (let i = 0; i < files.length; i++) {
+      const form = new FormData()
 
-    form.append('wid', wid)
-    form.append('uid', email)
-    form.append('dep', dep)
-    form.append('rid', rid)
-    form.append('pid', pid)
-    form.append('refid', '')
-    form.append('action', '')
-    form.append('filename', '')
-    form.append('file', files[0])
+      form.append('wid', wid)
+      form.append('uid', email)
+      form.append('dep', dep)
+      form.append('rid', rid)
+      form.append('pid', pid)
+      form.append('refid', '')
+      form.append('action', '')
+      form.append('filename', '')
+      form.append('file', files[i])
 
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
-        method: 'POST',
-        body: form,
-        headers: headers
-      })
+      console.log('start upload -----')
+      console.log(files[i])
 
-      if (response) {
-        console.log('createattachment success')
+      const filename = files[i].name
+
+      try {
+        // const response = await fetch(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, {
+        //   method: 'POST',
+        //   body: form,
+        //   headers: headers
+        // })
+
+        console.log(form)
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
+
+        if (response) {
+          console.log(`Upload ${filename} success!`)
+          console.log(response)
+
+          //toast.success(`Upload ${filename} success!`) // sg here
+        }
+      } catch (error: any) {
+        console.log(`Upload ${filename} fails!`)
+
+        //toast.error(`Upload ${filename} false!`)
       }
-
-      handleClose()
-    } catch (error: any) {
-      console.log('createattachment from client call failed. ', error.message)
     }
+
+    handleClose()
   }
 
   const handleRemoveFile = (file: FileProp) => {
@@ -112,7 +132,8 @@ const FileUploader = ({
   const handleEditFile = async () => {
     const headers = {
       Accept: '*/*',
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      mode: 'no-cors'
     }
 
     const form = new FormData()
@@ -127,19 +148,28 @@ const FileUploader = ({
     form.append('action', '')
     form.append('file', files[0])
 
+    const filename = files[0].name
+
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_FLOW_API_URL}/updateattachment?wid=${wid}&uid=${email}&dep=${dep}&id=${fileData.itemno}`,
-        {
-          method: 'POST',
-          body: form,
-          headers: headers
-        }
-      )
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_FLOW_API_URL}/updateattachment?wid=${wid}&uid=${email}&dep=${dep}&id=${fileData.itemno}`,
+      //   {
+      //     method: 'POST',
+      //     body: form,
+      //     headers: headers
+      //   }
+      // )
 
-      const data = response.json()
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createattachment`, form, { headers })
 
-      console.log(data)
+      //const data = response.json()
+
+      if (response) {
+        console.log(`Upload ${filename} success!`)
+        console.log(response)
+
+        //toast.success(`Upload ${filename} success!`) // sg here
+      }
 
       handleClose()
     } catch (error: any) {

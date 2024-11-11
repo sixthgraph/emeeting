@@ -71,11 +71,15 @@ async function refreshAccessToken(tokenObject: any, userEmail: any) {
 
     today = new Date()
 
+    console.log('refrest token success')
+
     return {
       message: tokenResponse.data.message,
       token: tokenResponse.data.token
     }
   } catch (error) {
+    console.log('refresh token false!')
+
     return {
       message: 'refresh token error',
       token: 'null'

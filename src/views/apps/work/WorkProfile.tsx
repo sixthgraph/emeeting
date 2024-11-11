@@ -275,6 +275,19 @@ const WorkProfile = ({
     setOpen(true)
   }
 
+  const toastHandler = (str: any, type: any) => {
+    console.log('toastHandler start')
+    console.log(str)
+
+    if (type === 'success') {
+      toast.success(str)
+    }
+
+    if (type === 'error') {
+      toast.error(str)
+    }
+  }
+
   const handleCheckDocument = async () => {
     const wid = workData?.wid
 
@@ -362,10 +375,9 @@ const WorkProfile = ({
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/work/edit`, reqBody)
 
       if (response.data.message.includes('success')) {
-        console.log('---Call Editwork success.------------------')
-        toast.success('Successfully saved!') // sg here
+        toastHandler('Successfully saved!', 'success')
       } else {
-        console.log(response.data.message)
+        toastHandler('Save eform data fails!', 'error')
       }
     } catch (error: any) {
       console.log('Editwork failed. ', error.message)

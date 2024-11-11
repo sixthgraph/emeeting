@@ -19,6 +19,8 @@ import { useDropzone } from 'react-dropzone'
 
 import { useSession } from 'next-auth/react'
 
+import axios from '@/utils/axios'
+
 // import axios from '@/utils/axios'
 
 type FileProp = {
@@ -79,8 +81,11 @@ const CoverProfileUploader = ({ handleClose }: { handleClose: () => void }) => {
         headers: headers
       })
 
+      //const response = await axios.post(`${process.env.NEXT_PUBLIC_FLOW_API_URL}/createcoverprofile`, form, { headers })
+
       if (response) {
         console.log('createcoverprofile success')
+        console.log(response)
       }
 
       handleClose()
