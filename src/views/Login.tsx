@@ -99,14 +99,14 @@ const LoginV2 = (props: Props, { mode }: { mode: SystemMode }) => {
   // Vars
   const darkImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/auth-mask-dark.png'
   const lightImg = process.env.NEXT_PUBLIC_BASEPATH + '/images/pages/auth-mask-light.png'
-  const darkIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V2-login-dark.png'
-  const lightIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V2-login-light.png'
+  const darkIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/v2-login-dark.png'
+  const lightIllustration = process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/v2-login-light.png'
 
   const borderedDarkIllustration =
-    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V2-login-dark-border.png'
+    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/v2-login-dark-border.png'
 
   const borderedLightIllustration =
-    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/V2-login-light-border.png'
+    process.env.NEXT_PUBLIC_BASEPATH + '/images/illustrations/auth/v2-login-light-border.png'
 
   // Hooks
   // const router = useRouter()
