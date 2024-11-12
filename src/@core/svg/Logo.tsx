@@ -3,34 +3,156 @@ import type { SVGAttributes } from 'react'
 
 const Logo = (props: SVGAttributes<SVGElement>) => {
   return (
-    <svg width='1.4583em' height='1em' viewBox='0 0 35 24' fill='none' xmlns='http://www.w3.org/2000/svg' {...props}>
-      <path
-        fillRule='evenodd'
-        clipRule='evenodd'
-        d='M0.00188479 0V7.47707C0.00188479 7.47707 -0.145285 9.83135 2.161 11.8242L14.9358 23.9961L21.5792 23.9107L20.5136 10.7809L17.9947 7.82497L10.0778 0H0.00188479Z'
-        fill='currentColor'
-      />
-      <path
-        opacity='0.06'
-        fillRule='evenodd'
-        clipRule='evenodd'
-        d='M8.39807 17.9307L13.6581 3.53127L18.059 7.91564L8.39807 17.9307Z'
-        fill='#161616'
-      />
-      <path
-        opacity='0.06'
-        fillRule='evenodd'
-        clipRule='evenodd'
-        d='M8.81183 17.3645L15.2093 5.06165L18.0926 7.94695L8.81183 17.3645Z'
-        fill='#161616'
-      />
-      <path
-        fillRule='evenodd'
-        clipRule='evenodd'
-        d='M8.47955 17.8436L25.8069 0H34.9091V7.50963C34.9091 7.50963 34.7195 10.0128 33.4463 11.3517L21.5808 24H14.9387L8.47955 17.8436Z'
-        fill='currentColor'
-      />
+    <svg
+      width='40'
+      height='22'
+      viewBox='0 0 40 22'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      version='1.1'
+      transform='matrix(1,-1.2246467991473532e-16,-1.2246467991473532e-16,-1,0,0)'
+      {...props}
+    >
+      <rect
+        width='7.37565'
+        height='21.1131'
+        rx='3.68783'
+        transform='matrix(-0.865206 0.501417 0.498585 0.866841 28.4115 0)'
+        fill='var(--mui-palette-primary-main)'
+      ></rect>
+      <rect
+        width='7.37565'
+        height='21.1131'
+        rx='3.68783'
+        transform='matrix(-0.865206 0.501417 0.498585 0.866841 28.4869 0)'
+        fill='url(#paint0_linear_448_114254)'
+        fill-opacity='0.4'
+      ></rect>
+      <rect
+        width='7.37565'
+        height='21.1131'
+        rx='3.68783'
+        transform='matrix(0.865206 0.501417 -0.498585 0.866841 25.6563 0)'
+        fill='var(--mui-palette-primary-main)'
+      ></rect>
+      <rect
+        width='7.37565'
+        height='21.1131'
+        rx='3.68783'
+        transform='matrix(-0.865206 0.501417 0.498585 0.866841 14.3293 0)'
+        fill='var(--mui-palette-primary-main)'
+      ></rect>
+      <rect
+        width='7.37565'
+        height='21.1131'
+        rx='3.68783'
+        transform='matrix(-0.865206 0.501417 0.498585 0.866841 14.3293 0)'
+        fill='url(#paint1_linear_448_114254)'
+        fill-opacity='0.4'
+      ></rect>
+      <rect
+        width='7.37565'
+        height='21.1131'
+        rx='3.68783'
+        transform='matrix(0.865206 0.501417 -0.498585 0.866841 11.5132 0)'
+        fill='var(--mui-palette-primary-main)'
+      ></rect>
+      <defs>
+        <linearGradient
+          id='paint0_linear_448_114254'
+          x1='3.68783'
+          y1='0'
+          x2='3.68783'
+          y2='21.1131'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop></stop>
+          <stop offset='1' stop-opacity='0'></stop>
+        </linearGradient>
+        <linearGradient
+          id='paint1_linear_448_114254'
+          x1='3.68783'
+          y1='0'
+          x2='3.68783'
+          y2='21.1131'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop></stop>
+          <stop offset='1' stop-opacity='0'></stop>
+        </linearGradient>
+      </defs>
     </svg>
+
+    // <svg width='40' height='22' viewBox='0 0 40 22' fill='none' xmlns='http://www.w3.org/2000/svg' {...props}>
+    //   <rect
+    //     width='7.37565'
+    //     height='21.1131'
+    //     rx='3.68783'
+    //     transform='matrix(-0.865206 0.501417 0.498585 0.866841 28.4115 0)'
+    //     fill='var(--mui-palette-primary-main)'
+    //   ></rect>
+    //   <rect
+    //     width='7.37565'
+    //     height='21.1131'
+    //     rx='3.68783'
+    //     transform='matrix(-0.865206 0.501417 0.498585 0.866841 28.4869 0)'
+    //     fill='url(#paint0_linear_448_114254)'
+    //     fill-opacity='0.4'
+    //   ></rect>
+    //   <rect
+    //     width='7.37565'
+    //     height='21.1131'
+    //     rx='3.68783'
+    //     transform='matrix(0.865206 0.501417 -0.498585 0.866841 25.6563 0)'
+    //     fill='var(--mui-palette-primary-main)'
+    //   ></rect>
+    //   <rect
+    //     width='7.37565'
+    //     height='21.1131'
+    //     rx='3.68783'
+    //     transform='matrix(-0.865206 0.501417 0.498585 0.866841 14.3293 0)'
+    //     fill='var(--mui-palette-primary-main)'
+    //   ></rect>
+    //   <rect
+    //     width='7.37565'
+    //     height='21.1131'
+    //     rx='3.68783'
+    //     transform='matrix(-0.865206 0.501417 0.498585 0.866841 14.3293 0)'
+    //     fill='url(#paint1_linear_448_114254)'
+    //     fill-opacity='0.4'
+    //   ></rect>
+    //   <rect
+    //     width='7.37565'
+    //     height='21.1131'
+    //     rx='3.68783'
+    //     transform='matrix(0.865206 0.501417 -0.498585 0.866841 11.5132 0)'
+    //     fill='var(--mui-palette-primary-main)'
+    //   ></rect>
+    //   <defs>
+    //     <linearGradient
+    //       id='paint0_linear_448_114254'
+    //       x1='3.68783'
+    //       y1='0'
+    //       x2='3.68783'
+    //       y2='21.1131'
+    //       gradientUnits='userSpaceOnUse'
+    //     >
+    //       <stop></stop>
+    //       <stop offset='1' stop-opacity='0'></stop>
+    //     </linearGradient>
+    //     <linearGradient
+    //       id='paint1_linear_448_114254'
+    //       x1='3.68783'
+    //       y1='0'
+    //       x2='3.68783'
+    //       y2='21.1131'
+    //       gradientUnits='userSpaceOnUse'
+    //     >
+    //       <stop></stop>
+    //       <stop offset='1' stop-opacity='0'></stop>
+    //     </linearGradient>
+    //   </defs>
+    // </svg>
   )
 }
 

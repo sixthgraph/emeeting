@@ -53,8 +53,8 @@ export type Config = {
 }
 
 const themeConfig: Config = {
-  templateName: 'RouteFlow',
-  settingsCookieName: 'routeflow-by-softvibe',
+  templateName: 'WorKit',
+  settingsCookieName: 'workit-by-team7th',
   mode: 'system', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
