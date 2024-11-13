@@ -3,6 +3,9 @@
 // Third-party Imports
 import classnames from 'classnames'
 
+// Type Imports
+import type { ShortcutsType } from '@components/layout/shared/ShortcutsDropdown'
+
 // Component Imports
 import NavToggle from './NavToggle'
 import Logo from '@components/layout/shared/Logo'
@@ -20,6 +23,48 @@ import type { NotificationsType } from '@components/layout/shared/NotificationsD
 
 // Util Imports
 import { horizontalLayoutClasses } from '@layouts/utils/layoutClasses'
+import ShortcutsDropdown from '../shared/ShortcutsDropdown'
+
+// Vars
+const shortcuts: ShortcutsType[] = [
+  {
+    url: '/calendar',
+    icon: 'tabler-calendar',
+    title: 'Calendar',
+    subtitle: 'Appointments'
+  },
+  {
+    url: '/apps/invoice/list',
+    icon: 'tabler-file-dollar',
+    title: 'RouteFlow',
+    subtitle: 'Work with workflow app'
+  }
+
+  // {
+  //   url: '/apps/user/list',
+  //   icon: 'tabler-user',
+  //   title: 'Users',
+  //   subtitle: 'Manage Users'
+  // },
+  // {
+  //   url: '/apps/roles',
+  //   icon: 'tabler-users-group',
+  //   title: 'Role Management',
+  //   subtitle: 'Permissions'
+  // },
+  // {
+  //   url: '/',
+  //   icon: 'tabler-device-desktop-analytics',
+  //   title: 'Dashboard',
+  //   subtitle: 'User Dashboard'
+  // },
+  // {
+  //   url: '/pages/account-settings',
+  //   icon: 'tabler-settings',
+  //   title: 'Settings',
+  //   subtitle: 'Account Settings'
+  // }
+]
 
 const notifications: NotificationsType[] = [
   {
@@ -87,6 +132,7 @@ const NavbarContent = () => {
         <ModeDropdown />
         <NavSearch />
         {/* <LanguageDropdown />  // sg here*/}
+        <ShortcutsDropdown shortcuts={shortcuts} />
         <NotificationsDropdown notifications={notifications} />
         <UserDropdown />
       </div>
