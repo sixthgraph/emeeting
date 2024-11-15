@@ -1,5 +1,3 @@
-import Script from 'next/script'
-
 // MUI Imports
 import Button from '@mui/material/Button'
 
@@ -47,41 +45,6 @@ const Layout = async ({ children, params }: ChildrenType & { params: { lang: Loc
         }
         horizontalLayout={
           <HorizontalLayout header={<Header dictionary={dictionary} />} footer={<HorizontalFooter />}>
-            <Script
-              async
-              strategy='beforeInteractive'
-              src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'
-            />
-            <Script
-              async
-              strategy='afterInteractive'
-              src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js'
-            />
-            <Script
-              async
-              strategy='afterInteractive'
-              src={`${process.env.BASEPATH}/assets/jquery-datetimepicker/jquery.datetimepicker.full.min.js`}
-            />
-            <Script
-              async
-              strategy='afterInteractive'
-              src={`${process.env.BASEPATH}/assets/form-builder/2022/form-builder.min.js`}
-            />
-            <Script
-              async
-              strategy='afterInteractive'
-              src={`${process.env.BASEPATH}/assets/form-builder/2022/form-render.min.js`}
-            />
-            <Script
-              async
-              strategy='afterInteractive'
-              src={`${process.env.BASEPATH}/assets/jquery-ui-1.13.2/jquery-ui.js`}
-            />
-            <Script
-              async
-              strategy='afterInteractive'
-              src={`${process.env.BASEPATH}/assets/jsPlumb/jquery.jsPlumb-1.4.1-all-min.js`}
-            />
             {children}
           </HorizontalLayout>
         }
