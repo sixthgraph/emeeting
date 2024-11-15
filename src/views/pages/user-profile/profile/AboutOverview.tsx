@@ -42,7 +42,7 @@ const renderList = (list: ProfileCommonType[]) => {
 //   )
 // }
 
-const AboutOverview = ({ userData, myStat }: { userData?: any; myStat?: any }) => {
+const AboutOverview = ({ userData }: { userData?: any }) => {
   const roles = ['Admin', 'Worker', 'Viewer', 'Super User']
 
   const aboutData = [
@@ -51,11 +51,6 @@ const AboutOverview = ({ userData, myStat }: { userData?: any; myStat?: any }) =
     { property: 'Role', value: roles[Number(`${userData?.role}`) - 1], icon: 'tabler-crown' },
     { property: 'Country', value: 'TH', icon: 'tabler-flag' },
     { property: 'Language', value: 'English', icon: 'tabler-language' }
-  ]
-
-  const statData = [
-    { property: 'Task Done', value: myStat?.complete, icon: 'tabler-checkbox' },
-    { property: 'Task Total', value: myStat?.total, icon: 'tabler-briefcase' }
   ]
 
   const dataContact = [
@@ -105,18 +100,6 @@ const AboutOverview = ({ userData, myStat }: { userData?: any; myStat?: any }) =
               </Typography>
               {data?.teams && renderTeams(data?.teams)}
             </div> */}
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <CardContent className='flex flex-col gap-6'>
-            <div className='flex flex-col gap-4'>
-              <Typography className='uppercase' variant='body2' color='text.disabled'>
-                Overview
-              </Typography>
-              {myStat && renderList(statData)}
-            </div>
           </CardContent>
         </Card>
       </Grid>

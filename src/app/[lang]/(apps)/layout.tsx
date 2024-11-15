@@ -25,15 +25,6 @@ import ScrollToTop from '@core/components/scroll-to-top'
 import { getDictionary } from '@/utils/getDictionary'
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 
-import './custom-eform.css'
-import './custom-routeflow.css'
-
-// import '@/css/jquery-ui.css'
-// import '@/css/jquery-ui.theme.css'
-// import '@/css/jsplumb.css'
-
-// import './eform.module.css'
-
 const Layout = async ({ children, params }: ChildrenType & { params: { lang: Locale } }) => {
   // Vars
   const direction = 'ltr'

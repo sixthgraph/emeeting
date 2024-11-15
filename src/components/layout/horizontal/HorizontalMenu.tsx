@@ -7,13 +7,12 @@ import { useParams } from 'next/navigation'
 import { useTheme } from '@mui/material/styles'
 
 // Type Imports
-import { useSession } from 'next-auth/react'
 
 import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
 import type { getDictionary } from '@/utils/getDictionary'
 
 // Component Imports
-import HorizontalNav, { Menu, MenuItem, SubMenu } from '@menu/horizontal-menu'
+import HorizontalNav, { Menu, MenuItem } from '@menu/horizontal-menu'
 import VerticalNavContent from './VerticalNavContent'
 
 // Hook Imports
@@ -58,8 +57,6 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
   const theme = useTheme()
   const params = useParams()
   const { settings } = useSettings()
-  const { data: session } = useSession()
-  const userRole = session?.user.role
 
   // Vars
   const { skin } = settings
@@ -94,59 +91,9 @@ const HorizontalMenu = ({ dictionary }: { dictionary: Awaited<ReturnType<typeof 
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        {/* <MenuItem href={`/${locale}/dashboard`} icon={<i className='tabler-dashboard' />}>
-          {dictionary['navigation'].dashboard}
-        </MenuItem> */}
-        {/* <MenuItem href={`/${locale}/users/profile/${email}`} icon={<i className='tabler-home' />}> */}
         <MenuItem href={`/${locale}/home`} icon={<i className='tabler-home' />}>
           {dictionary['navigation'].home}
         </MenuItem>
-        <MenuItem href={`/${locale}/todo`} icon={<i className='tabler-inbox' />}>
-          {dictionary['navigation'].todo}
-        </MenuItem>
-        <MenuItem href={`/${locale}/my-request`} icon={<i className='tabler-article' />}>
-          {dictionary['navigation'].myRequest}
-        </MenuItem>
-        <MenuItem href={`/${locale}/sent`} icon={<i className='tabler-arrow-autofit-right' />}>
-          {dictionary['navigation'].sent}
-        </MenuItem>
-        <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-message' />}>
-          {dictionary['navigation'].comments}
-        </MenuItem>
-        <MenuItem href={`/${locale}/my-app`} icon={<i className='tabler-app-window' />}>
-          {dictionary['navigation'].myApp}
-        </MenuItem>
-        <SubMenu label={dictionary['navigation'].create} icon={<i className='tabler-circle-plus' />}>
-          <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
-          <MenuItem disabled href={`/${locale}/new-route`}>
-            {dictionary['navigation'].newApp}
-          </MenuItem>
-        </SubMenu>
-        {userRole == 1 && (
-          <SubMenu label={dictionary['navigation'].admin} icon={<i className='tabler-settings' />}>
-            <MenuItem href={`/${locale}/users/list`} icon={<i className='tabler-user' />}>
-              {dictionary['navigation'].users}
-            </MenuItem>
-            {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
-            Users Example
-          </MenuItem> */}
-            <MenuItem href={`/${locale}/departments`} icon={<i className='tabler-building-bank' />}>
-              {dictionary['navigation'].departments}
-            </MenuItem>
-            <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
-              {dictionary['navigation'].position}
-            </MenuItem>
-            <MenuItem href={`/${locale}/groups`} icon={<i className='tabler-users' />}>
-              {dictionary['navigation'].userGroup}
-            </MenuItem>
-            {/* <MenuItem href={`/${locale}/position/dep`} icon={<i className='tabler-shield' />}>
-              {dictionary['navigation'].positionDep}
-            </MenuItem> */}
-            <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
-              {dictionary['navigation'].stateInfo}
-            </MenuItem>
-          </SubMenu>
-        )}
       </Menu>
     </HorizontalNav>
   )

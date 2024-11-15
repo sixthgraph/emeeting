@@ -34,36 +34,11 @@ const shortcuts: ShortcutsType[] = [
     subtitle: 'Appointments'
   },
   {
-    url: '/apps/invoice/list',
-    icon: 'tabler-file-dollar',
+    url: '/routeflow',
+    icon: 'tabler-cube-3d-sphere',
     title: 'RouteFlow',
     subtitle: 'Work with workflow app'
   }
-
-  // {
-  //   url: '/apps/user/list',
-  //   icon: 'tabler-user',
-  //   title: 'Users',
-  //   subtitle: 'Manage Users'
-  // },
-  // {
-  //   url: '/apps/roles',
-  //   icon: 'tabler-users-group',
-  //   title: 'Role Management',
-  //   subtitle: 'Permissions'
-  // },
-  // {
-  //   url: '/',
-  //   icon: 'tabler-device-desktop-analytics',
-  //   title: 'Dashboard',
-  //   subtitle: 'User Dashboard'
-  // },
-  // {
-  //   url: '/pages/account-settings',
-  //   icon: 'tabler-settings',
-  //   title: 'Settings',
-  //   subtitle: 'Account Settings'
-  // }
 ]
 
 const notifications: NotificationsType[] = [

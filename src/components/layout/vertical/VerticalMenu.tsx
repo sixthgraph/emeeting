@@ -9,13 +9,11 @@ import { useTheme } from '@mui/material/styles'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Type Imports
-import { useSession } from 'next-auth/react'
-
 import type { getDictionary } from '@/utils/getDictionary'
 import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
 
 // Component Imports
-import { Menu, MenuItem, MenuSection } from '@menu/vertical-menu'
+import { Menu, MenuItem } from '@menu/vertical-menu'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
@@ -52,8 +50,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
   const { settings } = useSettings()
   const params = useParams()
   const { isBreakpointReached } = useVerticalNav()
-  const { data: session } = useSession()
-  const userRole = session?.user.role
 
   // Vars
   const { transitionDuration } = verticalNavOptions
@@ -84,61 +80,9 @@ const VerticalMenu = ({ dictionary, scrollMenu }: Props) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        {/* <MenuItem href={`/${locale}/dashboard`} icon={<i className='tabler-dashboard' />}>
-          {dictionary['navigation'].dashboard}
-        </MenuItem> */}
         <MenuItem href={`/${locale}/users/profile`} icon={<i className='tabler-dashboard' />}>
           {dictionary['navigation'].home}
         </MenuItem>
-        <MenuSection label='Works'>
-          <MenuItem href={`/${locale}/todo`} icon={<i className='tabler-inbox' />}>
-            {dictionary['navigation'].todo}
-          </MenuItem>
-          <MenuItem href={`/${locale}/my-requests`} icon={<i className='tabler-inbox' />}>
-            {dictionary['navigation'].myRequest}
-          </MenuItem>
-          <MenuItem href={`/${locale}/sent`} icon={<i className='tabler-arrow-autofit-right' />}>
-            {dictionary['navigation'].sent}
-          </MenuItem>
-          <MenuItem href={`/${locale}/comments`} icon={<i className='tabler-inbox' />}>
-            {dictionary['navigation'].comments}
-          </MenuItem>
-          {/* <MenuItem href={`/${locale}/my-items`} icon={<i className='tabler-box' />}>
-            {dictionary['navigation'].myItems}
-          </MenuItem>
-          <MenuItem href={`/${locale}/assignment`} icon={<i className='tabler-window-maximize' />}>
-            {dictionary['navigation'].assignment}
-          </MenuItem>
-          <MenuItem href={`/${locale}/collabs`} icon={<i className='tabler-brand-asana' />}>
-            {dictionary['navigation'].collabs}
-          </MenuItem> */}
-        </MenuSection>
-        <MenuSection label={dictionary['navigation'].create}>
-          <MenuItem href={`/${locale}/new-request`}>{dictionary['navigation'].newRequest}</MenuItem>
-          <MenuItem href={`/${locale}/new-route`}>{dictionary['navigation'].newRoute}</MenuItem>
-        </MenuSection>
-        {userRole == 1 && (
-          <MenuSection label={dictionary['navigation'].admin}>
-            <MenuItem href={`/${locale}/users/list`} icon={<i className='tabler-user' />}>
-              {dictionary['navigation'].users}
-            </MenuItem>
-            {/* <MenuItem href={`/${locale}/users-example`} icon={<i className='tabler-user' />}>
-              Users Example
-            </MenuItem> */}
-            <MenuItem href={`/${locale}/departments`} icon={<i className='tabler-building-bank' />}>
-              {dictionary['navigation'].departments}
-            </MenuItem>
-            <MenuItem href={`/${locale}/groups`} icon={<i className='tabler-users' />}>
-              {dictionary['navigation'].userGroup}
-            </MenuItem>
-            <MenuItem href={`/${locale}/position`} icon={<i className='tabler-shield' />}>
-              {dictionary['navigation'].position}
-            </MenuItem>
-            <MenuItem href={`/${locale}/stateinfo`} icon={<i className='tabler-sort-descending-2' />}>
-              {dictionary['navigation'].stateInfo}
-            </MenuItem>
-          </MenuSection>
-        )}
       </Menu>
     </ScrollWrapper>
   )

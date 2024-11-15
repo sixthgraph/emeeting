@@ -17,12 +17,10 @@ import AboutOverview from './profile/AboutOverview'
 
 const UserProfile = ({
   tabContentList,
-  userData,
-  myStat
+  userData
 }: {
   tabContentList: { [key: string]: ReactElement }
   userData?: any
-  myStat?: any
 }) => {
   // States
   const [activeTab, setActiveTab] = useState('feed')
@@ -47,86 +45,34 @@ const UserProfile = ({
       <Grid item xs={12}>
         <Grid container spacing={6}>
           <Grid item xs={12} lg={4} md={5}>
-            <AboutOverview userData={userData} myStat={myStat} />
+            <AboutOverview userData={userData} />
           </Grid>
           <Grid item xs={12} lg={8} md={7}>
             {activeTab === undefined ? null : (
               <Grid item xs={12} className='flex flex-col gap-6'>
                 <TabContext value={activeTab}>
-                  {
-                    myProfile && (
-                      <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
-                        <Tab
-                          label={
-                            <div className='flex items-center gap-1.5'>
-                              <i className='tabler-dashboard text-lg' />
-                              Overview
-                            </div>
-                          }
-                          value='overview'
-                        />
-                        <Tab
-                          label={
-                            <div className='flex items-center gap-1.5'>
-                              <i className='tabler-news text-lg' />
-                              News Feed
-                            </div>
-                          }
-                          value='feed'
-                        />
-                        {/* <Tab
-                      label={
-                        <div className='flex items-center gap-1.5'>
-                          <i className='tabler-user-check text-lg' />
-                          Profile
-                        </div>
-                      }
-                      value='profile'
-                    />
-                    <Tab
-                      label={
-                        <div className='flex items-center gap-1.5'>
-                          <i className='tabler-users text-lg' />
-                          Teams
-                        </div>
-                      }
-                      value='teams'
-                    />
-                    <Tab
-                      label={
-                        <div className='flex items-center gap-1.5'>
-                          <i className='tabler-layout-grid text-lg' />
-                          Projects
-                        </div>
-                      }
-                      value='projects'
-                    />
-                    <Tab
-                      label={
-                        <div className='flex items-center gap-1.5'>
-                          <i className='tabler-link text-lg' />
-                          Connections
-                        </div>
-                      }
-                      value='connections'
-                    />  */}
-                      </CustomTabList>
-                    )
-
-                    // : (
-                    //   <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
-                    //     <Tab
-                    //       label={
-                    //         <div className='flex items-center gap-1.5'>
-                    //           <i className='tabler-news text-lg' />
-                    //           News Feed
-                    //         </div>
-                    //       }
-                    //       value='feed'
-                    //     />
-                    //   </CustomTabList>
-                    // )
-                  }
+                  {myProfile && (
+                    <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
+                      <Tab
+                        label={
+                          <div className='flex items-center gap-1.5'>
+                            <i className='tabler-dashboard text-lg' />
+                            Overview
+                          </div>
+                        }
+                        value='overview'
+                      />
+                      <Tab
+                        label={
+                          <div className='flex items-center gap-1.5'>
+                            <i className='tabler-news text-lg' />
+                            News Feed
+                          </div>
+                        }
+                        value='feed'
+                      />
+                    </CustomTabList>
+                  )}
 
                   <TabPanel value={activeTab} className='p-0'>
                     {tabContentList[activeTab]}

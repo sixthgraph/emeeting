@@ -53,8 +53,8 @@ export type Config = {
 }
 
 const themeConfig: Config = {
-  templateName: 'WorKit',
-  settingsCookieName: 'workit-by-team7th',
+  templateName: 'E-Meeting',
+  settingsCookieName: 'emeeting-by-softvibe',
   mode: 'system', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
